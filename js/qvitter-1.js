@@ -709,10 +709,10 @@ function checkForNewQueets() {
 				}		
 	
 			$('#new-queets-bar').html(new_queets_num + q_txt);
-			}
-		
+			}	
 		}	
 	}
+
 
 
 

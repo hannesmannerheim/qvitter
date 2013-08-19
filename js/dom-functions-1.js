@@ -391,6 +391,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 							checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling); // start interval again
 							remove_spinner();				
 							$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
+							$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
 							addToFeed(user_data, false,'visible'); // add stream items to feed element
 							$('#feed').animate({opacity:'1'},150); // fade in
 							$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
@@ -423,6 +424,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 					checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);	// start interval again
 					remove_spinner();				
 					$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
+					$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
 					addToFeed(queet_data, false,'visible'); // add stream items to feed element
 					$('#feed').animate({opacity:'1'},150); // fade in
 					$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
