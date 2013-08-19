@@ -4,7 +4,6 @@ Qvitter
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
 * Last mod.: August, 2013
 * Version:   1
-* Website:   <http://beaneditor.org/>
 * GitHub:    <https://github.com/hannesmannerheim/qvitter>
 
 Qvitter is free  software:  you can  redistribute it  and / or  modify it  
