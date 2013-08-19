@@ -34,42 +34,40 @@ to Qvitter-mod your Statusnet API.)
 TODO
 ----
 
-1. Join new external groups and follow new external users 
+1. Join _new_ external groups and follow _new_ external users ("New" meaning users/groups that the server don't know yet) 
 
-2. Follow people on other instances
+2. Auto suggest mentions 
 
-3. Auto suggest mentions 
+3. Register
 
-4. Register
+4. Background image uploading/editing
 
-5. Background image uploading/editing
+5. Color theme
 
-6. Color theme
+6. Auto url-shortening setting under queet box
 
-7. Auto url-shortening setting under queet box
+7. Settings (e.g. don't show replies to people I don't follow)
 
-10. Settings (e.g. don't show replies to people I don't follow)
+8. Syntax-coloring in queet-box, maybe codemirror (worked nicely for ltr but not rtl text when I tried it)
 
-11. Syntax-coloring in queet-box, maybe codemirror (worked nicely for ltr but not rtl text when I tried it)
+9. Image/file upload, drag-n-drop!
 
-12. Image/file upload, drag-n-drop!
+10. Search users
 
-13. Search users
+11. Recommended users
 
-14. Recommended users
+12. Filters (hide queets containing strings, e.g. mute users)
 
-15. Filters (hide queets containing strings, e.g. mute users)
+13. Better responsive design
 
-18. Better responsive design
+14. More languages
 
-19. More languages
+15. Queet-page
 
-20. Queet-page
+16. New api for serving _number_ of new items in several streams (to show number of new items in menu/history) 
 
-21. New api for serving _number_ of new items in several streams (to show number of new items in menu/history) 
+17. New "expand queet" api for getting conversation, retweets, favs and attachment in the same request 
 
-22. New "expand queet" api for getting conversation, retweets, favs and attachment in the same request 
+18. DMs
 
-23. DMs
-
-24. Node.js long polling server and an new api that serve aggregate of all polling users requests in one go
+19. Node.js long polling server and an new api that serve aggregate of all polling users requests in one go
