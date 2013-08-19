@@ -1,160 +1,170 @@
  CHANGES TO API
  --------------
  
- * actions/apiattachment.php     			New api action 
- * actions/apistatusesfavs.php   			New api action
- * actions/apicheckhub.php       			New api action  (not used yet)
- * actions/apiexternalprofileshow.php       New api action  
+ * actions/apiattachment.php                 New api action 
+ * actions/apistatusesfavs.php               New api action
+ * actions/apicheckhub.php                   New api action  (not used yet)
+ * actions/apiexternalprofileshow.php        New api action  
  
  * lib/apiaction.php          
  
- 	- add urls to larger avatars
- 	
-	 	~LINE 213   	$avatar = $profile->getAvatar(AVATAR_STREAM_SIZE);
-				        $twitter_user['profile_image_url'] = ($avatar) ? $avatar->displayUrl() :
-				            Avatar::defaultImage(AVATAR_STREAM_SIZE);
-				        $avatar = $profile->getAvatar(AVATAR_PROFILE_SIZE);
-				        $twitter_user['profile_image_url_profile_size'] = ($avatar) ? $avatar->displayUrl() :
-				            Avatar::defaultImage(AVATAR_PROFILE_SIZE);
-				        $avatar = $profile->getOriginalAvatar();
-				        $twitter_user['profile_image_url_original'] = ($avatar) ? $avatar->displayUrl() :
-				            Avatar::defaultImage(AVATAR_PROFILE_SIZE); 
-						$groups = $profile->getGroups();
-						$groups_count = 0; while($groups->fetch()) $groups_count++;
-				        $twitter_user['groups_count'] = $groups_count;   
+    - add urls to larger avatars
+     
+        ~LINE 213        
+                        $avatar = $profile->getAvatar(AVATAR_STREAM_SIZE);
+                        $twitter_user['profile_image_url'] = ($avatar) ? $avatar->displayUrl() :
+                            Avatar::defaultImage(AVATAR_STREAM_SIZE);
+                        $avatar = $profile->getAvatar(AVATAR_PROFILE_SIZE);
+                        $twitter_user['profile_image_url_profile_size'] = ($avatar) ? $avatar->displayUrl() :
+                            Avatar::defaultImage(AVATAR_PROFILE_SIZE);
+                        $avatar = $profile->getOriginalAvatar();
+                        $twitter_user['profile_image_url_original'] = ($avatar) ? $avatar->displayUrl() :
+                            Avatar::defaultImage(AVATAR_PROFILE_SIZE); 
+                        $groups = $profile->getGroups();
+                        $groups_count = 0; while($groups->fetch()) $groups_count++;
+                        $twitter_user['groups_count'] = $groups_count;   
 
 
-	- add the uri-field
-	
-		~line 320		$twitter_status['uri'] = $notice->uri;
-	
+    - add the uri-field
+    
+        ~line 330        
+                        $twitter_status['uri'] = $notice->uri;
+    
 
-	- show if a notices is favorited by auth_user
+    - show if a notices is favorited by auth_user
 
-		~line 345		if (isset($this->auth_user)) {
-				        	$this_profile = $this->auth_user->getProfile();
-				            $twitter_status['favorited'] = $this->auth_user->hasFave($notice); 
-				        	$twitter_status['repeated'] = $this_profile->hasRepeated($notice->id);
-				        } else {
-				            $twitter_status['favorited'] = false; 
-					       	$twitter_status['repeated'] = false;            	
-				        }
+        ~line 355        
+                        if (isset($this->auth_user)) {
+                            $this_profile = $this->auth_user->getProfile();
+                            $twitter_status['favorited'] = $this->auth_user->hasFave($notice); 
+                            $twitter_status['repeated'] = $this_profile->hasRepeated($notice->id);
+                        } else {
+                            $twitter_status['favorited'] = false; 
+                            $twitter_status['repeated'] = false;                
+                        }
 
 
-	- show number of admins in group api
-	            
-		~line 420		$admins = $group->getAdmins();
-						$admin_count = 0; while($admins->fetch()) $admin_count++;
-						$twitter_group['admin_count'] = $admin_count;  
-	        
+    - show number of admins in group api
+                
+        ~line 414        
+                        $admins = $group->getAdmins();
+                        $admin_count = 0; while($admins->fetch()) $admin_count++;
+                        $twitter_group['admin_count'] = $admin_count;  
+            
 
-	- to be able to get group profile by uri. 
-	- hackish though, because if uri get-var is sent, it will discard the id get var 
-	- (but id still needs to be sent and be non-numerical, so I do "?id=foo&uri={uri}")
-	- should be possible to only supply uri get var, but I was lazy... sry
+    - to be able to get group profile by uri. 
+    - hackish though, because if uri get-var is sent, it will discard the id get var 
+    - (but id still needs to be sent and be non-numerical, so I do "?id=foo&uri={uri}")
+    - should be possible to only supply uri get var, but I was lazy... sry
 
-		~line 1565		} else if ($this->arg('uri')) {
-		      	    		return User_group::staticGet('uri', urldecode($this->arg('uri')));
+        ~line 1565        
+                        } else if ($this->arg('uri')) {
+                            return User_group::staticGet('uri', urldecode($this->arg('uri')));
 
 
  * lib/router.php             
  
-	- add routing for new api actions
-		
-		~line 467:		$m->connect('api/statuses/favs/:id.json',
-                        array('action' => 'ApiStatusesFavs',
-                              'id' => '[0-9]+'));                              
+    - add routing for new api actions
+        
+        ~line 467:        
+                        $m->connect('api/statuses/favs/:id.json',
+                            array('action' => 'ApiStatusesFavs',
+                            'id' => '[0-9]+'));                              
+                        
+                        $m->connect('api/attachment/:id.json',
+                            array('action' => 'ApiAttachment',
+                            'id' => '[0-9]+'));     
+                        
+                        $m->connect('api/checkhub.json',
+                            array('action' => 'ApiCheckHub'));     
+                        
+                        $m->connect('api/externalprofile/show.json',
+                            array('action' => 'ApiExternalProfileShow'));                                                                                                                                                    
+                            
 
-			            $m->connect('api/attachment/:id.json',
-			                        array('action' => 'ApiAttachment',
-			                              'id' => '[0-9]+'));     
-			
-			            $m->connect('api/checkhub.json',
-			                        array('action' => 'ApiCheckHub'));     
-			
-						$m->connect('api/externalprofile/show.json',
-						            array('action' => 'ApiExternalProfileShow'));   									                                                                                                             
-									                                 
+     - also, tags need regexp to work with unicode charachters, e.g. farsi and arabic:
 
- 	- also, tags need regexp to work with unicode charachters, e.g. farsi and arabic:
-
-			            $m->connect('api/statusnet/tags/timeline/:tag.:format',
-			                        array('action' => 'ApiTimelineTag',
-			                              'tag' => self::REGEX_TAG,
-			                              'format' => '(xml|json|rss|atom|as)'));                                                                                                              
-
+                        $m->connect('api/statusnet/tags/timeline/:tag.:format',
+                            array('action' => 'ApiTimelineTag',
+                                'tag' => self::REGEX_TAG,
+                                'format' => '(xml|json|rss|atom|as)'));                                                                                                              
+    
  
- * acitons/apiconversation.php	
+ * acitons/apiconversation.php    
 
-	- I didn't always get Profile::current() to show me the auth user's profile, so I changed it to the normal $this->auth_user used in other api actions 
+    - I didn't always get Profile::current() to show me the auth user's profile, so I changed it to the normal $this->auth_user used in other api actions 
 
-		~ line 80:		if(isset($this->auth_user)) {
-							$profile = $this->auth_user->getProfile();			
-						}
-						else {
-						       $profile = null;
-						}
-									
-									
+        ~ line 80:
+                        if(isset($this->auth_user)) {
+                            $profile = $this->auth_user->getProfile();            
+                        } else {
+                            $profile = null;
+                        }
+                                    
+                                    
 
 
-	*actions/apitimelineuser.php	
-	
-		- this api did only return the public user timeline, not the auth user's. 
-		- e.g. it did not show notices from people who post to "my colleques at quitter"
-		- changed to return timeline according to which auth user is requesting
-		
-			~ line 238		$user_profile = $this->user->getProfile();
-							if(isset($this->auth_user)) {
-								$auth_user_profile = $this->auth_user->getProfile();					
-								}
-							else {
-								$auth_user_profile = null;					
-								}
-							
-					        $stream = new ProfileNoticeStream($user_profile, $auth_user_profile);
-					
-					        $notice = $stream->getNotices(($this->page-1) * $this->count,
-					                                          $this->count + 1,
-					                                          $this->since_id,
-					                                          $this->max_id);
+ *actions/apitimelineuser.php    
+
+    - this api did only return the public user timeline, not the auth user's. 
+    - e.g. it did not show notices from people who post to "my colleques at quitter"
+    - changed to return timeline according to which auth user is requesting
+    
+        ~ line 238        
+                        $user_profile = $this->user->getProfile();
+                        if(isset($this->auth_user)) {
+                            $auth_user_profile = $this->auth_user->getProfile();                    
+                        }
+                        else {
+                            $auth_user_profile = null;                    
+                        }
+                        
+                        $stream = new ProfileNoticeStream($user_profile, $auth_user_profile);
+                        
+                        $notice = $stream->getNotices(($this->page-1) * $this->count,
+                                                        $this->count + 1,
+                                                        $this->since_id,
+                                                        $this->max_id);
 
 
  * search.json 
  
- 	- changed response to normal twitter format, maybe I should have created a new api action for that,
- 	- but... i don't see the point in having a special format for searches, it should be same as other streams 				
+     - changed response to normal twitter format, maybe I should have created a new api action for that,
+     - but... i don't see the point in having a special format for searches, it should be same as other streams                 
  
  
  
- * actions/timelinetags.php   	
-	
-	- added max_id and since_id
-	
-		~line 179		$notice = Notice_tag::getStream(
-			            $this->tag,
-			            ($this->page - 1) * $this->count,
-				            $this->count + 1,
-				            $this->since_id,
-				            $this->max_id
-				        );
-															        
+ * actions/timelinetags.php       
+    
+    - added max_id and since_id
+    
+        ~line 179        
+                        $notice = Notice_tag::getStream(
+                            $this->tag,
+                            ($this->page - 1) * $this->count,
+                            $this->count + 1,
+                            $this->since_id,
+                            $this->max_id
+                            );
+                                                                    
  * actions/apistatusesupdate.php 
-	
-	- we don't want statuses to shorten if sent through the api
-	
- 		~ line 290:		//$status_shortened = $this->auth_user->shortenlinks($this->status); 		
-						$status_shortened = $this->status;
- 										
+    
+    - we don't want statuses to shorten if sent through the api
+    
+         ~ line 290:        
+                            //$status_shortened = $this->auth_user->shortenlinks($this->status);         
+                            $status_shortened = $this->status;
+                                         
  
- * classes/Notice.php 					
- 	
- 	- to _not_ shorten urls sent through api, we need to comment out this also
- 	
- 		~ line 352		//        if ($user) {
-						//            // Use the local user's shortening preferences, if applicable.
-						//            $final = $user->shortenLinks($content);
-						//        } else {
-						//            $final = common_shorten_links($content);			
-						//        } 										
- 								                                                                                                              
+ * classes/Notice.php                     
+     
+     - to _not_ shorten urls sent through api, we need to comment out this also
+     
+         ~ line 352        
+                            // if ($user) {
+                            //     // Use the local user's shortening preferences, if applicable.
+                            /      $final = $user->shortenLinks($content);
+                            // } else {
+                            //     $final = common_shorten_links($content);            
+                            // }                                         
+                                                                                                                                               
