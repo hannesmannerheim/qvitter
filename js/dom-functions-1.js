@@ -337,7 +337,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		var h2FeedHeader = window.sL.following;		
 		}	
 	else if(stream.substring(0,40) == 'statuses/user_timeline.json?screen_name=') {
-		var h2FeedHeader = window.sL.notices + '<div class="queet-streams">/ <a class="queet-stream mentions">' + window.sL.mentions + '</a> / <a class="queet-stream favorites">Favoriter</a></div>';		
+		var h2FeedHeader = window.sL.notices + '<div class="queet-streams">/ <a class="queet-stream mentions">' + window.sL.mentions + '</a> / <a class="queet-stream favorites">' + window.sL.favoritesNoun +'</a></div>';		
 		}	
 	else if(stream.substring(0,35) == 'statuses/mentions.json?screen_name=') {
 		var h2FeedHeader = '<div class="queet-streams"><a class="queet-stream queets">' + window.sL.notices + '</a> /</div>' + window.sL.mentions + '<div class="queet-streams">/ <a class="queet-stream favorites">' + window.sL.favoritesNoun + '</a></div>';		
