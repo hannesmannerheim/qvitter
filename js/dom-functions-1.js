@@ -1156,8 +1156,8 @@ function addToFeed(feed, after, extraClasses) {
 						}
 					}
 				}
-			// retweeted object don't exist in feed and not mine
-			else if(obj.user.statusnet_profile_url != $('#user-profile-link').children('a').attr('href')){
+			// retweeted object don't exist in feed
+			else {
 
 				// we don't want to print 'null', someone might have that username!
 				var in_reply_to_screen_name = '';
