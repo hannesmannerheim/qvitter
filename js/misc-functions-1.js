@@ -33,7 +33,29 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
   
-  
+
+/* ·  
+   · 
+   ·   Checks if localstorage is availible
+   ·
+   ·   We can't just do if(typeof localStorage.selectedLanguage != 'undefined')
+   ·   because firefox with cookies disabled then freaks out and stops executing js completely
+   · 
+   · · · · · · · · · */  
+
+function localStorageIsEnabled() {
+	var mod = 'test';
+	try {
+		localStorage.setItem(mod, mod);
+		localStorage.removeItem(mod);
+		return true;
+		}
+	catch(e) {
+		return false;
+		}
+	}
+    
+    
 
 /* ·  
    · 
@@ -233,24 +255,26 @@ function placeCaretAtEnd(el) {
    · · · · · · · · · · · · · */
    
 function updateHistoryLocalStorage() {
-	var i=0;
-	var localStorageName = window.username + '-history-container';
-	var historyContainer = new Object();
-	$.each($('#history-container .stream-selection'), function(key,obj) {
-		historyContainer[i] = new Object();
-		historyContainer[i].dataStreamName = $(obj).attr('data-stream-name');
-		historyContainer[i].dataStreamHeader = $(obj).attr('data-stream-header');			
-		i++;
-		});
-	localStorage[localStorageName] = JSON.stringify(historyContainer);
-	if($('#history-container .stream-selection').length==0) {
-		$('#history-container').css('display','none');
+	if(localStorageIsEnabled()) {
+		var i=0;
+		var localStorageName = window.username + '-history-container';
+		var historyContainer = new Object();
+		$.each($('#history-container .stream-selection'), function(key,obj) {
+			historyContainer[i] = new Object();
+			historyContainer[i].dataStreamName = $(obj).attr('data-stream-name');
+			historyContainer[i].dataStreamHeader = $(obj).attr('data-stream-header');			
+			i++;
+			});
+		localStorage[localStorageName] = JSON.stringify(historyContainer);
+		if($('#history-container .stream-selection').length==0) {
+			$('#history-container').css('display','none');
+			}
+		else {
+			$('#history-container').css('display','block');
+			}
+		$('#history-container').sortable({delay: 100});
+		$('#history-container').disableSelection();		
 		}
-	else {
-		$('#history-container').css('display','block');
-		}
-	$('#history-container').sortable({delay: 100});
-	$('#history-container').disableSelection();		
 	}
 
 
@@ -261,16 +285,18 @@ function updateHistoryLocalStorage() {
    · · · · · · · · · · · · · */
    
 function loadHistoryFromLocalStorage() {
-	var localStorageName = window.username + '-history-container';
-	if(typeof localStorage[localStorageName] != "undefined") {
-		$('#history-container').css('display','block');
-		$('#history-container').html('');																										
-		var historyContainer = $.parseJSON(localStorage[localStorageName]);
-		$.each(historyContainer, function(key,obj) {
-			$('#history-container').append('<div class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" data-stream-name="' + obj.dataStreamName + '">' + obj.dataStreamHeader + '<i class="close-right"></i><i class="chev-right"></i></div>');
-			});
+	if(localStorageIsEnabled()) {
+		var localStorageName = window.username + '-history-container';
+		if(typeof localStorage[localStorageName] != "undefined") {
+			$('#history-container').css('display','block');
+			$('#history-container').html('');																										
+			var historyContainer = $.parseJSON(localStorage[localStorageName]);
+			$.each(historyContainer, function(key,obj) {
+				$('#history-container').append('<div class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" data-stream-name="' + obj.dataStreamName + '">' + obj.dataStreamHeader + '<i class="close-right"></i><i class="chev-right"></i></div>');
+				});
+			}
+		updateHistoryLocalStorage();
 		}
-	updateHistoryLocalStorage();
 	}	
 
 

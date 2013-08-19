@@ -651,14 +651,16 @@ window.l.ar.adminCount				= 'الإداريين';
 
 
 
-// set language, from local storage, else browser language, else english
+// set language, from local storage, else browser language, else english (english also if no localstorage availible)
 var browserLang = navigator.language || navigator.userLanguage; 
 var selectedLanguage = 'en';
-if(typeof localStorage.selectedLanguage != 'undefined') {
-	selectedLanguage = localStorage.selectedLanguage;
-	}
-else if(typeof window.l[browserLang.substring(0,2)] != 'undefined') {
-	selectedLanguage = 	browserLang.substring(0,2);
+if(localStorageIsEnabled()) {
+	if(typeof localStorage.selectedLanguage != 'undefined') {
+		selectedLanguage = localStorage.selectedLanguage;
+		}
+	else if(typeof window.l[browserLang.substring(0,2)] != 'undefined') {
+		selectedLanguage = 	browserLang.substring(0,2);
+		}
 	}
 window.sL = window.l[selectedLanguage];
 

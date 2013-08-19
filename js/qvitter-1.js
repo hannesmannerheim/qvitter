@@ -63,8 +63,23 @@ $('<img/>').attr('src', window.fullUrlToThisQvitterApp + 'img/ekan4.jpg').load(f
 	$('#user-container').css('display','block');
 	$('#feed').css('display','block');		
 
+	// check for localstorage, if none, we remove possibility to remember login
+	var userInLocalStorage = false;
+	if(localStorageIsEnabled()) {
+		if(typeof localStorage.autologinUsername != 'undefined') {
+			userInLocalStorage = true;
+			}
+		}
+	else {
+		$('input#rememberme').css('display','none');
+		$('span#rememberme_label').css('display','none');		
+		$('#remember-forgot').css('font-size','0');						
+		$('.language-dropdown').css('display','none');		
+		}	
+
+
 	// autologin if saved
-	if(typeof localStorage.autologinUsername != 'undefined') {
+	if(userInLocalStorage) {
 		$('input#username').val(localStorage.autologinUsername);
 		$('input#password').val(localStorage.autologinPassword);
 		$('#submit-login').trigger('click');		
@@ -116,8 +131,10 @@ $('#submit-login').click(function () {
 
 		// if remeber me is checked, save credentials in local storage
 		if($('#rememberme').is(':checked')) {
-			localStorage.autologinPassword = $('input#password').val();
-			localStorage.autologinUsername = $('input#username').val();					
+			if(localStorageIsEnabled()) {
+				localStorage.autologinPassword = $('input#password').val();
+				localStorage.autologinUsername = $('input#username').val();					
+				}
 			}
 			
 		// load history
@@ -186,8 +203,10 @@ $('input#username,input#password,input#rememberme').keyup(function(e){
    · · · · · · · · · · · · · */ 
    
 $('#logout').click(function(){
-	delete localStorage.autologinUsername;
-	delete localStorage.autologinPassword;		
+	if(localStorageIsEnabled()) {
+		delete localStorage.autologinUsername;
+		delete localStorage.autologinPassword;		
+		}
 	location.reload();		
 	});		
 
@@ -206,7 +225,9 @@ $(document).bind('click', function (e) {
 		}
 	});
 $('.language-link').click(function(){
-	localStorage.selectedLanguage = $(this).attr('data-lang-code'); // save langage selection
+	if(localStorageIsEnabled()) {
+		localStorage.selectedLanguage = $(this).attr('data-lang-code'); // save langage selection
+		}
 	location.reload(); // reload	
 	});
 
