@@ -463,7 +463,9 @@ class Router
                         array('action' => 'ApiStatusesRetweets',
                               'id' => '[0-9]+',
                               'format' => '(xml|json)'));
-                              
+			
+			// new qvitter apis
+			
 			$m->connect('api/statuses/favs/:id.json',
 			            array('action' => 'ApiStatusesFavs',
 			                  'id' => '[0-9]+'));                              
@@ -476,7 +478,12 @@ class Router
 			            array('action' => 'ApiCheckHub'));    
 			            
 			$m->connect('api/externalprofile/show.json',
-			            array('action' => 'ApiExternalProfileShow'));   			            
+			            array('action' => 'ApiExternalProfileShow'));   
+			            
+            $m->connect('api/statusnet/groups/admins/:id.:format',
+                        array('action' => 'ApiGroupAdmins',
+                              'id' => Nickname::INPUT_FMT,
+                              'format' => '(xml|json)'));			            			            
 
             // users
 

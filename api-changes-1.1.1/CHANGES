@@ -5,6 +5,7 @@
  * actions/apistatusesfavs.php               New api action
  * actions/apicheckhub.php                   New api action  (not used yet)
  * actions/apiexternalprofileshow.php        New api action  
+ * actions/apigroupadmins.php                New api action   
  
  * lib/apiaction.php          
  
@@ -79,7 +80,12 @@
                             array('action' => 'ApiCheckHub'));     
                         
                         $m->connect('api/externalprofile/show.json',
-                            array('action' => 'ApiExternalProfileShow'));                                                                                                                                                    
+                            array('action' => 'ApiExternalProfileShow'));   
+
+                        $m->connect('api/statusnet/groups/admins/:id.:format',
+                            array('action' => 'ApiGroupAdmins',
+                                'id' => Nickname::INPUT_FMT,
+                                'format' => '(xml|json)'));                                                                                                                                                                             
                             
 
      - also, tags need regexp to work with unicode charachters, e.g. farsi and arabic:
