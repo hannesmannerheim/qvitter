@@ -287,20 +287,20 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	window.currentStream = stream;	
 	
 	// if this is a @user stream, i.e. user's queets, user's followers, user's following, we set _queets_ as the default stream in the menu
-	if(stream.substring(0,36) == 'statuses/followers.json?screen_name='
-	|| stream.substring(0,34) == 'statuses/friends.json?screen_name='
-	|| stream.substring(0,39) == 'statusnet/groups/list.json?screen_name='	
+	if(stream.substring(0,45) == 'statuses/followers.json?count=20&screen_name='
+	|| stream.substring(0,43) == 'statuses/friends.json?count=20&screen_name='
+	|| stream.substring(0,48) == 'statusnet/groups/list.json?count=10&screen_name='	
 	|| stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name='
 	|| stream.substring(0,27) == 'favorites.json?screen_name='	
 	|| stream.substring(0,35) == 'statuses/mentions.json?screen_name='	
 	|| stream.substring(0,27) == 'statuses/user_timeline.json')	{
-		var defaultStreamName = 'statuses/user_timeline' + stream.substring(stream.indexOf('.json'));
-		var streamHeader = '@' + stream.substring(stream.indexOf('=')+1);
+		var defaultStreamName = 'statuses/user_timeline.json?' + stream.substring(stream.indexOf('screen_name='));
+		var streamHeader = '@' + stream.substring(stream.lastIndexOf('=')+1);
 		}
 	// if this is a my user streams, i.e. my followers, my following
-	else if(stream == 'statuses/followers.json'
-	|| stream == 'statuses/friends.json'
-	|| stream == 'statusnet/groups/list.json')	{
+	else if(stream == 'statuses/followers.json?count=20'
+	|| stream == 'statuses/friends.json?count=20'
+	|| stream == 'statusnet/groups/list.json?count=10')	{
 		var defaultStreamName = stream;
 		var streamHeader = '@' + window.loginUsername;
 		}		
@@ -314,9 +314,11 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		}	
 		
 	// if this is a !group stream
-	else if(stream.substring(0,26) == 'statusnet/groups/timeline/')	{
-		var defaultStreamName = stream;
-		var streamHeader = '!' + stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
+	else if(stream.substring(0,26) == 'statusnet/groups/timeline/'
+		 || stream.substring(0,28) == 'statusnet/groups/membership/'
+		 || stream.substring(0,24) == 'statusnet/groups/admins/')	{
+		var defaultStreamName = 'statusnet/groups/timeline/' + stream.substring(stream.lastIndexOf('/')+1);
+		var streamHeader = '!' + stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));
 		}		
 	// if this is a #tag stream
 	else if(stream.substring(0,24) == 'statusnet/tags/timeline/')	{
@@ -347,7 +349,13 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		}					
 	else if(stream.substring(0,26) == 'statusnet/groups/list.json') {
 		var h2FeedHeader = window.sL.groups;		
-		}			
+		}	
+	else if(stream.substring(0,28) == 'statusnet/groups/membership/') {
+		var h2FeedHeader = window.sL.memberCount;
+		}				
+	else if(stream.substring(0,24) == 'statusnet/groups/admins/') {
+		var h2FeedHeader = window.sL.adminCount;
+		}						
 	else if(stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=') {
 		var h2FeedHeader = '<span style="unicode-bidi:bidi-override;direction:ltr;">' + streamHeader + '/all</span>'; // ugly rtl fix, sry, we should have translations for this stream header		
 		}			
@@ -386,8 +394,17 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 				getFromAPI(stream, function(user_data){
 					if(user_data) {
 						// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
-						if(window.currentStream == stream) {
-							profileCardFromFirstObject(profile_data,window.loginUsername); // show profile card
+						if(window.currentStream == stream) {	
+							
+							// get screen name from stream, if not found, this is me
+							if(stream.indexOf('screen_name=')>-1) {
+								var thisUsersScreenName = stream.substring(stream.indexOf('screen_name=')+12);
+								}
+							else {
+								var thisUsersScreenName = window.loginUsername;
+								}
+													
+							profileCardFromFirstObject(profile_data,thisUsersScreenName); // show profile card
 							checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling); // start interval again
 							remove_spinner();				
 							$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
@@ -416,8 +433,10 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 						profileCardFromFirstObject(queet_data,thisUsersScreenName);
 						}
 					// show group profile card if this is a group stream
-					else if(stream.substring(0,26) == 'statusnet/groups/timeline/')	{
-						var thisGroupAlias = stream.replace('statusnet/groups/timeline/','').replace('.json','');
+					else if(stream.substring(0,26) == 'statusnet/groups/timeline/'
+						 || stream.substring(0,28) == 'statusnet/groups/membership/'
+						 || stream.substring(0,24) == 'statusnet/groups/admins/') {
+						var thisGroupAlias = stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));
 						groupProfileCard(thisGroupAlias);
 						}						
 	
@@ -446,12 +465,12 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 
 function setUrlFromStream(stream) {
 
-	if(stream.substring(0,36) == 'statuses/followers.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);
+	if(stream.substring(0,45) == 'statuses/followers.json?count=20&screen_name=') {
+		var screenName = stream.substring(stream.lastIndexOf('=')+1);
 		history.pushState({strm:stream},'','/' + screenName + '/subscribers');
 		}
-	else if(stream.substring(0,34) == 'statuses/friends.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);		
+	else if(stream.substring(0,43) == 'statuses/friends.json?count=20&screen_name=') {
+		var screenName = stream.substring(stream.lastIndexOf('=')+1);		
 		history.pushState({strm:stream},'','/' + screenName + '/subscriptions');
 		}
 	else if(stream.substring(0,35) == 'statuses/mentions.json?screen_name=') {
@@ -462,14 +481,14 @@ function setUrlFromStream(stream) {
 		var screenName = stream.substring(stream.indexOf('=')+1);		
 		history.pushState({strm:stream},'','/' + screenName + '/favorites');
 		}	
-	else if(stream.substring(0,39) == 'statusnet/groups/list.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);		
+	else if(stream.substring(0,48) == 'statusnet/groups/list.json?count=10&screen_name=') {
+		var screenName = stream.substring(stream.lastIndexOf('=')+1);		
 		history.pushState({strm:stream},'','/' + screenName + '/groups');
 		}		
-	else if(stream == 'statuses/followers.json') {
+	else if(stream == 'statuses/followers.json?count=20') {
 		history.pushState({strm:stream},'','/' + window.loginUsername + '/subscribers');
 		}
-	else if(stream == 'statuses/friends.json') {
+	else if(stream == 'statuses/friends.json?count=20') {
 		history.pushState({strm:stream},'','/' + window.loginUsername + '/subscriptions');
 		}
 	else if(stream == 'statuses/mentions.json') {
@@ -478,7 +497,7 @@ function setUrlFromStream(stream) {
 	else if(stream == 'favorites.json') {
 		history.pushState({strm:stream},'','/' + window.loginUsername + '/favorites');
 		}						
-	else if(stream == 'statusnet/groups/list.json') {
+	else if(stream == 'statusnet/groups/list.json?count=10') {
 		history.pushState({strm:stream},'','/' + window.loginUsername + '/groups');
 		}	
 	else if (stream.substring(0,27) == 'statuses/user_timeline.json') {
@@ -499,9 +518,17 @@ function setUrlFromStream(stream) {
 		history.pushState({strm:stream},'','/');
 		}
 	else if(stream.substring(0,26) == 'statusnet/groups/timeline/')	{
-		var groupName = stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
+		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
 		history.pushState({strm:stream},'','/group/' + groupName);
 		}		
+	else if(stream.substring(0,28) == 'statusnet/groups/membership/')	{
+		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
+		history.pushState({strm:stream},'','/group/' + groupName + '/members');
+		}		
+	else if(stream.substring(0,24) == 'statusnet/groups/admins/')	{
+		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
+		history.pushState({strm:stream},'','/group/' + groupName + '/admins');
+		}						
 	else if(stream.substring(0,24) == 'statusnet/tags/timeline/')	{
 		var tagName = stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
 		history.pushState({strm:stream},'','/tag/' + tagName);
@@ -580,10 +607,10 @@ function getStreamFromUrl() {
 		var userToStream = loc.replace('/','').replace('/subscribers','');
 		if(userToStream.length>0) {
 			if(window.loginUsername == userToStream) {
-				streamToSet = 'statuses/followers.json';					
+				streamToSet = 'statuses/followers.json?count=20';					
 				}
 			else {
-				streamToSet = 'statuses/followers.json?screen_name=' + userToStream;				
+				streamToSet = 'statuses/followers.json?count=20&screen_name=' + userToStream;				
 				}
 			}
 		}	
@@ -593,10 +620,10 @@ function getStreamFromUrl() {
 		var userToStream = loc.replace('/','').replace('/subscriptions','');
 		if(userToStream.length>0) {
 			if(window.loginUsername == userToStream) {
-				streamToSet = 'statuses/friends.json';					
+				streamToSet = 'statuses/friends.json?count=20';					
 				}
 			else {
-				streamToSet = 'statuses/friends.json?screen_name=' + userToStream;				
+				streamToSet = 'statuses/friends.json?count=20&screen_name=' + userToStream;				
 				}
 			}
 		}	
@@ -606,10 +633,10 @@ function getStreamFromUrl() {
 		var userToStream = loc.replace('/','').replace('/groups','');
 		if(userToStream.length>0) {
 			if(window.loginUsername == userToStream) {
-				streamToSet = 'statusnet/groups/list.json';					
+				streamToSet = 'statusnet/groups/list.json?count=10';					
 				}
 			else {
-				streamToSet = 'statusnet/groups/list.json?screen_name=' + userToStream;				
+				streamToSet = 'statusnet/groups/list.json?count=10&screen_name=' + userToStream;				
 				}
 			}
 		}										
@@ -622,11 +649,26 @@ function getStreamFromUrl() {
 			}
 		}		
 
-	// {domain}/group/{group}
-	else if (loc.indexOf('/group/')>-1) { // we assume we don't get any /group/{id}/id-urls, because we shouldn't
-		var groupToStream = loc.replace('/group/','');
-		if(groupToStream.length>0) {
-			streamToSet = 'statusnet/groups/timeline/' + groupToStream + '.json';
+	// {domain}/group/{group}/members, {domain}/group/{group}/admins or {domain}/group/{group}
+	else if (loc.indexOf('/group/')>-1) { 
+		
+		if(loc.indexOf('/members')>-1) {
+			var groupToStream = loc.replace('/group/','').replace('/members','');
+			if(groupToStream.length>0) {
+				streamToSet = 'statusnet/groups/membership/' + groupToStream + '.json?count=20';
+				}						
+			}
+		else if(loc.indexOf('/admins')>-1) {
+			var groupToStream = loc.replace('/group/','').replace('/admins','');
+			if(groupToStream.length>0) {
+				streamToSet = 'statusnet/groups/admins/' + groupToStream + '.json?count=20';
+				}			
+			}
+		else {
+			var groupToStream = loc.replace('/group/','');
+			if(groupToStream.length>0) {
+				streamToSet = 'statusnet/groups/timeline/' + groupToStream + '.json';
+				}			
 			}
 		}	
 						
@@ -1097,44 +1139,69 @@ function addToFeed(feed, after, extraClasses) {
 		var extraClassesThisRun = extraClasses;			
 
 		// if this is a user feed
-		if(window.currentStream.substring(0,21) == 'statuses/friends.json' || window.currentStream.substring(0,18) == 'statuses/followers') {
-			obj.description = obj.description || '';
-
-			// show user actions
-			var followingClass = '';
-			if(obj.following) {
-				followingClass = 'following';
-				}			
-			var followButton = '';
-			if(typeof window.loginUsername != 'undefined'  	// if logged in
-			   && window.myUserID != obj.id) {	// not if this is me	
-				if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users	
-					var followButton = '<div class="user-actions"><button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
+		if(window.currentStream.substring(0,21) == 'statuses/friends.json'
+		|| window.currentStream.substring(0,18) == 'statuses/followers'
+		|| window.currentStream.substring(0,28) == 'statusnet/groups/membership/'
+		|| window.currentStream.substring(0,24) == 'statusnet/groups/admins/') {					
+			
+			
+			// only if not user is already in stream
+			if($('#stream-item-' + obj.id).length == 0) {			
+				
+				obj.description = obj.description || '';
+				
+				// show user actions
+				var followingClass = '';
+				if(obj.following) {
+					followingClass = 'following';
+					}			
+				var followButton = '';
+				if(typeof window.loginUsername != 'undefined'  	// if logged in
+				   && window.myUserID != obj.id) {	// not if this is me	
+					if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users	
+						var followButton = '<div class="user-actions"><button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
+						}
+					}
+	
+				var userHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet">' + followButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.statusnet_profile_url + '"><img class="avatar" src="' + obj.profile_image_url + '" /><strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> <span class="screen-name">@' + obj.screen_name + '</span></a></div><div class="queet-text">' + obj.description + '</div></div></div></div>';
+				
+				if(after) {
+					$('#' + after).after(userHtml);							
+					}
+				else {
+					$('#feed-body').prepend(userHtml);										
 					}
 				}
-
-			var userHtml = '<div class="stream-item user"><div class="queet">' + followButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.statusnet_profile_url + '"><img class="avatar" src="' + obj.profile_image_url + '" /><strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> <span class="screen-name">@' + obj.screen_name + '</span></a></div><div class="queet-text">' + obj.description + '</div></div></div></div>';
-			$('#feed-body').prepend(userHtml);						
 			}
 			
-		// if this is a group feed
+		// if this is a list of groups
 		else if(window.currentStream.substring(0,26) == 'statusnet/groups/list.json') {
 
-			obj.description = obj.description || '';
-			obj.stream_logo = obj.stream_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-stream.png';
-
-			// show group actions if logged in
-			var memberClass = '';
-			if(obj.member) {
-				memberClass = 'member';
-				}			
-			var memberButton = '';
-			if(typeof window.loginUsername != 'undefined') {			
-				var memberButton = '<div class="user-actions"><button data-group-id="' + obj.id + '" type="button" class="member-button ' + memberClass + '"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinGroup + '</span><span class="button-text ismember-text">' + window.sL.isMemberOfGroup + '</span><span class="button-text leave-text">' + window.sL.leaveGroup + '</span></button></div>';	
-				}			
-
-			var groupHtml = '<div class="stream-item user"><div class="queet">' + memberButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.url + '"><img class="avatar" src="' + obj.stream_logo + '" /><strong class="name" data-group-id="' + obj.id + '">' + obj.fullname + '</strong> <span class="screen-name">!' + obj.nickname + '</span></a></div><div class="queet-text">' + obj.description + '</div></div></div></div>';
-			$('#feed-body').prepend(groupHtml);						
+			// only if not group is already in stream
+			if($('#stream-item-' + obj.id).length == 0) {			
+	
+				obj.description = obj.description || '';
+				obj.stream_logo = obj.stream_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-stream.png';
+	
+				// show group actions if logged in
+				var memberClass = '';
+				if(obj.member) {
+					memberClass = 'member';
+					}			
+				var memberButton = '';
+				if(typeof window.loginUsername != 'undefined') {			
+					var memberButton = '<div class="user-actions"><button data-group-id="' + obj.id + '" type="button" class="member-button ' + memberClass + '"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinGroup + '</span><span class="button-text ismember-text">' + window.sL.isMemberOfGroup + '</span><span class="button-text leave-text">' + window.sL.leaveGroup + '</span></button></div>';	
+					}			
+	
+				var groupHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet">' + memberButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.url + '"><img class="avatar" src="' + obj.stream_logo + '" /><strong class="name" data-group-id="' + obj.id + '">' + obj.fullname + '</strong> <span class="screen-name">!' + obj.nickname + '</span></a></div><div class="queet-text">' + obj.description + '</div></div></div></div>';
+	
+				if(after) {
+					$('#' + after).after(groupHtml);							
+					}
+				else {
+					$('#feed-body').prepend(groupHtml);										
+					}					
+				}
 			}			
 
 		// if this is a retweet

@@ -351,43 +351,41 @@ $('body').on('click','.stream-selection',function(event){
    · 
    · · · · · · · · · · · · · */ 
 
-// my queets, etc
 $('#user-header, #user-queets, #user-following, #user-followers, #user-groups').on('click',function(){
 	if($(this).attr('id') == 'user-header' || $(this).attr('id') == 'user-queets') {
 		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loginUsername,function(){},true);	
 		}
 	else if($(this).attr('id') == 'user-following') {
-		setNewCurrentStream('statuses/friends.json',function(){},true);	
+		setNewCurrentStream('statuses/friends.json?count=20',function(){},true);	
 		}
 	else if($(this).attr('id') == 'user-followers') {
-		setNewCurrentStream('statuses/followers.json',function(){},true);			
+		setNewCurrentStream('statuses/followers.json?count=20',function(){},true);			
 		}	
 	else if($(this).attr('id') == 'user-groups') {
-		setNewCurrentStream('statusnet/groups/list.json',function(){},true);			
+		setNewCurrentStream('statusnet/groups/list.json?count=10',function(){},true);			
 		}				
 	});
 
 
 /* · 
    · 
-   ·   Select a stream when clicking on queets, followers etc in a profile card
+   ·   Select a stream when clicking on queets, followers etc in a profile card or feed header
    · 
    · · · · · · · · · · · · · */ 
 	
-// any users streams
-$('body').on('click','.profile-banner-footer .tweet-stats, .profile-banner-footer .following-stats, .groups-stats, .profile-banner-footer .follower-stats, .queet-stream',function(){
+$('body').on('click','.profile-banner-footer .stats li a, .queet-stream',function(){
 	var screenName = $('.profile-card-inner .screen-name').html().substring(1);	
 	if($(this).hasClass('tweet-stats')) {
 		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + screenName,function(){},true);	
 		}
 	else if($(this).hasClass('following-stats')) {
-		setNewCurrentStream('statuses/friends.json?screen_name=' + screenName,function(){},true);	
+		setNewCurrentStream('statuses/friends.json?count=20&screen_name=' + screenName,function(){},true);	
 		}
 	else if($(this).hasClass('follower-stats')) {
-		setNewCurrentStream('statuses/followers.json?screen_name=' + screenName,function(){},true);			
+		setNewCurrentStream('statuses/followers.json?count=20&screen_name=' + screenName,function(){},true);			
 		}
 	else if($(this).hasClass('groups-stats')) {
-		setNewCurrentStream('statusnet/groups/list.json?screen_name=' + screenName,function(){},true);			
+		setNewCurrentStream('statusnet/groups/list.json?count=10&screen_name=' + screenName,function(){},true);			
 		}
 	else if($(this).hasClass('queets')) {
 		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + screenName,function(){},true);			
@@ -397,7 +395,13 @@ $('body').on('click','.profile-banner-footer .tweet-stats, .profile-banner-foote
 		}
 	else if($(this).hasClass('favorites')) {
 		setNewCurrentStream('favorites.json?screen_name=' + screenName,function(){},true);			
-		}				
+		}
+	else if($(this).hasClass('member-stats')) {
+		setNewCurrentStream('statusnet/groups/membership/' + screenName + '.json?count=20',function(){},true);			
+		}
+	else if($(this).hasClass('admin-stats')) {
+		setNewCurrentStream('statusnet/groups/admins/' + screenName + '.json?count=20',function(){},true);			
+		}								
 								
 	});	
 	
@@ -604,52 +608,59 @@ $('#history-container').on("sortupdate", function() {
 $(window).scroll(function() {
 	if($(window).scrollTop() + $(window).height() > $(document).height() - 1000) {
 		
-		// only of logged in and not user stream		
-		if($('#user-container').css('display') == 'block' && $('.stream-item.user').length==0) {
-			// not if we're already loading
-			if(!$('body').hasClass('loading-older')) {
-				$('body').addClass('loading-older');
-				
-				// remove loading class in 10 seconds, i.e. try again if failed to load within 10 s			
-				if(window.currentStream.substring(0,6) != 'search') {				
-					setTimeout(function(){$('body').removeClass('loading-older');},10000); 
-					}
-	
-				var lastStreamItemId = $('#feed-body').children('.stream-item').last().attr('id');			
-				
-				// if this is search, we need page and rpp vars, we store page number in an attribute
-				if(window.currentStream.substring(0,6) == 'search') {
-					if(typeof $('#feed-body').attr('data-search-page-number') != 'undefined') {
-						var searchPage = parseInt($('#feed-body').attr('data-search-page-number'),10);
-						}
-					else {
-						var searchPage=2;
-						}
-					var nextPage = searchPage+1;
-					var getVars = '&rpp=20&page=' + searchPage;					
-					}
-				// normal streams
-				else {
-					var getVars = qOrAmp(window.currentStream) + 'max_id=' + $('#feed-body').children('.stream-item').last().attr('data-quitter-id-in-stream');				
-					}
-				
-				display_spinner();		
-				getFromAPI(window.currentStream + getVars,function(data){
-					if(data) {
-						addToFeed(data, lastStreamItemId,'visible');			
-						$('body').removeClass('loading-older');
-					
-						// if this is search, we remeber page number
-						if(window.currentStream.substring(0,6) == 'search') {
-							$('#feed-body').attr('data-search-page-number',nextPage);
-							}
-					
-						remove_spinner();	
-						}
-					});
+		// not if we're already loading
+		if(!$('body').hasClass('loading-older')) {
+			$('body').addClass('loading-older');
+			
+			// remove loading class in 10 seconds, i.e. try again if failed to load within 10 s			
+			if(window.currentStream.substring(0,6) != 'search') {				
+				setTimeout(function(){$('body').removeClass('loading-older');},10000); 
 				}
-    	   	}
-		}
+
+			var lastStreamItemId = $('#feed-body').children('.stream-item').last().attr('id');			
+			
+			// if this is search or users lists, we need page and rpp vars, we store page number in an attribute
+			if(window.currentStream.substring(0,6) == 'search'
+			|| window.currentStream.substring(0,23) == 'statuses/followers.json'
+			|| window.currentStream.substring(0,21) == 'statuses/friends.json'				
+			|| window.currentStream.substring(0,26) == 'statusnet/groups/list.json'
+			|| window.currentStream.substring(0,28) == 'statusnet/groups/membership/'
+			|| window.currentStream.substring(0,24) == 'statusnet/groups/admins/') {
+				if(typeof $('#feed-body').attr('data-search-page-number') != 'undefined') {
+					var searchPage = parseInt($('#feed-body').attr('data-search-page-number'),10);
+					}
+				else {
+					var searchPage=2;
+					}
+				var nextPage = searchPage+1;
+				var getVars = qOrAmp(window.currentStream) + 'rpp=20&page=' + searchPage; // search uses 'rrp' var and others 'count' for paging, though we can add rrp to others aswell without any problem					
+				}
+			// normal streams
+			else {
+				var getVars = qOrAmp(window.currentStream) + 'max_id=' + $('#feed-body').children('.stream-item').last().attr('data-quitter-id-in-stream');				
+				}
+			
+			display_spinner();		
+			getFromAPI(window.currentStream + getVars,function(data){
+				if(data) {
+					addToFeed(data, lastStreamItemId,'visible');			
+					$('body').removeClass('loading-older');
+				
+					// if this is search our group users lists, we remember page number
+					if(window.currentStream.substring(0,6) == 'search'
+					|| window.currentStream.substring(0,23) == 'statuses/followers.json'
+					|| window.currentStream.substring(0,21) == 'statuses/friends.json'		
+					|| window.currentStream.substring(0,26) == 'statusnet/groups/list.json'								
+					|| window.currentStream.substring(0,28) == 'statusnet/groups/membership/'
+					|| window.currentStream.substring(0,24) == 'statusnet/groups/admins/') {
+						$('#feed-body').attr('data-search-page-number',nextPage);
+						}
+				
+					remove_spinner();	
+					}
+				});
+			}
+   	   	}
 	});
 
 

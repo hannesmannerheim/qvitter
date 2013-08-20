@@ -52,7 +52,7 @@ $forcessl = false;
 
 // USE history.pushState TO REWRITE URLS IN THE LOCATION BAR (use with mod_rewrite)
 // Try this rule in .htaccess:
-// RewriteRule ^(search/)?(notice\?q=|group/|tag/)?([a-z0-9%]+)?(/all|/subscriptions|/subscribers|/groups|/replies|/favorites)?$ /theme/quitter-theme2/qvitter/index.php [L]    
+// RewriteRule ^(search/)?(notice\?q=|group/|tag/)?([a-z0-9%]+)?(/all|/subscriptions|/subscribers|/groups|/replies|/favorites|/members|/admins)?$ /theme/quitter-theme2/qvitter/index.php [L]    
 $usehistorypushstate = false;
 
 // FULL PATH TO THIS QVITTER APP
