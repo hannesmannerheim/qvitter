@@ -9,7 +9,7 @@
  
  * lib/apiaction.php          
  
-    - add urls to larger avatars
+    - add urls to larger avatars and groupcount field
      
         ~LINE 213        
                         $avatar = $profile->getAvatar(AVATAR_STREAM_SIZE);
@@ -21,9 +21,8 @@
                         $avatar = $profile->getOriginalAvatar();
                         $twitter_user['profile_image_url_original'] = ($avatar) ? $avatar->displayUrl() :
                             Avatar::defaultImage(AVATAR_PROFILE_SIZE); 
-                        $groups = $profile->getGroups();
-                        $groups_count = 0; while($groups->fetch()) $groups_count++;
-                        $twitter_user['groups_count'] = $groups_count;   
+
+                        $twitter_user['groups_count'] = $profile->getGroups(0, null)->N;        
 
 
     - add the uri-field

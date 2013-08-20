@@ -220,9 +220,7 @@ class ApiAction extends Action
 		$twitter_user['profile_image_url_original'] = ($avatar) ? $avatar->displayUrl() :
 		    Avatar::defaultImage(AVATAR_PROFILE_SIZE); 
 
-		$groups = $profile->getGroups();
-		$groups_count = 0; while($groups->fetch()) $groups_count++;
-        $twitter_user['groups_count'] = $groups_count;        
+        $twitter_user['groups_count'] = $profile->getGroups(0, null)->N;        
 
         $twitter_user['url'] = ($profile->homepage) ? $profile->homepage : null;
         $twitter_user['protected'] = (!empty($user) && $user->private_stream) ? true : false;
