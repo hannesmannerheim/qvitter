@@ -1165,7 +1165,7 @@ $('#queet-toolbar button').click(function () {
 
 /* · 
    · 
-   ·   Count chars in queet box on keyuo
+   ·   Count chars in queet box on keyup
    ·   
    · · · · · · · · · · · · · */ 
 
@@ -1215,11 +1215,11 @@ $('#queet-box').bind('paste',function () {
 	setTimeout(function () {
 		
 		// clean all html (but keep linebreaks)
-		var $keep_br = $('<div/>').append($('#queet-box').html().replace(/<br>/gi,'{{br}}'));
+		var $keep_br = $('<div/>').append($('#queet-box').html().replace(/(<br>\s*)+$/,'').replace(/<br>/gi,'{{br}}'));
 		$('#queet-box').html($keep_br.text().replace(/{{br}}/gi,'<br>'));
 		
 		// shorten urls
-		shortenUrlsInBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));
+//		shortenUrlsInBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));
 		
 		$('#queet-box').css('color','#333333');	
 		placeCaretAtEnd(document.getElementById("queet-box"));
@@ -1229,11 +1229,13 @@ $('#queet-box').bind('paste',function () {
 $('#feed').on('paste','.queet-box-template',function(e){
 	window.current_box_id = '#' + $(this).attr('id');
 	setTimeout(function () {			
-		// clean all html
-		$(window.current_box_id).html($(window.current_box_id).text());
-		
+
+		// clean all html (but keep linebreaks)
+		var $keep_br = $('<div/>').append($(window.current_box_id).html().replace(/(<br>\s*)+$/,'').replace(/<br>/gi,'{{br}}'));
+		$(window.current_box_id).html($keep_br.text().replace(/{{br}}/gi,'<br>'));
+
 		// shorten urls
-		shortenUrlsInBox($(window.current_box_id),$(window.current_box_id).find('.queet-counter'),$(window.current_box_id).find('.queet-toolbar button'));
+//		shortenUrlsInBox($(window.current_box_id),$(window.current_box_id).find('.queet-counter'),$(window.current_box_id).find('.queet-toolbar button'));
 		
 		placeCaretAtEnd(document.getElementById($(window.current_box_id).attr('id')));
 		countCharsInQueetBox($(window.current_box_id),$(window.current_box_id).find('.queet-counter'),$(window.current_box_id).find('.queet-toolbar button'));
