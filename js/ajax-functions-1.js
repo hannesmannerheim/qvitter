@@ -169,7 +169,7 @@ function postQueetToAPI(queetText_txt, actionOnSuccess) {
    · · · · · · · · · · · · · */ 
 
 function postNewLinkColor(newLinkColor) {
-	$.ajax({ url: 'API.php', 
+	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
 		type: "POST", 
 		data: { 
 			postRequest: 'account/update_link_color.json',
@@ -196,7 +196,7 @@ function postNewLinkColor(newLinkColor) {
    · · · · · · · · · · · · · */ 
 
 function postNewBackgroundColor(newBackgroundColor) {
-	$.ajax({ url: 'API.php', 
+	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
 		type: "POST", 
 		data: { 
 			postRequest: 'account/update_background_color.json',

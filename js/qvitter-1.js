@@ -263,40 +263,38 @@ $('#settings').click(function(){
 
 function logoutWithoutReload(doShake) {
 
-	// preload default background
-	$('<img/>').attr('src', window.fullUrlToThisQvitterApp + 'img/ekan4.jpg').load(function() {
+	if(window.currentStream == 'statuses/public_timeline.json') {
 		$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + 'img/ekan4.jpg)');
-	
-		$('#submit-login').removeAttr('disabled');				
-	
-		// delete any locally stored credentials
-		if(localStorageIsEnabled()) {
-			delete localStorage.autologinUsername;
-			delete localStorage.autologinPassword;		
-			}
-	
-		$('#user-header').animate({opacity:'0'},200);
-		$('#user-body').animate({opacity:'0'},200);
-		$('#user-footer').animate({opacity:'0'},200);
-		$('.menu-container').animate({opacity:'0'},200);									
-		$('#settingslink').fadeOut('slow');	
-		$('#search').fadeOut('slow');											
-		$('input#username').focus();	
+		}
+
+	$('#submit-login').removeAttr('disabled');				
+
+	// delete any locally stored credentials
+	if(localStorageIsEnabled()) {
+		delete localStorage.autologinUsername;
+		delete localStorage.autologinPassword;		
+		}
+
+	$('#user-header').animate({opacity:'0'},200);
+	$('#user-body').animate({opacity:'0'},200);
+	$('#user-footer').animate({opacity:'0'},200);
+	$('.menu-container').animate({opacity:'0'},200);									
+	$('#settingslink').fadeOut('slow');	
+	$('#search').fadeOut('slow');											
+	$('input#username').focus();	
+	if(doShake) {
+		$('input#username').css('background-color','pink');
+		$('input#password').css('background-color','pink');		
+		}
+	$('#login-content').animate({opacity:'1'},200, function(){
 		if(doShake) {
-			$('input#username').css('background-color','pink');
-			$('input#password').css('background-color','pink');		
+			$('#login-content').effect('shake',{distance:5,times:2},function(){
+				$('input#username').animate({backgroundColor:'#fff'},1000);
+				$('input#password').animate({backgroundColor:'#fff'},1000);					
+				});
 			}
-		$('#login-content').animate({opacity:'1'},200, function(){
-			if(doShake) {
-				$('#login-content').effect('shake',{distance:5,times:2},function(){
-					$('input#username').animate({backgroundColor:'#fff'},1000);
-					$('input#password').animate({backgroundColor:'#fff'},1000);					
-					});
-				}
-			});
-		$('#page-container').animate({opacity:'1'},200);	
-		
-		});		
+		});
+	$('#page-container').animate({opacity:'1'},200);	
 	
 	}
 
