@@ -59,8 +59,7 @@ if(window.useHistoryPushState) {
    · · · · · · · · · · · · · */ 
 
 $('#submit-login').removeAttr('disabled'); // might be remebered by browser...   
-$('<img/>').attr('src', window.fullUrlToThisQvitterApp + 'img/ekan4.jpg').load(function() {
-	$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + 'img/ekan4.jpg)');
+$(window).load(function() {
 
 	$('#user-container').css('display','block');
 	$('#feed').css('display','block');		
@@ -87,7 +86,6 @@ $('<img/>').attr('src', window.fullUrlToThisQvitterApp + 'img/ekan4.jpg').load(f
 		$('#submit-login').trigger('click');		
 		}
 	else {
-
 		display_spinner();
 		window.currentStream = ''; // force reload stream
 		setNewCurrentStream(getStreamFromUrl(),function(){
@@ -118,7 +116,21 @@ $('#submit-login').click(function () {
 		// store credentials in global var
 		window.loginUsername = user.screen_name;
 		window.loginPassword = $('input#password').val();
-		window.userLinkColor = user.linkcolor;
+		
+		// set colors if the api supports it
+		if(typeof user.linkcolor != 'undefined' &&
+	       typeof user.backgroundcolor != 'undefined') {
+			user.linkcolor = user.linkcolor || '';	// no null value		
+			user.backgroundcolor = user.backgroundcolor || ''; // no null value
+			window.userLinkColor = user.linkcolor;
+			window.userBackgroundColor = user.backgroundcolor;			       
+			if(window.userLinkColor.length != 6) {
+				window.userLinkColor = window.defaultLinkColor;
+				}	
+			if(window.userBackgroundColor.length != 6) {
+				window.userBackgroundColor = window.defaultBackgroundColor;
+				}		  		    
+	        }
 		
 		// add user data to DOM, show search form, remeber user id, show the feed
 		$('#user-avatar').attr('src', user.profile_image_url);
@@ -224,13 +236,20 @@ $('#logout').click(function(){
    · · · · · · · · · · · · · */ 
    
 $('#settings').click(function(){
-	popUpAction('popup-settings', window.sL.settings,'<div id="settings-container"><label for="link-color-selection">' + window.sL.linkColor + '</label><input id="link-color-selection" type="text" value="#' + window.userLinkColor + '" /></div>','<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary">' + window.sL.saveChanges + '</button></div>');
+	// buttons to add later: '<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary disabled">' + window.sL.saveChanges + '</button></div>'
+	popUpAction('popup-settings', window.sL.settings,'<div id="settings-container"><div><label for="link-color-selection">' + window.sL.linkColor + '</label><input id="link-color-selection" type="text" value="#' + window.userLinkColor + '" /></div><div><label for="link-color-selection">' + window.sL.backgroundColor + '</label><input id="background-color-selection" type="text" value="#' + window.userBackgroundColor + '" /></div></div>',false);
 	$('#link-color-selection').minicolors({
 		change: function(hex) {
 			changeLinkColor(hex);
 			postNewLinkColor(hex.substring(1));
 			}
 		});
+	$('#background-color-selection').minicolors({
+		change: function(hex) {
+			$('body').css('background-color',hex);
+			postNewBackgroundColor(hex.substring(1));
+			}
+		});		
 	});		
 
 
@@ -244,34 +263,40 @@ $('#settings').click(function(){
 
 function logoutWithoutReload(doShake) {
 
-	$('#submit-login').removeAttr('disabled');				
-
-	// delete any locally stored credentials
-	if(localStorageIsEnabled()) {
-		delete localStorage.autologinUsername;
-		delete localStorage.autologinPassword;		
-		}
-
-	$('#user-header').animate({opacity:'0'},800);
-	$('#user-body').animate({opacity:'0'},800);
-	$('#user-footer').animate({opacity:'0'},800);
-	$('.menu-container').animate({opacity:'0'},800);									
-	$('#settingslink').fadeOut('slow');	
-	$('#search').fadeOut('slow');											
-	$('input#username').focus();	
-	if(doShake) {
-		$('input#username').css('background-color','pink');
-		$('input#password').css('background-color','pink');		
-		}
-	$('#login-content').animate({opacity:'1'},800, function(){
-		if(doShake) {
-			$('#login-content').effect('shake',{distance:5,times:2},function(){
-				$('input#username').animate({backgroundColor:'#fff'},1000);
-				$('input#password').animate({backgroundColor:'#fff'},1000);					
-				});
+	// preload default background
+	$('<img/>').attr('src', window.fullUrlToThisQvitterApp + 'img/ekan4.jpg').load(function() {
+		$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + 'img/ekan4.jpg)');
+	
+		$('#submit-login').removeAttr('disabled');				
+	
+		// delete any locally stored credentials
+		if(localStorageIsEnabled()) {
+			delete localStorage.autologinUsername;
+			delete localStorage.autologinPassword;		
 			}
-		});
-	$('#page-container').animate({opacity:'1'},200);			
+	
+		$('#user-header').animate({opacity:'0'},200);
+		$('#user-body').animate({opacity:'0'},200);
+		$('#user-footer').animate({opacity:'0'},200);
+		$('.menu-container').animate({opacity:'0'},200);									
+		$('#settingslink').fadeOut('slow');	
+		$('#search').fadeOut('slow');											
+		$('input#username').focus();	
+		if(doShake) {
+			$('input#username').css('background-color','pink');
+			$('input#password').css('background-color','pink');		
+			}
+		$('#login-content').animate({opacity:'1'},200, function(){
+			if(doShake) {
+				$('#login-content').effect('shake',{distance:5,times:2},function(){
+					$('input#username').animate({backgroundColor:'#fff'},1000);
+					$('input#password').animate({backgroundColor:'#fff'},1000);					
+					});
+				}
+			});
+		$('#page-container').animate({opacity:'1'},200);	
+		
+		});		
 	
 	}
 

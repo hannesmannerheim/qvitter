@@ -10,7 +10,7 @@
  
  * lib/apiaction.php          
  
-    - add urls to larger avatars, groupcount and linkcolor field
+    - add urls to larger avatars, groupcount, linkcolor and backgroundcolor fields
      
         ~LINE 213        
                         $avatar = $profile->getAvatar(AVATAR_STREAM_SIZE);
@@ -24,7 +24,8 @@
                             Avatar::defaultImage(AVATAR_PROFILE_SIZE); 
 
                         $twitter_user['groups_count'] = $profile->getGroups(0, null)->N;        
-				        $twitter_user['linkcolor'] = $user->linkcolor;                                   
+                        $twitter_user['linkcolor'] = $user->linkcolor;  
+                        $twitter_user['backgroundcolor'] = $user->backgroundcolor;        				                                         
 
 
     - add the uri-field
@@ -90,6 +91,9 @@
                         
                         $m->connect('api/account/update_link_color.json',
                             array('action' => 'ApiAccountUpdateLinkColor'));                                          			                                            
+                            
+                        $m->connect('api/account/update_background_color.json',
+                            array('action' => 'ApiAccountUpdateBackgroundColor'));                                                     
                             
 
      - also, tags need regexp to work with unicode charachters, e.g. farsi and arabic:
@@ -182,8 +186,10 @@
  
  * classes/User.php                     
      
-     - add field "linkcolor" to user table (do this is the db too!) 
+     - add fields "linkcolor" and "background_image_url" to user table (do this is the db too!) 
      
          ~ line 64           public $linkcolor;                       // varchar(6)                                     
+                             public $background_image_url;            // varchar(255)             
          ~ line 105          'linkcolor' => array('type' => 'varchar', 'length' => 6, 'description' => 'hex link color'),
+                             'background_image_url' => array('type' => 'varchar', 'length' => 255, 'description' => 'url to profile image'),                
                                                                                                                                                

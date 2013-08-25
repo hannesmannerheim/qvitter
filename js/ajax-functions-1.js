@@ -179,10 +179,39 @@ function postNewLinkColor(newLinkColor) {
 			},
 		dataType:"json",
 		error: function(data){ console.log(data); },
-		success: function(data) { console.log(data);}
+		success: function(data) { 
+			window.userLinkColor = newLinkColor;
+			}
 		});	
 	}
 	
+	
+	
+/* · 
+   · 
+   ·   Post new background color
+   ·
+   ·   @param newBackgroundColor: the new background color in hex without #
+   ·   
+   · · · · · · · · · · · · · */ 
+
+function postNewBackgroundColor(newBackgroundColor) {
+	$.ajax({ url: 'API.php', 
+		type: "POST", 
+		data: { 
+			postRequest: 'account/update_background_color.json',
+			backgroundcolor: newBackgroundColor,
+			username: window.loginUsername,
+			password: window.loginPassword
+			},
+		dataType:"json",
+		error: function(data){ console.log(data); },
+		success: function(data) { 
+			window.userBackgroundColor = newBackgroundColor;			
+			}
+		});	
+	}
+		
 	
 
 /* · 
@@ -298,31 +327,6 @@ function postActionToAPI(action, actionOnSuccess) {
 		success: function(data) { actionOnSuccess(data);}
 		});	
 	}	
-
-
-/* · 
-   · 
-   ·   Generic POST-action
-   ·
-   ·   @param action: the api action, e.q. 'statuses/retweet/1.json'
-   ·   @param actionOnSuccess: callback function, false on error, data on success
-   ·   
-   · · · · · · · · · · · · · */ 
-   
-function postActionToAPI(action, actionOnSuccess) {
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
-		type: "POST", 
-		data: { 
-			postRequest: action,
-			source: 'Qvitter',
-			username: window.loginUsername,
-			password: window.loginPassword
-			},
-		dataType:"json",
-		error: function(data){ actionOnSuccess(false); console.log(data); },
-		success: function(data) { actionOnSuccess(data);}
-		});	
-	}		
 	
 	
 /* ·  

@@ -55,6 +55,68 @@ function localStorageIsEnabled() {
 		}
 	}
     
+
+    
+/* ·  
+   · 
+   ·   Change profile design
+   ·
+   ·   @param obj: user object that _might_ contain colors, or window object, that _might_ contain user settings 
+   · 
+   · · · · · · · · · */  
+
+function changeDesign(obj) {
+	
+	// user object that might contains other user's colors
+	if(typeof obj.linkcolor != 'undefined' &&
+       typeof obj.backgroundcolor != 'undefined') {
+		if(obj.linkcolor == null) {
+			changeLinkColor(window.defaultLinkColor);
+			}
+		else if(obj.linkcolor.length == 6) {
+			changeLinkColor('#' + obj.linkcolor);
+			}
+		else {
+			changeLinkColor(window.defaultLinkColor);
+			}	
+		if(obj.backgroundcolor == null) {
+			$('body').css('background-color',window.defaultBackgroundColor);
+			}							   
+		else if(obj.backgroundcolor.length == 6) {
+			$('body').css('background-color','#' + obj.backgroundcolor);
+			}
+		else {
+			$('body').css('background-color',window.defaultBackgroundColor);
+			}							   
+	   }
+	   
+	  // window object that might contain my colors
+	  else if(typeof obj.userLinkColor != 'undefined' &&
+              typeof obj.userBackgroundColor != 'undefined') {
+		if(obj.userLinkColor == null) {
+			changeLinkColor(window.defaultLinkColor);
+			}
+		else if(obj.userLinkColor.length == 6) {
+			changeLinkColor('#' + obj.userLinkColor);
+			}
+		else {
+			changeLinkColor(window.defaultLinkColor);
+			}	
+		if(obj.userBackgroundColor == null) {
+			$('body').css('background-color',window.defaultBackgroundColor);
+			}
+		else if(obj.userBackgroundColor.length == 6) {
+			$('body').css('background-color','#' + obj.userBackgroundColor);
+			}
+		else {
+			$('body').css('background-color',window.defaultBackgroundColor);
+			}		  	
+	  	}
+	  	
+	  	// TODO BACKGROUND IMAGE!
+	  	$('body').css('background-image','none');
+	}
+
     
 /* ·  
    · 
@@ -272,7 +334,7 @@ function placeCaretAtEnd(el) {
 function updateHistoryLocalStorage() {
 	if(localStorageIsEnabled()) {
 		var i=0;
-		var localStorageName = window.username + '-history-container';
+		var localStorageName = window.loginUsername + '-history-container';
 		var historyContainer = new Object();
 		$.each($('#history-container .stream-selection'), function(key,obj) {
 			historyContainer[i] = new Object();
@@ -301,7 +363,7 @@ function updateHistoryLocalStorage() {
    
 function loadHistoryFromLocalStorage() {
 	if(localStorageIsEnabled()) {
-		var localStorageName = window.username + '-history-container';
+		var localStorageName = window.loginUsername + '-history-container';
 		if(typeof localStorage[localStorageName] != "undefined") {
 			$('#history-container').css('display','block');
 			$('#history-container').html('');																										

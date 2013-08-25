@@ -488,6 +488,9 @@ class Router
             $m->connect('api/account/update_link_color.json',
                         array('action' => 'ApiAccountUpdateLinkColor'));                                          			            
 
+            $m->connect('api/account/update_background_color.json',
+                        array('action' => 'ApiAccountUpdateBackgroundColor'));                         
+
             // users
 
             $m->connect('api/users/show/:id.:format',

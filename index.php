@@ -46,6 +46,8 @@
 			window.fullUrlToThisQvitterApp = '<?php print $qvitterpath; ?>';
 			window.siteRootDomain = '<?php print $siterootdomain; ?>';
 			window.useHistoryPushState = <?php if($usehistorypushstate) print 'true'; else print 'false'; ?>;			
+			window.defaultLinkColor = '<?php print $defaultlinkcolor; ?>';
+			window.defaultBackgroundColor = '<?php print $defaultbackgroundcolor; ?>';
 		</script>
 		<style>
 			a, a:visited, a:active,
@@ -72,7 +74,7 @@
 				}			
 		</style>
 	</head>
-	<body>
+	<body style="background-color:<?php print $defaultbackgroundcolor; ?>">
 		<div class="topbar">
 			<a href="<?php print strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos( $_SERVER["SERVER_PROTOCOL"],'/'))).'://'.$siterootdomain; ?>"><div id="logo"></div></a>
 			<a id="settingslink">

@@ -44,6 +44,12 @@ $siterootdomain = 'quitter.se'; // no http:// or https:// and no ending slash
 // API ROOT
 $apiroot = 'http://quitter.se/api/';
 
+// DEFAULT BACKGROUND COLOR
+$defaultbackgroundcolor = '#f4f4f4';
+
+// DEFAULT LINK COLOR
+$defaultlinkcolor = '#0084B4';
+
 // TIME BETWEEN POLLING
 $timebetweenpolling = 5000; // ms
 

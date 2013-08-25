@@ -221,7 +221,8 @@ class ApiAction extends Action
 		    Avatar::defaultImage(AVATAR_PROFILE_SIZE); 
 
         $twitter_user['groups_count'] = $profile->getGroups(0, null)->N;    
-        $twitter_user['linkcolor'] = $user->linkcolor;           
+        $twitter_user['linkcolor'] = $user->linkcolor;
+        $twitter_user['backgroundcolor'] = $user->backgroundcolor;        
 
         $twitter_user['url'] = ($profile->homepage) ? $profile->homepage : null;
         $twitter_user['protected'] = (!empty($user) && $user->private_stream) ? true : false;

@@ -125,7 +125,7 @@ window.l.es.adminCount				= 'Administradores';
 window.l.es.settings				= 'Configuración';
 window.l.es.saveChanges				= 'Guardar cambios';
 window.l.es.linkColor				= 'Color del enlace';
-
+window.l.es.backgroundColor			= 'Color de fondo';
 
 // french
 window.l.fr = new Object();
@@ -214,7 +214,8 @@ window.l.fr.memberCount				= 'Membres';
 window.l.fr.adminCount				= 'Administrateurs';
 window.l.fr.settings				= 'Paramètres';
 window.l.fr.saveChanges				= 'Sauvegarder les modifications';
-window.l.fr.linkColor				= ' Couleur des liens';
+window.l.fr.linkColor				= 'Couleur des liens';
+window.l.fr.backgroundColor			= 'Couleur de l\'arrière-plan';
 
 
 // deutsch
@@ -305,6 +306,7 @@ window.l.de.adminCount				= 'Administratoren';
 window.l.de.settings				= 'Einstellungen';
 window.l.de.saveChanges				= 'Änderungen speichern';
 window.l.de.linkColor				= 'Linkfarbe';
+window.l.de.backgroundColor			= 'Hintergrundfarbe';
 
 
 
@@ -396,6 +398,7 @@ window.l.en.adminCount				= 'Admins';
 window.l.en.settings				= 'Settings';
 window.l.en.saveChanges				= 'Save changes';
 window.l.en.linkColor				= 'Link color';
+window.l.en.backgroundColor			= 'Background color';
 
 
 // svenska
@@ -486,6 +489,7 @@ window.l.sv.adminCount				= 'Administratörer';
 window.l.sv.settings				= 'Inställningar';
 window.l.sv.saveChanges				= 'Spara ändringarna';
 window.l.sv.linkColor				= 'Länkfärg';
+window.l.sv.backgroundColor			= 'Bakgrundsfärg';
 
 
 
@@ -577,7 +581,7 @@ window.l.fa.adminCount				= 'مدیران';
 window.l.fa.settings				= 'تنظیمات';
 window.l.fa.saveChanges				= 'ذخیره تغییرات';
 window.l.fa.linkColor				= 'رنگ پیوند';
-
+window.l.fa.backgroundColor			= 'رنگ پس‌زمینه';
 
 
 // arabic
@@ -668,6 +672,7 @@ window.l.ar.adminCount				= 'الإداريين';
 window.l.ar.settings				= 'الإعدادات';
 window.l.ar.saveChanges				= 'حفظ التغييرات';
 window.l.ar.linkColor				= 'لون الرابط';
+window.l.ar.backgroundColor			= 'لون الخلفيّة';
 
 
 

@@ -63,6 +63,7 @@ class User extends Managed_DataObject
     public $inboxed;                         // tinyint(1)
     public $linkcolor;                       // varchar(6)
     public $background_image_url;            // varchar(255)    
+    public $backgroundcolor;                 // varchar(6)    
     public $private_stream;                  // tinyint(1)   default_0
     public $created;                         // datetime()   not_null
     public $modified;                        // timestamp()   not_null default_CURRENT_TIMESTAMP
@@ -104,6 +105,7 @@ class User extends Managed_DataObject
                 'inboxed' => array('type' => 'int', 'size' => 'tiny', 'default' => 0, 'description' => 'has an inbox been created for this user?'),
                 'linkcolor' => array('type' => 'varchar', 'length' => 6, 'description' => 'hex link color'),
                 'background_image_url' => array('type' => 'varchar', 'length' => 255, 'description' => 'url to profile image'),                
+                'backgroundcolor' => array('type' => 'varchar', 'length' => 6, 'description' => 'hex background color'),
                 'private_stream' => array('type' => 'int', 'size' => 'tiny', 'default' => 0, 'description' => 'whether to limit all notices to followers only'),
 
                 'created' => array('type' => 'datetime', 'not null' => true, 'description' => 'date this record was created'),
