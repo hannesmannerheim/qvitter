@@ -413,12 +413,14 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 						if(window.currentStream == stream) {	
 							
 							// change link color
-							if(window.userLinkColor.length == 6) {
-								changeLinkColor('#' + window.userLinkColor);
-								}				
-							else {
-								changeLinkColor('#0084B4');
-								}							
+							if(typeof window.userLinkColor != 'undefined') {
+								if(window.userLinkColor.length == 6) {
+									changeLinkColor('#' + window.userLinkColor);
+									}				
+								else {
+									changeLinkColor('#0084B4');
+									}							
+								}
 							
 							// get screen name from stream, if not found, this is me
 							if(stream.indexOf('screen_name=')>-1) {
@@ -452,13 +454,15 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 				if(window.currentStream == stream) {
 
 					// change link color
-					if(window.userLinkColor.length == 6) {
-						changeLinkColor('#' + window.userLinkColor);
-						}				
-					else {
-						changeLinkColor('#0084B4');
+					if(typeof window.userLinkColor != 'undefined') {
+						if(window.userLinkColor.length == 6) {
+							changeLinkColor('#' + window.userLinkColor);
+							}				
+						else {
+							changeLinkColor('#0084B4');
+							}
 						}
-	
+						
 					// show profile card if this is a user's queet stream
 					if(stream.substring(0,27) == 'statuses/user_timeline.json')	{
 						var thisUsersScreenName = stream.replace('statuses/user_timeline.json','').replace('?screen_name=','').replace('?id=','').replace('?user_id=','');
