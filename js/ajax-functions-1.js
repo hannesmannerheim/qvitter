@@ -53,14 +53,27 @@ function checkLogin(username,password,actionOnSuccess) {
 			password: password
 			},	 	
 	 	dataType: 'json', 
+	 	error: function() {
+	 		logoutWithoutReload(true);
+	 		},
  		success: function(data) { 
+ 						
 			if(typeof data.error == 'undefined') {
 				actionOnSuccess(data);
 				}
 			else {
-				alert(data.error);
-				remove_spinner();
-				$('#submit-login').removeAttr('disabled');				
+				// if no stream is set, get the one from the url
+				if(typeof window.currentStream == 'undefined' || window.currentStream == '') {
+					setNewCurrentStream(getStreamFromUrl(),function(){
+						logoutWithoutReload(true);
+						remove_spinner();			
+						},true);					
+					}
+				// if we have a strem, just just do logout and shake...
+				else {
+					logoutWithoutReload(true);									
+					remove_spinner();					
+					}
 				}
 			}
 		});				
@@ -146,6 +159,31 @@ function postQueetToAPI(queetText_txt, actionOnSuccess) {
 		});	
 	}			
 
+
+/* · 
+   · 
+   ·   Post new link color
+   ·
+   ·   @param newLinkColor: the new link color in hex without #
+   ·   
+   · · · · · · · · · · · · · */ 
+
+function postNewLinkColor(newLinkColor) {
+	$.ajax({ url: 'API.php', 
+		type: "POST", 
+		data: { 
+			postRequest: 'account/update_link_color.json',
+			linkcolor: newLinkColor,
+			username: window.loginUsername,
+			password: window.loginPassword
+			},
+		dataType:"json",
+		error: function(data){ console.log(data); },
+		success: function(data) { console.log(data);}
+		});	
+	}
+	
+	
 
 /* · 
    · 

@@ -177,6 +177,14 @@ function profileCardFromFirstObject(data,screen_name) {
 		if(typeof window.loginUsername != 'undefined' && window.myUserID != first.user.id) {			
 			var followButton = '<div class="user-actions"><button data-follow-user-id="' + first.user.id + '" data-follow-user="' + first.user.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
 			}		
+			
+		// change link color if set
+		if(first.user.linkcolor.length == 6) {
+			changeLinkColor('#' + first.user.linkcolor);
+			}
+		else {
+			changeLinkColor('#0084B4');
+			}			
 		
 		$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + first.user.profile_image_url_original + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + first.user.profile_image_url_original + '"><img src="' + first.user.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + first.user.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + first.user.screen_name + '</span><span class="follow-status"></span></h2><div class="bio-container"><p>' + first.user.description + '</p></div><p class="location-and-url"><span class="location">' + first.user.location + '</span><span class="divider"> · </span><span class="url"><a href="' + first.user.url + '">' + first.user.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats"><strong>' + first.user.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a class="following-stats"><strong>' + first.user.friends_count + '</strong>' + window.sL.following + '</a></li><li><a class="follower-stats"><strong>' + first.user.followers_count + '</strong>' + window.sL.followers + '</a></li><li><a class="groups-stats"><strong>' + first.user.groups_count + '</strong>' + window.sL.groups + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
 		}
@@ -206,6 +214,14 @@ function profileCardFromFirstObject(data,screen_name) {
 			var followButton = '';
 			if(typeof window.loginUsername != 'undefined' && window.myUserID != data.id) {			
 				var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
+				}
+				
+			// change link color
+			if(data.linkcolor.length == 6) {
+				changeLinkColor('#' + data.linkcolor);
+				}				
+			else {
+				changeLinkColor('#0084B4');
 				}
 			
 			$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.profile_image_url_original + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + data.profile_image_url_original + '"><img src="' + data.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + data.screen_name + '</span><span class="follow-status"></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"><span class="location">' + data.location + '</span><span class="divider"> · </span><span class="url"><a href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats"><strong>' + data.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a class="following-stats"><strong>' + data.friends_count + '</strong>' + window.sL.following + '</a></li><li><a class="follower-stats"><strong>' + data.followers_count + '</strong>' + window.sL.followers + '</a></li><li><a class="groups-stats"><strong>' + data.groups_count + '</strong>' + window.sL.groups + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
@@ -396,6 +412,14 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 						// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
 						if(window.currentStream == stream) {	
 							
+							// change link color
+							if(window.userLinkColor.length == 6) {
+								changeLinkColor('#' + window.userLinkColor);
+								}				
+							else {
+								changeLinkColor('#0084B4');
+								}							
+							
 							// get screen name from stream, if not found, this is me
 							if(stream.indexOf('screen_name=')>-1) {
 								var thisUsersScreenName = stream.substring(stream.indexOf('screen_name=')+12);
@@ -426,6 +450,14 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 			if(queet_data) {
 				// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
 				if(window.currentStream == stream) {
+
+					// change link color
+					if(window.userLinkColor.length == 6) {
+						changeLinkColor('#' + window.userLinkColor);
+						}				
+					else {
+						changeLinkColor('#0084B4');
+						}
 	
 					// show profile card if this is a user's queet stream
 					if(stream.substring(0,27) == 'statuses/user_timeline.json')	{

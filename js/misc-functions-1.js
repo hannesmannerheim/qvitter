@@ -56,6 +56,21 @@ function localStorageIsEnabled() {
 	}
     
     
+/* ·  
+   · 
+   ·   Change link color
+   ·
+   ·   @param newLinkColor: hex value with #
+   · 
+   · · · · · · · · · */  
+
+function changeLinkColor(newLinkColor) {
+	var linkstyle = $('style').html();
+	$('style').html(linkstyle.substring(0,linkstyle.indexOf('color:')+6) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*COLOREND*/')));
+	var linkstyle = $('style').html();
+	$('style').html(linkstyle.substring(0,linkstyle.indexOf('background-color:')+17) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BACKGROUNDCOLOREND*/')));		
+	}
+    
 
 /* ·  
    · 

@@ -39,6 +39,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">		
 		<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/1.css" />
+		<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
 		<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>favicon.ico">
 		<script>
 			window.timeBetweenPolling = <?php print $timebetweenpolling; ?>;
@@ -46,11 +47,35 @@
 			window.siteRootDomain = '<?php print $siterootdomain; ?>';
 			window.useHistoryPushState = <?php if($usehistorypushstate) print 'true'; else print 'false'; ?>;			
 		</script>
+		<style>
+			a, a:visited, a:active,
+			ul.stats li:hover a,
+			ul.stats li:hover a strong,
+			#user-body a:hover div strong,
+			#user-body a:hover div div,
+			.permalink-link:hover,
+			.stream-item.expanded > .queet .stream-item-expand,
+			.stream-item-footer .with-icn .requeet-text a b:hover,
+			ul.queet-actions li .with-icn,
+			.queet-text span.attachment.more,
+			.stream-item-header .created-at a:hover,
+			.stream-item-header a.account-group:hover .name,
+			.queet:hover .stream-item-expand,
+			.show-full-conversation:hover,
+			#new-queets-bar,
+			.menu-container div,	
+			#user-header:hover #user-name {
+			    color:#0084B4;/*COLOREND*/
+				}	
+			ul.queet-actions li .icon {
+				background-color:#0084B4;/*BACKGROUNDCOLOREND*/
+				}			
+		</style>
 	</head>
 	<body>
 		<div class="topbar">
-			<a id="logolink">
-				<div id="logo"></div>
+			<a href="<?php print strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos( $_SERVER["SERVER_PROTOCOL"],'/'))).'://'.$siterootdomain; ?>"><div id="logo"></div></a>
+			<a id="settingslink">
 				<div class="dropdown-toggle">
 					<i class="nav-session"></i>
 					<b class="caret"></b>
@@ -61,6 +86,8 @@
 					<span class="caret-outer"></span>
 					<span class="caret-inner"></span>
 				</li>
+				<li><a id="settings"></a></li>
+				<li class="dropdown-divider"></li>				
 				<li><a id="logout"></a></li>
 			</ul>			
 			<img id="birds-top" src="<?php print $qvitterpath; ?>img/birds.png" />
@@ -167,6 +194,7 @@
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery-2.0.2.min.js"></script>
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery-ui-1.10.3.min.js"></script>
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery.easing.1.3.js"></script>	    
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery.minicolors.min.js"></script>	    	    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions-1.js"></script>		    	
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions-1.js"></script>		    		    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions-1.js"></script>		    		    	    

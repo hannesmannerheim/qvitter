@@ -122,6 +122,9 @@ window.l.es.isMemberOfGroup			= 'Abandonar grupo';
 window.l.es.leaveGroup				= 'Abandonar grupo';
 window.l.es.memberCount				= 'Miembros';
 window.l.es.adminCount				= 'Administradores';
+window.l.es.settings				= 'Configuración';
+window.l.es.saveChanges				= 'Guardar cambios';
+window.l.es.linkColor				= 'Color del enlace';
 
 
 // french
@@ -209,6 +212,9 @@ window.l.fr.isMemberOfGroup			= 'Quitter le groupe';
 window.l.fr.leaveGroup				= 'Quitter le groupe';
 window.l.fr.memberCount				= 'Membres';
 window.l.fr.adminCount				= 'Administrateurs';
+window.l.fr.settings				= 'Paramètres';
+window.l.fr.saveChanges				= 'Sauvegarder les modifications';
+window.l.fr.linkColor				= ' Couleur des liens';
 
 
 // deutsch
@@ -296,6 +302,9 @@ window.l.de.isMemberOfGroup			= 'Gruppe verlassen';
 window.l.de.leaveGroup				= 'Gruppe verlassen';
 window.l.de.memberCount				= 'Mitglieder';
 window.l.de.adminCount				= 'Administratoren';
+window.l.de.settings				= 'Einstellungen';
+window.l.de.saveChanges				= 'Änderungen speichern';
+window.l.de.linkColor				= 'Linkfarbe';
 
 
 
@@ -384,7 +393,9 @@ window.l.en.isMemberOfGroup			= 'Member';
 window.l.en.leaveGroup				= 'Leave';
 window.l.en.memberCount				= 'Members';
 window.l.en.adminCount				= 'Admins';
-
+window.l.en.settings				= 'Settings';
+window.l.en.saveChanges				= 'Save changes';
+window.l.en.linkColor				= 'Link color';
 
 
 // svenska
@@ -472,6 +483,9 @@ window.l.sv.isMemberOfGroup			= 'Medlem';
 window.l.sv.leaveGroup				= 'Gå ur';
 window.l.sv.memberCount				= 'Medlemmar';
 window.l.sv.adminCount				= 'Administratörer';
+window.l.sv.settings				= 'Inställningar';
+window.l.sv.saveChanges				= 'Spara ändringarna';
+window.l.sv.linkColor				= 'Länkfärg';
 
 
 
@@ -560,6 +574,9 @@ window.l.fa.isMemberOfGroup			= 'عضو گروه';
 window.l.fa.leaveGroup				= 'ترک گروه';
 window.l.fa.memberCount				= 'اعضا';
 window.l.fa.adminCount				= 'مدیران';
+window.l.fa.settings				= 'تنظیمات';
+window.l.fa.saveChanges				= 'ذخیره تغییرات';
+window.l.fa.linkColor				= 'رنگ پیوند';
 
 
 
@@ -648,6 +665,9 @@ window.l.ar.isMemberOfGroup			= 'مغادرة المجموعة';
 window.l.ar.leaveGroup				= 'مغادرة المجموعة';
 window.l.ar.memberCount				= 'الأعضاء';
 window.l.ar.adminCount				= 'الإداريين';
+window.l.ar.settings				= 'الإعدادات';
+window.l.ar.saveChanges				= 'حفظ التغييرات';
+window.l.ar.linkColor				= 'لون الرابط';
 
 
 
@@ -692,6 +712,7 @@ $('#queet-box').html(window.sL.compose);
 $('#queet').html(window.sL.queetVerb);
 $('#feed-header-inner h2').html(window.sL.queetsNounPlural);
 $('#logout').html(window.sL.logout);
+$('#settings').html(window.sL.settings);
 $('.language-dropdown .dropdown-toggle small').html(window.sL.languageSelected);
 $('.language-dropdown .current-language').html(window.sL.languageName);
 $('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').prepend(window.sL.queetsNounPlural);

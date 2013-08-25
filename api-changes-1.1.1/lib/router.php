@@ -483,7 +483,10 @@ class Router
             $m->connect('api/statusnet/groups/admins/:id.:format',
                         array('action' => 'ApiGroupAdmins',
                               'id' => Nickname::INPUT_FMT,
-                              'format' => '(xml|json)'));			            			            
+                              'format' => '(xml|json)'));			
+                              
+            $m->connect('api/account/update_link_color.json',
+                        array('action' => 'ApiAccountUpdateLinkColor'));                                          			            
 
             // users
 

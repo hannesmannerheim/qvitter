@@ -6,10 +6,11 @@
  * actions/apicheckhub.php                   New api action  (not used yet)
  * actions/apiexternalprofileshow.php        New api action  
  * actions/apigroupadmins.php                New api action   
+ * actions/apiaccountupdatelinkcolor.php	 New api action   
  
  * lib/apiaction.php          
  
-    - add urls to larger avatars and groupcount field
+    - add urls to larger avatars, groupcount and linkcolor field
      
         ~LINE 213        
                         $avatar = $profile->getAvatar(AVATAR_STREAM_SIZE);
@@ -23,6 +24,7 @@
                             Avatar::defaultImage(AVATAR_PROFILE_SIZE); 
 
                         $twitter_user['groups_count'] = $profile->getGroups(0, null)->N;        
+				        $twitter_user['linkcolor'] = $user->linkcolor;                                   
 
 
     - add the uri-field
@@ -85,6 +87,9 @@
                             array('action' => 'ApiGroupAdmins',
                                 'id' => Nickname::INPUT_FMT,
                                 'format' => '(xml|json)'));                                                                                                                                                                             
+                        
+                        $m->connect('api/account/update_link_color.json',
+                            array('action' => 'ApiAccountUpdateLinkColor'));                                          			                                            
                             
 
      - also, tags need regexp to work with unicode charachters, e.g. farsi and arabic:
@@ -172,4 +177,13 @@
                             // } else {
                             //     $final = common_shorten_links($content);            
                             // }                                         
+                                                                                                                                               
+
+ 
+ * classes/User.php                     
+     
+     - add field "linkcolor" to user table (do this is the db too!) 
+     
+         ~ line 64           public $linkcolor;                       // varchar(6)                                     
+         ~ line 105          'linkcolor' => array('type' => 'varchar', 'length' => 6, 'description' => 'hex link color'),
                                                                                                                                                

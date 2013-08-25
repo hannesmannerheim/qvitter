@@ -32,6 +32,8 @@
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
+  
+  
 
 /* · 
    · 
@@ -85,17 +87,17 @@ $('<img/>').attr('src', window.fullUrlToThisQvitterApp + 'img/ekan4.jpg').load(f
 		$('#submit-login').trigger('click');		
 		}
 	else {
-		
-		// set stream		
+
 		display_spinner();
+		window.currentStream = ''; // force reload stream
 		setNewCurrentStream(getStreamFromUrl(),function(){
-			$('input#username').focus();	
-			$('#login-content').animate({opacity:'1'},800);
-			$('#page-container').animate({opacity:'1'},200);			
+			logoutWithoutReload(false);
 			remove_spinner();			
 			},true);
 		}	
 	});	
+
+
 
 /* · 
    · 
@@ -111,11 +113,12 @@ $('#submit-login').click(function () {
 	// login with ajax
 	checkLogin($('input#username').val(),$('input#password').val(),function(user){
 
+		console.log(user);
+		
 		// store credentials in global var
 		window.loginUsername = user.screen_name;
 		window.loginPassword = $('input#password').val();
-		
-		console.log(user);
+		window.userLinkColor = user.linkcolor;
 		
 		// add user data to DOM, show search form, remeber user id, show the feed
 		$('#user-avatar').attr('src', user.profile_image_url);
@@ -125,10 +128,9 @@ $('#submit-login').click(function () {
 		$('#user-queets strong').html(user.statuses_count);
 		$('#user-following strong').html(user.friends_count);			
 		$('#user-followers strong').html(user.followers_count);		
-		$('#user-groups strong').html(user.groups_count);				
-		$('#search').fadeIn('slow');
+		$('#user-groups strong').html(user.groups_count);
 		window.myUserID = user.id;				
-
+		
 		// if remeber me is checked, save credentials in local storage
 		if($('#rememberme').is(':checked')) {
 			if(localStorageIsEnabled()) {
@@ -155,7 +157,9 @@ $('#submit-login').click(function () {
 			$('#user-body').animate({opacity:'1'},800);
 			$('#user-footer').animate({opacity:'1'},800);
 			$('.menu-container').animate({opacity:'1'},800);									
-			$('#page-container').animate({opacity:'1'},200);						
+			$('#page-container').animate({opacity:'1'},200);
+			$('#settingslink').fadeIn('slow');	
+			$('#search').fadeIn('slow');											
 			$('#login-content').css('display','none');
 			remove_spinner();			
 			},true);
@@ -179,7 +183,7 @@ $('#rememberme_label').click(function(){
 		$('#rememberme').prop('checked', true);
 		}
 	});
-	
+$('#rememberme_label').disableSelection();	
 
 
 /* · 
@@ -210,6 +214,68 @@ $('#logout').click(function(){
 	location.reload();		
 	});		
 
+
+
+
+/* · 
+   · 
+   ·   Settings
+   · 
+   · · · · · · · · · · · · · */ 
+   
+$('#settings').click(function(){
+	popUpAction('popup-settings', window.sL.settings,'<div id="settings-container"><label for="link-color-selection">' + window.sL.linkColor + '</label><input id="link-color-selection" type="text" value="#' + window.userLinkColor + '" /></div>','<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary">' + window.sL.saveChanges + '</button></div>');
+	$('#link-color-selection').minicolors({
+		change: function(hex) {
+			changeLinkColor(hex);
+			postNewLinkColor(hex.substring(1));
+			}
+		});
+	});		
+
+
+
+
+/* · 
+   · 
+   ·   Do a logout without reloading, i.e. on login errors 
+   · 
+   · · · · · · · · · · · · · */ 
+
+function logoutWithoutReload(doShake) {
+
+	$('#submit-login').removeAttr('disabled');				
+
+	// delete any locally stored credentials
+	if(localStorageIsEnabled()) {
+		delete localStorage.autologinUsername;
+		delete localStorage.autologinPassword;		
+		}
+
+	$('#user-header').animate({opacity:'0'},800);
+	$('#user-body').animate({opacity:'0'},800);
+	$('#user-footer').animate({opacity:'0'},800);
+	$('.menu-container').animate({opacity:'0'},800);									
+	$('#settingslink').fadeOut('slow');	
+	$('#search').fadeOut('slow');											
+	$('input#username').focus();	
+	if(doShake) {
+		$('input#username').css('background-color','pink');
+		$('input#password').css('background-color','pink');		
+		}
+	$('#login-content').animate({opacity:'1'},800, function(){
+		if(doShake) {
+			$('#login-content').effect('shake',{distance:5,times:2},function(){
+				$('input#username').animate({backgroundColor:'#fff'},1000);
+				$('input#password').animate({backgroundColor:'#fff'},1000);					
+				});
+			}
+		});
+	$('#page-container').animate({opacity:'1'},200);			
+	
+	}
+
+
 /* · 
    · 
    ·   Handling the language dropdown selection
@@ -219,7 +285,7 @@ $('#logout').click(function(){
 $('.dropdown').click(function(){$(this).toggleClass('dropped')});
 $('.dropdown').disableSelection();
 $(document).bind('click', function (e) {
-	if(!$(e.target).is('#logo') && !$(e.target).is('#logolink') && !$(e.target).is('.nav-session') && !$(e.target).is('.dropdown-toggle') && !$(e.target).is('.dropdown-toggle small') && !$(e.target).is('.dropdown-toggle span') && !$(e.target).is('.dropdown-toggle b')) {
+	if(!$(e.target).is('#logo') && !$(e.target).is('#settingslink') && !$(e.target).is('.nav-session') && !$(e.target).is('.dropdown-toggle') && !$(e.target).is('.dropdown-toggle small') && !$(e.target).is('.dropdown-toggle span') && !$(e.target).is('.dropdown-toggle b')) {
 		$('.dropdown').removeClass('dropped');
 		$('.quitter-settings.dropdown-menu').removeClass('dropped');
 		}
@@ -238,7 +304,7 @@ $('.language-link').click(function(){
    · 
    · · · · · · · · · · · · · */ 
    
-$('#logolink').click(function(){
+$('#settingslink').click(function(){
 	if(!$('.quitter-settings').hasClass('dropped')) { $('.quitter-settings').addClass('dropped'); }
 	else { $('.quitter-settings').removeClass('dropped'); }
 	});
