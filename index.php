@@ -91,6 +91,14 @@
 				<li><a id="settings"></a></li>
 				<li class="dropdown-divider"></li>				
 				<li><a id="logout"></a></li>
+				<li class="language dropdown-divider"></li>				
+				<li class="language"><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>	
+				<li class="language"><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
+				<li class="language"><a class="language-link" title="English" data-lang-code="en">English</a></li>
+				<li class="language"><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>									
+				<li class="language"><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
+				<li class="language"><a class="language-link" title="French" data-lang-code="fr">français</a></li>									
+				<li class="language"><a class="language-link" title="Swedish" data-lang-code="sv">svenska</a></li>					
 			</ul>			
 			<img id="birds-top" src="<?php print $qvitterpath; ?>img/birds.png" />
 			<div class="global-nav">
@@ -132,7 +140,11 @@
 			</div>
 		</div>
 		<div id="page-container">
-			<div id="user-container" style="display:none;">
+			<div class="front-welcome-text">
+				<h1></h1>
+				<p></p>
+			</div>		
+			<div id="user-container" style="display:none;">		
 				<div id="login-content">
 					<div id="username-container">
 						<input id="username" type="text" value="" tabindex="1" />
@@ -150,6 +162,13 @@
 					<div id="remember-forgot">
 						<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3"> <span id="rememberme_label"></span> · <a href="http://quitter.se/main/recoverpassword"></a>
 					</div>
+				</div>
+				<div class="front-signup">
+					<h2></h2>
+					<div class="signup-input-container"><input placeholder="" type="text" name="user[name]" autocomplete="off" class="text-input" id="signup-user-name"></div>
+					<div class="signup-input-container"><input placeholder="" type="text" name="user[email]" autocomplete="off" id="signup-user-email"></div>
+					<div class="signup-input-container"><input placeholder="" type="password" name="user[user_password]" class="text-input" id="signup-user-password"></div>
+					<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
 				</div>
 				<div id="user-header">
 					<img id="user-avatar" src="" />
@@ -200,7 +219,7 @@
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions-1.js"></script>		    	
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions-1.js"></script>		    		    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions-1.js"></script>		    		    	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter-1.js"></script>		
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan-1.js"></script>	
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter-1.js"></script>		
 	</body>
 </html>
