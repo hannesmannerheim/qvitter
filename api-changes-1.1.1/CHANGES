@@ -6,7 +6,11 @@
  * actions/apicheckhub.php                   New api action  (not used yet)
  * actions/apiexternalprofileshow.php        New api action  
  * actions/apigroupadmins.php                New api action   
- * actions/apiaccountupdatelinkcolor.php	 New api action   
+ * actions/apiaccountupdatelinkcolor.php	 New api action  
+ * actions/apiaccountupdatelinkcolor.php	 New api action  
+ * actions/apichecknickname.php	             New api action    
+ * actions/apiaccountregister.php            New api action     
+ 
  
  * lib/apiaction.php          
  
@@ -93,7 +97,14 @@
                             array('action' => 'ApiAccountUpdateLinkColor'));                                          			                                            
                             
                         $m->connect('api/account/update_background_color.json',
-                            array('action' => 'ApiAccountUpdateBackgroundColor'));                                                     
+                            array('action' => 'ApiAccountUpdateBackgroundColor'));  
+
+                        $m->connect('api/account/register.json',
+                            array('action' => 'ApiAccountRegister')); 
+                        
+                        $m->connect('api/check_nickname.json',
+                            array('action' => 'ApiCheckNickname'));                                                                                  
+                            
                             
 
      - also, tags need regexp to work with unicode charachters, e.g. farsi and arabic:

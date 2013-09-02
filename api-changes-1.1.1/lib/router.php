@@ -489,7 +489,15 @@ class Router
                         array('action' => 'ApiAccountUpdateLinkColor'));                                          			            
 
             $m->connect('api/account/update_background_color.json',
-                        array('action' => 'ApiAccountUpdateBackgroundColor'));                         
+                        array('action' => 'ApiAccountUpdateBackgroundColor')); 
+                        
+            $m->connect('api/account/register.json',
+                        array('action' => 'ApiAccountRegister')); 
+                        
+            $m->connect('api/check_nickname.json',
+                        array('action' => 'ApiCheckNickname'));                                                 
+                        
+                                                
 
             // users
 

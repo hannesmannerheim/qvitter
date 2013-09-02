@@ -54,6 +54,53 @@ function localStorageIsEnabled() {
 		return false;
 		}
 	}
+	
+	
+/* ·  
+   · 
+   ·   Checks if register form is valid
+   · 
+   ·   @returns true or false
+   ·
+   · · · · · · · · · */  
+
+function validateRegisterForm(o) {
+	
+	var nickname 	= o.find('#signup-user-nickname-step2');
+	var fullname 	= o.find('#signup-user-name-step2');	
+	var email 		= o.find('#signup-user-email-step2');		
+	var homepage 	= o.find('#signup-user-homepage-step2');
+	var bio 		= o.find('#signup-user-bio-step2');
+	var loc		 	= o.find('#signup-user-location-step2');
+	var password1 	= o.find('#signup-user-password1-step2');
+	var password2 	= o.find('#signup-user-password2-step2');
+	var passwords 	= o.find('#signup-user-password1-step2,#signup-user-password2-step2');		
+	
+	var allFieldsValid = true;
+	
+	if(nickname.val().length>1 && /^[a-zA-Z0-9]+$/.test(nickname.val())) {
+		nickname.removeClass('invalid'); } else { nickname.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }
+		
+	if(fullname.val().length < 255) {
+		fullname.removeClass('invalid'); } else { fullname.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+
+	if(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email.val())) {
+		email.removeClass('invalid'); } else { email.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+
+	if($.trim(homepage.val()).length==0 || /^(ftp|http|https):\/\/[^ "]+$/.test(homepage.val())) {
+		homepage.removeClass('invalid'); } else { homepage.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+
+	if(bio.val().length < 140) {
+		bio.removeClass('invalid'); } else { bio.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+
+	if(loc.val().length < 255) {
+		loc.removeClass('invalid'); } else { loc.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+
+	if(password1.val().length>5 && password2.val().length>5 && password1.val() == password2.val()) {
+		passwords.removeClass('invalid'); } else { passwords.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+		
+	return allFieldsValid;
+	}	
     
 
     

@@ -52,9 +52,178 @@ if(window.useHistoryPushState) {
 		}
 	}
 	
+	
 /* · 
    · 
-   ·   Preload the default background image and show login box after
+   ·   fix login and register box to top when they reach top 
+   · 
+   · · · · · · · · · · · · · */ 
+	
+window.loginContentStartPos = $('.front-welcome-text').height()+45;
+$(window).scroll(function(e){ 
+	if ($(this).scrollTop() > window.loginContentStartPos && $('#login-content').css('position') != 'fixed'){ 
+		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'fixed', 'top': '50px'}); 
+		}
+	else if ($(this).scrollTop() < window.loginContentStartPos && $('#login-content').css('position') != 'absolute'){ 
+		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'absolute', 'top': 'auto'}); 
+		}		
+ 	});	
+	
+
+
+/* · 
+   · 
+   ·   Tooltip to show what federated means
+   · 
+   · · · · · · · · · · · · · */ 
+	
+$('#federated-tooltip').on('mouseenter',function(){
+	$('#what-is-federation').fadeIn(100);
+	});
+$('#what-is-federation').on('mouseleave',function(){
+	$('#what-is-federation').fadeOut(100);
+	});	
+
+
+
+/* · 
+   · 
+   ·   Register
+   · 
+   · · · · · · · · · · · · · */ 
+
+$('.front-signup input, .front-signup button').removeAttr('disabled'); // clear this onload
+$('#signup-btn-step1').click(function(){
+		
+	display_spinner();
+	$('.front-signup input, .front-signup button').addClass('disabled');
+	$('.front-signup input, .front-signup button').attr('disabled','disabled');
+	// 7 s timeout to annoy human spammers
+	setTimeout(function(){
+		remove_spinner();
+		popUpAction('popup-register',window.sL.signUp,'<div id="popup-signup" class="front-signup">' + 
+													      '<div class="signup-input-container"><div id="atsign">@</div><input placeholder="Nickname" type="text" autocomplete="off" class="text-input" id="signup-user-nickname-step2"><div class="fieldhelp">a-z0-9</div></div>' +
+													      '<div class="signup-input-container"><input placeholder="' + window.sL.signUpFullName + '" type="text" autocomplete="off" class="text-input" id="signup-user-name-step2" value="' + $('#signup-user-name').val() + '"></div>' +
+													      '<div class="signup-input-container"><input placeholder="' + window.sL.signUpEmail + '" type="text" autocomplete="off" id="signup-user-email-step2" value="' + $('#signup-user-email').val() + '"></div>' + 
+													      '<div class="signup-input-container"><input placeholder="Homepage" type="text" autocomplete="off" class="text-input" id="signup-user-homepage-step2"></div>' +
+													      '<div class="signup-input-container"><input placeholder="Bio" type="text"  autocomplete="off" class="text-input" id="signup-user-bio-step2"></div>' +
+													      '<div class="signup-input-container"><input placeholder="Location" type="text" autocomplete="off" class="text-input" id="signup-user-location-step2"></div>' +													      													      
+													      '<div class="signup-input-container"><input placeholder="' + window.sL.loginPassword + '" type="password" class="text-input" id="signup-user-password1-step2" value="' + $('#signup-user-password').val() + '"><div class="fieldhelp">>5</div></div>' + 
+													      '<div class="signup-input-container"><input placeholder="Repeat password" type="password" class="text-input" id="signup-user-password2-step2"></div>' + 													      
+													      '<button id="signup-btn-step2" class="signup-btn disabled" type="submit">' + window.sL.signUpButtonText + '</button>' +
+													   '</div>',false);		
+		
+		// ask api if nickname is ok, if no typing for 1 s
+		$('#signup-user-nickname-step2').on('keyup',function(){
+			clearTimeout(window.checkNicknameTimeout);
+			if($('#signup-user-nickname-step2').val().length>1 && /^[a-zA-Z0-9]+$/.test($('#signup-user-nickname-step2').val())) {
+				$('#signup-user-nickname-step2').addClass('nickname-taken');
+				if($('.spinner-wrap').length==0) {
+					$('#signup-user-nickname-step2').after('<div class="spinner-wrap"><div class="spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>');
+					}				
+				window.checkNicknameTimeout = setTimeout(function(){					
+					getFromAPI('check_nickname.json?nickname=' + encodeURIComponent($('#signup-user-nickname-step2').val()),function(data){
+						$('.spinner-wrap').remove();
+						console.log($('.spinner-wrap').length);
+						if(data==0) {
+							$('#signup-user-password2-step2').trigger('keyup'); // revalidates	
+							}
+						else {
+							$('#signup-user-nickname-step2').removeClass('nickname-taken');			
+							$('#signup-user-password2-step2').trigger('keyup');
+							}
+						});
+					},1000);
+				}
+			else {
+				$('.spinner-wrap').remove();				
+				}
+			});
+
+		
+		// validate on keyup
+		$('#popup-register input').on('keyup',function(){
+			if(validateRegisterForm($('#popup-register'))) {
+				if(!$('#signup-user-nickname-step2').hasClass('nickname-taken')) {
+					$('#signup-btn-step2').removeClass('disabled');
+					}
+				else {
+					$('#signup-btn-step2').addClass('disabled');
+					}
+				}
+			else {
+				$('#signup-btn-step2').addClass('disabled');				
+				}
+			});				
+		$('#popup-register input').trigger('keyup');
+		
+		// submit on enter
+		$('input#signup-user-name-step2,input#signup-user-email-step2,input#signup-user-password1-step2, input#signup-user-password2-step2').keyup(function(e){ 
+			if(e.keyCode==13) { 
+				$('#signup-btn-step2').trigger('click');
+				}
+			});	
+			
+		$('#signup-btn-step2').click(function(){
+			$('#popup-register input,#popup-register button').addClass('disabled');
+			display_spinner();
+			$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+				type: "POST", 
+				data: { 
+					postRequest: 	'account/register.json',
+					nickname: 		$('#signup-user-nickname-step2').val(),
+					email: 			$('#signup-user-email-step2').val(),
+					fullname: 		$('#signup-user-name-step2').val(),
+					homepage: 		$('#signup-user-homepage-step2').val(),
+					bio: 			$('#signup-user-bio-step2').val(),
+					location: 		$('#signup-user-location-step2').val(),																									
+					password: 		$('#signup-user-password1-step2').val(),																									
+					confirm: 		$('#signup-user-password2-step2').val(),				
+					username: 		'none',
+					},
+				dataType:"json",
+				error: function(data){ console.log('error'); console.log(data); },
+				success: function(data) {
+					remove_spinner();					 
+					if(typeof data.error == 'undefined') {
+						 $('input#username').val($('#signup-user-nickname-step2').val());
+						 $('input#password').val($('#signup-user-password1-step2').val());
+						 $('input#rememberme').prop('checked', true);
+						 $('#submit-login').trigger('click');
+						 $('#popup-register').remove();
+					 	 }
+					 else {
+					 	alert('Try again! ' + data.error);
+						$('#popup-register input,#popup-register button').removeClass('disabled');
+					 	}
+					 
+					 
+					 }
+				});
+
+			});
+			
+		// reactivate register form on popup close
+		$('#popup-register').on('remove',function(){
+			$('.front-signup input, .front-signup button').removeAttr('disabled');
+			$('.front-signup input, .front-signup button').removeClass('disabled');
+			});		
+		},7000);
+	});
+// submit on enter
+$('input#signup-user-name,input#signup-user-email,input#signup-user-password').keyup(function(e){ 
+	if(e.keyCode==13) { 
+		$('#signup-btn-step1').trigger('click');
+		}
+	});
+	
+	
+	
+	
+	
+/* · 
+   · 
+   ·   autologin or show welcome screen
    · 
    · · · · · · · · · · · · · */ 
 
@@ -165,14 +334,18 @@ $('#submit-login').click(function () {
 		// set stream
 		window.currentStream = ''; // always reload stream on login
 		setNewCurrentStream(streamToSet,function(){		
+			$('.language-dropdown').css('display','none');
+			$('.dropdown-menu.quitter-settings li.language').css('display','block');	
 			$('#user-header').animate({opacity:'1'},800);
 			$('#user-body').animate({opacity:'1'},800);
 			$('#user-footer').animate({opacity:'1'},800);
 			$('.menu-container').animate({opacity:'1'},800);									
 			$('#page-container').animate({opacity:'1'},200);
+			$('.front-welcome-text').slideUp(1000);			
 			$('#settingslink').fadeIn('slow');	
 			$('#search').fadeIn('slow');											
 			$('#login-content').css('display','none');
+			$('.front-signup').css('display','none');
 			remove_spinner();			
 			},true);
 
@@ -279,9 +452,12 @@ function logoutWithoutReload(doShake) {
 	$('#user-body').animate({opacity:'0'},200);
 	$('#user-footer').animate({opacity:'0'},200);
 	$('.menu-container').animate({opacity:'0'},200);									
+	$('.language-dropdown').css('display','block');
+	$('.dropdown-menu.quitter-settings li.language').css('display','none');	
 	$('#settingslink').fadeOut('slow');	
 	$('#search').fadeOut('slow');											
 	$('input#username').focus();	
+	$('.front-signup').animate({opacity:'1'},200);
 	if(doShake) {
 		$('input#username').css('background-color','pink');
 		$('input#password').css('background-color','pink');		
@@ -293,6 +469,7 @@ function logoutWithoutReload(doShake) {
 				$('input#password').animate({backgroundColor:'#fff'},1000);					
 				});
 			}
+		$('.front-welcome-text').fadeIn(3000);						
 		});
 	$('#page-container').animate({opacity:'1'},200);	
 	
@@ -652,7 +829,7 @@ $('body').on('click','a', function(e) {
 							}
 						i++;
 						});
-					var profileCard = '<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.original_logo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture"><img src="' + data.homepage_logo + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.fullname + '<span></span></h1><h2 class="username"><span class="screen-name"><a target="_blank" href="' + groupRoot + '/group/' + data.nickname + '">!' + data.nickname + '@' + groupServer + '</a></span></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"></span><span class="url"><a href="' + data.homepage + '">' + data.homepage.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a target="_blank" href="' + groupRoot + '/group/' + data.nickname + '/members" class="member-stats">' + avatars + '</li></ul>' + memberButton + '<div class="clearfix"></div></div></div>';		
+					var profileCard = '<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.original_logo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture"><img src="' + data.homepage_logo + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.fullname + '<span></span></h1><h2 class="username"><span class="screen-name"><a target="_blank" href="' + groupRoot + '/group/' + data.nickname + '">!' + data.nickname + '@' + groupServer + '</a></span></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"></span><span class="url"><a href="' + data.homepage + '">' + data.homepage.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a target="_blank" href="' + groupRoot + '/group/' + data.nickname + '/members" class="member-stats">' + avatars + '</a></li></ul>' + memberButton + '<div class="clearfix"></div></div></div>';		
 					popUpAction('popup-external-group-profile', '!' + data.nickname + '@' + groupServer,profileCard,false);				
 					remove_spinner();																	
 					}});				
@@ -857,8 +1034,7 @@ $('#feed-body').on('click','.queet',function (event) {
 		&& !$(event.target).is('span.group')		
 		&& !$(event.target).is('.longdate')			
 		&& !$(event.target).is('.screen-name')
-		&& !$(this).parent('.stream-item').hasClass('user') // not if user stream
-		&& typeof window.loginUsername != 'undefined') {    // not if not logged in
+		&& !$(this).parent('.stream-item').hasClass('user')) { // not if user stream
 		expand_queet($(this).parent());
 		}	
 	});
