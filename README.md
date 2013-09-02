@@ -2,7 +2,7 @@ Qvitter
 ==========================================
 
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
-* Last mod.: August, 2013
+* Last mod.: September, 2013
 * Version:   1
 * GitHub:    <https://github.com/hannesmannerheim/qvitter>
 
