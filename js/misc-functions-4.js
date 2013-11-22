@@ -179,7 +179,7 @@ function changeLinkColor(newLinkColor) {
 	var linkstyle = $('style').html();
 	$('style').html(linkstyle.substring(0,linkstyle.indexOf('background-color:')+17) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BACKGROUNDCOLOREND*/')));		
 	}
-    
+
 
 /* ·  
    · 
@@ -381,11 +381,11 @@ function placeCaretAtEnd(el) {
 function updateHistoryLocalStorage() {
 	if(localStorageIsEnabled()) {
 		var i=0;
-		var localStorageName = window.loginUsername + '-history-container';
+		var localStorageName = window.loginUsername + '-history-container-v2';
 		var historyContainer = new Object();
 		$.each($('#history-container .stream-selection'), function(key,obj) {
 			historyContainer[i] = new Object();
-			historyContainer[i].dataStreamName = $(obj).attr('data-stream-name');
+			historyContainer[i].dataStreamHref = $(obj).attr('href');
 			historyContainer[i].dataStreamHeader = $(obj).attr('data-stream-header');			
 			i++;
 			});
@@ -410,13 +410,13 @@ function updateHistoryLocalStorage() {
    
 function loadHistoryFromLocalStorage() {
 	if(localStorageIsEnabled()) {
-		var localStorageName = window.loginUsername + '-history-container';
+		var localStorageName = window.loginUsername + '-history-container-v2';
 		if(typeof localStorage[localStorageName] != "undefined") {
 			$('#history-container').css('display','block');
 			$('#history-container').html('');																										
 			var historyContainer = $.parseJSON(localStorage[localStorageName]);
 			$.each(historyContainer, function(key,obj) {
-				$('#history-container').append('<div class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" data-stream-name="' + obj.dataStreamName + '">' + obj.dataStreamHeader + '<i class="close-right"></i><i class="chev-right"></i></div>');
+				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '<i class="close-right"></i><i class="chev-right"></i></a>');
 				});
 			}
 		updateHistoryLocalStorage();
@@ -445,44 +445,40 @@ function qOrAmp(stream) {
    · 
    ·   Count chars in queet box
    ·
-   ·   @param src: the queetbox
+   ·   @param src: the queetbox's value
    ·   @param trgt: the counter
    ·   @param btn: the button 
    ·   
    · · · · · · · · · · · · · */ 
 
 function countCharsInQueetBox(src,trgt,btn) {
-	var $src_txt = $('<div/>').append($.trim(src.html()).replace(/&nbsp;/gi,'').replace(/<br>/i,'').replace(/<br>/gi,"x"));
-	var numchars = ($.trim($src_txt.text())).length;
+	var numchars = $.trim(src).length;
 	trgt.html(140 - numchars);
 
 	// activate/deactivare button
-	if(src.html().replace(/\s/g, '').replace(/&nbsp;/gi,'').replace(/<br>/gi,'') != unescape(src.attr('data-start-html')).replace(/\s/g, '').replace(/&nbsp;/gi,'').replace(/<br>/gi,'')) {
-		if(src.text().replace(/\s/g, '').replace(/&nbsp;/gi,'').replace(/<br>/gi,'').length==0) {
-			btn.removeClass('enabled');
-			btn.addClass('disabled');	
-			}
-		else if((140-numchars) < 0) {
-			btn.removeClass('enabled');
-			btn.addClass('disabled');			
-			}
-		else {
-			btn.removeClass('disabled');
-			btn.addClass('enabled');
+	if(numchars > 0 && numchars < 141) {
+		btn.removeClass('disabled');
+		btn.addClass('enabled');
+
+		// deactivate button if it's equal to the start text
+		var startText = btn.closest('.inline-reply-queetbox').children('.queet-box-template').attr('data-start-text');
+		if(typeof startText != 'undefined') {
+			if($.trim(startText) == $.trim(src)) {
+				btn.removeClass('enabled');
+				btn.addClass('disabled');			
+				}
 			}
 		}
 	else {
 		btn.removeClass('enabled');
 		btn.addClass('disabled');
 		}	
+	
 		
 	// counter color		
 	if((140-numchars) < 0) {
 		trgt.css('color','#D40D12');
 		}
-	else if(src.html().length == 0 || src.html() == '<br>'  || src.html() == '<br />') {
-		trgt.removeAttr('style');	
-		}	
 	else {
 		trgt.removeAttr('style');			
 		}

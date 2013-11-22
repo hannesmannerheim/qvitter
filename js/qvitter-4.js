@@ -94,7 +94,7 @@ $('#what-is-federation').on('mouseleave',function(){
 
 $('.front-signup input, .front-signup button').removeAttr('disabled'); // clear this onload
 $('#signup-btn-step1').click(function(){
-		
+	
 	display_spinner();
 	$('.front-signup input, .front-signup button').addClass('disabled');
 	$('.front-signup input, .front-signup button').attr('disabled','disabled');
@@ -102,14 +102,14 @@ $('#signup-btn-step1').click(function(){
 	setTimeout(function(){
 		remove_spinner();
 		popUpAction('popup-register',window.sL.signUp,'<div id="popup-signup" class="front-signup">' + 
-													      '<div class="signup-input-container"><div id="atsign">@</div><input placeholder="Nickname" type="text" autocomplete="off" class="text-input" id="signup-user-nickname-step2"><div class="fieldhelp">a-z0-9</div></div>' +
+													      '<div class="signup-input-container"><div id="atsign">@</div><input placeholder="' + window.sL.registerNickname + '" type="text" autocomplete="off" class="text-input" id="signup-user-nickname-step2"><div class="fieldhelp">a-z0-9</div></div>' +
 													      '<div class="signup-input-container"><input placeholder="' + window.sL.signUpFullName + '" type="text" autocomplete="off" class="text-input" id="signup-user-name-step2" value="' + $('#signup-user-name').val() + '"></div>' +
 													      '<div class="signup-input-container"><input placeholder="' + window.sL.signUpEmail + '" type="text" autocomplete="off" id="signup-user-email-step2" value="' + $('#signup-user-email').val() + '"></div>' + 
-													      '<div class="signup-input-container"><input placeholder="Homepage" type="text" autocomplete="off" class="text-input" id="signup-user-homepage-step2"></div>' +
-													      '<div class="signup-input-container"><input placeholder="Bio" type="text"  autocomplete="off" class="text-input" id="signup-user-bio-step2"></div>' +
-													      '<div class="signup-input-container"><input placeholder="Location" type="text" autocomplete="off" class="text-input" id="signup-user-location-step2"></div>' +													      													      
+													      '<div class="signup-input-container"><input placeholder="' + window.sL.registerHomepage + '" type="text" autocomplete="off" class="text-input" id="signup-user-homepage-step2"></div>' +
+													      '<div class="signup-input-container"><input placeholder="' + window.sL.registerBio + '" type="text"  autocomplete="off" class="text-input" id="signup-user-bio-step2"></div>' +
+													      '<div class="signup-input-container"><input placeholder="' + window.sL.registerLocation + '" type="text" autocomplete="off" class="text-input" id="signup-user-location-step2"></div>' +													      													      
 													      '<div class="signup-input-container"><input placeholder="' + window.sL.loginPassword + '" type="password" class="text-input" id="signup-user-password1-step2" value="' + $('#signup-user-password').val() + '"><div class="fieldhelp">>5</div></div>' + 
-													      '<div class="signup-input-container"><input placeholder="Repeat password" type="password" class="text-input" id="signup-user-password2-step2"></div>' + 													      
+													      '<div class="signup-input-container"><input placeholder="' + window.sL.registerRepeatPassword + '" type="password" class="text-input" id="signup-user-password2-step2"></div>' + 													      
 													      '<button id="signup-btn-step2" class="signup-btn disabled" type="submit">' + window.sL.signUpButtonText + '</button>' +
 													   '</div>',false);		
 		
@@ -178,7 +178,9 @@ $('#signup-btn-step1').click(function(){
 					bio: 			$('#signup-user-bio-step2').val(),
 					location: 		$('#signup-user-location-step2').val(),																									
 					password: 		$('#signup-user-password1-step2').val(),																									
-					confirm: 		$('#signup-user-password2-step2').val(),				
+					confirm: 		$('#signup-user-password2-step2').val(),
+					cBS: 			window.cBS,
+					cBSm: 			window.cBSm,										
 					username: 		'none',
 					},
 				dataType:"json",
@@ -252,7 +254,16 @@ $(window).load(function() {
 	if(userInLocalStorage) {
 		$('input#username').val(localStorage.autologinUsername);
 		$('input#password').val(localStorage.autologinPassword);
-		$('#submit-login').trigger('click');		
+
+		// if this is a special url for user, notice etc, grab that stream
+		var streamToSet = getStreamFromUrl();
+	
+		// if we're in client mode, i.e. not webapp mode, always go to friends timeline if logged in
+		if(window.useHistoryPushState === false) {
+			streamToSet = 'statuses/friends_timeline.json';
+			}
+
+		doLogin(streamToSet);		
 		}
 	else {
 		display_spinner();
@@ -273,6 +284,19 @@ $(window).load(function() {
    · · · · · · · · · · · · · */ 
 
 $('#submit-login').click(function () {		
+
+	// if this is a special url for user, notice etc, grab that stream
+	var streamToSet = getStreamFromUrl();
+	
+	// if this is the public feed, we redirect to friends_timline (I think that's intuitive)
+	if(streamToSet == 'statuses/public_timeline.json') {
+		streamToSet = 'statuses/friends_timeline.json';
+		}
+
+	doLogin(streamToSet);
+	});
+
+function doLogin(streamToSet) {
 	$('#submit-login').attr('disabled','disabled');
 	$('#submit-login').focus(); // prevents submit on enter to close alert-popup on wrong credentials
 	display_spinner();
@@ -302,6 +326,8 @@ $('#submit-login').click(function () {
 	        }
 		
 		// add user data to DOM, show search form, remeber user id, show the feed
+		$('#user-container').css('z-index','1000');
+		$('#top-compose').removeClass('hidden');
 		$('#user-avatar').attr('src', user.profile_image_url);
 		$('#user-name').append(user.name);
 		$('#user-screen-name').append(user.screen_name);
@@ -310,6 +336,10 @@ $('#submit-login').click(function () {
 		$('#user-following strong').html(user.friends_count);			
 		$('#user-followers strong').html(user.followers_count);		
 		$('#user-groups strong').html(user.groups_count);
+		$('.stream-selection.friends-timeline').attr('href', user.statusnet_profile_url + '/all');
+		$('.stream-selection.mentions').attr('href', user.statusnet_profile_url + '/replies');
+		$('.stream-selection.my-timeline').attr('href', user.statusnet_profile_url);				
+		$('.stream-selection.favorites').attr('href', user.statusnet_profile_url + '/favorites');								
 		window.myUserID = user.id;				
 		
 		// if remeber me is checked, save credentials in local storage
@@ -322,14 +352,6 @@ $('#submit-login').click(function () {
 			
 		// load history
 		loadHistoryFromLocalStorage();			
-
-		// if this is a special url for user, notice etc, grab that stream
-		var streamToSet = getStreamFromUrl();
-		
-		// if this is the public feed, we redirect to friends_timline (I think that's intuitive)
-		if(streamToSet == 'statuses/public_timeline.json') {
-			streamToSet = 'statuses/friends_timeline.json';
-			}
 		
 		// set stream
 		window.currentStream = ''; // always reload stream on login
@@ -349,9 +371,8 @@ $('#submit-login').click(function () {
 			remove_spinner();			
 			},true);
 
-		});	
-
-	});
+		});		
+	}
 
 
 /* · 
@@ -410,7 +431,7 @@ $('#logout').click(function(){
    
 $('#settings').click(function(){
 	// buttons to add later: '<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary disabled">' + window.sL.saveChanges + '</button></div>'
-	popUpAction('popup-settings', window.sL.settings,'<div id="settings-container"><div><label for="link-color-selection">' + window.sL.linkColor + '</label><input id="link-color-selection" type="text" value="#' + window.userLinkColor + '" /></div><div><label for="link-color-selection">' + window.sL.backgroundColor + '</label><input id="background-color-selection" type="text" value="#' + window.userBackgroundColor + '" /></div></div>',false);
+	popUpAction('popup-settings', window.sL.settings,'<div id="settings-container"><div><label for="link-color-selection">' + window.sL.linkColor + '</label><input id="link-color-selection" type="text" value="#' + window.userLinkColor + '" /></div><div><label for="link-color-selection">' + window.sL.backgroundColor + '</label><input id="background-color-selection" type="text" value="#' + window.userBackgroundColor + '" /></div><a id="moresettings">' + window.sL.moreSettings + '<form action="https://quitter.se/main/login" method="post" target="_blank"><input type="hidden" id="nickname" name="nickname" value="' + $('input#username').val() + '" /><input type="hidden" id="password" name="password" value="' + $('input#password').val() + '" /><input type="hidden" id="returnto" name="returnto" value="/settings/profile" /></form></a></div>',false);
 	$('#link-color-selection').minicolors({
 		change: function(hex) {
 			changeLinkColor(hex);
@@ -423,7 +444,45 @@ $('#settings').click(function(){
 			postNewBackgroundColor(hex.substring(1));
 			}
 		});		
+	// also on keyup in input (minicolors 'change' event does not do this, apparently)
+	$('#link-color-selection').on('keyup',function(){
+		keyupSetLinkColor($(this).val());
+		});
+	$('#background-color-selection').on('keyup',function(){
+		keyupSetBGColor($(this).val());
+		});		
+	});	
+
+// idle function for linkcolor selection by keyboard input
+var keyupLinkColorTimer;
+function keyupSetLinkColor(hex) {
+	clearTimeout(keyupLinkColorTimer);
+	keyupLinkColorTimer = setTimeout(function () {
+		$('#link-color-selection').minicolors('value',hex);	
+		changeLinkColor($('#link-color-selection').val());
+		postNewLinkColor($('#link-color-selection').val().substring(1));		
+		}, 500);
+	}	
+// idle function for bgcolor selection by keyboard input
+var keyupBGColorTimer;
+function keyupSetBGColor(hex) {
+	clearTimeout(keyupBGColorTimer);
+	keyupBGColorTimer = setTimeout(function () {
+		$('#background-color-selection').minicolors('value',hex);	
+		$('body').css('background-color',$('#background-color-selection').val());
+		postNewBackgroundColor($('#background-color-selection').val().substring(1));		
+		}, 500);
+	}		
+
+
+// go to standard settingspage 
+$('body').on('click','#moresettings',function(){
+    $(document.body).append('<iframe id="logout-iframe" src="https://quitter.se/main/logout" style="display:none;">'); // we need to logout before login, otherwise redirection to settingspage doesn't work
+    $('iframe#logout-iframe').load(function() {
+        $('#moresettings').children('form').submit(); // submit hidden form and open settingspage in new tab
+	    });	
 	});		
+
 
 
 
@@ -517,6 +576,17 @@ $('#settingslink').click(function(){
    · 
    · · · · · · · · · · · · · */ 
 
+
+$('body').on('click','.external-follow-button',function(event){
+	popUpAction('popup-external-follow', window.sL.userExternalFollow + ' ' + $('.profile-card-inner .screen-name').html(),'<form method="post" action="' + window.siteInstanceURL + 'main/ostatus"><input type="hidden" id="nickname" name="nickname" value="' + $('.profile-card-inner .screen-name').html().substring(1) + '"><input type="text" id="profile" name="profile" placeholder="' + window.sL.userExternalFollowHelp + '" /></form>','<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary">' + window.sL.userExternalFollow + '</button></div>');		
+	$('#popup-external-follow form input#profile').focus();
+	$('#popup-external-follow button.primary').click(function(){
+		$('#popup-external-follow form').submit();
+		});
+	});
+
+
+
 $('body').on('click','.follow-button',function(event){
 	if(!$(this).hasClass('disabled')) {
 		$(this).addClass('disabled');
@@ -599,20 +669,6 @@ $('body').on('click','.member-button',function(event){
 
 /* · 
    · 
-   ·   Select a stream when clicking on a menu item
-   · 
-   · · · · · · · · · · · · · */ 
-
-// select stream
-$('body').on('click','.stream-selection',function(event){
-	if(!$(event.target).is('.close-right') && !$(this).hasClass('current')) {
-		setNewCurrentStream($(this).attr('data-stream-name'),function(){},true);
-		}
-	});
-
-
-/* · 
-   · 
    ·   Select a stream when the logged in user clicks their own queets, followers etc 
    · 
    · · · · · · · · · · · · · */ 
@@ -688,17 +744,54 @@ function showSearchStream() {
 
 
 /* · 
-   ·                                                                          <o
-   ·   Hijack all links and look for local users, tags and groups.             (//
+   ·                                                                              <o
+   ·   Hijack all links and look for local users, tags, searches and groups.       (//
    ·   
    ·   If found, select that stream and prevent links default behaviour
    · 
    · · · · · · · · · · · · · */ 
 
-$('body').on('click','a', function(e) {          
+$(document).on('click','a', function(e) {          
+	
+	// not if metakeys are pressed!
+	if(e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) {
+		return;
+		}
+	
+	// ugly fix: if this is the x remove users from history, prevent link but don't set a new currentstream
+	if($(e.target).is('i.close-right')) {
+		e.preventDefault();		
+		return;
+		}
+	
+	// all non-hijacked links opens in new tab
+	$(this).attr('target','_blank'); 
+
 	if(typeof $(this).attr('href') != 'undefined') {
+		// site root
+		if($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'') == '/') {
+			e.preventDefault();
+			setNewCurrentStream('statuses/public_timeline.json',function(){},true);	
+			}
+		// logged in users streams
+		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loginUsername,'') == '/all') {
+			e.preventDefault();			
+			setNewCurrentStream('statuses/friends_timeline.json',function(){},true);	
+			}
+		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loginUsername,'') == '/replies') {
+			e.preventDefault();			
+			setNewCurrentStream('statuses/mentions.json',function(){},true);				
+			}			
+// 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','') == window.loginUsername) {
+// 			e.preventDefault();			
+// 			setNewCurrentStream('statuses/user_timeline.json',function(){},true);				
+// 			}			
+		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loginUsername,'') == '/favorites') {
+			e.preventDefault();			
+			setNewCurrentStream('favorites.json',function(){},true);				
+			}			
 		// profiles
-		if ((/^[a-zA-Z0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','')))) {
+		else if ((/^[a-zA-Z0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','')))) {
 			e.preventDefault();
 			if($(this).parent().attr('id') == 'user-profile-link') { // logged in user
 				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loginUsername,function(){},true);	
@@ -733,7 +826,13 @@ $('body').on('click','a', function(e) {
 		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/group/')>-1) {
 			e.preventDefault();
 			setNewCurrentStream('statusnet/groups/timeline/' + $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/group/','') + '.json',function(){},true);				
-			}				
+			}		
+		// search 
+		else if ($(this).attr('href').indexOf('/search/notice?q=')>-1) {
+			e.preventDefault();
+			var searchToStream = $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'').replace('/search/notice?q=','');
+			setNewCurrentStream('search.json?q=' + searchToStream,function(){},true);		
+			}
 		
 		// profile picture
 		else if ($(this).hasClass('profile-picture')) {
@@ -751,9 +850,9 @@ $('body').on('click','a', function(e) {
 			getFromAPI('externalprofile/show.json?profileurl=' + encodeURIComponent($(this).attr('href')),function(data){
 				// external user found locally
 				if(data) {
-				
-					var screenNameWithServer = '@' + data.screen_name + '@' + data.statusnet_profile_url.replace('http://','').replace('https://','').replace('/' + data.screen_name,'');
-
+					
+					console.log(data);
+					
 					// empty strings and zeros instead of null
 					data.name = data.name || '';
 					data.profile_image_url = data.profile_image_url || '';
@@ -774,11 +873,31 @@ $('body').on('click','a', function(e) {
 						followingClass = 'following';
 						}			
 						
+					var serverUrl = data.statusnet_profile_url.replace('/' + data.screen_name,'');
+					var userApiUrl = serverUrl + '/api/statuses/user_timeline.json?screen_name=' + data.screen_name;
+					var screenNameWithServer = '@' + data.screen_name + '@' + serverUrl.replace('http://','').replace('https://','');						
 					var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
 					var profileCard = '<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.profile_image_url_original + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.name + '<span></span></h1><h2 class="username"><span class="screen-name"><a target="_blank" href="' + data.statusnet_profile_url + '">' + screenNameWithServer + '</a></span><span class="follow-status"></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"><span class="location">' + data.location + '</span><span class="divider"> · </span><span class="url"><a target="_blank" href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a target="_blank" href="' + data.statusnet_profile_url + '"><strong>' + data.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a target="_blank" href="' + data.statusnet_profile_url + '/subscriptions"><strong>' + data.friends_count + '</strong>' + window.sL.following + '</a></li><li><a target="_blank" href="' + data.statusnet_profile_url + '/subscribers"><strong>' + data.followers_count + '</strong>' + window.sL.followers + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div><div class="clearfix"></div>';		
 					
 					popUpAction('popup-external-profile', screenNameWithServer,profileCard,false);
-				
+					
+					// if remote server is https, do jsonp request directly, otherwise proxy
+					if(serverUrl.substring(0,8) == 'https://') {
+						console.log(userApiUrl);
+						$.ajax({ url: userApiUrl, type: "GET", dataType: "jsonp", success: function(data) { 
+								console.log(data);
+								}
+							});
+						}
+					else {
+						getFromAPI('externalproxy.json?url=' + encodeURIComponent(userApiUrl),function(data){
+							if(data) {
+							
+								}
+							});
+						}
+					
+					
 					remove_spinner();	
 					}
 				// external user not found locally, try externally
@@ -1018,8 +1137,15 @@ $('#feed').on('click','#new-queets-bar',function(){
 
 $('#feed-body').on('click','.queet',function (event) {
 	if(!$(event.target).is('a')
+		&& !$(event.target).is('.CodeMirror-scroll')
+		&& !$(event.target).is('.cm-mention')
+		&& !$(event.target).is('.cm-tag')
+		&& !$(event.target).is('.cm-group')
+		&& !$(event.target).is('.cm-url')						
+		&& !$(event.target).is('pre')		
 		&& !$(event.target).is('.name')
 		&& !$(event.target).is('.queet-box-template')	
+		&& !$(event.target).is('img')				
 		&& !$(event.target).is('button')				
 		&& !$(event.target).is('.show-full-conversation')						
 		&& !$(event.target).is('span.mention')
@@ -1038,7 +1164,29 @@ $('#feed-body').on('click','.queet',function (event) {
 		expand_queet($(this).parent());
 		}	
 	});
+	
+	
+/* · 
+   · 
+   ·   Collapse all open conversations on esc or when clicking the margin  
+   ·   
+   · · · · · · · · · · · · · */ 
 
+$('body').click(function(event){	
+	if($(event.target).is('body')) {
+		$.each($('.stream-item.expanded'),function(){
+			expand_queet($(this), false);
+			});
+		}	
+	});
+
+$(document).keyup(function(e){
+	if(e.keyCode==27) { // esc
+		$.each($('.stream-item.expanded'),function(){
+			expand_queet($(this), false);
+			});
+		}
+	});	
 
 
 /* · 
@@ -1196,30 +1344,33 @@ $('#feed').on('click','.action-fav-container',function(){
    · · · · · · · · · · · · · */ 
 
 $('#feed').on('click','.action-reply-container',function(){
-	var this_stream_item = $(this).parent().parent().parent().parent().parent();
+	var this_stream_item = $(this).closest('.stream-item');
 	var this_stream_item_id = this_stream_item.attr('data-quitter-id');
-	
-	// if in conversation, popup
-	if(this_stream_item.hasClass('conversation')) {
 
-		var $queetHtml = $('<div>').append(this_stream_item.html());
-		var $queetHtmlFooter = $queetHtml.find('.stream-item-footer');
-		$queetHtmlFooter.remove();
-		var queetHtmlWithoutFooter = $queetHtml.html();
-		popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
-		expandInlineQueetBox($('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box-template'));
-		}
-	// inline replies	
-	else {
-		// if not expanded, expand first
-		if(!this_stream_item.hasClass('expanded')) {
-			expand_queet(this_stream_item);
-			}
-		// if queet box is not active: activate
-		if(!this_stream_item.find('.queet').find('.queet-box-template').hasClass('active')) {
-			expandInlineQueetBox(this_stream_item.find('.queet').find('.queet-box-template'));			
-			}
-		}
+	// grabbing the queet and view it in the popup, stripped of footer, reply box and other sruff
+	var $queetHtml = $('<div>').append(this_stream_item.children('.queet').outerHTML());
+	var $queetHtmlFooter = $queetHtml.find('.stream-item-footer');
+	$queetHtmlFooter.remove();
+	var $queetHtmlQueetBox = $queetHtml.find('.inline-reply-queetbox');
+	$queetHtmlQueetBox.remove();
+	var $queetHtmlExpandedContent = $queetHtml.find('.expanded-content');
+	$queetHtmlExpandedContent.remove();		
+	var queetHtmlWithoutFooter = $queetHtml.html();
+	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
+	expandInlineQueetBox($('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box-template'));
+
+	});
+	
+
+/* · 
+   · 
+   ·   When clicking the compose button on mobile view
+   ·   
+   · · · · · · · · · · · · · */ 
+
+$('body').on('click','#top-compose',function(){
+	popUpAction('popup-compose', window.sL.compose,'<div class="inline-reply-queetbox"><div class="queet-box-template"></div></div>',false);
+	expandInlineQueetBox($('#popup-compose').find('.queet-box-template'));
 	});
 
 
@@ -1256,61 +1407,6 @@ $('#feed').on('click','.queet-box-template',function(){
 	
 
 
-/* · 
-   · 
-   ·   When inline reply form blur, check if it is changed  
-   ·   
-   · · · · · · · · · · · · · */ 
-
-$('#feed').on('blur','.queet-box-template',function(){
-	if($(this).html().replace(/\s/g, '').replace(/&nbsp;/gi,'').replace(/<br>/gi,'') != unescape($(this).attr('data-start-html')).replace(/\s/g, '').replace(/&nbsp;/gi,'').replace(/<br>/gi,'')) {
-		if($(this).text().replace(/\s/gi, '').replace(/&nbsp;/gi,'').replace(/<br>/gi,'').length==0) {
-			$(this).removeClass('active');
-			$(this).html(unescape($(this).attr('data-blurred-html')));
-			$(this).parent().find('.queet-toolbar').remove();			
-			}
-		}
-	else {
-		$(this).removeClass('active');
-		$(this).html(unescape($(this).attr('data-blurred-html')));
-		$(this).parent().find('.queet-toolbar').remove();
-		}
-	});
-
-
-
-/* · 
-   · 
-   ·   Do varouis thins on keyup in reply box, counting, checking for spaces in mentions etc
-   ·   
-   · · · · · · · · · · · · · */ 
-
-$('body').on('keyup','.queet-box-template, .queet-box',function(e){
-
-	// count chars
-	countCharsInQueetBox($(this),$(this).parent().find('.queet-toolbar .queet-counter'),$(this).parent().find('.queet-toolbar button'));	
-	
-	// no spaces in mentions!
-	$.each($(this).find('a'), function(key, obj){
-		var obj_html = $(obj).html();
-		var first_part = obj_html.substr(0,obj_html.indexOf(' ')); 
-		if(first_part.length>0) {
-			var second_part = obj_html.substr(obj_html.indexOf(' ')+1); 
-			if(e.keyCode==32) { // space
-				$(obj).before('<a>' + first_part + '</a> ');
-				$(obj).after(second_part);				
-				$(obj)[0].outerHTML = '';				
-				}
-			else { // other keys
-				$(obj).before('<a>' + first_part + '</a> ' + second_part);
-				$(obj)[0].outerHTML = '';				
-				}
-			}
-		});
-	
-	});
-
-
 
 /* · 
    · 
@@ -1330,16 +1426,10 @@ $('body').on('click', '.queet-toolbar button',function () {
 			var tempPostId = $('.temp-post').attr('id') + 'i';			
 			}
 			
-		var queetText = $(this).parent().parent().parent().find('.queet-box-template').html();
-		var queetText_txt = $(this).parent().parent().parent().find('.queet-box-template').text();
-		
-		// remove trailing <br> and convert other <br> to newline
-		queetText = $.trim(queetText);
-		if(queetText.substr(queetText.length-4) == '<br>') {
-			queetText = queetText.substring(0, queetText.length - 4);
-			queetText = queetText.replace(/<br>/g,"\n");
-			}						
-		
+		var queetBoxID = $(this).parent().parent().parent().find('.queet-box-template').attr('id');
+
+		var queetText = window['codemirror-' + queetBoxID].getValue();		
+
 		// get reply to id and add temp queet
 		if($('.modal-container').find('.queet-toolbar button').length>0) { // from popup
 			var in_reply_to_status_id = $('.modal-container').attr('id').substring(12); // removes "popup-reply-" from popups id
@@ -1356,15 +1446,17 @@ $('body').on('click', '.queet-toolbar button',function () {
 			}		
 		
 		// null reply box
-		$(this).parent().parent().parent().find('.queet-box-template').removeClass('active');
-		$(this).parent().parent().parent().find('.queet-box-template').html(unescape($(this).parent().parent().parent().find('.queet-box-template').attr('data-blurred-html')));
+		$(this).parent().parent().parent().find('.queet-box-template').css('display','block');	
+		$(this).parent().parent().parent().find('.CodeMirror').remove();
+		$(this).parent().parent().parent().find('textarea#codemirror-' + queetBoxID).remove();		
 		$(this).parent().parent().parent().find('.queet-toolbar').remove();
+		delete window['codemirror-' + queetBoxID];
 				
 		// check for new queets (one second from) NOW 
 		setTimeout('checkForNewQueets()', 1000);
 
 		// post queet
-		postReplyToAPI(queetText_txt, in_reply_to_status_id, function(data){ if(data) {
+		postReplyToAPI(queetText, in_reply_to_status_id, function(data){ if(data) {
 
 			// show real queet
 			var new_queet = Array();
@@ -1373,10 +1465,14 @@ $('body').on('click', '.queet-toolbar button',function () {
 
 			// remove temp queet
 			$('#' + tempPostId).remove();
+			
+			// queet count
+			$('#user-queets strong').html(parseInt($('#user-queets strong').html(),10)+1);			
 				
 			}});
 		}
 	});
+
 
 
 
@@ -1397,14 +1493,10 @@ $('#queet-toolbar button').click(function () {
 			var tempPostId = $('.temp-post').attr('id') + 'i';			
 			}
 			
-		var queetText = $('#queet-box').html();
+		var queetText = codemirrorQueetBox.getValue();
 
 		// remove trailing <br> and convert other <br> to newline
-		queetText = $.trim(queetText);
-		if(queetText.substr(queetText.length-4) == '<br>') {
-			queetText = queetText.substring(0, queetText.length - 4);
-			queetText = queetText.replace(/<br>/g,"\n");
-			}		
+		queetText = $.trim(queetText);	
 
 		// show temporary queet
 		var queetHtml = '<div id="' + tempPostId + '" class="stream-item temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText + '</div><div class="stream-item-footer"><span class="stream-item-expand">&nbsp;</span></div></div></div></div>';
@@ -1418,9 +1510,10 @@ $('#queet-toolbar button').click(function () {
 		setTimeout('checkForNewQueets()', 1000);
 		
 		// null post form
-		$('#queet-box').html(window.sL.compose);
-		$('#queet-box').attr('contenteditable','false');
-		$('#queet-toolbar').css('display','none');
+		codemirrorQueetBox.setValue('');
+		$('#queet-toolbar').css('display','none');	
+		$('#queet-box').css('display','block');	
+		$('#user-footer .CodeMirror-wrap').css('display','none');	
 
 		// post queet
 		postQueetToAPI(queetText, function(data){ if(data) {
@@ -1433,10 +1526,85 @@ $('#queet-toolbar button').click(function () {
 			// remove temp queet
 			$('#' + tempPostId).remove();
 			
+			// queet count
+			$('#user-queets strong').html(parseInt($('#user-queets strong').html(),10)+1);
+			
 			}});
 		}
 	});
 
+
+/* · 
+   · 
+   ·   Codemirror configuration for queet box
+   ·   
+   · · · · · · · · · · · · · */ 
+
+
+CodeMirror.defaults.lineWrapping = true;        
+CodeMirror.defineMode("css-base", function(config, parserConfig) {	
+	function tokenBase(stream, state) {
+		
+		stream.string = stream.string + ' '; // makes regexping easier..
+		var ch = stream.next();
+		
+		// regexps
+		var externalMentionInBeginningRE = /[a-zA-Z0-9]+(@)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))/;
+		var mentionInBeginningRE = /[a-zA-Z0-9]+/;		
+		var tagInBeginningRE = /[\wåäö\-]+/;	
+		var groupInBeginningRE = /[a-zA-Z0-9]+/;			
+		var externalMentionRE = /([ ]+)?@[a-zA-Z0-9]+(@)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))/;
+		var mentionRE = /([ ]+)?@[a-zA-Z0-9]+/;		
+		var tagRE = /([ ]+)?#[\wåäö\-]+/;	
+		var groupRE = /([ ]+)?![a-zA-Z0-9]+/;	
+		var urlWithoutHttpInBeginningRE = /([\wåäö\-\.]+)?(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?( )/;
+		var urlWithoutHttpRE = /([ ]+)?[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?( )/;
+		var urlInBeginningRE = /(ttp\:\/\/|ttps\:\/\/)([\wåäö\-\.]+)?(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?( )/;
+		var urlRE = /([ ]+)?(http\:\/\/|https\:\/\/)([\wåäö\-\.]+)?(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?( )/;		
+		var emailRE = /([ ]+)?([a-zA-Z0-9\!\#\$\%\&\'\*\+\-\/\=\?\^\_\`\{\|\}\~\.]+)?(@)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))( )/;
+		
+		if (stream.start == 0 && ch == "@" && stream.match(externalMentionInBeginningRE)) { return "mention"}		
+		else if (stream.start == 0 && ch == "@" && stream.match(mentionInBeginningRE)) { return "mention"}
+		else if (stream.start == 0 && ch == "#" && stream.match(tagInBeginningRE)) { return "mention"}
+		else if (stream.start == 0 && ch == "!" && stream.match(groupInBeginningRE)) { return "mention"}				
+		else if (stream.start == 0 && ch.match(/[a-z0-9]/) && stream.match(urlWithoutHttpInBeginningRE)) { stream.backUp(1); return "url"; }
+		else if (stream.start == 0 && ch == "h" && stream.match(urlInBeginningRE)) { return "url"; }
+		else if (ch == " " && stream.match(externalMentionRE)) { return "mention"}		
+		else if (ch == " " && stream.match(mentionRE)) { return "mention"}		
+		else if (ch == " " && stream.match(tagRE)) { return "tag"; }   
+		else if (ch == " " && stream.match(groupRE)) { return "group"; }
+		else if (ch == " " && stream.match(urlWithoutHttpRE)) { stream.backUp(1); return "url"; }
+		else if (ch == " " && stream.match(urlRE)) { return "url"; }
+		else if(!(ch == ' ' && stream.next() == '.') && !(stream.start == 0 && ch == '.') && (stream.start == 0 || ch == ' ') && stream.match(emailRE)) {
+			stream.backUp(1);
+			return "email";
+			}
+		}
+	
+	return {
+		startState: function(base) {
+			return {tokenize: tokenBase };
+			},
+		token: function(stream, state) {
+			state.tokenize = state.tokenize || tokenBase;
+			var style = state.tokenize(stream, state);	
+			return style;
+			}
+		};
+	});
+
+// activate queet box
+var codemirrorQueetBox = CodeMirror.fromTextArea(document.getElementById("codemirror-queet-box"), { 
+	// submit on enter
+	onKeyEvent: function(editor, event) {
+		event = $.event.fix(event);
+		var enterKeyHasBeenPressed = event.type == "keyup" && event.keyCode == 13 && (event.ctrlKey || event.altKey);		
+		if(enterKeyHasBeenPressed ){
+			$('#queet-toolbar button').trigger('click');
+			}
+		}
+  });
+      
 
 
 /* · 
@@ -1445,9 +1613,10 @@ $('#queet-toolbar button').click(function () {
    ·   
    · · · · · · · · · · · · · */ 
 
-$('#queet-box').keyup(function () {
-	countCharsInQueetBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));
+codemirrorQueetBox.on('change',function () {
+	countCharsInQueetBox(codemirrorQueetBox.getValue(),$('#queet-counter'),$('#queet-toolbar button'));
 	});	
+	
 	
 	
 	
@@ -1459,66 +1628,21 @@ $('#queet-box').keyup(function () {
    · · · · · · · · · · · · · */ 	
 
 $('#queet-box').click(function () {
-	if($('#queet-box').html() == window.sL.compose) {
-		$('#queet-box').attr('contenteditable','true');	
-		$('#queet-box').html('&nbsp;');
-		$('#queet-box').focus();
-		$('#queet-toolbar').css('display','block');	
-		$('#queet-toolbar button').addClass('disabled');	
-		countCharsInQueetBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));	
-		}
+	$('#queet-box').css('display','none');	
+	$('#user-footer .CodeMirror-wrap').css('display','block');
+	$('#queet-toolbar').css('display','block');	
+	$('#queet-toolbar button').addClass('disabled');	
+	codemirrorQueetBox.setValue('');
+	codemirrorQueetBox.focus();
+	countCharsInQueetBox(codemirrorQueetBox.getValue(),$('#queet-counter'),$('#queet-toolbar button'));	
 	});
-$('#queet-box').blur(function () {
-	if($('#queet-box').html().length == 0 || $('#queet-box').html() == '<br>'  || $('#queet-box').html() == '<br />' || $('#queet-box').html() == '&nbsp;' || $('#queet-box').html() == '&nbsp;<br>') {
-		$('#queet-box').attr('contenteditable','false');	
-		$('#queet-box').html(window.sL.compose);
+codemirrorQueetBox.on("blur", function(){	
+	if(codemirrorQueetBox.getValue().length == 0) {
 		$('#queet-toolbar').css('display','none');	
-		$('#queet-box').removeAttr('style'); 
+		$('#queet-box').css('display','block');	
+		$('#user-footer .CodeMirror-wrap').css('display','none');		
 		}
-	});
-
-
-	
-	
-/* · 
-   · 
-   ·   Remove html and shorten urls on paste in queet boxes
-   ·   
-   · · · · · · · · · · · · · */ 	
-   
-$('#queet-box').bind('paste',function () {
-	$('#queet-box').css('color','transparent');
-	setTimeout(function () {
-		
-		// clean all html (but keep linebreaks)
-		var $keep_br = $('<div/>').append($('#queet-box').html().replace(/(<br>\s*)+$/,'').replace(/<br>/gi,'{{br}}'));
-		$('#queet-box').html($keep_br.text().replace(/{{br}}/gi,'<br>'));
-		
-		// shorten urls
-//		shortenUrlsInBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));
-		
-		$('#queet-box').css('color','#333333');	
-		placeCaretAtEnd(document.getElementById("queet-box"));
-		countCharsInQueetBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));
-		}, 1);
-	});
-$('#feed').on('paste','.queet-box-template',function(e){
-	window.current_box_id = '#' + $(this).attr('id');
-	setTimeout(function () {			
-
-		// clean all html (but keep linebreaks)
-		var $keep_br = $('<div/>').append($(window.current_box_id).html().replace(/(<br>\s*)+$/,'').replace(/<br>/gi,'{{br}}'));
-		$(window.current_box_id).html($keep_br.text().replace(/{{br}}/gi,'<br>'));
-
-		// shorten urls
-//		shortenUrlsInBox($(window.current_box_id),$(window.current_box_id).find('.queet-counter'),$(window.current_box_id).find('.queet-toolbar button'));
-		
-		placeCaretAtEnd(document.getElementById($(window.current_box_id).attr('id')));
-		countCharsInQueetBox($(window.current_box_id),$(window.current_box_id).find('.queet-counter'),$(window.current_box_id).find('.queet-toolbar button'));
-		}, 1);
-	});		
-	
-	
+	});	
 	
 /* · 
    · 
@@ -1526,16 +1650,16 @@ $('#feed').on('paste','.queet-box-template',function(e){
    ·   
    · · · · · · · · · · · · · */ 	
   
-$('body').on('keyup','#queet-box',function(e){
-	if(e.keyCode == 32) {
-		shortenUrlsInBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));	
-		}
-	});
-$('#feed').on('keyup','.queet-box-template',function(e){
-	if(e.keyCode == 32) {
-		shortenUrlsInBox($(this),$(this).find('.queet-counter'),$(this).find('.queet-toolbar button'));	
-		}
-	});	
+// $('body').on('keyup','#queet-box',function(e){
+// 	if(e.keyCode == 32) {
+// 		shortenUrlsInBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));	
+// 		}
+// 	});
+// $('#feed').on('keyup','.queet-box-template',function(e){
+// 	if(e.keyCode == 32) {
+// 		shortenUrlsInBox($(this),$(this).find('.queet-counter'),$(this).find('.queet-toolbar button'));	
+// 		}
+// 	});	
 
 
 /* · 

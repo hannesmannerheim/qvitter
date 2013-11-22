@@ -109,11 +109,14 @@ window.l.es.posting					= 'enviando';
 window.l.es.viewMoreInConvBefore	= '← Ver más en la conversación';
 window.l.es.viewMoreInConvAfter		= 'Ver más en la conversación →';
 window.l.es.mentions				= 'Menciones';
+window.l.es.timeline				= 'Línea temporal';
 window.l.es.publicTimeline			= 'Línea temporal pública';
 window.l.es.searchVerb				= 'Buscar';
 window.l.es.deleteVerb				= 'Eliminar';
 window.l.es.cancelVerb				= 'Cancelar';
 window.l.es.deleteConfirmation		= '¿Estás seguro de que quieres eliminar este queet?';
+window.l.es.userExternalFollow		= 'Seguir';
+window.l.es.userExternalFollowHelp	= 'Identificador de su cuenta (por ejemplo user@quitter.se).';
 window.l.es.userFollow				= 'Seguir';
 window.l.es.userFollowing			= 'Siguiendo';
 window.l.es.userUnfollow			= 'Dejar de seguir';
@@ -133,6 +136,13 @@ window.l.es.signUpEmail				= 'Correo electrónico';
 window.l.es.signUpButtonText		= 'Regístrate en Quitter';
 window.l.es.welcomeHeading			= 'Bienvenido a Quitter.';
 window.l.es.welcomeText				= 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que ustedes no debeis tener una cuenta Quitter para seguir sus usuarios, estar seguidos o interaccionar con ellos. ¡Podéis registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Incluso, no debéis inscribir vosotros o cualquier cosa puesto que podéis tambien instalar el software GNU Social en vuestro propio servidor. (:</div>federación</span> no comercial de microblogs que, como ustedes, se preocupan de la ética y de la solidaridad, y queremos salir de los servicios centralizados capitalistas. Estamos por aquí desde 2010 y siempre seremos sin ánimo de lucro.';
+window.l.es.registerNickname		= 'Nombre de usuario';
+window.l.es.registerHomepage		= 'Sitio web';
+window.l.es.registerBio				= 'Biografía';
+window.l.es.registerLocation		= 'Ubicación';
+window.l.es.registerRepeatPassword	= 'Verificar contraseña';
+window.l.es.moreSettings			= 'Más configuraciones';
+
 
 
 // french
@@ -207,11 +217,14 @@ window.l.fr.posting					= 'envoie';
 window.l.fr.viewMoreInConvBefore	= '← Voir davantage dans la conversation';
 window.l.fr.viewMoreInConvAfter		= 'Voir davantage dans la conversation →';
 window.l.fr.mentions				= 'Mentions';
+window.l.fr.timeline				= 'Queets';
 window.l.fr.publicTimeline			= 'Tous les queets';
 window.l.fr.searchVerb				= 'Rechercher';
 window.l.fr.deleteVerb				= 'Supprimer';
 window.l.fr.cancelVerb				= 'Annuler';
 window.l.fr.deleteConfirmation		= 'Êtes-vous sûr de vouloir supprimer ce queet ?';
+window.l.fr.userExternalFollowHelp	= 'Votre identifiant (utilisateur@quitter.se, par exemple).';
+window.l.fr.userExternalFollow		= 'Suivre';
 window.l.fr.userFollow				= 'Suivre';
 window.l.fr.userFollowing			= 'Abonné';
 window.l.fr.userUnfollow			= 'Se désabonner';
@@ -231,6 +244,12 @@ window.l.fr.signUpEmail				= 'Email';
 window.l.fr.signUpButtonText		= 'S\'inscrire sur Quitter';
 window.l.fr.welcomeHeading			= 'Bienvenue sur Quitter.';
 window.l.fr.welcomeText				= 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte Quitter pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés capitalistes. Nous sommes en ligne depuis 2010 et resterons toujours sans but lucratif.';
+window.l.fr.registerNickname		= 'Nom d\'utilisateur';
+window.l.fr.registerHomepage		= 'Site Web';
+window.l.fr.registerBio				= 'Biographie';
+window.l.fr.registerLocation		= 'Localisation';
+window.l.fr.registerRepeatPassword	= 'Vérifiez votre mot de passe';
+window.l.fr.moreSettings			= 'Plus de paramètres';
 
 
 // deutsch
@@ -254,7 +273,7 @@ window.l.de.viewMyProfilePage		= 'Mein Profil ansehen';
 window.l.de.expand					= 'Öffnen';
 window.l.de.collapse				= 'Schließen';
 window.l.de.details					= 'Details';
-window.l.de.expandFullConversation	= 'Vollständige Gespräch';
+window.l.de.expandFullConversation	= 'Vollständiges Gespräch';
 window.l.de.replyVerb				= 'Antworten';
 window.l.de.requeetVerb				= 'Requeeten';
 window.l.de.favoriteVerb			= 'Favorisieren';
@@ -305,11 +324,14 @@ window.l.de.posting					= 'Entsendung';
 window.l.de.viewMoreInConvBefore	= '← Mehr im Gespräch anzeigen';
 window.l.de.viewMoreInConvAfter		= 'Mehr im Gespräch anzeigen →';
 window.l.de.mentions				= 'Erwähnungen';
-window.l.de.publicTimeline			= 'Öffentliche Zeitleiste';
+window.l.de.timeline				= 'Timeline';
+window.l.de.publicTimeline			= 'Öffentliche Timeline';
 window.l.de.searchVerb				= 'Suche';
 window.l.de.deleteVerb				= 'Löschen';
 window.l.de.cancelVerb				= 'Abbrechen';
 window.l.de.deleteConfirmation		= 'Bist Du sicher, dass Du diesen Queet löschen möchtest?';
+window.l.de.userExternalFollow		= 'Folgen';
+window.l.de.userExternalFollowHelp	= 'Deine Konto-ID (z.B. user@quitter.se).';
 window.l.de.userFollow				= 'Folgen';
 window.l.de.userFollowing			= 'Folge ich';
 window.l.de.userUnfollow			= 'Entfolgen';
@@ -328,7 +350,25 @@ window.l.de.signUpFullName			= 'Vollständiger Name';
 window.l.de.signUpEmail				= 'E-Mail';
 window.l.de.signUpButtonText		= 'Registriere Dich bei Quitter!';
 window.l.de.welcomeHeading			= 'Willkommen bei Quitter!';
-window.l.de.welcomeText				= 'Wir sind eine Community von Microbloggern, verteilt über einen weltweiten <span id="federated-tooltip"><div id="what-is-federation">"Verbund" bedeutet, dass du nicht selbst einen Quitter-Account brauchst, um mit Quitter-Nutzern zu kommunizieren, ihnen zu folgen oder Follower bei Quitter zu haben. Du kannst dich genauso gut bei einem der anderen <a href="http://www.gnu.org/software/social/">GNU-Social</a>-Server registrieren oder einem anderen Dienst, der das <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>-Protokoll unterstützt. Du kannst sogar ganz ohne Anmeldung teilnehmen, wenn du dir GNU Social auf deinem eigenen Server installierst.</div>Verbund</span> unabhängiger GNU-Social-Server, auch bekannt als StatusNet. Wir sind genau das Richtige für <strong>Leute wie dich</strong>, denen Ethik und Solidarität etwas bedeuten und die sich nicht mehr an zentralisierten kapitalistischen Diensten beteiligen wollen. Es gibt uns schon seit 2010, und wir werden immer Non-Profit bleiben.';
+window.l.de.welcomeText				= 'Wir sind eine Community von Microbloggern, verteilt über einen weltweiten \
+									   <span id="federated-tooltip"><div id="what-is-federation">"Verbund" bedeutet, \
+									   dass du nicht selbst einen Quitter-Account brauchst, um mit Quitter-Nutzern zu \
+									   kommunizieren, ihnen zu folgen oder Follower bei Quitter zu haben. Du kannst dich \
+									   genauso gut bei einem der anderen <a href="http://www.gnu.org/software/social/">\
+									   GNU-Social</a>-Server registrieren oder einem anderen Dienst, der das \
+									   <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>-Protokoll \
+									   unterstützt. Du kannst sogar ganz ohne Anmeldung teilnehmen, wenn du dir GNU Social \
+									   auf deinem eigenen Server installierst.</div>Verbund</span> unabhängiger \
+									   GNU-Social-Server, auch bekannt als StatusNet. Wir sind genau das Richtige für \
+									   <strong>Leute wie dich</strong>, denen Ethik und Solidarität etwas bedeuten und \
+									   die sich nicht mehr an zentralisierten kommerziellen Diensten beteiligen \
+									   	wollen. Es gibt uns schon seit 2010, und wir werden immer Non-Profit bleiben.';
+window.l.de.registerNickname		= 'Nutzername';
+window.l.de.registerHomepage		= 'Webseite';
+window.l.de.registerBio				= 'Bio';
+window.l.de.registerLocation		= 'Standort';
+window.l.de.registerRepeatPassword	= 'Passwort bestätigen';
+window.l.de.moreSettings			= 'Weitere Einstellungen';
 
 
 // english
@@ -403,11 +443,14 @@ window.l.en.posting					= 'posting';
 window.l.en.viewMoreInConvBefore	= '← View more in conversation';
 window.l.en.viewMoreInConvAfter		= 'View more in conversation →';
 window.l.en.mentions				= 'Mentions';
+window.l.en.timeline				= 'Timeline';
 window.l.en.publicTimeline			= 'Public Timeline';
 window.l.en.searchVerb				= 'Search';
 window.l.en.deleteVerb				= 'Delete';
 window.l.en.cancelVerb				= 'Cancel';
 window.l.en.deleteConfirmation		= 'Are you sure you want to delete this queet?';
+window.l.en.userExternalFollow		= 'Remote follow';
+window.l.en.userExternalFollowHelp	= 'Your account ID (e.g. user@quitter.se).';
 window.l.en.userFollow				= 'Follow';
 window.l.en.userFollowing			= 'Following';
 window.l.en.userUnfollow			= 'Unfollow';
@@ -426,8 +469,22 @@ window.l.en.signUpFullName			= 'Full name';
 window.l.en.signUpEmail				= 'Email';
 window.l.en.signUpButtonText		= 'Sign up for Quitter';
 window.l.en.welcomeHeading			= 'Welcome to Quitter.';
-window.l.en.welcomeText				= 'We are a <span id="federated-tooltip"><div id="what-is-federation">"Federation" means that you don\'t have to have a Quitter account to be able to follow, be followed by or interact with Quitter users. You can register on any site that supports the <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a> protocol! You don\'t even have to join a service – try installing the lovely <a href="http://www.gnu.org/software/social/">GNU Social</a> software on your own server! :)</div>federated</span> common, for microbloggers like you who care about ethics and solidarity and want to quit the centralised capitalistic services. We\'ve been around since 2010 and will always be non-profit.';
-
+window.l.en.welcomeText				= 'We are a <span id="federated-tooltip"><div id="what-is-federation">"Federation" \
+									   means that you don\'t need a Quitter account to be able to follow, be followed \
+									   by or interact with Quitter users. You can register on any StatusNet or GNU Social server \
+									   or any service based on the the \
+									   <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a> protocol! \
+									   You don\'t even have to join a service – try installing the lovely \
+									   <a href="http://www.gnu.org/software/social/">GNU Social</a> software on your own server! :)\
+									   </div>federation</span> of microbloggers who care about ethics and \
+									   solidarity and want to quit the centralised capitalistic services. We\'ve been around \
+									   since 2010 and will always be non-profit.';
+window.l.en.registerNickname		= 'Nickname';
+window.l.en.registerHomepage		= 'Homepage';
+window.l.en.registerBio				= 'Bio';
+window.l.en.registerLocation		= 'Location';
+window.l.en.registerRepeatPassword	= 'Repeat password';
+window.l.en.moreSettings			= 'More settings';
 
 
 // svenska
@@ -502,11 +559,14 @@ window.l.sv.posting					= 'postar';
 window.l.sv.viewMoreInConvBefore	= '← Visa mer i konversationen';
 window.l.sv.viewMoreInConvAfter		= 'Visa mer i konversationen →';
 window.l.sv.mentions				= 'Omnämnanden';
+window.l.sv.timeline				= 'Qvitter';
 window.l.sv.publicTimeline			= 'Hela sajtens flöde';
 window.l.sv.searchVerb				= 'Sök';
 window.l.sv.deleteVerb				= 'Ta bort';
 window.l.sv.cancelVerb				= 'Avbryt';
 window.l.sv.deleteConfirmation		= 'Är du säker på att du vill radera denna queet?';
+window.l.sv.userExternalFollow		= 'Följ externt';
+window.l.sv.userExternalFollowHelp	= 'Ditt konto-ID (ex. user@quitter.se).';
 window.l.sv.userFollow				= 'Följ';
 window.l.sv.userFollowing			= 'Följer';
 window.l.sv.userUnfollow			= 'Avfölj';
@@ -526,7 +586,12 @@ window.l.sv.signUpEmail				= 'E-post';
 window.l.sv.signUpButtonText		= 'Registrera dig på Quitter';
 window.l.sv.welcomeHeading			= 'Välkommen till Quitter.';
 window.l.sv.welcomeText				= 'Vi är en <span id="federated-tooltip"><div id="what-is-federation">"Federering" betyder att du inte behöver ha ett Quitter-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href="http://www.gnu.org/software/social/">GNU Social</a> (som Quitter bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt. Vi har funnits sedan 2010 och sajten drivs helt ideellt.';
-
+window.l.sv.registerNickname		= 'Användarnamn';
+window.l.sv.registerHomepage		= 'Webbplats';
+window.l.sv.registerBio				= 'Biografi';
+window.l.sv.registerLocation		= 'Plats';
+window.l.sv.registerRepeatPassword	= 'Upprepa lösenord';
+window.l.sv.moreSettings			= 'Fler inställningar';
 
 
 
@@ -602,11 +667,14 @@ window.l.fa.posting					= 'در حال ارسال';
 window.l.fa.viewMoreInConvBefore	= '→ نمایش  بیشتر در گفتگوها';
 window.l.fa.viewMoreInConvAfter		= 'نمایش  بیشتر در گفتگوها ←';
 window.l.fa.mentions				= 'رونوشت‌ها';
+window.l.fa.timeline				= 'توييت';
 window.l.fa.publicTimeline			= 'خط‌زمانی عمومی';
 window.l.fa.searchVerb				= 'جستجو';
 window.l.fa.deleteVerb				= 'حذف';
 window.l.fa.cancelVerb				= 'انصراف';
 window.l.fa.deleteConfirmation		= 'آیا مطمئن هستید که می‌خواهید این توییت را پاک کنید؟';
+window.l.fa.userExternalFollow		= 'دنبال کنید';
+window.l.fa.userExternalFollowHelp	= 'شناسه حساب شما (بعنوان مثال user@quitter.se)';
 window.l.fa.userFollow				= 'دنبال کنید';
 window.l.fa.userFollowing			= 'دنبال می‌کنید';
 window.l.fa.userUnfollow			= 'دنبال نكن';
@@ -626,7 +694,12 @@ window.l.fa.signUpEmail				= 'ایمیل';
 window.l.fa.signUpButtonText		= 'عضو توییتر شوید';
 window.l.fa.welcomeHeading			= 'به واگذارنده خوش آمدید.';
 window.l.fa.welcomeText				= '';
-
+window.l.fa.registerNickname		= 'شناسه';
+window.l.fa.registerHomepage		= 'وب‌سایت';
+window.l.fa.registerBio				= 'زندگینامه';
+window.l.fa.registerLocation		= 'مکان';
+window.l.fa.registerRepeatPassword	= 'تایید گذرواژه';
+window.l.fa.moreSettings			= 'تنظیمات بیشتر';
 
 
 // arabic
@@ -701,11 +774,14 @@ window.l.ar.posting					= 'إرسال';
 window.l.ar.viewMoreInConvBefore	= '→ عرض المزيد في المحادثة';
 window.l.ar.viewMoreInConvAfter		= 'عرض المزيد في المحادثة ←';
 window.l.ar.mentions				= 'الإشارات';
+window.l.ar.timeline				= 'تغريدات';
 window.l.ar.publicTimeline			= 'المسار الزمني العام';
 window.l.ar.searchVerb				= 'بحث';
 window.l.ar.deleteVerb				= 'حذف';
 window.l.ar.cancelVerb				= 'إلغاء';
 window.l.ar.deleteConfirmation		= 'هل أنت متأكد أنك تريد حذف هذه التغريدة؟';
+window.l.ar.userExternalFollow		= 'تابِع';
+window.l.ar.userExternalFollowHelp	= 'رقم حسابك (على سبيل المثال user@quitter.se)';
 window.l.ar.userFollow				= 'تابِع';
 window.l.ar.userFollowing			= 'مُتابَع';
 window.l.ar.userUnfollow			= 'إلغاء المتابعة';
@@ -725,15 +801,251 @@ window.l.ar.signUpEmail				= 'البريد الإلكترونيّ';
 window.l.ar.signUpButtonText		= 'التسجيل في ترك';
 window.l.ar.welcomeHeading			= 'مرحبًا بك في ترك.';
 window.l.ar.welcomeText				= '';
+window.l.ar.registerNickname		= 'اسم المستخدم';
+window.l.ar.registerHomepage		= 'موقع إلكتروني';
+window.l.ar.registerBio				= 'النبذة التعريفيّة';
+window.l.ar.registerLocation		= 'الموقع الجغرافي';
+window.l.ar.registerRepeatPassword	= 'تأكيد كلمة المرور';
+window.l.ar.moreSettings			= 'مزيد من الإعدادات';
 
 
+// esperanto
+window.l.eo = new Object();
+window.l.eo.languageName             = 'Esperanto';
+window.l.eo.loginUsername             = 'Nomo de uzanto aŭ retpoŝto';
+window.l.eo.loginPassword             = 'Pasvorto';
+window.l.eo.loginSignIn             = 'Ensaluti';
+window.l.eo.loginRememberMe         = 'Memoru min';
+window.l.eo.loginForgotPassword     = 'Ĉu forgesas vian pasvorto?';
+window.l.eo.notices                 = 'Avizoj';
+window.l.eo.followers                 = 'Sekvantoj';
+window.l.eo.following                 = 'Sekvantaj';
+window.l.eo.groups                     = 'Grupoj';
+window.l.eo.compose                 = 'Krei novan avizon...';
+window.l.eo.queetVerb                = 'Avizi';
+window.l.eo.queetsNounPlural        = 'Avizoj';
+window.l.eo.logout                    = 'Elsaluti';
+window.l.eo.languageSelected        = 'Lingvo:';
+window.l.eo.viewMyProfilePage        = 'Vidi mian paĝon de profilo';
+window.l.eo.expand                    = 'Elvolvi';
+window.l.eo.collapse                = 'Envolvi';
+window.l.eo.details                    = 'Detalaĵojn';
+window.l.eo.expandFullConversation    = 'Elvolvi la tutan konversacio';
+window.l.eo.replyVerb                = 'Respondi';
+window.l.eo.requeetVerb                = 'Reavizi';
+window.l.eo.favoriteVerb            = 'Favorigi';
+window.l.eo.requeetedVerb            = 'Reavizita';
+window.l.eo.favoritedVerb            = 'Favorigita';
+window.l.eo.replyTo                    = 'Respondi al';
+window.l.eo.requeetedBy                = 'Reavizita de';
+window.l.eo.favoriteNoun            = 'Favorato';
+window.l.eo.favoritesNoun            = 'Favoratoj';
+window.l.eo.requeetNoun                = 'Reavizo';
+window.l.eo.requeetsNoun            = 'Reavizoj';
+window.l.eo.newQueet                = 'nova avizo';
+window.l.eo.newQueets                = 'novaj avizoj';
+window.l.eo.longmonthsJanuary         = "januaro";
+window.l.eo.longmonthsFebruary         = "February";
+window.l.eo.longmonthsMars             = "marto";
+window.l.eo.longmonthsApril         = "aprilo";
+window.l.eo.longmonthsMay             = "majo";
+window.l.eo.longmonthsJune             = "junio";
+window.l.eo.longmonthsJuly             = "julio";
+window.l.eo.longmonthsAugust         = "aŭgusto";
+window.l.eo.longmonthsSeptember        = "septembro";
+window.l.eo.longmonthsOctober         = "oktobro";
+window.l.eo.longmonthsNovember         = "novembro";
+window.l.eo.longmonthsDecember         = "decembro";
+window.l.eo.shortmonthsJanuary         = "jan";
+window.l.eo.shortmonthsFebruary     = "feb";
+window.l.eo.shortmonthsMars         = "mar";
+window.l.eo.shortmonthsApril         = "apr";
+window.l.eo.shortmonthsMay             = "maj";
+window.l.eo.shortmonthsJune         = "jun";
+window.l.eo.shortmonthsJuly         = "jul";
+window.l.eo.shortmonthsAugust         = "aŭg";
+window.l.eo.shortmonthsSeptember    = "sep";
+window.l.eo.shortmonthsOctober         = "okt";
+window.l.eo.shortmonthsNovember     = "nov";
+window.l.eo.shortmonthsDecember     = "dec";
+window.l.eo.time12am                = '{time} a.t.m.';
+window.l.eo.time12pm                = '{time} p.t.m.';
+window.l.eo.longDateFormat             = '{time24} - {day} {month} {year}';
+window.l.eo.shortDateFormatSeconds    = '{seconds}s';
+window.l.eo.shortDateFormatMinutes    = '{minutes}min';
+window.l.eo.shortDateFormatHours    = '{hours}h';
+window.l.eo.shortDateFormatDate        = '{day} {month}';
+window.l.eo.shortDateFormatDateAndY    = '{day} {month} {year}';
+window.l.eo.now                        = 'nuna';
+window.l.eo.posting                    = 'sendanta';
+window.l.eo.viewMoreInConvBefore    = '← Vidi pli de la konversacio';
+window.l.eo.viewMoreInConvAfter        = 'Vidi pli de la konversacio →';
+window.l.eo.mentions                = 'Mencioj';
+window.l.eo.timeline            	= 'Kronologio';
+window.l.eo.publicTimeline            = 'Publika kronologio';
+window.l.eo.searchVerb                = 'Serĉi';
+window.l.eo.deleteVerb                = 'Forigi';
+window.l.eo.cancelVerb                = 'Rezigni';
+window.l.eo.deleteConfirmation        = 'Ĉu vi certas, ke vi volas forigi tiun avizon?';
+window.l.eo.userExternalFollow		= 'Sekvi';
+window.l.eo.userExternalFollowHelp	= 'Via konto ID (? I user@quitter.se)';
+window.l.eo.userFollow                = 'Sekvi';
+window.l.eo.userFollowing            = 'Sekvanta';
+window.l.eo.userUnfollow            = 'Malsekvi';
+window.l.eo.joinGroup                = 'Membriĝi grupon';
+window.l.eo.isMemberOfGroup            = 'membro de grupo';
+window.l.eo.leaveGroup                = 'Rezigni grupon';
+window.l.eo.memberCount                = 'Membroj';
+window.l.eo.adminCount                = 'Intendantoj';
+window.l.eo.settings                = 'Agordo';
+window.l.eo.saveChanges                = 'Konservi ŝanĝojn';
+window.l.eo.linkColor                = 'Koloro de ligiloj';
+window.l.eo.backgroundColor            = 'Koloro de fono';
+window.l.eo.newToQuitter            = 'Ĉu vi estas novanto je Quitter?';
+window.l.eo.signUp                    = 'Regístriĝi';
+window.l.eo.signUpFullName            = 'Plena nomo';
+window.l.eo.signUpEmail                = 'Retpoŝto';
+window.l.eo.signUpButtonText        = 'Regístriĝi ĉe Quitter';
+window.l.eo.welcomeHeading            = 'Bonvenon al Quitter.';
+window.l.eo.welcomeText				= 'Ni estas <span id="federated-tooltip"><div id="what-is-federation">Helpindiko\
+									   por “federaĵon”: “federaĵon” signifas, ke vi ne bezonas konton ĉe Quitter por\
+									   ebli sekvi, esti sekvanta far aliaj, aŭ interagi kun uzantoj de Quitter. Vi povas\
+									   registriĝi ĉe ajna servaĵo de StatusNet aŭ\
+									   <a href="http://www.gnu.org/software/social/">GNU Social</a>, aŭ ajna servaĵo, kiu baziĝas\
+									   sur la protokolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>!\
+									   Vi eĉ ne bezonas membriĝi al servaĵo – peni instali la belan\
+									   programon GNU Social ĉe via propra servaĵo! :)</div>federaĵon</span> de mikroblogantoj,\
+									   kiu ĉagrenas pri etiko kaj solidareco, kaj kiu volas forlasi la centralizantajn\
+									   kapitalismajn servaĵojn. Ni ekzistas\ ekde 2010, kaj ĉiam estos senprofitcela.';
+window.l.eo.registerNickname		= 'Nomo de uzanto';
+window.l.eo.registerHomepage		= 'Afiŝinto';
+window.l.eo.registerBio				= 'Biografio';
+window.l.eo.registerLocation		= 'Loko';
+window.l.eo.registerRepeatPassword	= 'Ripeti pasvorton';
+window.l.eo.moreSettings			= 'Pli agordoj';
+
+
+// italian
+window.l.it = new Object();
+window.l.it.languageName             = 'Italiano';
+window.l.it.loginUsername             = 'Nome dell\' utente o indirizzo email';
+window.l.it.loginPassword             = 'Password';
+window.l.it.loginSignIn             = 'Iniziare la sessione';
+window.l.it.loginRememberMe         = 'Ricordami';
+window.l.it.loginForgotPassword     = 'Hai dimenticato la password?';
+window.l.it.notices                 = 'Queets';
+window.l.it.followers                 = 'Follower';
+window.l.it.following                 = 'Following';
+window.l.it.groups                     = 'Gruppi';
+window.l.it.compose                 = 'Compore un nuovo Queet...';
+window.l.it.queetVerb                = 'Quittare';
+window.l.it.queetsNounPlural        = 'Queet';
+window.l.it.logout                    = 'Disconnettersi';
+window.l.it.languageSelected        = 'Lingua';
+window.l.it.viewMyProfilePage        = 'Accesso al mio profilo';
+window.l.it.expand                    = 'Apri';
+window.l.it.collapse                = 'Riduci';
+window.l.it.details                    = 'Detagli';
+window.l.it.expandFullConversation    = 'Vedera la conversazione completa';
+window.l.it.replyVerb                = 'Rispondere';
+window.l.it.requeetVerb                = 'Requittare';
+window.l.it.favoriteVerb            = 'Favorire';
+window.l.it.requeetedVerb            = 'Requittato';
+window.l.it.favoritedVerb            = 'Favorito';
+window.l.it.replyTo                    = 'Rispondere a';
+window.l.it.requeetedBy                = 'Requittato per';
+window.l.it.favoriteNoun            = 'Favorito';
+window.l.it.favoritesNoun            = 'Favoriti';
+window.l.it.requeetNoun                = 'Requeet';
+window.l.it.requeetsNoun            = 'Requeet';
+window.l.it.newQueet                = 'nuovo Queet';
+window.l.it.newQueets                = 'nuovi Queet';
+window.l.it.longmonthsJanuary         = "gennaio";
+window.l.it.longmonthsFebruary         = "febbraio";
+window.l.it.longmonthsMars             = "marzo";
+window.l.it.longmonthsApril         = "aprile";
+window.l.it.longmonthsMay             = "maggio";
+window.l.it.longmonthsJune             = "giugno";
+window.l.it.longmonthsJuly             = "luglio";
+window.l.it.longmonthsAugust         = "agosto";
+window.l.it.longmonthsSeptember        = "settembre";
+window.l.it.longmonthsOctober         = "ottobre";
+window.l.it.longmonthsNovember         = "novembre";
+window.l.it.longmonthsDecember         = "dicembre";
+window.l.it.shortmonthsJanuary         = "gen";
+window.l.it.shortmonthsFebruary     = "feb";
+window.l.it.shortmonthsMars         = "mar";
+window.l.it.shortmonthsApril         = "apr";
+window.l.it.shortmonthsMay             = "mag";
+window.l.it.shortmonthsJune         = "giu";
+window.l.it.shortmonthsJuly         = "lug";
+window.l.it.shortmonthsAugust         = "ago";
+window.l.it.shortmonthsSeptember    = "set";
+window.l.it.shortmonthsOctober         = "ott";
+window.l.it.shortmonthsNovember     = "nov";
+window.l.it.shortmonthsDecember     = "dic";
+window.l.it.time12am                = '{time} AM';
+window.l.it.time12pm                = '{time} PM';
+window.l.it.longDateFormat             = '{time24} - {day} {month} {year}';
+window.l.it.shortDateFormatSeconds    = '{seconds}s';
+window.l.it.shortDateFormatMinutes    = '{minutes}min';
+window.l.it.shortDateFormatHours    = '{hours}h';
+window.l.it.shortDateFormatDate        = '{day} {month}';
+window.l.it.shortDateFormatDateAndY    = '{day} {month} {year}';
+window.l.it.now                        = 'adesso';
+window.l.it.posting                    = 'inviato';
+window.l.it.viewMoreInConvBefore    = '← Conversazioni precedenti';
+window.l.it.viewMoreInConvAfter        = 'Conversazioni successive →';
+window.l.it.mentions                = 'Menzioni';
+window.l.it.timeline            	= 'Timeline';
+window.l.it.publicTimeline            = 'Timeline publica';
+window.l.it.searchVerb                = 'Cercare';
+window.l.it.deleteVerb                = 'Eliminare';
+window.l.it.cancelVerb                = 'Cancellare';
+window.l.it.deleteConfirmation        = 'Sei sicuro di volere cancellare questo queet?';
+window.l.it.userExternalFollow		= 'Seguire';
+window.l.it.userExternalFollowHelp	= 'Il tuo ID conto (ad esempio user@quitter.se)';
+window.l.it.userFollow                = 'Seguire';
+window.l.it.userFollowing            = 'Seguendo';
+window.l.it.userUnfollow            = 'Smettere di seguire';
+window.l.it.joinGroup                = 'Aderire al gruppe';
+window.l.it.isMemberOfGroup            = 'Membro del gruppo';
+window.l.it.leaveGroup                = 'Lasciare il gruppo';
+window.l.it.memberCount                = 'Membri';
+window.l.it.adminCount                = 'Amministratori';
+window.l.it.settings                = 'Configurazione';
+window.l.it.saveChanges                = 'Salvaguardare';
+window.l.it.linkColor                = 'Colore dei link';
+window.l.it.backgroundColor            = 'Colore di sfone';
+window.l.it.newToQuitter            = 'Sei un novizio su Quitter?';
+window.l.it.signUp                    = 'Registrati';
+window.l.it.signUpFullName            = 'Nome e cognome';
+window.l.it.signUpEmail                = 'Indirizzo di posta elettronica';
+window.l.it.signUpButtonText        = 'Registrati su Quitter';
+window.l.it.welcomeHeading            = 'Benvenuto  Quitter.';
+window.l.it.welcomeText				= 'Siamo una <span id="federated-tooltip"><div id="what-is-federation">"Federazione" \
+									   significa che non è necessario avere un acconto Quitter per essere in grado di seguire, \
+									   essere seguito da, o interagire con gli altri utenti Quitter. Potete registrarvi su \
+									   qualsiasi server StatusNet, <a href="http://www.gnu.org/software/social/">GNU Social</a>, \
+									   o qualsiasi altro servizio basato sul protocollo \
+									   <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Non avete \
+									   nemmeno bisogno di far parte di un servizio - provate a installare il meraviglioso \
+									   software GNU Social sul proprio server! :)</div>federazione</span> di microbloggers \
+									   che hanno a cuore l\'etica, la solidarietà, e che vogliono uscire dai servizi \
+									   centralizzati capitalisti. Esistiamo dal 2010 e saremmo sempre non-profit.';
+window.l.it.registerNickname		= 'Nome dell\' utente';
+window.l.it.registerHomepage		= 'Sito web';
+window.l.it.registerBio				= 'Biografia';
+window.l.it.registerLocation		= 'Posizione';
+window.l.it.registerRepeatPassword	= 'Ripetere la password';
+window.l.it.moreSettings			= 'Altre configurazioni';
 
 
 // set language, from local storage, else browser language, else english (english also if no localstorage availible)
 var browserLang = navigator.language || navigator.userLanguage; 
 var selectedLanguage = 'en';
 if(localStorageIsEnabled()) {
-	if(typeof localStorage.selectedLanguage != 'undefined') {
+	if(typeof localStorage.selectedLanguage != 'undefined' && localStorage.selectedLanguage != null) {
 		selectedLanguage = localStorage.selectedLanguage;
 		}
 	else if(typeof window.l[browserLang.substring(0,2)] != 'undefined') {
@@ -780,8 +1092,8 @@ $('#logout').html(window.sL.logout);
 $('#settings').html(window.sL.settings);
 $('.language-dropdown .dropdown-toggle small').html(window.sL.languageSelected);
 $('.language-dropdown .current-language').html(window.sL.languageName);
-$('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').prepend(window.sL.queetsNounPlural);
-$('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').attr('data-stream-header',window.sL.queetsNounPlural);
+$('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').prepend(window.sL.timeline);
+$('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').attr('data-stream-header',window.sL.timeline);
 $('.stream-selection[data-stream-name="statuses/mentions.json"]').prepend(window.sL.mentions);
 $('.stream-selection[data-stream-name="statuses/mentions.json"]').attr('data-stream-header',window.sL.mentions);
 $('.stream-selection[data-stream-name="favorites.json"]').prepend(window.sL.favoritesNoun);

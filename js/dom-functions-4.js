@@ -176,7 +176,13 @@ function profileCardFromFirstObject(data,screen_name) {
 		var followButton = '';				
 		if(typeof window.loginUsername != 'undefined' && window.myUserID != first.user.id) {			
 			var followButton = '<div class="user-actions"><button data-follow-user-id="' + first.user.id + '" data-follow-user="' + first.user.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
-			}		
+			}
+		
+		// follow from external instance if logged out
+		if(typeof window.loginUsername == 'undefined') {			
+			var followButton = '<div class="user-actions"><button type="button" class="external-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';	
+			}
+		
 			
 		// change design
 		changeDesign(first.user);			
@@ -380,7 +386,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	if($('.stream-selection[data-stream-header="' + streamHeader + '"]').length==0
 	&& streamHeader != '@' + window.loginUsername
 	&& typeof window.loginUsername != 'undefined') { 			
-		$('#history-container').append('<div class="stream-selection" data-stream-header="' + streamHeader + '" data-stream-name="' + defaultStreamName + '">' + streamHeader + '<i class="close-right"></i><i class="chev-right"></i></div>');
+		$('#history-container').append('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + $('.stream-selection.public-timeline').attr('href') + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="close-right"></i><i class="chev-right"></i></a>');
 		updateHistoryLocalStorage();
 		}
 	
@@ -469,6 +475,91 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 
 /* ·  
    · 
+   ·   Convert stream to path
+   · 
+   ·   @param stream: the stream, e.g. 'public_timeline.json'
+   ·   @returns: relative path
+   · 
+   · · · · · · · · · */
+
+function convertStreamToPath(stream) {
+	if(stream.substring(0,45) == 'statuses/followers.json?count=20&screen_name=') {
+		var screenName = stream.substring(stream.lastIndexOf('=')+1);
+		return screenName + '/subscribers';
+		}
+	else if(stream.substring(0,43) == 'statuses/friends.json?count=20&screen_name=') {
+		var screenName = stream.substring(stream.lastIndexOf('=')+1);		
+		return screenName + '/subscriptions';
+		}
+	else if(stream.substring(0,35) == 'statuses/mentions.json?screen_name=') {
+		var screenName = stream.substring(stream.indexOf('=')+1);
+		return screenName + '/replies';
+		}
+	else if(stream.substring(0,27) == 'favorites.json?screen_name=') {
+		var screenName = stream.substring(stream.indexOf('=')+1);		
+		return screenName + '/favorites';
+		}	
+	else if(stream.substring(0,48) == 'statusnet/groups/list.json?count=10&screen_name=') {
+		var screenName = stream.substring(stream.lastIndexOf('=')+1);		
+		return screenName + '/groups';
+		}		
+	else if(stream == 'statuses/followers.json?count=20') {
+		return window.loginUsername + '/subscribers';
+		}
+	else if(stream == 'statuses/friends.json?count=20') {
+		return window.loginUsername + '/subscriptions';
+		}
+	else if(stream == 'statuses/mentions.json') {
+		return window.loginUsername + '/replies';
+		}
+	else if(stream == 'favorites.json') {
+		return window.loginUsername + '/favorites';
+		}						
+	else if(stream == 'statusnet/groups/list.json?count=10') {
+		return window.loginUsername + '/groups';
+		}	
+	else if (stream.substring(0,27) == 'statuses/user_timeline.json') {
+		var screenName = stream.substring(stream.indexOf('=')+1);
+		return screenName;		
+		}
+	else if(stream == 'statuses/friends_timeline.json') {
+		return window.loginUsername + '/all';
+		}
+	else if(stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=') {
+		var screenName = stream.substring(stream.indexOf('=')+1);
+		return screenName + '/all';
+		}		
+	else if (stream == 'statuses/mentions.json') {
+		return window.loginUsername + '/replies';		
+		}
+	else if(stream == 'statuses/public_timeline.json')	{
+		return '';
+		}
+	else if(stream.substring(0,26) == 'statusnet/groups/timeline/')	{
+		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
+		return 'group/' + groupName;
+		}		
+	else if(stream.substring(0,28) == 'statusnet/groups/membership/')	{
+		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
+		return 'group/' + groupName + '/members';
+		}		
+	else if(stream.substring(0,24) == 'statusnet/groups/admins/')	{
+		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
+		return 'group/' + groupName + '/admins';
+		}						
+	else if(stream.substring(0,24) == 'statusnet/tags/timeline/')	{
+		var tagName = stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
+		return 'tag/' + tagName;
+		}			
+	else if(stream.substring(0,11) == 'search.json')	{
+		var searchTerms = stream.substring(stream.indexOf('?q=')+3);
+		return 'search/notice?q=' + searchTerms;
+		}	
+	}
+
+
+/* ·  
+   · 
    ·   Sets the location bar in the browser to correspond with given stream
    · 
    ·   @param stream: the stream, e.g. 'public_timeline.json'
@@ -476,79 +567,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
    · · · · · · · · · */
 
 function setUrlFromStream(stream) {
-
-	if(stream.substring(0,45) == 'statuses/followers.json?count=20&screen_name=') {
-		var screenName = stream.substring(stream.lastIndexOf('=')+1);
-		history.pushState({strm:stream},'','/' + screenName + '/subscribers');
-		}
-	else if(stream.substring(0,43) == 'statuses/friends.json?count=20&screen_name=') {
-		var screenName = stream.substring(stream.lastIndexOf('=')+1);		
-		history.pushState({strm:stream},'','/' + screenName + '/subscriptions');
-		}
-	else if(stream.substring(0,35) == 'statuses/mentions.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);
-		history.pushState({strm:stream},'','/' + screenName + '/replies');
-		}
-	else if(stream.substring(0,27) == 'favorites.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);		
-		history.pushState({strm:stream},'','/' + screenName + '/favorites');
-		}	
-	else if(stream.substring(0,48) == 'statusnet/groups/list.json?count=10&screen_name=') {
-		var screenName = stream.substring(stream.lastIndexOf('=')+1);		
-		history.pushState({strm:stream},'','/' + screenName + '/groups');
-		}		
-	else if(stream == 'statuses/followers.json?count=20') {
-		history.pushState({strm:stream},'','/' + window.loginUsername + '/subscribers');
-		}
-	else if(stream == 'statuses/friends.json?count=20') {
-		history.pushState({strm:stream},'','/' + window.loginUsername + '/subscriptions');
-		}
-	else if(stream == 'statuses/mentions.json') {
-		history.pushState({strm:stream},'','/' + window.loginUsername + '/replies');
-		}
-	else if(stream == 'favorites.json') {
-		history.pushState({strm:stream},'','/' + window.loginUsername + '/favorites');
-		}						
-	else if(stream == 'statusnet/groups/list.json?count=10') {
-		history.pushState({strm:stream},'','/' + window.loginUsername + '/groups');
-		}	
-	else if (stream.substring(0,27) == 'statuses/user_timeline.json') {
-		var screenName = stream.substring(stream.indexOf('=')+1);
-		history.pushState({strm:stream},'','/' + screenName);		
-		}
-	else if(stream == 'statuses/friends_timeline.json') {
-		history.pushState({strm:stream},'','/' + window.loginUsername + '/all');
-		}
-	else if(stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);
-		history.pushState({strm:stream},'','/' + screenName + '/all');
-		}		
-	else if (stream == 'statuses/mentions.json') {
-		history.pushState({strm:stream},'','/' + window.loginUsername + '/replies');		
-		}
-	else if(stream == 'statuses/public_timeline.json')	{
-		history.pushState({strm:stream},'','/');
-		}
-	else if(stream.substring(0,26) == 'statusnet/groups/timeline/')	{
-		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
-		history.pushState({strm:stream},'','/group/' + groupName);
-		}		
-	else if(stream.substring(0,28) == 'statusnet/groups/membership/')	{
-		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
-		history.pushState({strm:stream},'','/group/' + groupName + '/members');
-		}		
-	else if(stream.substring(0,24) == 'statusnet/groups/admins/')	{
-		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
-		history.pushState({strm:stream},'','/group/' + groupName + '/admins');
-		}						
-	else if(stream.substring(0,24) == 'statusnet/tags/timeline/')	{
-		var tagName = stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
-		history.pushState({strm:stream},'','/tag/' + tagName);
-		}			
-	else if(stream.substring(0,11) == 'search.json')	{
-		var searchTerms = stream.substring(stream.indexOf('?q=')+3);
-		history.pushState({strm:stream},'','/search/notice?q=' + searchTerms);
-		}	
+	history.pushState({strm:stream},'','/' + convertStreamToPath(stream));
 	}
 	
 	
@@ -567,9 +586,9 @@ function getStreamFromUrl() {
 	// default/fallback
 	var streamToSet = 'statuses/public_timeline.json';
 	
-	// {domain}/{screen_name}
-	if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','')))) {
-		var userToStream = loc.replace('/','');
+	// {domain}/{screen_name} or {domain}/{screen_name}/
+	if ((/^[a-zA-Z0-9]+$/.test(loc.substring(0, loc.length - 1).replace('/','')))) {
+		var userToStream = loc.replace('/','').replace('/','');
 		if(userToStream.length>0) {
 			streamToSet = 'statuses/user_timeline.json?screen_name=' + userToStream;
 			}
@@ -687,7 +706,7 @@ function getStreamFromUrl() {
 	// {domain}/search/notice?q={urlencoded searh terms}
 	else if (loc.indexOf('/search/notice?q=')>-1) {
 		var searchToStream = loc.replace('/search/notice?q=','');
-		if(userToStream.length>0) {
+		if(searchToStream.length>0) {
 			streamToSet = 'search.json?q=' + searchToStream;
 			}
 		}	
@@ -700,49 +719,57 @@ function getStreamFromUrl() {
    ·   Expand/de-expand queet
    · 
    ·   @param q: the stream item to expand
+   ·   @param doScrolling: if we should scroll back to position or not
    · 
    · · · · · · · · · */
     
-function expand_queet(q) {
+function expand_queet(q,doScrolling) {
 	
+	doScrolling = typeof doScrolling !== 'undefined' ? doScrolling : true;
 	var qid = q.attr('data-quitter-id');
 	
 	// de-expand if expanded
 	if(q.hasClass('expanded') && !q.hasClass('collapsing')) {
-		q.addClass('collapsing');
-		q.find('.stream-item-expand').html(window.sL.expand);
-		if(q.hasClass('conversation')) {
-			q.removeClass('expanded');	         
-			q.removeClass('collapsing');				
-			q.find('.expanded-content').remove();
-			q.find('.view-more-container-top').remove();
-			q.find('.view-more-container-bottom').remove();
-			q.find('.stream-item.conversation').remove();
-			q.find('.inline-reply-queetbox').remove();
-			}
-		else {
-			rememberMyScrollPos(q.children('.queet'),qid,0);			
-			var collapseTime = 200 + q.find('.stream-item.conversation:not(.hidden-conversation)').length*50;
-			q.find('.expanded-content').slideUp(collapseTime,function(){$(this).remove();});
-			q.find('.view-more-container-top').slideUp(collapseTime,function(){$(this).remove();});
-			q.find('.view-more-container-bottom').slideUp(collapseTime,function(){$(this).remove();});
-			q.find('.stream-item.conversation').slideUp(collapseTime,function(){$(this).remove();});
-			q.find('.inline-reply-queetbox').slideUp(collapseTime,function(){$(this).remove();});
-	   		backToMyScrollPos(q,qid,'animate');
-			setTimeout(function(){
-				q.removeClass('expanded');
-				q.removeClass('collapsing');	  
-				},collapseTime+500);	   								
-			}
+		var sel = getSelection().toString();
+    	
+    	if(!sel && !q.find('.queet-button').children('button').hasClass('enabled')) { // don't collapse if text is selected, or if queet has an active queet button
+			q.addClass('collapsing');
+			q.find('.stream-item-expand').html(window.sL.expand);
+			if(q.hasClass('conversation')) {
+				q.removeClass('expanded');	         
+				q.removeClass('collapsing');				
+				q.find('.expanded-content').remove();
+				q.find('.view-more-container-top').remove();
+				q.find('.view-more-container-bottom').remove();
+				q.find('.stream-item.conversation').remove();
+				q.find('.inline-reply-queetbox').remove();
+				}
+			else {
+				rememberMyScrollPos(q.children('.queet'),qid,0);			
+				var collapseTime = 200 + q.find('.stream-item.conversation:not(.hidden-conversation)').length*50;
+				q.find('.expanded-content').slideUp(collapseTime,function(){$(this).remove();});
+				q.find('.view-more-container-top').slideUp(collapseTime,function(){$(this).remove();});
+				q.find('.view-more-container-bottom').slideUp(collapseTime,function(){$(this).remove();});
+				q.find('.stream-item.conversation').slideUp(collapseTime,function(){$(this).remove();});
+				q.find('.inline-reply-queetbox').slideUp(collapseTime,function(){$(this).remove();});
+				if(doScrolling) {
+					backToMyScrollPos(q,qid,'animate');
+					}
+				setTimeout(function(){
+					q.removeClass('expanded');
+					q.removeClass('collapsing');	  
+					},collapseTime+500);	   								
+				}    	    
+	    	}
 		}
 	else {
 		
 		rememberMyScrollPos(q,qid,-8);
 		
-		q.addClass('expanded');
-		
 		// not for acitivity
 		if(!q.hasClass('activity')) {
+		
+			q.addClass('expanded');		
 			q.find('.stream-item-expand').html(window.sL.collapse);
 				
 			// if shortened queet, get full text (not if external)
@@ -751,7 +778,8 @@ function expand_queet(q) {
 					var attachmentId = q.children('.queet').find('span.attachment.more').attr('data-attachment-id');
 					getFromAPI("attachment/" + attachmentId + ".json",function(data){
 						if(data) {
-							q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
+							console.log(data);
+							q.children('.queet').find('.queet-text').html($.trim(data.replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
 							}
 						});					
 					}
@@ -761,7 +789,7 @@ function expand_queet(q) {
 			var longdate = parseTwitterLongDate(q.find('.created-at').attr('data-created-at'));
 			var qurl = q.find('.created-at').find('a').attr('href');
 			
-			var metadata = '<span class="longdate" title="' + longdate + '">' + longdate + ' · </span><a href="' + qurl + '" class="permalink-link">' + window.sL.details + '</a>';
+			var metadata = '<span class="longdate" title="' + longdate + '">' + longdate + ' · ' + unescape(q.attr('data-source')) + '</span> · <a href="' + qurl + '" class="permalink-link">' + window.sL.details + '</a>';
 			
 			// show expanded content
 			q.find('.stream-item-footer').after('<div class="expanded-content"><div class="queet-stats-container"></div><div class="client-and-actions"><span class="metadata">' + metadata + '</span></div></div>');					
@@ -834,23 +862,28 @@ function replyFormHtml(q,qid) {
 	// get all @:s
 	var user_screen_name = q.find('.queet').find('.screen-name').html().substring(1);
 	var user_screen_name_html = '<a>@' + user_screen_name + '</a>';
+	var user_screen_name_text = '@' + user_screen_name;	
 	var reply_to_screen_name = '';
 	var reply_to_screen_name_html = '';			
+	var reply_to_screen_name_text = '';				
 	if(q.attr('data-in-reply-to-screen-name').length>0 // not if not a reply
 	&& q.attr('data-in-reply-to-screen-name') != $('#user-screen-name').html() // not if it's me
 	&& q.attr('data-in-reply-to-screen-name') != user_screen_name // not same screen name twice
 		) {
 		reply_to_screen_name = q.attr('data-in-reply-to-screen-name');				
 		reply_to_screen_name_html = '&nbsp;<a>@' + reply_to_screen_name + '</a>';				
+		reply_to_screen_name_text = ' @' + reply_to_screen_name;						
 		}
 	var more_reply_tos = '';
+	var more_reply_tos_text = '';	
 	$.each(q.find('.queet').find('.queet-text').find('.mention'),function(key,obj){
 		if($(obj).html() != user_screen_name && $(obj).html() != reply_to_screen_name && $(obj).html() != $('#user-screen-name').html()) {
 			more_reply_tos = more_reply_tos + '&nbsp;<a>@' + $(obj).html() + '</a>';
+			more_reply_tos_text = more_reply_tos_text + ' @' + $(obj).html();			
 			}
 		});
 	
-	return '<div class="inline-reply-queetbox"><div contenteditable="true" aria-multiline="true" role="textbox" spellcheck="true" class="queet-box-template" id="queet-box-template-' + qid + '" data-blurred-html=' + escape(window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br>') + ' data-start-html="' + escape(user_screen_name_html + reply_to_screen_name_html + more_reply_tos) + '">' + window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br></div></div>';	
+	return '<div class="inline-reply-queetbox"><div class="queet-box-template" id="queet-box-template-' + qid + '" data-start-text="' + user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '">' + window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br></div></div>';	
 	}
 	
 
@@ -897,24 +930,43 @@ function popUpAction(popupId, heading, bodyHtml, footerHtml){
    · · · · · · · · · · · · · */ 
    
 function expandInlineQueetBox(box) {
-	if(!box.hasClass('active')) {
-		box.addClass('active');	
-		// remove the "reply/svara/etc" before the mentions
-		var new_mentions_html = '';
-		$.each(box.find('a'),function(key,obj){
-			new_mentions_html = new_mentions_html + '<a>' + $(obj).html() + '</a>&nbsp;';
-			});
-		box.html(new_mentions_html);
-		placeCaretAtEnd(document.getElementById(box.attr('id')));
-		
-		// show toolbar/button
-		box.after('<div class="queet-toolbar"><div class="queet-box-extras"></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div><div style="clear:both;"></div></div>');
-
-		// count chars
-		countCharsInQueetBox(box,box.parent().find('.queet-toolbar .queet-counter'),box.parent().find('.queet-toolbar button'));	
-		}		
-	}	
 	
+	// remove the "reply/svara/etc" before the mentions
+	var new_mentions_html = '';
+	$.each(box.find('a'),function(key,obj){
+		new_mentions_html = new_mentions_html + $(obj).html() + ' ';
+		});
+	
+	// insert textarea before, activate and display codemirror
+	box.before('<textarea id="codemirror-' + box.attr('id') + '"></textarea>');
+	window['codemirror-' + box.attr('id')] = CodeMirror.fromTextArea(document.getElementById('codemirror-' + box.attr('id')), { 
+		// submit on enter
+		onKeyEvent: function(editor, event) {
+			event = $.event.fix(event);
+			var enterKeyHasBeenPressed = event.type == "keyup" && event.keyCode == 13 && (event.ctrlKey || event.altKey);		
+			if(enterKeyHasBeenPressed ){
+				console.log('#q-' + box.attr('id') + ' .queet-toolbar button');
+				$('#' + box.attr('id')).siblings('.queet-toolbar').find('button').trigger('click');
+				}
+			}
+		});
+	box.siblings('.CodeMirror').css('display','block');
+	window['codemirror-' + box.attr('id')].setValue(new_mentions_html);
+	window['codemirror-' + box.attr('id')].focus();
+	window['codemirror-' + box.attr('id')].setCursor(window['codemirror-' + box.attr('id')].lineCount(), 0)		
+	box.css('display','none');
+
+	// show toolbar/button
+	box.after('<div class="queet-toolbar"><div class="queet-box-extras"></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div><div style="clear:both;"></div></div>');
+
+	// count chars
+	countCharsInQueetBox(window['codemirror-' + box.attr('id')].getValue(),box.parent().find('.queet-toolbar .queet-counter'),box.parent().find('.queet-toolbar button'));	
+	
+	// activate char counter
+	window['codemirror-' + box.attr('id')].on('change',function () {
+		countCharsInQueetBox(window['codemirror-' + box.attr('id')].getValue(),box.parent().find('.queet-toolbar .queet-counter'),box.parent().find('.queet-toolbar button'));	
+		});		
+	}		
 	
 	
 /* · 
@@ -976,12 +1028,30 @@ function showConversation(qid) {
 							var favoriteHtml = '<a class="with-icn"><span class="icon sm-fav"></span> <b>' + window.sL.favoriteVerb + '</b></a>';
 							}							
 							
+						// actions only for logged in users
+						var queetActions = '';
+						if(typeof window.loginUsername != 'undefined') {			
+							queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply"></span> <b>' + window.sL.replyVerb + '</b></a></li>' +  requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul>';
+							}
+
+						// reply-to html
+						var reply_to_html = '';							
+						if(obj.in_reply_to_screen_name != null && obj.in_reply_to_screen_name != obj.user.screen_name) {
+							reply_to_html = '<span class="reply-to">@' + obj.in_reply_to_screen_name + '</span> ';
+							}
+
+						// in-groups html
+						var in_groups_html = '';							
+						if(obj.statusnet_in_groups !== false) {
+							in_groups_html = '<span class="in-groups">' + obj.statusnet_in_groups + '</span>';
+							}								
+												
 						if(obj.source == 'activity') {
-							var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a>' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
+							var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a>' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
 							}
 						else {
-							var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation hidden-conversation ' + requeetedClass + ' ' + favoritedClass + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer"><ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply"></span> <b>' + window.sL.replyVerb + '</b></a></li>' + requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul><span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';				
-							}
+							var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation hidden-conversation ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';				
+							}						
 						
 						// detect rtl
 						queetHtml = detectRTL(queetHtml);						
@@ -1029,13 +1099,18 @@ function showConversation(qid) {
 										if(obj.in_reply_to_screen_name != null) {
 											in_reply_to_screen_name = obj.in_reply_to_screen_name;
 											}
-					
+
+										// reply-to html
+										var reply_to_html = '';							
+										if(obj.in_reply_to_screen_name != null && obj.in_reply_to_screen_name != obj.user.screen_name) {
+											reply_to_html = '<span class="reply-to">@' + obj.in_reply_to_screen_name + '</span> ';
+											}
 											
 										if(obj.source == 'activity') {
-											var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation external-conversation" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + external_base_url + '/notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
+											var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation external-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + external_base_url + '/notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
 											}
 										else {
-											var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation hidden-conversation external-conversation" data-external-base-url="' + escape(external_base_url) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + external_base_url + '/notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer"><ul class="queet-actions"><li class="action-reply-container">&nbsp;</li></ul><span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';				
+											var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation hidden-conversation external-conversation" data-external-base-url="' + escape(external_base_url) + '" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a>' + reply_to_html + '<small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + external_base_url + '/notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer"><ul class="queet-actions"><li class="action-reply-container">&nbsp;</li></ul><span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';				
 											}
 										
 										// detect rtl
@@ -1276,9 +1351,21 @@ function addToFeed(feed, after, extraClasses) {
 				if(typeof window.loginUsername != 'undefined') {			
 					queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply"></span> <b>' + window.sL.replyVerb + '</b></a></li>' +  requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul>';
 					}
+
+				// reply-to html
+				var reply_to_html = '';							
+				if(obj.retweeted_status.in_reply_to_screen_name != null && obj.retweeted_status.in_reply_to_screen_name != obj.retweeted_status.user.screen_name) {
+					reply_to_html = '<span class="reply-to">@' + obj.retweeted_status.in_reply_to_screen_name + '</span> ';
+					}		
+					
+				// in-groups html
+				var in_groups_html = '';							
+				if(obj.retweeted_status.statusnet_in_groups !== false) {
+					in_groups_html = '<span class="in-groups">' + obj.retweeted_status.statusnet_in_groups + '</span>';
+					}									
 						
 				var queetTime = parseTwitterDate(obj.retweeted_status.created_at);												
-				var queetHtml = '<div id="stream-item-' + obj.retweeted_status.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-quitter-id="' + obj.retweeted_status.id + '" data-conversation-id="' + obj.retweeted_status.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.retweeted_status.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.retweeted_status.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.retweeted_status.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.retweeted_status.user.profile_image_url + '" /><strong class="name" data-user-id="' + obj.retweeted_status.user.id + '">' + obj.retweeted_status.user.name + '</strong> <span class="screen-name">@' + obj.retweeted_status.user.screen_name + '</span></a><small class="created-at" data-created-at="' + obj.retweeted_status.created_at + '"><a href="' + obj.retweeted_status.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.retweeted_status.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<div class="context" id="requeet-' + obj.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy + '<a href="' + obj.user.statusnet_profile_url + '"> <b>' + obj.user.name + '</b></a></span></span></div><span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
+				var queetHtml = '<div id="stream-item-' + obj.retweeted_status.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.retweeted_status.source) + '" data-quitter-id="' + obj.retweeted_status.id + '" data-conversation-id="' + obj.retweeted_status.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.retweeted_status.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.retweeted_status.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.retweeted_status.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.retweeted_status.user.profile_image_url + '" /><strong class="name" data-user-id="' + obj.retweeted_status.user.id + '">' + obj.retweeted_status.user.name + '</strong> <span class="screen-name">@' + obj.retweeted_status.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.retweeted_status.created_at + '"><a href="' + obj.retweeted_status.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.retweeted_status.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<div class="context" id="requeet-' + obj.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy + '<a href="' + obj.user.statusnet_profile_url + '"> <b>' + obj.user.name + '</b></a></span></span></div><span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
 				
 				// detect rtl
 				queetHtml = detectRTL(queetHtml);						
@@ -1372,9 +1459,21 @@ function addToFeed(feed, after, extraClasses) {
 					if(typeof window.loginUsername != 'undefined') {			
 						queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply"></span> <b>' + window.sL.replyVerb + '</b></a></li>' + requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul>';
 						}
-					
+						
+					// reply-to html					
+					var reply_to_html = '';							
+					if(obj.in_reply_to_screen_name != null && obj.in_reply_to_screen_name != obj.user.screen_name) {
+						reply_to_html = '<span class="reply-to">@' + obj.in_reply_to_screen_name + '</span> ';
+						}
+						
+					// in-groups html
+					var in_groups_html = '';							
+					if(obj.statusnet_in_groups !== false) {
+						in_groups_html = '<span class="in-groups">' + obj.statusnet_in_groups + '</span>';
+						}	
+						
 					var queetTime = parseTwitterDate(obj.created_at);															
-					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"  data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
+					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"  data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
 
 					// detect rtl
 					queetHtml = detectRTL(queetHtml);	
@@ -1409,53 +1508,55 @@ function addToFeed(feed, after, extraClasses) {
    ·   View threaded converation
    · 
    ·   @param id: the stream item id
+   ·
+   ·   (experimental, not finished, commented out...)
    ·   
    · · · · · · · · · · · · · */ 
 
-$('body').on('click','.longdate',function(){
-	threadedConversation($(this).closest('.stream-item:not(.conversation)').attr('data-quitter-id'));
-	})
-function threadedConversation(id){
-	$('body').prepend('<div id="threaded-' + id + '" class="modal-container"><div class="thread-container" style="margin-left:0;"><div></div></div></div>');	
-	var scrollTop = $(window).scrollTop();
-	var containerStreamItem = $('#stream-item-' + id);
-	if(containerStreamItem.children('div:first-child').hasClass('.queet')) {
-		var firstStreamItemId = id;
-		}
-	else {
-		var firstStreamItemId = containerStreamItem.children('div:first-child').attr('data-quitter-id');
-		}
-	getThreadedReply(id,firstStreamItemId,$('#threaded-' + id + ' .thread-container div'));
-	}	
-
-function getThreadedReply(containerStreamId,this_id,appendToObj) {
-
-	var $this_item = $('<div/>').append($('.stream-item[data-quitter-id="' + this_id + '"]').outerHTML());
-	$this_item.children().children().remove('.stream-item.conversation');
-	$this_item.children('.stream-item').css('margin-left',parseInt(appendToObj.css('margin-left'),10)+20 + 'px');
-	$this_item.children('.stream-item').removeClass('hidden-conversation');
-	$this_item.children('.stream-item').removeClass('expanded');
-	$this_item.children('.stream-item').removeClass('activity');
-	$this_item.children('.stream-item').removeClass('conversation');	
-	$this_item.children('.stream-item').removeClass('visible');		
-	$this_item.children('.stream-item').children('div:not(.queet)').remove();
-	$this_item.children('.stream-item').find('.inline-reply-queetbox').remove();
-	$this_item.children('.stream-item').find('.expanded-content').remove();
-	$this_item.children('.stream-item').find('.stream-item-expand').remove();		
-	$this_item.children('.stream-item').css('opacity','1');
-	appendToObj.after($this_item.html());
-
-	$.each($('.stream-item[data-quitter-id="' + containerStreamId + '"]').children().get().reverse(),function(){
-		if($(this).hasClass('queet')) {
-			var this_reply_to = $(this).parent().attr('data-in-reply-to-status-id');
-			var childs_id = $(this).parent().attr('data-quitter-id');			
-			}
-		else {
-			var this_reply_to = $(this).attr('data-in-reply-to-status-id');			
-			var childs_id = $(this).attr('data-quitter-id');
-			}		
-		if(this_id == this_reply_to) {
-			getThreadedReply(containerStreamId,childs_id,$('#threaded-' + containerStreamId + ' .stream-item[data-quitter-id="' + this_id + '"]'));	
-			}
-		});
-	}
+// $('body').on('click','.longdate',function(){
+// 	threadedConversation($(this).closest('.stream-item:not(.conversation)').attr('data-quitter-id'));
+// 	})
+// function threadedConversation(id){
+// 	$('body').prepend('<div id="threaded-' + id + '" class="modal-container"><div class="thread-container" style="margin-left:0;"><div></div></div></div>');	
+// 	var scrollTop = $(window).scrollTop();
+// 	var containerStreamItem = $('#stream-item-' + id);
+// 	if(containerStreamItem.children('div:first-child').hasClass('.queet')) {
+// 		var firstStreamItemId = id;
+// 		}
+// 	else {
+// 		var firstStreamItemId = containerStreamItem.children('div:first-child').attr('data-quitter-id');
+// 		}
+// 	getThreadedReply(id,firstStreamItemId,$('#threaded-' + id + ' .thread-container div'));
+// 	}	
+// 
+// function getThreadedReply(containerStreamId,this_id,appendToObj) {
+// 
+// 	var $this_item = $('<div/>').append($('.stream-item[data-quitter-id="' + this_id + '"]').outerHTML());
+// 	$this_item.children().children().remove('.stream-item.conversation');
+// 	$this_item.children('.stream-item').css('margin-left',parseInt(appendToObj.css('margin-left'),10)+20 + 'px');
+// 	$this_item.children('.stream-item').removeClass('hidden-conversation');
+// 	$this_item.children('.stream-item').removeClass('expanded');
+// 	$this_item.children('.stream-item').removeClass('activity');
+// 	$this_item.children('.stream-item').removeClass('conversation');	
+// 	$this_item.children('.stream-item').removeClass('visible');		
+// 	$this_item.children('.stream-item').children('div:not(.queet)').remove();
+// 	$this_item.children('.stream-item').find('.inline-reply-queetbox').remove();
+// 	$this_item.children('.stream-item').find('.expanded-content').remove();
+// 	$this_item.children('.stream-item').find('.stream-item-expand').remove();		
+// 	$this_item.children('.stream-item').css('opacity','1');
+// 	appendToObj.after($this_item.html());
+// 
+// 	$.each($('.stream-item[data-quitter-id="' + containerStreamId + '"]').children().get().reverse(),function(){
+// 		if($(this).hasClass('queet')) {
+// 			var this_reply_to = $(this).parent().attr('data-in-reply-to-status-id');
+// 			var childs_id = $(this).parent().attr('data-quitter-id');			
+// 			}
+// 		else {
+// 			var this_reply_to = $(this).attr('data-in-reply-to-status-id');			
+// 			var childs_id = $(this).attr('data-quitter-id');
+// 			}		
+// 		if(this_id == this_reply_to) {
+// 			getThreadedReply(containerStreamId,childs_id,$('#threaded-' + containerStreamId + ' .stream-item[data-quitter-id="' + this_id + '"]'));	
+// 			}
+// 		});
+// 	}

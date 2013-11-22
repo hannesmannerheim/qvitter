@@ -2,8 +2,8 @@ Qvitter
 ==========================================
 
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
-* Last mod.: September, 2013
-* Version:   1
+* Last mod.: November, 2013
+* Version:   2
 * GitHub:    <https://github.com/hannesmannerheim/qvitter>
 
 Qvitter is free  software:  you can  redistribute it  and / or  modify it  
@@ -28,9 +28,13 @@ Setup
 
 3. You should really put some security-by-obscurity-stuff in the registration process. E-mail h@nnesmannerhe.im if you want to copy mine. 
 
-(Qvitter uses a slightly modified statusnet API. Some things will not work
+Qvitter uses a slightly modified statusnet API. Some things will not work
 if you connect to a site with standard API. Files are included if you want
-to Qvitter-mod your Statusnet API.)
+to Qvitter-mod your Statusnet API.
+
+Recently MMN-o has implemented these API-changes in GNU Social. The API changes should
+only be needed if you are running Statusnet 1.1.1, not if you have a recent GNU Social
+version. 
    
 
 TODO
@@ -48,8 +52,6 @@ TODO
 
 7. Settings (e.g. don't show replies to people I don't follow)
 
-8. Syntax-coloring in queet-box, maybe codemirror (worked nicely for ltr but not rtl text when I tried it)
-
 9. Image/file upload, drag-n-drop!
 
 10. Search users
@@ -57,8 +59,6 @@ TODO
 11. Recommended users
 
 12. Filters (hide queets containing strings, e.g. mute users)
-
-13. Better responsive design
 
 14. More languages
 
