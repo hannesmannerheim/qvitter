@@ -470,7 +470,7 @@ window.l.en.newToQuitter            = 'New to Quitter?';
 window.l.en.signUp                  = 'Sign up';
 window.l.en.signUpFullName          = 'Full name';
 window.l.en.signUpEmail             = 'Email';
-window.l.en.signUpButtonText        = 'Sign up for Quitter';
+window.l.en.signUpButtonText        = 'Sign up to Quitter';
 window.l.en.welcomeHeading          = 'Welcome to Quitter.';
 window.l.en.welcomeText             = 'We are a <span id="federated-tooltip"><div id="what-is-federation">"Federation" \
                                        means that you don\'t need a Quitter account to be able to follow, be followed \
@@ -480,7 +480,7 @@ window.l.en.welcomeText             = 'We are a <span id="federated-tooltip"><di
                                        You don\'t even have to join a service – try installing the lovely \
                                        <a href="http://www.gnu.org/software/social/">GNU Social</a> software on your own server! :)\
                                        </div>federation</span> of microbloggers who care about ethics and \
-                                       solidarity and want to quit the centralised capitalistic services. We\'ve been around \
+                                       solidarity and want to quit the centralised capitalist services. We are around \
                                        since 2010 and will always be non-profit.';
 window.l.en.registerNickname        = 'Nickname';
 window.l.en.registerHomepage        = 'Homepage';
