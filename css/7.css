@@ -60,20 +60,35 @@ ul.queet-actions li .icon,
 .dogear,
 .chev-right,
 .close-right,
-button.icon.nav-search {	
-	background-image: url("../img/sprite.png");	
+button.icon.nav-search,
+.member-button .join-text i,
+.external-follow-button .follow-text i,
+.follow-button .follow-text i,
+#birds-top,
+#logo,
+.topbar .global-nav {	
+	background-image: url("../img/sprite-2x.png");	
+	background-size: 500px 1329px;
 	}
-
-.topbar .global-nav {
-    background-image: url("../img/sprite_bgs.png");	
+	
+#logo {
+	width:89px;
+	height:34px;
+	display:block;
+	position:fixed;
+	z-index:1001;
+	margin-top:3px;
+	left:50%;
+	margin-left:-420px;	
+	background-position:0 5px;
+	cursor:pointer;
 	}
+#logo:hover {
+	background-position: 0 -24px;
+	}	
 
 #top-compose {
 	display:none;
-	}
-
-#logo {
-	background-image:url("../img/logo.png");	
 	}
 	
 #settingslink {
@@ -168,7 +183,7 @@ button.icon.nav-search {
     display: inline-block;
     vertical-align: text-top;
     height: 14px;
-    width: 12px;
+    width: 14px;
 	background-position: -20px -710px;        	
     background-color: transparent;
     margin-left: 7px;
@@ -374,18 +389,20 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
 	}
 	
 #birds-top {
-	display:block;
-	position:fixed;
-	z-index:1001;
-	margin-top:-1px;
-	right:-3px;
+	background-position: -193px -3px;
+    display: block;
+    height: 64px;
+    position: fixed;
+    right: 0;
+    width: 103px;
+    z-index: 1001;
 	}
 .topbar .global-nav {
     position: relative;
     width: 100%;
     height: 40px;
     background-color: #252525;
-    background-position: 0 0;        	
+	background-position: 0 -1200px;      	
     background-repeat: repeat-x;    
 	}	
 
@@ -800,6 +817,7 @@ button#submit-login:hover {
     border-color: #EC8B11;
 	}
 	
+	
 .modal-body .front-signup {
 	width:100%;
 	opacity: 1;
@@ -834,6 +852,15 @@ button#submit-login:hover {
 .modal-body .front-signup .signup-input-container input.invalid,
 .modal-body .front-signup .signup-input-container input.nickname-taken {	
 	background-color:pink;
+	}
+	
+#other-servers-link {
+	height:150px;
+	position: absolute;
+	bottom:-170px;
+	padding:10px;
+	text-shadow:1px 1px 3px rgba(0, 0, 0, 0.6);
+	color:rgba(255,255,255,0.8);
 	}
 
 #page-container {
@@ -912,15 +939,15 @@ button#submit-login:hover {
 	font-size: 14px;
 	}	
 .menu-container a .chev-right {
+    background-position: 0 -140px;
     background-repeat: no-repeat;
     display: block;
-    height: 13px;
-    width: 9px;
-    background-position: 0 -140px;
+    height: 15px;
     position: absolute;
-    right: 12px;
-    top: 9px;            	
-	}
+    right: 10px;
+    top: 9px;
+    width: 12px;
+    }
 .menu-container a .close-right {
     background-repeat: no-repeat;
     display: none;
@@ -1430,7 +1457,7 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	}		
 	
 .queet-text img {
-	width:100%;
+	max-width:100%;
 	}
 	
 .stream-item .queet-text p {
@@ -1549,14 +1576,14 @@ ul.queet-actions li .icon.sm-reply {
     }	
 ul.queet-actions li .icon.sm-rt {
 	background-position: -20px -190px;
-    width: 12px;
+    width: 14px;
     }	
 ul.queet-actions li .icon.sm-trash {
 	background-position: -160px -190px;
     width: 12px;
     }	    
 ul.queet-actions li .icon.sm-fav {
-	background-position: -40px -190px;
+	background-position: -39px -190px;
     width: 12px;
     }	        
 .stream-item:not(.expanded):hover ul.queet-actions li .icon.sm-reply,
@@ -1644,8 +1671,8 @@ ul.queet-actions li .icon.sm-fav {
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: -60px -350px;
-	width: 16px;
-	height: 12px;
+	width: 18px;
+	height: 11px;
 	margin-right: 1px;
 	display: inline-block;
 	cursor: pointer;
@@ -2334,22 +2361,7 @@ button.signup-btn.disabled,
 	border-color:#096eb3;
 	color:#fff;
 	}	
-
-#logo {
-	width:89px;
-	height:34px;
-	display:block;
-	position:fixed;
-	z-index:1001;
-	margin-top:3px;
-	left:50%;
-	margin-left:-420px;	
-	background-position:0 0;
-	cursor:pointer;
-	}
-#logo:hover {
-	background-position: 0 34px;
-	}	
+	
 #settingslink:hover i.nav-session {
 	background-position: -160px -80px;
 	}
@@ -2375,8 +2387,8 @@ button.signup-btn.disabled,
     background-repeat: no-repeat;
     vertical-align: text-top;
     background-position: -160px -50px;
-    height: 21px;
-    width: 20px;
+    height: 25px;
+    width: 25px;
     margin: -4px 6px 0 0;
 	cursor: pointer;
     display: block;
@@ -2426,7 +2438,7 @@ button.signup-btn.disabled,
     height: 200px;
     position: absolute;
     top: 60px;
-    width: 520px;	
+    width: 100%;	
 	}
 .profile-header-inner .profile-picture {
     outline: 0 none;
@@ -2616,7 +2628,7 @@ div.clearfix {
 .member-button .join-text i,
 .external-follow-button .follow-text i,
 .follow-button .follow-text i {
-    background-image: url("../img/button_birds.png");
+	background-position: -90px -92px;
     display: block;
     height: 28px;
     margin-left: -50px;
@@ -3144,6 +3156,7 @@ body.rtl #feed {
 	float: left;
 	}	
 body.rtl #birds-top {
+	background-position: -205px -74px;
 	right:auto;
 	left:-3px;
 	}		
@@ -3540,7 +3553,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 
 	.front-welcome-text {
 		opacity:0;
-		height:250px;
+		height:320px;
 		overflow:hidden;
 		}
 	#page-container {
@@ -3570,9 +3583,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 		}
 
 	#search-query {
-		background-image: url("../img/mobile-sprite-2x.png");
-		background-position: -100px -4px;
-		background-size: 800px 600px;
+		background-image: url("../img/sprite-2x.png");
+		background-size: 500px 1329px;
+		background-position: -100px -804px;
 		border: 0 none;
 		border-radius: 0;
 		box-shadow: none;
@@ -3629,9 +3642,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 
 
 	#top-compose {
-		background-image: url("../img/mobile-sprite-2x.png");
-		background-position: -55px 0;
-		background-size: 800px 600px;
+		background-image: url("../img/sprite-2x.png");
+		background-size: 500px 1329px;
+		background-position: -55px -800px;
 		cursor: pointer;
 		display: block;
 		height: 49px;
@@ -3810,9 +3823,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 		display:none;
 		}		
 	.nav-session {
-		background-image: url("../img/mobile-sprite-2x.png");
-		background-size:800px 600px;
-		background-position: 0 0;
+		background-image: url("../img/sprite-2x.png");
+		background-size: 500px 1329px;
+		background-position: 0 -800px;
 		height: 49px;
 		width: 49px;
 		}		
@@ -3870,9 +3883,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 		padding:0;
 		margin:0;
 		border-radius:0 0 0 0 !important;
-		background-image: url("../img/mobile-sprite-2x.png");
-		background-size:800px 600px;		
-		background-position: center -203px;		
+		background-image: url("../img/sprite-2x.png");
+		background-size: 500px 1329px;
+		background-position: center -1003px;		
 		}
 	.menu-container a:hover,
 	.menu-container a.current:hover {	
@@ -3904,21 +3917,21 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 		margin-left: -35px; 
 		width: 70px; 
 		height: 55px;
-		background-image: url("../img/mobile-sprite-2x.png");	
-		background-size:800px 600px;		
+		background-image: url("../img/sprite-2x.png");
+		background-size: 500px 1329px;
 		background-color:#ccc;
 		}
 	.stream-selection.friends-timeline:after {
-		background-position:0px -61px ;
+		background-position:0px -861px ;
 		}	
 	.stream-selection.mentions:after {
-		background-position:-78px -61px ;
+		background-position:-78px -861px ;
 		}	
 	.stream-selection.my-timeline:after {
-		background-position:-150px -61px ;
+		background-position:-150px -861px ;
 		}	
 	.stream-selection.public-timeline:after {
-		background-position:-230px -61px ;
+		background-position:-230px -861px ;
 		}	
 	.stream-selection.current:after {
 		background-color:transparent;
@@ -4050,34 +4063,34 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 	ul.queet-actions li .icon.sm-rt,	
 	ul.queet-actions li .icon.sm-trash,		
 	ul.queet-actions li .icon.sm-reply {	
-		background-image: url("../img/mobile-sprite-2x.png");	
-		background-size:800px 600px;		
+		background-image: url("../img/sprite-2x.png");
+		background-size: 500px 1329px;
 		width:35px;
 		height:35px;
 		}
 	ul.queet-actions li .icon.sm-reply {
-		background-position: -10px -120px;
+		background-position: -10px -920px;
 		}		
 	ul.queet-actions li .icon.sm-rt {
-		background-position: -60px -120px;
+		background-position: -60px -920px;
 		}		
 	ul.queet-actions li .icon.sm-fav {
-		background-position:-110px -120px;
+		background-position:-110px -920px;
 		}						
 	ul.queet-actions li .icon.sm-trash {
-		background-position:-145px -121px;
+		background-position:-145px -921px;
 		}								
 	.stream-item.expanded > .stream-item.expanded .queet ul.queet-actions li .icon.sm-reply {
-		background-position: -10px -162px;
+		background-position: -10px -962px;
 		}		
 	.stream-item.expanded > .stream-item.expanded .queet ul.queet-actions li .icon.sm-rt {	
-		background-position: -60px -162px;
+		background-position: -60px -962px;
 		}		
 	.stream-item.expanded > .stream-item.expanded .queet ul.queet-actions li .icon.sm-fav {		
-		background-position:-110px -162px;
+		background-position:-110px -962px;
 		}								
 	.stream-item.expanded > .stream-item.expanded .queet ul.queet-actions li .icon.sm-trash {		
-		background-position:-145px -163px;
+		background-position:-145px -963px;
 		}										
 
 	.queet ul.stats {

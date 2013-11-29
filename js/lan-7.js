@@ -142,6 +142,7 @@ window.l.es.registerBio				= 'Biografía';
 window.l.es.registerLocation		= 'Ubicación';
 window.l.es.registerRepeatPassword	= 'Verificar contraseña';
 window.l.es.moreSettings			= 'Más configuraciones';
+window.l.es.otherServers			= 'De manera alternativa, puedes crear una cuenta en otro servidor de la red GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativa</a>';
 
 
 
@@ -250,6 +251,7 @@ window.l.fr.registerBio				= 'Biographie';
 window.l.fr.registerLocation		= 'Localisation';
 window.l.fr.registerRepeatPassword	= 'Vérifiez votre mot de passe';
 window.l.fr.moreSettings			= 'Plus de paramètres';
+window.l.fr.otherServers			= '';
 
 
 // deutsch
@@ -369,6 +371,7 @@ window.l.de.registerBio				= 'Bio';
 window.l.de.registerLocation		= 'Standort';
 window.l.de.registerRepeatPassword	= 'Passwort bestätigen';
 window.l.de.moreSettings			= 'Weitere Einstellungen';
+window.l.de.otherServers			= 'Du kannst Dir auch gerne ein Konto auf einem anderen Server des GNUsocial-Netzwerks einrichten. <a href="http://federation.skilledtests.com/select_your_server.html">Übersicht</a>';
 
 
 // english
@@ -485,6 +488,7 @@ window.l.en.registerBio				= 'Bio';
 window.l.en.registerLocation		= 'Location';
 window.l.en.registerRepeatPassword	= 'Repeat password';
 window.l.en.moreSettings			= 'More settings';
+window.l.en.otherServers			= 'Alternatively you can create an account on another server of the GNU social network. <a href="http://federation.skilledtests.com/select_your_server.html">Comparison</a>';
 
 
 // svenska
@@ -592,6 +596,7 @@ window.l.sv.registerBio				= 'Biografi';
 window.l.sv.registerLocation		= 'Plats';
 window.l.sv.registerRepeatPassword	= 'Upprepa lösenord';
 window.l.sv.moreSettings			= 'Fler inställningar';
+window.l.sv.otherServers			= 'Men du kan lika gärna skapa ett konto på en annan server som är del av GNU social-nätverket. <a href="http://federation.skilledtests.com/select_your_server.html">Här är en jämförelse.</a>';
 
 
 
@@ -700,6 +705,7 @@ window.l.fa.registerBio				= 'زندگینامه';
 window.l.fa.registerLocation		= 'مکان';
 window.l.fa.registerRepeatPassword	= 'تایید گذرواژه';
 window.l.fa.moreSettings			= 'تنظیمات بیشتر';
+window.l.fa.otherServers			= '';
 
 
 // arabic
@@ -807,6 +813,7 @@ window.l.ar.registerBio				= 'النبذة التعريفيّة';
 window.l.ar.registerLocation		= 'الموقع الجغرافي';
 window.l.ar.registerRepeatPassword	= 'تأكيد كلمة المرور';
 window.l.ar.moreSettings			= 'مزيد من الإعدادات';
+window.l.ar.otherServers			= '';
 
 
 // esperanto
@@ -923,6 +930,7 @@ window.l.eo.registerBio				= 'Biografio';
 window.l.eo.registerLocation		= 'Loko';
 window.l.eo.registerRepeatPassword	= 'Ripeti pasvorton';
 window.l.eo.moreSettings			= 'Pli agordoj';
+window.l.eo.otherServers			= '';
 
 
 // italian
@@ -1039,6 +1047,7 @@ window.l.it.registerBio				= 'Biografia';
 window.l.it.registerLocation		= 'Posizione';
 window.l.it.registerRepeatPassword	= 'Ripetere la password';
 window.l.it.moreSettings			= 'Altre configurazioni';
+window.l.it.otherServers			= '';
 
 
 // set language, from local storage, else browser language, else english (english also if no localstorage availible)
@@ -1057,12 +1066,10 @@ window.sL = window.l[selectedLanguage];
 // if this is a RTL-language, add rt classes and change some things
 if(selectedLanguage == 'ar') {
 	$('body').addClass('rtl');
-	$('#birds-top').attr('src',window.fullUrlToThisQvitterApp + 'img/birds_rtl.png');	
 	$('title').html('&#x202b;ترك');
 	}
 else if(selectedLanguage == 'fa') {
 	$('body').addClass('rtl');
-	$('#birds-top').attr('src', window.fullUrlToThisQvitterApp + 'img/birds_rtl.png');	
 	$('title').html('&#x202b;واگذارنده');
 	}
 
@@ -1090,6 +1097,7 @@ $('#queet').html(window.sL.queetVerb);
 $('#feed-header-inner h2').html(window.sL.queetsNounPlural);
 $('#logout').html(window.sL.logout);
 $('#settings').html(window.sL.settings);
+$('#other-servers-link').html(window.sL.otherServers);
 $('.language-dropdown .dropdown-toggle small').html(window.sL.languageSelected);
 $('.language-dropdown .current-language').html(window.sL.languageName);
 $('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').prepend(window.sL.timeline);

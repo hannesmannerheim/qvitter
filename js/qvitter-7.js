@@ -95,6 +95,7 @@ $('#what-is-federation').on('mouseleave',function(){
 $('.front-signup input, .front-signup button').removeAttr('disabled'); // clear this onload
 $('#signup-btn-step1').click(function(){
 	
+	
 	display_spinner();
 	$('.front-signup input, .front-signup button').addClass('disabled');
 	$('.front-signup input, .front-signup button').attr('disabled','disabled');
@@ -328,7 +329,7 @@ function doLogin(streamToSet) {
 		// add user data to DOM, show search form, remeber user id, show the feed
 		$('#user-container').css('z-index','1000');
 		$('#top-compose').removeClass('hidden');
-		$('#user-avatar').attr('src', user.profile_image_url);
+		$('#user-avatar').attr('src', user.profile_image_url_profile_size);
 		$('#user-name').append(user.name);
 		$('#user-screen-name').append(user.screen_name);
 		$('#user-profile-link').append('<a href="' + user.statusnet_profile_url + '">' + window.sL.viewMyProfilePage + '</a>');
@@ -578,7 +579,7 @@ $('#settingslink').click(function(){
 
 
 $('body').on('click','.external-follow-button',function(event){
-	popUpAction('popup-external-follow', window.sL.userExternalFollow + ' ' + $('.profile-card-inner .screen-name').html(),'<form method="post" action="' + window.siteInstanceURL + 'main/ostatus"><input type="hidden" id="nickname" name="nickname" value="' + $('.profile-card-inner .screen-name').html().substring(1) + '"><input type="text" id="profile" name="profile" placeholder="' + window.sL.userExternalFollowHelp + '" /></form>','<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary">' + window.sL.userExternalFollow + '</button></div>');		
+	popUpAction('popup-external-follow', window.sL.userExternalFollow + ' ' + $('.profile-card-inner .screen-name').html(),'<form method="post" action="' + window.siteInstanceURL.replace('https://','http://') + 'main/ostatus"><input type="hidden" id="nickname" name="nickname" value="' + $('.profile-card-inner .screen-name').html().substring(1) + '"><input type="text" id="profile" name="profile" placeholder="' + window.sL.userExternalFollowHelp + '" /></form>','<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary">' + window.sL.userExternalFollow + '</button></div>');		
 	$('#popup-external-follow form input#profile').focus();
 	$('#popup-external-follow button.primary').click(function(){
 		$('#popup-external-follow form').submit();
@@ -993,8 +994,8 @@ $('#history-container').on("sortupdate", function() {
 $(window).scroll(function() {
 	if($(window).scrollTop() + $(window).height() > $(document).height() - 1000) {
 		
-		// not if we're already loading
-		if(!$('body').hasClass('loading-older')) {
+		// not if we're already loading or if no stream is set yet
+		if(!$('body').hasClass('loading-older') && typeof window.currentStream != "undefined") {
 			$('body').addClass('loading-older');
 			
 			// remove loading class in 10 seconds, i.e. try again if failed to load within 10 s			
@@ -1542,7 +1543,7 @@ $('#queet-toolbar button').click(function () {
 
 
 CodeMirror.defaults.lineWrapping = true;        
-CodeMirror.defineMode("css-base", function(config, parserConfig) {	
+CodeMirror.defineMode("gnusocial", function(config, parserConfig) {	
 	function tokenBase(stream, state) {
 		
 		stream.string = stream.string + ' '; // makes regexping easier..
@@ -1568,13 +1569,13 @@ CodeMirror.defineMode("css-base", function(config, parserConfig) {
 		else if (stream.start == 0 && ch == "#" && stream.match(tagInBeginningRE)) { return "mention"}
 		else if (stream.start == 0 && ch == "!" && stream.match(groupInBeginningRE)) { return "mention"}				
 		else if (stream.start == 0 && ch.match(/[a-z0-9]/) && stream.match(urlWithoutHttpInBeginningRE)) { stream.backUp(1); return "url"; }
-		else if (stream.start == 0 && ch == "h" && stream.match(urlInBeginningRE)) { return "url"; }
+		else if (stream.start == 0 && ch == "h" && stream.match(urlInBeginningRE)) { stream.backUp(1); return "url"; }
 		else if (ch == " " && stream.match(externalMentionRE)) { return "mention"}		
 		else if (ch == " " && stream.match(mentionRE)) { return "mention"}		
 		else if (ch == " " && stream.match(tagRE)) { return "tag"; }   
 		else if (ch == " " && stream.match(groupRE)) { return "group"; }
 		else if (ch == " " && stream.match(urlWithoutHttpRE)) { stream.backUp(1); return "url"; }
-		else if (ch == " " && stream.match(urlRE)) { return "url"; }
+		else if (ch == " " && stream.match(urlRE)) { stream.backUp(1); return "url"; }
 		else if(!(ch == ' ' && stream.next() == '.') && !(stream.start == 0 && ch == '.') && (stream.start == 0 || ch == ' ') && stream.match(emailRE)) {
 			stream.backUp(1);
 			return "email";
@@ -1602,9 +1603,10 @@ var codemirrorQueetBox = CodeMirror.fromTextArea(document.getElementById("codemi
 		if(enterKeyHasBeenPressed ){
 			$('#queet-toolbar button').trigger('click');
 			}
+		
 		}
   });
-      
+
 
 
 /* · 

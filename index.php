@@ -60,10 +60,10 @@ if($usehistorypushstate) {
 	<head>  
 		<title><?php print $sitetitle; ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">		
-		<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/4.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">		
+		<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/7.css" />
 		<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
-		<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>favicon.ico">
+		<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>favicon.ico?v=2">
 		<?php
 
 		// if qvitter is a webapp and this is a users url we add feeds
@@ -77,8 +77,8 @@ if($usehistorypushstate) {
 				else {
 					print '<link title="Notice feed for '.$nickname.' (Activity Streams JSON)" type="application/stream+json" href="'.$apiroot.'statuses/user_timeline/'.$user->id.'.as" rel="alternate">'."\n";
 					print '		<link title="Notice feed for '.$nickname.' (RSS 1.0)" type="application/rdf+xml" href="'.$instanceurl.$nickname.'/rss" rel="alternate">'."\n";
-					print '		<link title="Notice feed for '.$nickname.' (RSS 2.0)" type="application/rss+xml" href="'.$apiroot.'statuses/user_timeline/'.$user->id.'.rss" rel="alternate">'."\n";
-					print '		<link title="Notice feed for '.$nickname.' (Atom)" type="application/atom+xml" href="'.$apiroot.'statuses/user_timeline/'.$user->id.'.atom" rel="alternate">'."\n";
+					print '		<link title="Notice feed for '.$nickname.' (RSS 2.0)" type="application/rss+xml" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.rss" rel="alternate">'."\n";
+					print '		<link title="Notice feed for '.$nickname.' (Atom)" type="application/atom+xml" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.atom" rel="alternate">'."\n";
 					print '		<link title="FOAF for '.$nickname.'" type="application/rdf+xml" href="'.$instanceurl.$nickname.'/foaf" rel="meta">'."\n";
 					print '		<link href="'.$instanceurl.$nickname.'/microsummary" rel="microsummary">'."\n";		    
 					}		
@@ -100,8 +100,8 @@ if($usehistorypushstate) {
 			if(preg_match("/^[a-zA-Z0-9]+$/", $group_id_or_name) == 1) {
 				print '<link rel="alternate" href="'.$apiroot.'statusnet/groups/timeline/'.$group_id.'.as" type="application/stream+json" title="Notice feed for '.$group_id_or_name.' group (Activity Streams JSON)"/>'."\n";
 				print '		<link rel="alternate" href="'.$instanceurl.'group/'.$group_name.'/rss" type="application/rdf+xml" title="Notice feed for '.$group_id_or_name.' group (RSS 1.0)"/>'."\n";
-				print '		<link rel="alternate" href="'.$apiroot.'statusnet/groups/timeline/'.$group_id.'.rss" type="application/rss+xml" title="Notice feed for '.$group_id_or_name.' group (RSS 2.0)"/>'."\n";
-				print '		<link rel="alternate" href="'.$apiroot.'statusnet/groups/timeline/'.$group_id.'.atom" type="application/atom+xml" title="Notice feed for '.$group_id_or_name.' group (Atom)"/>'."\n";
+				print '		<link rel="alternate" href="'.$instanceurl.'api/statusnet/groups/timeline/'.$group_id.'.rss" type="application/rss+xml" title="Notice feed for '.$group_id_or_name.' group (RSS 2.0)"/>'."\n";
+				print '		<link rel="alternate" href="'.$instanceurl.'api/statusnet/groups/timeline/'.$group_id.'.atom" type="application/atom+xml" title="Notice feed for '.$group_id_or_name.' group (Atom)"/>'."\n";
 				print '		<link rel="meta" href="'.$instanceurl.'group/'.$group_name.'/foaf" type="application/rdf+xml" title="FOAF for '.$group_id_or_name.' group"/>'."\n";						
 				}
 			}
@@ -176,7 +176,7 @@ if($usehistorypushstate) {
 				<li class="language"><a class="language-link" title="Italian" data-lang-code="it">Italiano</a></li>													
 				<li class="language"><a class="language-link" title="Swedish" data-lang-code="sv">svenska</a></li>					
 			</ul>			
-			<img id="birds-top" src="<?php print $qvitterpath; ?>img/birds.png" />
+			<div id="birds-top"></div>
 			<div class="global-nav">
 				<div class="global-nav-inner">
 					<div class="container">				
@@ -247,6 +247,7 @@ if($usehistorypushstate) {
 					<div class="signup-input-container"><input placeholder="" type="text" name="user[email]" autocomplete="off" id="signup-user-email"></div>
 					<div class="signup-input-container"><input placeholder="" type="password" name="user[user_password]" class="text-input" id="signup-user-password"></div>
 					<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
+					<div id="other-servers-link"></div>
 				</div>
 				<div id="user-header">
 					<img id="user-avatar" src="" />
@@ -292,15 +293,15 @@ if($usehistorypushstate) {
 			
 			<div id="footer"></div>
 		</div>
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/codemirror.3.14.js"></script>
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/codemirror.3.20.js"></script>
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery-2.0.2.min.js"></script>
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery-ui-1.10.3.min.js"></script>
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery.easing.1.3.js"></script>	    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery.minicolors.min.js"></script>	    	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions-4.js"></script>		    	
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions-4.js"></script>		    		    
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions-7.js"></script>		    	
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions-7.js"></script>		    		    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions-4.js"></script>		    		    	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan-4.js"></script>	
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter-4.js"></script>		
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan-7.js"></script>	
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter-7.js"></script>		
 	</body>
 </html>
