@@ -135,7 +135,7 @@ window.l.es.signUpFullName          = 'Nombre completo';
 window.l.es.signUpEmail             = 'Correo electrónico';
 window.l.es.signUpButtonText        = 'Regístrate en Quitter';
 window.l.es.welcomeHeading          = 'Bienvenido a Quitter.';
-window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que ustedes no debeis tener una cuenta Quitter para seguir sus usuarios, estar seguidos o interaccionar con ellos. ¡Podéis registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Incluso, no debéis inscribir vosotros o cualquier cosa puesto que podéis tambien instalar el software GNU Social en vuestro propio servidor. (:</div>federación</span> no comercial de microblogs que, como ustedes, se preocupan de la ética y de la solidaridad, y queremos salir de los servicios centralizados capitalistas. Estamos por aquí desde 2010 y siempre seremos sin ánimo de lucro.';
+window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que usted no debe tener una cuenta de Quitter para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puede registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debe registrarse en cualquier servicio para postear; puede simplemente instalar el software GNU Social en su servidor propio. (:</div>federación</span> de microblogueros que, como usted, están motivados por la ética y solidaridad, y quieren abandonar los servicios centralizados capitalistas. Estamos aquí desde 2010 y los servicios siempre van a ser sin ánimo de lucro.';
 window.l.es.registerNickname        = 'Nombre de usuario';
 window.l.es.registerHomepage        = 'Sitio web';
 window.l.es.registerBio             = 'Biografía';
@@ -411,7 +411,7 @@ window.l.en.newQueet                = 'new Queet';
 window.l.en.newQueets               = 'new Queets';
 window.l.en.longmonthsJanuary       = "January";
 window.l.en.longmonthsFebruary      = "February";
-window.l.en.longmonthsMars          = "Mars";
+window.l.en.longmonthsMars          = "March";
 window.l.en.longmonthsApril         = "April";
 window.l.en.longmonthsMay           = "May";
 window.l.en.longmonthsJune          = "June";
@@ -480,7 +480,7 @@ window.l.en.welcomeText             = 'We are a <span id="federated-tooltip"><di
                                        You don\'t even have to join a service – try installing the lovely \
                                        <a href="http://www.gnu.org/software/social/">GNU Social</a> software on your own server! :)\
                                        </div>federation</span> of microbloggers who care about ethics and \
-                                       solidarity and want to quit the centralised capitalist services. We are around \
+                                       solidarity and want to quit the centralised capitalist services. We have been around \
                                        since 2010 and will always be non-profit.';
 window.l.en.registerNickname        = 'Nickname';
 window.l.en.registerHomepage        = 'Homepage';
