@@ -219,13 +219,16 @@ class ApiAction extends Action
 		$avatar = $profile->getOriginalAvatar();
 		$twitter_user['profile_image_url_original'] = ($avatar) ? $avatar->displayUrl() :
 		    Avatar::defaultImage(AVATAR_PROFILE_SIZE); 
+		$twitter_user['profile_image_url_https'] = $twitter_user['profile_image_url'];    
 
         $twitter_user['groups_count'] = $profile->getGroups(0, null)->N;    
-        $twitter_user['linkcolor'] = $user->linkcolor;
-        $twitter_user['backgroundcolor'] = $user->backgroundcolor;        
+        $twitter_user['linkcolor'] = '';
+        if(isset($user->linkcolor)) $twitter_user['linkcolor'] = $user->linkcolor;
+        $twitter_user['backgroundcolor'] = '';        
+        if(isset($user->backgroundcolor)) $twitter_user['backgroundcolor'] = $user->backgroundcolor; 
 
         $twitter_user['url'] = ($profile->homepage) ? $profile->homepage : null;
-        $twitter_user['protected'] = (!empty($user) && $user->private_stream) ? true : false;
+        $twitter_user['protected'] = (!empty($user) && isset($user->private_stream)) ? true : false;
         $twitter_user['followers_count'] = $profile->subscriberCount();
         
 
@@ -239,7 +242,7 @@ class ApiAction extends Action
 
         $timezone = 'UTC';
 
-        if (!empty($user) && $user->timezone) {
+        if (!empty($user) && isset($user->timezone)) {
             $timezone = $user->timezone;
         }
 
@@ -362,6 +365,15 @@ class ApiAction extends Action
 			$twitter_status['repeated'] = false;            	
 		}
 
+		$notice_groups = $notice->getGroups();
+		$group_addressees = false;
+		foreach($notice_groups as $g) {
+			$group_addressees .= '!'.$g->nickname.' ';
+			}		
+		$group_addressees = trim($group_addressees);
+		if($group_addressees == '') $group_addressees = false;
+		$twitter_status['statusnet_in_groups'] = $group_addressees;
+
         // Enclosures
         $attachments = $notice->attachments();
 
@@ -371,9 +383,11 @@ class ApiAction extends Action
 
             foreach ($attachments as $attachment) {
                 $enclosure_o=$attachment->getEnclosure();
+                $thumb = File_thumbnail::staticGet('file_id', $attachment->id);
                 if ($enclosure_o) {
                     $enclosure = array();
                     $enclosure['url'] = $enclosure_o->url;
+                    $enclosure['thumb_url'] = $thumb->url;
                     $enclosure['mimetype'] = $enclosure_o->mimetype;
                     $enclosure['size'] = $enclosure_o->size;
                     $twitter_status['attachments'][] = $enclosure;

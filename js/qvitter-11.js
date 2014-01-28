@@ -33,7 +33,9 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
   
-  
+// object to keep old states of streams in, to speed up stream change  
+window.oldStreams = new Object();
+
 
 /* · 
    · 
@@ -94,8 +96,7 @@ $('#what-is-federation').on('mouseleave',function(){
 
 $('.front-signup input, .front-signup button').removeAttr('disabled'); // clear this onload
 $('#signup-btn-step1').click(function(){
-	
-	
+		
 	display_spinner();
 	$('.front-signup input, .front-signup button').addClass('disabled');
 	$('.front-signup input, .front-signup button').attr('disabled','disabled');
@@ -255,16 +256,13 @@ $(window).load(function() {
 	if(userInLocalStorage) {
 		$('input#username').val(localStorage.autologinUsername);
 		$('input#password').val(localStorage.autologinPassword);
-
-		// if this is a special url for user, notice etc, grab that stream
-		var streamToSet = getStreamFromUrl();
 	
 		// if we're in client mode, i.e. not webapp mode, always go to friends timeline if logged in
 		if(window.useHistoryPushState === false) {
 			streamToSet = 'statuses/friends_timeline.json';
 			}
 
-		doLogin(streamToSet);		
+		doLogin("get stream from url");		
 		}
 	else {
 		display_spinner();
@@ -286,11 +284,11 @@ $(window).load(function() {
 
 $('#submit-login').click(function () {		
 
-	// if this is a special url for user, notice etc, grab that stream
-	var streamToSet = getStreamFromUrl();
+	// if this is a special url for user, notice etc, grab that stream (UGLY SORRRRRY)
+	var streamToSet = "get stream from url";
 	
 	// if this is the public feed, we redirect to friends_timline (I think that's intuitive)
-	if(streamToSet == 'statuses/public_timeline.json') {
+	if(getStreamFromUrl() == 'statuses/public_timeline.json') {
 		streamToSet = 'statuses/friends_timeline.json';
 		}
 
@@ -310,6 +308,11 @@ function doLogin(streamToSet) {
 		// store credentials in global var
 		window.loginUsername = user.screen_name;
 		window.loginPassword = $('input#password').val();
+		
+		// maybe get stream from url (UGLY SORRRRRY)
+		if(streamToSet == "get stream from url") {
+			streamToSet = getStreamFromUrl(); // called now becuase we want window.loginUsername to be set first...
+			}
 		
 		// set colors if the api supports it
 		if(typeof user.linkcolor != 'undefined' &&
@@ -573,7 +576,7 @@ $('#settingslink').click(function(){
 
 /* · 
    · 
-   ·   When clicking a follow button
+   ·   When clicking a external follow button
    · 
    · · · · · · · · · · · · · */ 
 
@@ -585,6 +588,21 @@ $('body').on('click','.external-follow-button',function(event){
 		$('#popup-external-follow form').submit();
 		});
 	});
+	
+/* · 
+   · 
+   ·   When clicking a external join button
+   · 
+   · · · · · · · · · · · · · */ 
+
+
+$('body').on('click','.external-member-button',function(event){
+	popUpAction('popup-external-join', window.sL.joinExternalGroup + ' ' + $('.profile-card-inner .screen-name').html(),'<form method="post" action="' + window.siteInstanceURL.replace('https://','http://') + 'main/ostatus"><input type="hidden" id="group" name="group" value="' + $('.profile-card-inner .screen-name').html().substring(1) + '"><input type="text" id="profile" name="profile" placeholder="' + window.sL.userExternalFollowHelp + '" /></form>','<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary">' + window.sL.userExternalFollow + '</button></div>');		
+	$('#popup-external-join form input#profile').focus();
+	$('#popup-external-join button.primary').click(function(){
+		$('#popup-external-join form').submit();
+		});
+	});	
 
 
 
@@ -760,7 +778,7 @@ $(document).on('click','a', function(e) {
 		}
 	
 	// ugly fix: if this is the x remove users from history, prevent link but don't set a new currentstream
-	if($(e.target).is('i.close-right')) {
+	if($(e.target).is('i.chev-right')) {
 		e.preventDefault();		
 		return;
 		}
@@ -774,6 +792,11 @@ $(document).on('click','a', function(e) {
 			e.preventDefault();
 			setNewCurrentStream('statuses/public_timeline.json',function(){},true);	
 			}
+		// whole network feed
+		else if($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'') == '/main/all') {
+			e.preventDefault();
+			setNewCurrentStream('statuses/public_and_external_timeline.json?since_id=1',function(){},true);	
+			}			
 		// logged in users streams
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loginUsername,'') == '/all') {
 			e.preventDefault();			
@@ -811,7 +834,7 @@ $(document).on('click','a', function(e) {
 		// tags
 		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/tag/')>-1) {
 			e.preventDefault();
-			setNewCurrentStream('statusnet/tags/timeline/' + $(this).text().toLowerCase() + '.json',function(){},true);				
+			setNewCurrentStream('statusnet/tags/timeline/' + $(this).text().toLowerCase().replace('#','') + '.json',function(){},true);				
 			}	
 		// groups
 		else if (/^[0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/group/','').replace('/id',''))) {
@@ -965,7 +988,7 @@ $(document).on('click','a', function(e) {
    ·   
    · · · · · · · · · · · · · */ 
    
-$('body').on('click','.close-right',function(event){
+$('body').on('click','#history-container .chev-right',function(event){
 	$(this).parent('.stream-selection').remove();
 	updateHistoryLocalStorage();
 	});
@@ -976,7 +999,7 @@ $('body').on('click','.close-right',function(event){
    ·   When sorting the history menu
    ·   
    · · · · · · · · · · · · · */ 
-   
+  
 $('#history-container').on("sortupdate", function() {
 	updateHistoryLocalStorage();
 	});
@@ -1119,7 +1142,7 @@ function checkForNewQueets() {
    ·   
    · · · · · · · · · · · · · */ 
 
-$('#feed').on('click','#new-queets-bar',function(){
+$('body').on('click','#new-queets-bar',function(){
 	document.title = window.siteTitle;
 	$('.stream-item.hidden').css('opacity','0')
 	$('.stream-item.hidden').animate({opacity:'1'}, 200);
@@ -1136,7 +1159,7 @@ $('#feed').on('click','#new-queets-bar',function(){
    ·   
    · · · · · · · · · · · · · */ 
 
-$('#feed-body').on('click','.queet',function (event) {
+$('body').on('click','.queet',function (event) {
 	if(!$(event.target).is('a')
 		&& !$(event.target).is('.CodeMirror-scroll')
 		&& !$(event.target).is('.cm-mention')
@@ -1196,7 +1219,7 @@ $(document).keyup(function(e){
    ·   
    · · · · · · · · · · · · · */ 
 
-$('#feed').on('click','.action-del-container',function(){
+$('body').on('click','.action-del-container',function(){
 	var this_stream_item = $(this).parent().parent().parent().parent().parent();	
 	var this_qid = this_stream_item.attr('data-quitter-id');		
 	var $queetHtml = $('<div>').append(this_stream_item.html());
@@ -1233,7 +1256,7 @@ $('#feed').on('click','.action-del-container',function(){
    ·   
    · · · · · · · · · · · · · */ 
 
-$('#feed').on('click','.action-rt-container',function(){
+$('body').on('click','.action-rt-container',function(){
 	var this_stream_item = $(this).parent().parent().parent().parent().parent();
 	var this_action = $(this); 
 	
@@ -1289,7 +1312,7 @@ $('#feed').on('click','.action-rt-container',function(){
    ·   
    · · · · · · · · · · · · · */ 
 
-$('#feed').on('click','.action-fav-container',function(){
+$('body').on('click','.action-fav-container',function(){
 	var this_stream_item = $(this).parent().parent().parent().parent().parent();
 	var this_action = $(this); 
 
@@ -1344,7 +1367,7 @@ $('#feed').on('click','.action-fav-container',function(){
    ·   
    · · · · · · · · · · · · · */ 
 
-$('#feed').on('click','.action-reply-container',function(){
+$('body').on('click','.action-reply-container',function(){
 	var this_stream_item = $(this).closest('.stream-item');
 	var this_stream_item_id = this_stream_item.attr('data-quitter-id');
 
@@ -1401,7 +1424,7 @@ $(document).keyup(function(e){
    ·   
    · · · · · · · · · · · · · */ 
 
-$('#feed').on('click','.queet-box-template',function(){
+$('body').on('click','.queet-box-template',function(){
 	// expand inline queet box
 	expandInlineQueetBox($(this));
 	});
@@ -1430,19 +1453,30 @@ $('body').on('click', '.queet-toolbar button',function () {
 		var queetBoxID = $(this).parent().parent().parent().find('.queet-box-template').attr('id');
 
 		var queetText = window['codemirror-' + queetBoxID].getValue();		
+		var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText + '</div><div class="stream-item-footer"><span class="stream-item-expand">&nbsp;</span></div></div></div></div>';
+		queetHtml = detectRTL(queetHtml);		
+
 
 		// get reply to id and add temp queet
 		if($('.modal-container').find('.queet-toolbar button').length>0) { // from popup
 			var in_reply_to_status_id = $('.modal-container').attr('id').substring(12); // removes "popup-reply-" from popups id
 			$('.modal-container').remove();			
-			var queetHtml = '<div id="' + tempPostId + '" class="stream-item temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText + '</div><div class="stream-item-footer"><span class="stream-item-expand">&nbsp;</span></div></div></div></div>';
-			queetHtml = detectRTL(queetHtml);		
-			$('#feed-body').prepend(queetHtml);
+			queetHtml = detectRTL(queetHtml);
+
+			// try to find an expanded queet to add the temp queet to
+			if($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').length > 0) {
+				$('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').append(queetHtml);
+				}
+			else if($('.stream-item.conversation[data-quitter-id="' + in_reply_to_status_id + '"]').not('.hidden-conversation').length > 0) {
+				$('.stream-item.conversation[data-quitter-id="' + in_reply_to_status_id + '"]').not('.hidden-conversation').parent().append(queetHtml);
+				}
+			// if we cant find a proper place, just add it to top and remove conversation class
+			else {
+				$('#feed-body').prepend(queetHtml.replace('class="stream-item conversation','class="stream-item'));				
+				}
 			}
 		else { // from inline reply
 			var in_reply_to_status_id = $(this).parent().parent().parent().parent().parent().attr('data-quitter-id');
-			var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText + '</div><div class="stream-item-footer"><span class="stream-item-expand">&nbsp;</span></div></div></div></div>';
-			queetHtml = detectRTL(queetHtml);		
 			$(this).parent().parent().parent().parent().parent().append(queetHtml);			
 			}		
 		
@@ -1657,7 +1691,7 @@ codemirrorQueetBox.on("blur", function(){
 // 		shortenUrlsInBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));	
 // 		}
 // 	});
-// $('#feed').on('keyup','.queet-box-template',function(e){
+// $('body').on('keyup','.queet-box-template',function(e){
 // 	if(e.keyCode == 32) {
 // 		shortenUrlsInBox($(this),$(this).find('.queet-counter'),$(this).find('.queet-toolbar button'));	
 // 		}
@@ -1670,11 +1704,11 @@ codemirrorQueetBox.on("blur", function(){
    ·   
    · · · · · · · · · · · · · */ 	
   	
-$('#feed').on('click','.view-more-container-bottom', function(){
+$('body').on('click','.view-more-container-bottom', function(){
 	findReplyToStatusAndShow($(this).parent('.stream-item').attr('data-quitter-id'),$(this).attr('data-replies-after'));
 	$(this).remove();
 	});
-$('#feed').on('click','.view-more-container-top', function(){
+$('body').on('click','.view-more-container-top', function(){
 
 	var this_qid = $(this).closest('.stream-item:not(.conversation)').attr('data-quitter-id');	
 	var queet = $(this).siblings('.queet');
@@ -1700,7 +1734,7 @@ $('#feed').on('click','.view-more-container-top', function(){
    ·   
    · · · · · · · · · · · · · */ 	
 
-$('#feed').on('click','.show-full-conversation',function(){
+$('body').on('click','.show-full-conversation',function(){
 
 	var this_q = $(this).closest('.queet');
 	var this_qid = $(this).closest('.stream-item:not(.conversation)').attr('data-quitter-id');	
@@ -1719,3 +1753,4 @@ $('#feed').on('click','.show-full-conversation',function(){
 	
 	backToMyScrollPos(this_q,this_qid,false);
 	});
+

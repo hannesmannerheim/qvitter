@@ -61,7 +61,7 @@ if($usehistorypushstate) {
 		<title><?php print $sitetitle; ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">		
-		<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/7.css" />
+		<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/14.css" />
 		<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
 		<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>favicon.ico?v=2">
 		<?php
@@ -126,7 +126,6 @@ if($usehistorypushstate) {
 			.permalink-link:hover,
 			.stream-item.expanded > .queet .stream-item-expand,
 			.stream-item-footer .with-icn .requeet-text a b:hover,
-			ul.queet-actions li .with-icn,
 			.queet-text span.attachment.more,
 			.stream-item-header .created-at a:hover,
 			.stream-item-header a.account-group:hover .name,
@@ -137,8 +136,7 @@ if($usehistorypushstate) {
 			#user-header:hover #user-name,
 			.cm-mention, .cm-tag, .cm-group, .cm-url, .cm-email {
 			    color:#0084B4;/*COLOREND*/
-				}	
-			ul.queet-actions li .icon,			
+				}			
 			.topbar .global-nav,
 			.menu-container {
 				background-color:#0084B4;/*BACKGROUNDCOLOREND*/
@@ -278,6 +276,7 @@ if($usehistorypushstate) {
 					<a class="stream-selection my-timeline" data-stream-header="@statuses/user_timeline.json" data-stream-name="statuses/user_timeline.json"><i class="chev-right"></i></a>				
 					<a class="stream-selection favorites" data-stream-header="" data-stream-name="favorites.json"><i class="chev-right"></i></a>									
 					<a href="<?php print $instanceurl ?>" class="stream-selection public-timeline" data-stream-header="" data-stream-name="statuses/public_timeline.json"><i class="chev-right"></i></a>
+					<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline" data-stream-header="" data-stream-name="statuses/public_and_external_timeline.json?since_id=1"><i class="chev-right"></i></a>					
 				</div>
 				<div class="menu-container" id="history-container"></div>				
 			</div>						
@@ -287,7 +286,7 @@ if($usehistorypushstate) {
 						<h2></h2>
 					</div>
 				</div>
-				<div class="stream-item hidden"><div id="new-queets-bar"></div></div>
+				<div id="new-queets-bar-container" class="hidden"><div id="new-queets-bar"></div></div>
 				<div id="feed-body"></div>
 			</div>
 			
@@ -298,10 +297,10 @@ if($usehistorypushstate) {
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery-ui-1.10.3.min.js"></script>
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery.easing.1.3.js"></script>	    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery.minicolors.min.js"></script>	    	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions-7.js"></script>		    	
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions-7.js"></script>		    		    
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions-12.js"></script>		    	
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions-11.js"></script>		    		    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions-4.js"></script>		    		    	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan-7.js"></script>	
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter-7.js"></script>		
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan-12.js"></script>	
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter-11.js"></script>		
 	</body>
 </html>

@@ -357,6 +357,11 @@ class Router
                         array('action' => 'ApiTimelinePublic',
                               'format' => '(xml|json|rss|atom|as)'));
 
+            $m->connect('api/statuses/public_and_external_timeline.:format',
+                        array('action' => 'ApiTimelinePublicAndExternal',
+                              'format' => '(xml|json|rss|atom|as)'));
+
+
             $m->connect('api/statuses/friends_timeline/:id.:format',
                         array('action' => 'ApiTimelineFriends',
                               'id' => Nickname::INPUT_FMT,
@@ -392,6 +397,15 @@ class Router
             $m->connect('api/statuses/mentions.:format',
                         array('action' => 'ApiTimelineMentions',
                               'format' => '(xml|json|rss|atom|as)'));
+                              
+            $m->connect('api/statuses/mentions_timeline/:id.:format',
+                        array('action' => 'ApiTimelineMentions',
+                              'id' => Nickname::INPUT_FMT,
+                              'format' => '(xml|json|rss|atom|as)'));
+
+            $m->connect('api/statuses/mentions_timeline.:format',
+                        array('action' => 'ApiTimelineMentions',
+                              'format' => '(xml|json|rss|atom|as)'));                              
 
             $m->connect('api/statuses/replies/:id.:format',
                         array('action' => 'ApiTimelineMentions',
@@ -820,6 +834,10 @@ class Router
                 'api/statusnet/media/upload',
                 array('action' => 'ApiMediaUpload')
             );
+            $m->connect(
+                'api/statuses/update_with_media.json',
+                 array('action' => 'ApiMediaUpload')
+             );            
 
             // search
             $m->connect('api/search.atom', array('action' => 'ApiSearchAtom'));

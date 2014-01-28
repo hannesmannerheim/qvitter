@@ -416,7 +416,7 @@ function loadHistoryFromLocalStorage() {
 			$('#history-container').html('');																										
 			var historyContainer = $.parseJSON(localStorage[localStorageName]);
 			$.each(historyContainer, function(key,obj) {
-				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '<i class="close-right"></i><i class="chev-right"></i></a>');
+				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right"></i></a>');
 				});
 			}
 		updateHistoryLocalStorage();
@@ -518,13 +518,16 @@ function rememberMyScrollPos(obj,id,offset) {
 function backToMyScrollPos(obj,id,animate,callback) {
 	var pos = obj.offset().top-window.scrollpositions[id];
 	if(animate) {
+		if(animate == 'animate' || animate === true) {
+			animate = 1000;
+			}
 	   if(typeof callback !== 'undefined'){
-			$('html, body').animate({ scrollTop: pos}, 1000, 'easeOutExpo',function(){
+			$('html, body').animate({ scrollTop: pos}, animate, 'linear',function(){
 				callback();
 				});		   	
 		   	}
 	    else {
-	    	$('html, body').animate({ scrollTop: pos }, 1000, 'easeOutExpo');
+	    	$('html, body').animate({ scrollTop: pos }, animate, 'linear');
 	    	}
 		}
 	else {

@@ -186,7 +186,11 @@ function profileCardFromFirstObject(data,screen_name) {
 			
 		// change design
 		changeDesign(first.user);			
-		
+
+		// remove any old profile card 
+		$('#feed').siblings('.profile-card').remove();
+
+		// insert profile card into dom
 		$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + first.user.profile_image_url_original + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + first.user.profile_image_url_original + '"><img src="' + first.user.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + first.user.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + first.user.screen_name + '</span><span class="follow-status"></span></h2><div class="bio-container"><p>' + first.user.description + '</p></div><p class="location-and-url"><span class="location">' + first.user.location + '</span><span class="divider"> · </span><span class="url"><a href="' + first.user.url + '">' + first.user.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats"><strong>' + first.user.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a class="following-stats"><strong>' + first.user.friends_count + '</strong>' + window.sL.following + '</a></li><li><a class="follower-stats"><strong>' + first.user.followers_count + '</strong>' + window.sL.followers + '</a></li><li><a class="groups-stats"><strong>' + first.user.groups_count + '</strong>' + window.sL.groups + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
 		}
 	
@@ -219,7 +223,9 @@ function profileCardFromFirstObject(data,screen_name) {
 				
 			// change design
 			changeDesign(data);
-			
+
+			// remove any old profile card and show profile card
+			$('#feed').siblings('.profile-card').remove();
 			$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.profile_image_url_original + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + data.profile_image_url_original + '"><img src="' + data.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + data.screen_name + '</span><span class="follow-status"></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"><span class="location">' + data.location + '</span><span class="divider"> · </span><span class="url"><a href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats"><strong>' + data.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a class="following-stats"><strong>' + data.friends_count + '</strong>' + window.sL.following + '</a></li><li><a class="follower-stats"><strong>' + data.followers_count + '</strong>' + window.sL.followers + '</a></li><li><a class="groups-stats"><strong>' + data.groups_count + '</strong>' + window.sL.groups + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
 			}});		
 		}		
@@ -259,8 +265,14 @@ function groupProfileCard(groupAlias) {
 		if(typeof window.loginUsername != 'undefined') {			
 			var memberButton = '<div class="user-actions"><button data-group-id="' + data.id + '" type="button" class="member-button ' + memberClass + '"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinGroup + '</span><span class="button-text ismember-text">' + window.sL.isMemberOfGroup + '</span><span class="button-text leave-text">' + window.sL.leaveGroup + '</span></button></div>';	
 			}
+			
+		// follow from external instance if logged out
+		if(typeof window.loginUsername == 'undefined') {			
+			var memberButton = '<div class="user-actions"><button type="button" class="external-member-button"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinExternalGroup + '</span></button></div>';	
+			}			
 		
 		// add card to DOM
+		$('#feed').siblings('.profile-card').remove();  // remove any old profile card 
 		$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.original_logo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + data.original_logo + '"><img src="' + data.homepage_logo + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.fullname + '<span></span></h1><h2 class="username"><span class="screen-name">!' + data.nickname + '</span></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"></span><span class="url"><a href="' + data.homepage + '">' + data.homepage.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="member-stats"><strong>' + data.member_count + '</strong>' + window.sL.memberCount + '</a></li><li><a class="admin-stats"><strong>' + data.admin_count + '</strong>' + window.sL.adminCount + '</a></li></ul>' + memberButton + '<div class="clearfix"></div></div></div>');		
 		}});		
 	}	
@@ -277,11 +289,19 @@ function groupProfileCard(groupAlias) {
    · · · · · · · · · */
     
 function setNewCurrentStream(stream,actionOnSuccess,setLocation) { 
-		
+	
 	// don't do anything if this stream is already the current
 	if(window.currentStream == stream) {
+
+		// scroll to top if we are downscrolled
+		
+		// refresh if we are at top
+
 		return;
 		}
+	
+	// remember state of old stream (including profile card)
+	window.oldStreams[window.currentStream] = $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML();
 
 	// set location bar from stream
 	if(setLocation && window.useHistoryPushState) {
@@ -320,7 +340,8 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	else if(stream == 'statuses/friends_timeline.json'
 	|| stream == 'statuses/mentions.json'
 	|| stream == 'favorites.json'	
-	|| stream == 'statuses/public_timeline.json')	{
+	|| stream == 'statuses/public_timeline.json'
+	|| stream == 'statuses/public_and_external_timeline.json?since_id=1')	{	
 		var defaultStreamName = stream;
 		var streamHeader = $('.stream-selection[data-stream-name="' + stream + '"]').attr('data-stream-header');
 		}	
@@ -375,18 +396,33 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		var h2FeedHeader = streamHeader;		
 		}									
 	
-	// fade out
-	$('#feed,.profile-card').animate({opacity:'0'},150,function(){
-		// when fade out finishes, remove any profile cards
+
+	// if we have a saved copy of this stream, show it immediately (but it is replaced when stream finishes to load later)
+	if(typeof window.oldStreams[window.currentStream] != "undefined") {
 		$('.profile-card').remove(); 
-		$('#feed-header-inner h2').html(h2FeedHeader);
-		});	
-	
+		$('#feed').remove();
+		$('#user-container').after(window.oldStreams[window.currentStream]);
+		$('.profile-card').css('display','none');
+		$('#feed').css('display','none');		
+		$('.profile-card').fadeIn(300);
+		$('#feed').fadeIn(300);
+		}
+
+	// otherwise we fade out and wait for stream to load
+	else {
+		// fade out
+		$('#feed,.profile-card').animate({opacity:'0'},150,function(){
+			// when fade out finishes, remove any profile cards and set new header
+			$('.profile-card').remove(); 
+			$('#feed-header-inner h2').html(h2FeedHeader);
+			});	
+		}
+			
 	// add this stream to history menu if it doesn't exist there (but not if this is me or if we're not logged in)
 	if($('.stream-selection[data-stream-header="' + streamHeader + '"]').length==0
 	&& streamHeader != '@' + window.loginUsername
 	&& typeof window.loginUsername != 'undefined') { 			
-		$('#history-container').append('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + $('.stream-selection.public-timeline').attr('href') + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="close-right"></i><i class="chev-right"></i></a>');
+		$('#history-container').append('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + $('.stream-selection.public-timeline').attr('href') + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="chev-right"></i></a>');
 		updateHistoryLocalStorage();
 		}
 	
@@ -424,6 +460,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 							remove_spinner();				
 							$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
 							$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
+							$('#feed-body').removeAttr('data-search-page-number'); // reset
 							addToFeed(user_data, false,'visible'); // add stream items to feed element
 							$('#feed').animate({opacity:'1'},150); // fade in
 							$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
@@ -535,6 +572,9 @@ function convertStreamToPath(stream) {
 	else if(stream == 'statuses/public_timeline.json')	{
 		return '';
 		}
+	else if(stream == 'statuses/public_and_external_timeline.json?since_id=1')	{
+		return 'main/all';
+		}		
 	else if(stream.substring(0,26) == 'statusnet/groups/timeline/')	{
 		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
 		return 'group/' + groupName;
@@ -586,8 +626,13 @@ function getStreamFromUrl() {
 	// default/fallback
 	var streamToSet = 'statuses/public_timeline.json';
 	
+	// main/all, i.e. full network
+	if (loc == '/main/all') {
+		streamToSet = 'statuses/public_and_external_timeline.json?since_id=1';
+		}
+
 	// {domain}/{screen_name} or {domain}/{screen_name}/
-	if ((/^[a-zA-Z0-9]+$/.test(loc.substring(0, loc.length - 1).replace('/','')))) {
+	else if ((/^[a-zA-Z0-9]+$/.test(loc.substring(0, loc.length - 1).replace('/','')))) {
 		var userToStream = loc.replace('/','').replace('/','');
 		if(userToStream.length>0) {
 			streamToSet = 'statuses/user_timeline.json?screen_name=' + userToStream;
@@ -738,27 +783,60 @@ function expand_queet(q,doScrolling) {
 			if(q.hasClass('conversation')) {
 				q.removeClass('expanded');	         
 				q.removeClass('collapsing');				
-				q.find('.expanded-content').remove();
 				q.find('.view-more-container-top').remove();
 				q.find('.view-more-container-bottom').remove();
 				q.find('.stream-item.conversation').remove();
 				q.find('.inline-reply-queetbox').remove();
+				q.find('.expanded-content').remove();					
 				}
 			else {
-				rememberMyScrollPos(q.children('.queet'),qid,0);			
-				var collapseTime = 200 + q.find('.stream-item.conversation:not(.hidden-conversation)').length*50;
-				q.find('.expanded-content').slideUp(collapseTime,function(){$(this).remove();});
-				q.find('.view-more-container-top').slideUp(collapseTime,function(){$(this).remove();});
-				q.find('.view-more-container-bottom').slideUp(collapseTime,function(){$(this).remove();});
-				q.find('.stream-item.conversation').slideUp(collapseTime,function(){$(this).remove();});
-				q.find('.inline-reply-queetbox').slideUp(collapseTime,function(){$(this).remove();});
-				if(doScrolling) {
-					backToMyScrollPos(q,qid,'animate');
-					}
-				setTimeout(function(){
+				rememberMyScrollPos(q.children('.queet'),qid,0);	
+				
+				// give stream item a height
+				q.css('height',q.height() + 'px');
+				
+				q.children('div').not('.queet').children('a').css('opacity','0.5');
+				q.children('div').not('.queet').children().children().css('opacity','0.5');
+
+				var collapseTime = 150 + q.find('.stream-item.conversation:not(.hidden-conversation)').length*50;
+				
+				// set transition time (needs to be delayed, otherwise webkit animates the height-setting above)
+ 				setTimeout(function() {				
+					q.children('.queet').css('-moz-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+					q.children('.queet').css('-o-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+					q.children('.queet').css('-webkit-transition-duration',Math.round( collapseTime * 1000 * 10) / 10 + 's');
+					q.children('.queet').css('transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+					q.css('-moz-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+					q.css('-o-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+					q.css('-webkit-transition-duration',Math.round( collapseTime * 1000 * 10) / 10 + 's');
+					q.css('transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+
+					// set new heights and margins to animate to
+					q.css('height',(q.children('.queet').find('.queet-content').outerHeight() - q.children('.queet').find('.expanded-content').outerHeight() - 10) + 'px');
+					q.children('.queet').css('margin-top', '-' + (q.children('.queet').offset().top - q.offset().top) + 'px');					
+
+ 					}, 50);				
+				
+				setTimeout(function() {
+					q.css('height','auto');
+					q.children('.queet').css('margin-top','0');
 					q.removeClass('expanded');
-					q.removeClass('collapsing');	  
-					},collapseTime+500);	   								
+					q.removeClass('collapsing');	
+					q.find('.expanded-content').remove();	
+					q.find('.view-more-container-top').remove();
+					q.find('.view-more-container-bottom').remove();
+					q.find('.inline-reply-queetbox').remove();																																							
+					q.find('.stream-item.conversation').remove();					
+					q.removeAttr('style');			
+					q.children('.queet').removeAttr('style');							
+					}, collapseTime+500);
+
+				
+				
+				if(doScrolling) {
+					backToMyScrollPos(q,qid,collapseTime);
+					}
+   								
 				}    	    
 	    	}
 		}
@@ -794,15 +872,21 @@ function expand_queet(q,doScrolling) {
 			// show expanded content
 			q.find('.stream-item-footer').after('<div class="expanded-content"><div class="queet-stats-container"></div><div class="client-and-actions"><span class="metadata">' + metadata + '</span></div></div>');					
 	
-			// maybe show images
+			// maybe show images or videos
 			$.each(q.children('.queet').find('.queet-text').find('a'), function() {
 				var attachment_title = $(this).attr('title');
 				if(typeof attachment_title != 'undefined') {
+					// images
 					if(attachment_title.substr(attachment_title.length - 5) == '.jpeg' ||
 					   attachment_title.substr(attachment_title.length - 4) == '.png' ||
 					   attachment_title.substr(attachment_title.length - 4) == '.gif' ||
 					   attachment_title.substr(attachment_title.length - 4) == '.jpg') {
 						q.children('.queet').find('.expanded-content').prepend('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_title + '" /></a></div>');
+						}
+					// videos
+					else if(attachment_title.indexOf('youtube.com/watch?v=') > -1) {
+						var youtubeId = attachment_title.replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').substr(0,11);
+						q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="420" height="315" src="//www.youtube.com/embed/' + youtubeId + '" frameborder="0" allowfullscreen></iframe></div>');						
 						}
 					}
 				});
@@ -883,7 +967,7 @@ function replyFormHtml(q,qid) {
 			}
 		});
 	
-	return '<div class="inline-reply-queetbox"><div class="queet-box-template" id="queet-box-template-' + qid + '" data-start-text="' + user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '">' + window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br></div></div>';	
+	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box-template" id="queet-box-template-' + qid + '" data-start-text="' + user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '">' + window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br></div></div>';	
 	}
 	
 
@@ -1166,7 +1250,8 @@ function findInReplyToStatusAndShow(qid,reply,only_first,onlyINreplyto) {
 	var reply_found_reply_to = $('#stream-item-' + qid).find('.stream-item[data-quitter-id="' + reply_found.attr('data-in-reply-to-status-id') + '"]');	
 	if(reply_found.length>0) {
 		reply_found.removeClass('hidden-conversation');
-		reply_found.animate({opacity:'1'},500);
+		//reply_found.animate({opacity:'1'},500);
+		reply_found.css('opacity','1');
 		if(only_first && reply_found_reply_to.length>0) {
 			reply_found.before('<div class="view-more-container-top" data-trace-from="' + reply + '"><a>' + window.sL.viewMoreInConvBefore + '</a></div>');			
 			findReplyToStatusAndShow(qid,qid,true);
@@ -1188,11 +1273,15 @@ function findReplyToStatusAndShow(qid,this_id,only_first) {
 	var reply_founds_reply = $('#stream-item-' + qid).find('.stream-item[data-in-reply-to-status-id="' + reply_found.attr('data-quitter-id') + '"]');
 	if(reply_found.length>0) {
 		reply_found.removeClass('hidden-conversation');
-		reply_found.animate({opacity:'1'},100,function(){
-			if(!only_first) {
-				findReplyToStatusAndShow(qid,$(this).attr('data-quitter-id'),false);
-				}			
-			});
+// 		reply_found.animate({opacity:'1'},0,function(){
+// 			if(!only_first) {
+// 				findReplyToStatusAndShow(qid,$(this).attr('data-quitter-id'),false);
+// 				}			
+// 			});
+		reply_found.css('opacity','1');
+		if(!only_first) {
+			findReplyToStatusAndShow(qid,$(this).attr('data-quitter-id'),false);
+			}					
 		if(only_first && reply_founds_reply.length>0) {
 			reply_found.last().after('<div class="view-more-container-bottom" data-replies-after="' + qid + '"><a>' + window.sL.viewMoreInConvAfter + '</a></div>');			
 			}
@@ -1223,7 +1312,7 @@ function checkForHiddenConversationQueets(qid) {
    · · · · · · · · · · · · · */ 	
   	
 function addToFeed(feed, after, extraClasses) {
-
+	
 	$.each(feed.reverse(), function (key,obj) {
 		
 		var extraClassesThisRun = extraClasses;			
@@ -1280,10 +1369,14 @@ function addToFeed(feed, after, extraClasses) {
 					}			
 				var memberButton = '';
 				if(typeof window.loginUsername != 'undefined') {			
+					console.log(obj);
 					var memberButton = '<div class="user-actions"><button data-group-id="' + obj.id + '" type="button" class="member-button ' + memberClass + '"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinGroup + '</span><span class="button-text ismember-text">' + window.sL.isMemberOfGroup + '</span><span class="button-text leave-text">' + window.sL.leaveGroup + '</span></button></div>';	
 					}			
-	
-				var groupHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet">' + memberButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.url + '"><img class="avatar" src="' + obj.stream_logo + '" /><strong class="name" data-group-id="' + obj.id + '">' + obj.fullname + '</strong> <span class="screen-name">!' + obj.nickname + '</span></a></div><div class="queet-text">' + obj.description + '</div></div></div></div>';
+				var groupAvatar = obj.stream_logo;
+				if(obj.homepage_logo != null) {
+					groupAvatar = obj.homepage_logo;
+					}
+				var groupHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet">' + memberButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.url + '"><img class="avatar" src="' + groupAvatar + '" /><strong class="name" data-group-id="' + obj.id + '">' + obj.fullname + '</strong> <span class="screen-name">!' + obj.nickname + '</span></a></div><div class="queet-text">' + obj.description + '</div></div></div></div>';
 	
 				if(after) {
 					$('#' + after).after(groupHtml);							
@@ -1364,8 +1457,23 @@ function addToFeed(feed, after, extraClasses) {
 					in_groups_html = '<span class="in-groups">' + obj.retweeted_status.statusnet_in_groups + '</span>';
 					}									
 						
+
+				// image attachment thumbnails
+				var attachment_html = '';
+				if(typeof obj.retweeted_status.attachments != "undefined") {
+					$.each(obj.retweeted_status.attachments, function(){
+						if(this.thumb_url != null) {
+							attachment_html = attachment_html + '<a href="' + this.url + '"><img src="' + this.thumb_url + '"/></a>';
+							}
+						});
+					}	
+				if(attachment_html.length>0) {
+					attachment_html = '<div class="attachments">' + attachment_html + '</div>';
+					}
+
+
 				var queetTime = parseTwitterDate(obj.retweeted_status.created_at);												
-				var queetHtml = '<div id="stream-item-' + obj.retweeted_status.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.retweeted_status.source) + '" data-quitter-id="' + obj.retweeted_status.id + '" data-conversation-id="' + obj.retweeted_status.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.retweeted_status.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.retweeted_status.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.retweeted_status.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.retweeted_status.user.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.retweeted_status.user.id + '">' + obj.retweeted_status.user.name + '</strong> <span class="screen-name">@' + obj.retweeted_status.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.retweeted_status.created_at + '"><a href="' + obj.retweeted_status.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.retweeted_status.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<div class="context" id="requeet-' + obj.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy + '<a href="' + obj.user.statusnet_profile_url + '"> <b>' + obj.user.name + '</b></a></span></span></div><span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
+				var queetHtml = '<div id="stream-item-' + obj.retweeted_status.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.retweeted_status.source) + '" data-quitter-id="' + obj.retweeted_status.id + '" data-conversation-id="' + obj.retweeted_status.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.retweeted_status.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.retweeted_status.id + '">' + attachment_html + '<span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.retweeted_status.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.retweeted_status.user.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.retweeted_status.user.id + '">' + obj.retweeted_status.user.name + '</strong> <span class="screen-name">@' + obj.retweeted_status.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.retweeted_status.created_at + '"><a href="' + obj.retweeted_status.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.retweeted_status.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<div class="context" id="requeet-' + obj.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy + '<a href="' + obj.user.statusnet_profile_url + '"> <b>' + obj.user.name + '</b></a></span></span></div><span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
 				
 				// detect rtl
 				queetHtml = detectRTL(queetHtml);						
@@ -1472,8 +1580,21 @@ function addToFeed(feed, after, extraClasses) {
 						in_groups_html = '<span class="in-groups">' + obj.statusnet_in_groups + '</span>';
 						}	
 						
+					// image attachment thumbnails
+					var attachment_html = '';
+					if(typeof obj.attachments != "undefined") {
+						$.each(obj.attachments, function(){
+							if(this.thumb_url != null) {
+								attachment_html = attachment_html + '<a href="' + this.url + '"><img src="' + this.thumb_url + '"/></a>';
+								}
+							});
+						}	
+					if(attachment_html.length>0) {
+						attachment_html = '<div class="attachments">' + attachment_html + '</div>';
+						}
+						
 					var queetTime = parseTwitterDate(obj.created_at);															
-					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"  data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
+					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"  data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.id + '">' + attachment_html + '<span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
 
 					// detect rtl
 					queetHtml = detectRTL(queetHtml);	

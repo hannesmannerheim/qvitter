@@ -9,7 +9,9 @@
  * actions/apiaccountupdatelinkcolor.php	 New api action  
  * actions/apiaccountupdatelinkcolor.php	 New api action  
  * actions/apichecknickname.php	             New api action    
- * actions/apiaccountregister.php            New api action     
+ * actions/apiaccountregister.php            New api action   
+ * actions/apitimelinepublicandexternal.php  New api action   
+ * lib/publicandexternalnoticestream.php      
  
  
  * lib/apiaction.php          
