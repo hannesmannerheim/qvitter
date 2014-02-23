@@ -36,13 +36,13 @@
 
 
 // SITE TITLE
-$sitetitle = 'Quitter';
+$sitetitle = 'qvitter front-end';
 
 // SITE DOMAIN
-$siterootdomain = 'quitter.se'; // no http:// or https:// and no ending slash
+$siterootdomain = 'qvitter.example.com'; // no http:// or https:// and no ending slash
 
-// API ROOT
-$apiroot = 'http://quitter.se/api/';
+// API ROOT (GNU social instance)
+$apiroot = 'https://social.example.com/api/';
 
 // DEFAULT BACKGROUND COLOR
 $defaultbackgroundcolor = '#f4f4f4';
@@ -73,5 +73,3 @@ $qvitterpath = ''; // WITH trailing slash!!
   ·             \____)                                  (____/                  · 
   ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
-
-?>
