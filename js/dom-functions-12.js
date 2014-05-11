@@ -872,21 +872,35 @@ function expand_queet(q,doScrolling) {
 			// show expanded content
 			q.find('.stream-item-footer').after('<div class="expanded-content"><div class="queet-stats-container"></div><div class="client-and-actions"><span class="metadata">' + metadata + '</span></div></div>');					
 	
+			
 			// maybe show images or videos
-			$.each(q.children('.queet').find('.queet-text').find('a'), function() {
+			$.each($('#' + q.children('.queet').attr('id') + ' .queet-text, #' + q.children('.queet').attr('id') + ' > .attachments').find('a'), function() {
 				var attachment_title = $(this).attr('title');
+				
+				console.log('attachment: ' + attachment_title);
+				
+				// attachments in the .attachments container don't have a title, their full url is in the href
+				if(typeof attachment_title == 'undefined') {
+					attachment_title = $(this).attr('href');					
+					}
+
+				// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
 				if(typeof attachment_title != 'undefined') {
 					// images
 					if(attachment_title.substr(attachment_title.length - 5) == '.jpeg' ||
 					   attachment_title.substr(attachment_title.length - 4) == '.png' ||
 					   attachment_title.substr(attachment_title.length - 4) == '.gif' ||
 					   attachment_title.substr(attachment_title.length - 4) == '.jpg') {
-						q.children('.queet').find('.expanded-content').prepend('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_title + '" /></a></div>');
+						if(q.children('.queet').find('.expanded-content').children('.media').children('a').attr('href') != attachment_title) { // not if already showed
+							q.children('.queet').find('.expanded-content').prepend('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_title + '" /></a></div>');
+							}
 						}
 					// videos
-					else if(attachment_title.indexOf('youtube.com/watch?v=') > -1) {
-						var youtubeId = attachment_title.replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').substr(0,11);
-						q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="420" height="315" src="//www.youtube.com/embed/' + youtubeId + '" frameborder="0" allowfullscreen></iframe></div>');						
+					else if(attachment_title.indexOf('youtube.com/watch?v=') > -1 || attachment_title.indexOf('://youtu.be/') > -1) {
+						var youtubeId = attachment_title.replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
+						if(q.children('.queet').find('.expanded-content').children('.media').children('iframe').attr('src') != '//www.youtube.com/embed/' + youtubeId) { // not if already showed
+							q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="420" height="315" src="//www.youtube.com/embed/' + youtubeId + '" frameborder="0" allowfullscreen></iframe></div>');						
+							}
 						}
 					}
 				});
