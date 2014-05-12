@@ -1066,6 +1066,33 @@ function expandInlineQueetBox(box) {
 		});		
 	}		
 	
+
+
+/* · 
+   · 
+   ·  Gnu social don't use url as uri anymore, we need to handle both cases	
+   ·
+   · · · · · · · · · · · · · */ 	
+  
+function convertNewGNUSocialURItoURL(obj) {
+
+	if(obj.uri.substring(0,4) != 'http') {									
+		
+		// guess the url if we only have the non-url uri
+		if(typeof obj.url == 'undefined') {							
+			var httpOrHttps = obj.user.statusnet_profile_url.substring(0,obj.user.statusnet_profile_url.indexOf('://'));
+			obj.uri = httpOrHttps + '://' + obj.uri.substring(4,obj.uri.indexOf(',')) + '/notice/' + obj.uri.substring(obj.uri.indexOf('noticeId=')+9,obj.uri.indexOf(':objectType'));
+			}
+		
+		// if an url record is present, use that
+		else {
+			obj.uri = obj.url;
+			}
+		}
+	return obj;
+	}
+	
+	
 	
 /* · 
    · 
@@ -1102,21 +1129,6 @@ function showConversation(qid) {
 						var in_reply_to_screen_name = '';
 						if(obj.in_reply_to_screen_name != null) {
 							in_reply_to_screen_name = obj.in_reply_to_screen_name;
-							}
-						
-						// gnu social don't use url as uri anymore, we need to handle both cases	
-						if(obj.uri.substring(0,4) != 'http') {									
-							
-							// guess the url if we only have the non-url uri
-							if(typeof obj.url == 'undefined') {							
-								var httpOrHttps = obj.user.statusnet_profile_url.substring(0,obj.user.statusnet_profile_url.indexOf('://'));
-								obj.uri = httpOrHttps + '://' + obj.uri.substring(4,obj.uri.indexOf(',')) + '/notice/' + obj.uri.substring(obj.uri.indexOf('noticeId=')+9,obj.uri.indexOf(':objectType'));
-								}
-							
-							// if the new url record is present, use that
-							else {
-								obj.uri = obj.url;
-								}
 							}
 						
 						// requeet or delete html
@@ -1158,6 +1170,8 @@ function showConversation(qid) {
 						if(obj.statusnet_in_groups !== false) {
 							in_groups_html = '<span class="in-groups">' + obj.statusnet_in_groups + '</span>';
 							}								
+
+						obj = convertNewGNUSocialURItoURL(obj);
 												
 						if(obj.source == 'activity') {
 							var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a>' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
@@ -1218,7 +1232,9 @@ function showConversation(qid) {
 										if(obj.in_reply_to_screen_name != null && obj.in_reply_to_screen_name != obj.user.screen_name) {
 											reply_to_html = '<span class="reply-to">@' + obj.in_reply_to_screen_name + '</span> ';
 											}
-											
+										
+										obj = convertNewGNUSocialURItoURL(obj);
+										
 										if(obj.source == 'activity') {
 											var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation external-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + external_base_url + '/notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
 											}
@@ -1500,6 +1516,7 @@ function addToFeed(feed, after, extraClasses) {
 					attachment_html = '<div class="attachments">' + attachment_html + '</div>';
 					}
 
+				obj.retweeted_status = convertNewGNUSocialURItoURL(obj.retweeted_status);
 
 				var queetTime = parseTwitterDate(obj.retweeted_status.created_at);												
 				var queetHtml = '<div id="stream-item-' + obj.retweeted_status.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.retweeted_status.source) + '" data-quitter-id="' + obj.retweeted_status.id + '" data-conversation-id="' + obj.retweeted_status.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.retweeted_status.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.retweeted_status.id + '">' + attachment_html + '<span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.retweeted_status.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.retweeted_status.user.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.retweeted_status.user.id + '">' + obj.retweeted_status.user.name + '</strong> <span class="screen-name">@' + obj.retweeted_status.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.retweeted_status.created_at + '"><a href="' + obj.retweeted_status.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.retweeted_status.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<div class="context" id="requeet-' + obj.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy + '<a href="' + obj.user.statusnet_profile_url + '"> <b>' + obj.user.name + '</b></a></span></span></div><span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
@@ -1621,6 +1638,9 @@ function addToFeed(feed, after, extraClasses) {
 					if(attachment_html.length>0) {
 						attachment_html = '<div class="attachments">' + attachment_html + '</div>';
 						}
+
+
+					obj = convertNewGNUSocialURItoURL(obj);
 						
 					var queetTime = parseTwitterDate(obj.created_at);															
 					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"  data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="q-' + obj.id + '">' + attachment_html + '<span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a><i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '<span class="stream-item-expand">' + window.sL.expand + '</span></div></div></div></div>';
