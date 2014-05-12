@@ -1104,6 +1104,21 @@ function showConversation(qid) {
 							in_reply_to_screen_name = obj.in_reply_to_screen_name;
 							}
 						
+						// gnu social don't use url as uri anymore, we need to handle both cases	
+						if(obj.uri.substring(0,4) != 'http') {									
+							
+							// guess the url if we only have the non-url uri
+							if(typeof obj.url == 'undefined') {							
+								var httpOrHttps = obj.user.statusnet_profile_url.substring(0,obj.user.statusnet_profile_url.indexOf('://'));
+								obj.uri = httpOrHttps + '://' + obj.uri.substring(4,obj.uri.indexOf(',')) + '/notice/' + obj.uri.substring(obj.uri.indexOf('noticeId=')+9,obj.uri.indexOf(':objectType'));
+								}
+							
+							// if the new url record is present, use that
+							else {
+								obj.uri = obj.url;
+								}
+							}
+						
 						// requeet or delete html
 						var requeetedClass = '';
 						if(obj.user.id == window.myUserID) {
