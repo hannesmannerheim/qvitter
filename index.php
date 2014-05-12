@@ -75,7 +75,7 @@ if($usehistorypushstate) {
 					error_log("QVITTER: Could not get user id for user with nickname: $nickname – REQUEST_URI: ".$_SERVER['REQUEST_URI']);
 					}        
 				else {
-					print '<link title="Notice feed for '.$nickname.' (Activity Streams JSON)" type="application/stream+json" href="'.$apiroot.'statuses/user_timeline/'.$user->id.'.as" rel="alternate">'."\n";
+					print '<link title="Notice feed for '.$nickname.' (Activity Streams JSON)" type="application/stream+json" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.as" rel="alternate">'."\n";
 					print '		<link title="Notice feed for '.$nickname.' (RSS 1.0)" type="application/rdf+xml" href="'.$instanceurl.$nickname.'/rss" rel="alternate">'."\n";
 					print '		<link title="Notice feed for '.$nickname.' (RSS 2.0)" type="application/rss+xml" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.rss" rel="alternate">'."\n";
 					print '		<link title="Notice feed for '.$nickname.' (Atom)" type="application/atom+xml" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.atom" rel="alternate">'."\n";
@@ -292,15 +292,15 @@ if($usehistorypushstate) {
 			
 			<div id="footer"></div>
 		</div>
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/codemirror.3.20.js"></script>
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery-2.0.2.min.js"></script>
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery-ui-1.10.3.min.js"></script>
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery.easing.1.3.js"></script>	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/jquery.minicolors.min.js"></script>	    	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions-12.js"></script>		    	
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions-11.js"></script>		    		    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions-4.js"></script>		    		    	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan-12.js"></script>	
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter-11.js"></script>		
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/codemirror.4.0.js"></script>
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.0.2.min.js"></script>
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-ui-1.10.3.min.js"></script>
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.easing.1.3.js"></script>	    
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=13"></script>		    	
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=11"></script>		    		    
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=4"></script>		    		    	    
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=12"></script>	
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=11"></script>		
 	</body>
 </html>
