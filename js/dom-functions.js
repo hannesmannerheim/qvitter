@@ -1498,7 +1498,7 @@ function addToFeed(feed, after, extraClasses) {
 					
 				// in-groups html
 				var in_groups_html = '';							
-				if(obj.retweeted_status.statusnet_in_groups !== false && typeof obj.retweeted_status.statusnet_in_groups !== 'undefined') {
+				if(obj.retweeted_status.statusnet_in_groups !== false && typeof obj.retweeted_status.statusnet_in_groups != 'undefined') {
 					in_groups_html = '<span class="in-groups">' + obj.retweeted_status.statusnet_in_groups + '</span>';
 					}									
 						
