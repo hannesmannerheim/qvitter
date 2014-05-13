@@ -1167,7 +1167,7 @@ function showConversation(qid) {
 
 						// in-groups html
 						var in_groups_html = '';							
-						if(obj.statusnet_in_groups !== false) {
+						if(obj.statusnet_in_groups !== false && typeof obj.statusnet_in_groups != 'undefined') {
 							in_groups_html = '<span class="in-groups">' + obj.statusnet_in_groups + '</span>';
 							}								
 
@@ -1622,7 +1622,7 @@ function addToFeed(feed, after, extraClasses) {
 						
 					// in-groups html
 					var in_groups_html = '';							
-					if(obj.statusnet_in_groups !== false) {
+					if(obj.statusnet_in_groups !== false && typeof obj.statusnet_in_groups != 'undefined') {
 						in_groups_html = '<span class="in-groups">' + obj.statusnet_in_groups + '</span>';
 						}	
 						
