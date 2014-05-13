@@ -297,10 +297,10 @@ if($usehistorypushstate) {
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-ui-1.10.3.min.js"></script>
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.easing.1.3.js"></script>	    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=13"></script>		    	
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=17"></script>		    	
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=11"></script>		    		    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=4"></script>		    		    	    
 	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=12"></script>	
-	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=11"></script>		
+	    <script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=12"></script>		
 	</body>
 </html>

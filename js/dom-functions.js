@@ -247,9 +247,9 @@ function groupProfileCard(groupAlias) {
 		
 		data.nickname = data.nickname || '';
 		data.fullname = data.fullname || '';
-		data.stream_logo = data.stream_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-stream.png';
-		data.homepage_logo = data.homepage_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-profile.png';
-		data.original_logo = data.original_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-profile.png';						
+		data.stream_logo = data.stream_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-stream.png';
+		data.homepage_logo = data.homepage_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-profile.png';
+		data.original_logo = data.original_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-profile.png';						
 		data.description = data.description || '';
 		data.homepage = data.homepage || '';
 		data.url = data.url || '';
@@ -1405,7 +1405,7 @@ function addToFeed(feed, after, extraClasses) {
 			if($('#stream-item-' + obj.id).length == 0) {			
 	
 				obj.description = obj.description || '';
-				obj.stream_logo = obj.stream_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-stream.png';
+				obj.stream_logo = obj.stream_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-profile.png';
 	
 				// show group actions if logged in
 				var memberClass = '';
@@ -1498,7 +1498,7 @@ function addToFeed(feed, after, extraClasses) {
 					
 				// in-groups html
 				var in_groups_html = '';							
-				if(obj.retweeted_status.statusnet_in_groups !== false) {
+				if(obj.retweeted_status.statusnet_in_groups !== false && typeof obj.retweeted_status.statusnet_in_groups !== 'undefined') {
 					in_groups_html = '<span class="in-groups">' + obj.retweeted_status.statusnet_in_groups + '</span>';
 					}									
 						
