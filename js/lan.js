@@ -131,13 +131,13 @@ window.l.es.settings                = 'Configuración';
 window.l.es.saveChanges             = 'Guardar cambios';
 window.l.es.linkColor               = 'Color del enlace';
 window.l.es.backgroundColor         = 'Color de fondo';
-window.l.es.newToQuitter            = '¿Eres nuevo en Quitter?';
+window.l.es.newToQuitter            = '¿Eres nuevo en ' + window.siteTitle + '?';
 window.l.es.signUp                  = 'Regístrate';
 window.l.es.signUpFullName          = 'Nombre completo';
 window.l.es.signUpEmail             = 'Correo electrónico';
-window.l.es.signUpButtonText        = 'Regístrate en Quitter';
-window.l.es.welcomeHeading          = 'Bienvenido a Quitter.';
-window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que no debes tener una cuenta de Quitter para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puedes registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debes registrarse en cualquier servicio para participar - simplemente instala el software GNU Social en tu propio servidor. (:</div>federación</span> de microblogueros que, como tú, estan motivados por ética y solidaridad y quieren abandonar los servicios centralizados capitalistas. Estamos aquí desde 2010 y siempre vamos a ser no-profit.';
+window.l.es.signUpButtonText        = 'Regístrate en ' + window.siteTitle;
+window.l.es.welcomeHeading          = 'Bienvenido a ' + window.siteTitle + '.';
+window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que no debes tener una cuenta de ' + window.siteTitle + ' para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puedes registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debes registrarse en cualquier servicio para participar - simplemente instala el software GNU Social en tu propio servidor. (:</div>federación</span> de microblogueros que, como tú, estan motivados por ética y solidaridad y quieren abandonar los servicios centralizados capitalistas. Estamos aquí desde 2010 y siempre vamos a ser no-profit.';
 window.l.es.registerNickname        = 'Nombre de usuario';
 window.l.es.registerHomepage        = 'Sitio web';
 window.l.es.registerBio             = 'Biografía';
@@ -242,13 +242,13 @@ window.l.fr.settings                = 'Paramètres';
 window.l.fr.saveChanges             = 'Sauvegarder les modifications';
 window.l.fr.linkColor               = 'Couleur des liens';
 window.l.fr.backgroundColor         = 'Couleur de l\'arrière-plan';
-window.l.fr.newToQuitter            = 'Nouveau sur Quitter ?';
+window.l.fr.newToQuitter            = 'Nouveau sur ' + window.siteTitle + ' ?';
 window.l.fr.signUp                  = 'Inscrivez-vous';
 window.l.fr.signUpFullName          = 'Nom complet';
 window.l.fr.signUpEmail             = 'Email';
-window.l.fr.signUpButtonText        = 'S\'inscrire sur Quitter';
-window.l.fr.welcomeHeading          = 'Bienvenue sur Quitter.';
-window.l.fr.welcomeText             = 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte Quitter pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés capitalistes. Nous sommes en ligne depuis 2010 et resterons toujours sans but lucratif.';
+window.l.fr.signUpButtonText        = 'S\'inscrire sur ' + window.siteTitle;
+window.l.fr.welcomeHeading          = 'Bienvenue sur ' + window.siteTitle + '.';
+window.l.fr.welcomeText             = 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte ' + window.siteTitle + ' pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés capitalistes. Nous sommes en ligne depuis 2010 et resterons toujours sans but lucratif.';
 window.l.fr.registerNickname        = 'Nom d\'utilisateur';
 window.l.fr.registerHomepage        = 'Site Web';
 window.l.fr.registerBio             = 'Biographie';
@@ -352,16 +352,16 @@ window.l.de.settings                = 'Einstellungen';
 window.l.de.saveChanges             = 'Änderungen speichern';
 window.l.de.linkColor               = 'Linkfarbe';
 window.l.de.backgroundColor         = 'Hintergrundfarbe';
-window.l.de.newToQuitter            = 'Neu bei Quitter?';
+window.l.de.newToQuitter            = 'Neu bei ' + window.siteTitle + '?';
 window.l.de.signUp                  = 'Registriere Dich!';
 window.l.de.signUpFullName          = 'Vollständiger Name';
 window.l.de.signUpEmail             = 'E-Mail';
-window.l.de.signUpButtonText        = 'Registriere Dich bei Quitter!';
-window.l.de.welcomeHeading          = 'Willkommen bei Quitter!';
+window.l.de.signUpButtonText        = 'Registriere Dich bei ' + window.siteTitle + '!';
+window.l.de.welcomeHeading          = 'Willkommen bei ' + window.siteTitle + '!';
 window.l.de.welcomeText             = 'Wir sind eine Community von Microbloggern, verteilt über einen weltweiten \
                                        <span id="federated-tooltip"><div id="what-is-federation">"Verbund" bedeutet, \
-                                       dass du nicht selbst einen Quitter-Account brauchst, um mit Quitter-Nutzern zu \
-                                       kommunizieren, ihnen zu folgen oder Follower bei Quitter zu haben. Du kannst dich \
+                                       dass du nicht selbst einen ' + window.siteTitle + '-Account brauchst, um mit ' + window.siteTitle + '-Nutzern zu \
+                                       kommunizieren, ihnen zu folgen oder Follower bei ' + window.siteTitle + ' zu haben. Du kannst dich \
                                        genauso gut bei einem der anderen <a href="http://www.gnu.org/software/social/">\
                                        GNU-Social</a>-Server registrieren oder einem anderen Dienst, der das \
                                        <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>-Protokoll \
@@ -388,13 +388,13 @@ window.l.en.loginPassword           = 'Password';
 window.l.en.loginSignIn             = 'Sign in';
 window.l.en.loginRememberMe         = 'Remember me';
 window.l.en.loginForgotPassword     = 'Forgot password?';
-window.l.en.notices                 = 'Queets';
+window.l.en.notices                 = 'Notices';
 window.l.en.followers               = 'Followers';
 window.l.en.following               = 'Following';
 window.l.en.groups                  = 'Groups';
-window.l.en.compose                 = 'Compose a new Queet...';
-window.l.en.queetVerb               = 'Queet';
-window.l.en.queetsNounPlural        = 'Queets';
+window.l.en.compose                 = 'Compose a new notice...';
+window.l.en.queetVerb               = 'Send';
+window.l.en.queetsNounPlural        = 'Notices';
 window.l.en.logout                  = 'Sign out';
 window.l.en.languageSelected        = 'Language:';
 window.l.en.viewMyProfilePage       = 'View my profile page';
@@ -403,18 +403,18 @@ window.l.en.collapse                = 'Collapse';
 window.l.en.details                 = 'Details';
 window.l.en.expandFullConversation  = 'Expand full conversation';
 window.l.en.replyVerb               = 'Reply';
-window.l.en.requeetVerb             = 'Requeet';
+window.l.en.requeetVerb             = 'Repeat';
 window.l.en.favoriteVerb            = 'Favorite';
-window.l.en.requeetedVerb           = 'Requeeted';
+window.l.en.requeetedVerb           = 'Repeated';
 window.l.en.favoritedVerb           = 'Favorited';
 window.l.en.replyTo                 = 'Reply to';
-window.l.en.requeetedBy             = 'Requeeted by';
+window.l.en.requeetedBy             = 'Repeated by';
 window.l.en.favoriteNoun            = 'Favorite';
 window.l.en.favoritesNoun           = 'Favorites';
-window.l.en.requeetNoun             = 'Requeet';
-window.l.en.requeetsNoun            = 'Requeets';
-window.l.en.newQueet                = 'new Queet';
-window.l.en.newQueets               = 'new Queets';
+window.l.en.requeetNoun             = 'Repeat';
+window.l.en.requeetsNoun            = 'Repeats';
+window.l.en.newQueet                = 'new notice';
+window.l.en.newQueets               = 'new notices';
 window.l.en.longmonthsJanuary       = "January";
 window.l.en.longmonthsFebruary      = "February";
 window.l.en.longmonthsMars          = "March";
@@ -458,7 +458,7 @@ window.l.en.publicAndExtTimeline    = 'The whole known network';
 window.l.en.searchVerb              = 'Search';
 window.l.en.deleteVerb              = 'Delete';
 window.l.en.cancelVerb              = 'Cancel';
-window.l.en.deleteConfirmation      = 'Are you sure you want to delete this queet?';
+window.l.en.deleteConfirmation      = 'Are you sure you want to delete this notice?';
 window.l.en.userExternalFollow      = 'Remote follow';
 window.l.en.userExternalFollowHelp  = 'Your account ID (e.g. user@rainbowdash.net).';
 window.l.en.userFollow              = 'Follow';
@@ -474,15 +474,15 @@ window.l.en.settings                = 'Settings';
 window.l.en.saveChanges             = 'Save changes';
 window.l.en.linkColor               = 'Link color';
 window.l.en.backgroundColor         = 'Background color';
-window.l.en.newToQuitter            = 'New to Quitter?';
+window.l.en.newToQuitter            = 'New to ' + window.siteTitle + '?';
 window.l.en.signUp                  = 'Sign up';
 window.l.en.signUpFullName          = 'Full name';
 window.l.en.signUpEmail             = 'Email';
-window.l.en.signUpButtonText        = 'Sign up to Quitter';
-window.l.en.welcomeHeading          = 'Welcome to Quitter.';
+window.l.en.signUpButtonText        = 'Sign up to ' + window.siteTitle + '';
+window.l.en.welcomeHeading          = 'Welcome to ' + window.siteTitle + '.';
 window.l.en.welcomeText             = 'We are a <span id="federated-tooltip"><div id="what-is-federation">"Federation" \
-                                       means that you don\'t need a Quitter account to be able to follow, be followed \
-                                       by or interact with Quitter users. You can register on any StatusNet or GNU Social server \
+                                       means that you don\'t need a ' + window.siteTitle + ' account to be able to follow, be followed \
+                                       by or interact with ' + window.siteTitle + ' users. You can register on any StatusNet or GNU Social server \
                                        or any service based on the the \
                                        <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a> protocol! \
                                        You don\'t even have to join a service – try installing the lovely \
@@ -593,13 +593,13 @@ window.l.sv.settings                = 'Inställningar';
 window.l.sv.saveChanges             = 'Spara ändringarna';
 window.l.sv.linkColor               = 'Länkfärg';
 window.l.sv.backgroundColor         = 'Bakgrundsfärg';
-window.l.sv.newToQuitter            = 'Ny på Quitter?';
+window.l.sv.newToQuitter            = 'Ny på ' + window.siteTitle + '?';
 window.l.sv.signUp                  = 'Registrera dig';
 window.l.sv.signUpFullName          = 'Fullständigt namn';
 window.l.sv.signUpEmail             = 'E-post';
-window.l.sv.signUpButtonText        = 'Registrera dig på Quitter';
-window.l.sv.welcomeHeading          = 'Välkommen till Quitter.';
-window.l.sv.welcomeText             = 'Vi är en <span id="federated-tooltip"><div id="what-is-federation">"Federering" betyder att du inte behöver ha ett Quitter-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href="http://www.gnu.org/software/social/">GNU Social</a> (som Quitter bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt. Vi har funnits sedan 2010 och sajten drivs helt ideellt.';
+window.l.sv.signUpButtonText        = 'Registrera dig på ' + window.siteTitle + '';
+window.l.sv.welcomeHeading          = 'Välkommen till ' + window.siteTitle + '.';
+window.l.sv.welcomeText             = 'Vi är en <span id="federated-tooltip"><div id="what-is-federation">"Federering" betyder att du inte behöver ha ett ' + window.siteTitle + '-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href="http://www.gnu.org/software/social/">GNU Social</a> (som ' + window.siteTitle + ' bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt. Vi har funnits sedan 2010 och sajten drivs helt ideellt.';
 window.l.sv.registerNickname        = 'Användarnamn';
 window.l.sv.registerHomepage        = 'Webbplats';
 window.l.sv.registerBio             = 'Biografi';
@@ -924,15 +924,15 @@ window.l.eo.settings                = 'Agordo';
 window.l.eo.saveChanges             = 'Konservi ŝanĝojn';
 window.l.eo.linkColor               = 'Koloro de ligiloj';
 window.l.eo.backgroundColor         = 'Koloro de fono';
-window.l.eo.newToQuitter            = 'Ĉu vi estas novanto je Quitter?';
+window.l.eo.newToQuitter            = 'Ĉu vi estas novanto je ' + window.siteTitle + '?';
 window.l.eo.signUp                  = 'Regístriĝi';
 window.l.eo.signUpFullName          = 'Plena nomo';
 window.l.eo.signUpEmail             = 'Retpoŝto';
-window.l.eo.signUpButtonText        = 'Regístriĝi ĉe Quitter';
-window.l.eo.welcomeHeading          = 'Bonvenon al Quitter.';
+window.l.eo.signUpButtonText        = 'Regístriĝi ĉe ' + window.siteTitle + '';
+window.l.eo.welcomeHeading          = 'Bonvenon al ' + window.siteTitle + '.';
 window.l.eo.welcomeText             = 'Ni estas <span id="federated-tooltip"><div id="what-is-federation">Helpindiko\
-                                       por “federaĵon”: “federaĵon” signifas, ke vi ne bezonas konton ĉe Quitter por\
-                                       ebli sekvi, esti sekvanta far aliaj, aŭ interagi kun uzantoj de Quitter. Vi povas\
+                                       por “federaĵon”: “federaĵon” signifas, ke vi ne bezonas konton ĉe ' + window.siteTitle + ' por\
+                                       ebli sekvi, esti sekvanta far aliaj, aŭ interagi kun uzantoj de ' + window.siteTitle + '. Vi povas\
                                        registriĝi ĉe ajna servaĵo de StatusNet aŭ\
                                        <a href="http://www.gnu.org/software/social/">GNU Social</a>, aŭ ajna servaĵo, kiu baziĝas\
                                        sur la protokolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>!\
@@ -1043,15 +1043,15 @@ window.l.it.settings = 'Opzioni';
 window.l.it.saveChanges = 'Salva modifiche';
 window.l.it.linkColor = 'Colore dei link';
 window.l.it.backgroundColor = 'Colore dello sfondo';
-window.l.it.newToQuitter = 'Sei nuovo su Quitter?';
+window.l.it.newToQuitter = 'Sei nuovo su ' + window.siteTitle + '?';
 window.l.it.signUp = 'Registrati';
 window.l.it.signUpFullName = 'Nome e cognome';
 window.l.it.signUpEmail = 'Indirizzo di posta elettronica';
-window.l.it.signUpButtonText = 'Registrati su Quitter';
-window.l.it.welcomeHeading = 'Benvenuto su Quitter.';
+window.l.it.signUpButtonText = 'Registrati su ' + window.siteTitle + '';
+window.l.it.welcomeHeading = 'Benvenuto su ' + window.siteTitle + '.';
 window.l.it.welcomeText = 'Siamo una <span id="federated-tooltip"><div id="what-is-federation">"Federazione" \
-significa che non è necessario avere un account su Quitter per essere in grado di seguire, \
-essere seguito, o interagire con gli altri utenti Quitter. Potete registrarvi su \
+significa che non è necessario avere un account su ' + window.siteTitle + ' per essere in grado di seguire, \
+essere seguito, o interagire con gli altri utenti ' + window.siteTitle + '. Potete registrarvi su \
 qualsiasi server StatusNet, <a href="http://www.gnu.org/software/social/">GNU Social</a>, \
 o qualsiasi altro servizio basato sul protocollo \
 <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Non avete \
@@ -1096,7 +1096,7 @@ window.siteTitle = $('head title').html(); // remember this for later use
 // set some static string
 $('.front-welcome-text h1').html(window.sL.welcomeHeading);
 $('.front-welcome-text p').html(window.sL.welcomeText);
-$('#username').attr('placeholder',window.sL.loginUsername);
+$('#nickname').attr('placeholder',window.sL.loginUsername);
 $('#password').attr('placeholder',window.sL.loginPassword);
 $('button#submit-login').html(window.sL.loginSignIn);
 $('#rememberme_label').html(window.sL.loginRememberMe);

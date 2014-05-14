@@ -39,18 +39,16 @@ window.oldStreams = new Object();
 
 /* · 
    · 
-   ·   Update stream on back button (if we're using history push state)
+   ·   Update stream on back button
    · 
    · · · · · · · · · · · · · */ 
 
-if(window.useHistoryPushState) {
-	window.onpopstate = function(event) {
-	    if(event && event.state) {
-			display_spinner();
-			setNewCurrentStream(event.state.strm,function(){
-				remove_spinner();			
-				},false);
-		    }
+window.onpopstate = function(event) {
+	if(event && event.state) {
+		display_spinner();
+		setNewCurrentStream(event.state.strm,function(){
+			remove_spinner();			
+			},false);
 		}
 	}
 	
@@ -169,7 +167,7 @@ $('#signup-btn-step1').click(function(){
 		$('#signup-btn-step2').click(function(){
 			$('#popup-register input,#popup-register button').addClass('disabled');
 			display_spinner();
-			$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+			$.ajax({ url: window.qvitterApiRoot, 
 				type: "POST", 
 				data: { 
 					postRequest: 	'account/register.json',
@@ -190,7 +188,7 @@ $('#signup-btn-step1').click(function(){
 				success: function(data) {
 					remove_spinner();					 
 					if(typeof data.error == 'undefined') {
-						 $('input#username').val($('#signup-user-nickname-step2').val());
+						 $('input#nickname').val($('#signup-user-nickname-step2').val());
 						 $('input#password').val($('#signup-user-password1-step2').val());
 						 $('input#rememberme').prop('checked', true);
 						 $('#submit-login').trigger('click');
@@ -240,28 +238,28 @@ $(window).load(function() {
 	// check for localstorage, if none, we remove possibility to remember login
 	var userInLocalStorage = false;
 	if(localStorageIsEnabled()) {
-		if(typeof localStorage.autologinUsername != 'undefined') {
+		if(typeof localStorage.autologinPassword != 'undefined') {
 			userInLocalStorage = true;
 			}
 		}
-	else {
-		$('input#rememberme').css('display','none');
-		$('span#rememberme_label').css('display','none');		
-		$('#remember-forgot').css('font-size','0');						
-		$('.language-dropdown').css('display','none');		
-		}	
 
-
-	// autologin if saved
-	if(userInLocalStorage) {
-		$('input#username').val(localStorage.autologinUsername);
-		$('input#password').val(localStorage.autologinPassword);
+	// if we have a user logged in to localStorage, but not to gnusocial, delete
+	// and send them to front page and tell it to shake loginbox
+	if(!window.isLoggedIn && userInLocalStorage) {
+		localStorage.doShake = true;
+		delete localStorage.autologinUsername;
+		delete localStorage.autologinPassword;
+		window.location.href =window.siteInstanceURL;
+		}
 	
-		// if we're in client mode, i.e. not webapp mode, always go to friends timeline if logged in
-		if(window.useHistoryPushState === false) {
-			streamToSet = 'statuses/friends_timeline.json';
-			}
-
+	// if login credentials in localstorage got lost somewhere, logout
+	if(window.isLoggedIn && !userInLocalStorage) {
+		window.location.href =window.siteInstanceURL + 'main/logout';		
+		}		
+	// autologin
+	else if(window.isLoggedIn && userInLocalStorage) {
+		$('input#nickname').val(localStorage.autologinUsername);
+		$('input#password').val(localStorage.autologinPassword);
 		doLogin("get stream from url");		
 		}
 	else {
@@ -269,7 +267,7 @@ $(window).load(function() {
 		window.currentStream = ''; // force reload stream
 		setNewCurrentStream(getStreamFromUrl(),function(){
 			logoutWithoutReload(false);
-			remove_spinner();			
+			remove_spinner();						
 			},true);
 		}	
 	});	
@@ -282,17 +280,15 @@ $(window).load(function() {
    · 
    · · · · · · · · · · · · · */ 
 
-$('#submit-login').click(function () {		
-
-	// if this is a special url for user, notice etc, grab that stream (UGLY SORRRRRY)
-	var streamToSet = "get stream from url";
+$('#form_login').submit(function(e) {		
 	
-	// if this is the public feed, we redirect to friends_timline (I think that's intuitive)
-	if(getStreamFromUrl() == 'statuses/public_timeline.json') {
-		streamToSet = 'statuses/friends_timeline.json';
-		}
-
-	doLogin(streamToSet);
+	// store username and password in localstorage before submitting
+	if(typeof localStorage.autologinPassword == 'undefined') {
+		e.preventDefault();
+		localStorage.autologinPassword = $('input#password').val();
+		localStorage.autologinUsername = $('input#nickname').val();	
+		$(this).submit();
+		}	
 	});
 
 function doLogin(streamToSet) {
@@ -301,7 +297,7 @@ function doLogin(streamToSet) {
 	display_spinner();
 
 	// login with ajax
-	checkLogin($('input#username').val(),$('input#password').val(),function(user){
+	checkLogin($('input#nickname').val(),$('input#password').val(),function(user){
 
 		console.log(user);
 		
@@ -350,7 +346,7 @@ function doLogin(streamToSet) {
 		if($('#rememberme').is(':checked')) {
 			if(localStorageIsEnabled()) {
 				localStorage.autologinPassword = $('input#password').val();
-				localStorage.autologinUsername = $('input#username').val();					
+				localStorage.autologinUsername = $('input#nickname').val();					
 				}
 			}
 			
@@ -396,18 +392,6 @@ $('#rememberme_label').click(function(){
 $('#rememberme_label').disableSelection();	
 
 
-/* · 
-   · 
-   ·   Submit login form on enter key
-   · 
-   · · · · · · · · · · · · · */ 
-   
-$('input#username,input#password,input#rememberme').keyup(function(e){ 
-	if(e.keyCode==13) { 
-		$('#submit-login').trigger('click');
-		}
-	}); 
-	
 
 
 /* · 
@@ -421,7 +405,7 @@ $('#logout').click(function(){
 		delete localStorage.autologinUsername;
 		delete localStorage.autologinPassword;		
 		}
-	location.reload();		
+	window.location.href =window.siteInstanceURL + 'main/logout';		
 	});		
 
 
@@ -435,7 +419,7 @@ $('#logout').click(function(){
    
 $('#settings').click(function(){
 	// buttons to add later: '<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary disabled">' + window.sL.saveChanges + '</button></div>'
-	popUpAction('popup-settings', window.sL.settings,'<div id="settings-container"><div><label for="link-color-selection">' + window.sL.linkColor + '</label><input id="link-color-selection" type="text" value="#' + window.userLinkColor + '" /></div><div><label for="link-color-selection">' + window.sL.backgroundColor + '</label><input id="background-color-selection" type="text" value="#' + window.userBackgroundColor + '" /></div><a id="moresettings">' + window.sL.moreSettings + '<form action="' + window.siteInstanceURL + '/main/login" method="post" target="_blank"><input type="hidden" id="nickname" name="nickname" value="' + $('input#username').val() + '" /><input type="hidden" id="password" name="password" value="' + $('input#password').val() + '" /><input type="hidden" id="returnto" name="returnto" value="/settings/profile" /></form></a></div>',false);
+	popUpAction('popup-settings', window.sL.settings,'<div id="settings-container"><div><label for="link-color-selection">' + window.sL.linkColor + '</label><input id="link-color-selection" type="text" value="#' + window.userLinkColor + '" /></div><div><label for="link-color-selection">' + window.sL.backgroundColor + '</label><input id="background-color-selection" type="text" value="#' + window.userBackgroundColor + '" /></div><a href="' + window.siteInstanceURL + 'settings/profile" id="moresettings">' + window.sL.moreSettings + '</a></div>',false);
 	$('#link-color-selection').minicolors({
 		change: function(hex) {
 			changeLinkColor(hex);
@@ -500,7 +484,7 @@ $('body').on('click','#moresettings',function(){
 function logoutWithoutReload(doShake) {
 
 	if(window.currentStream == 'statuses/public_timeline.json') {
-		$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + 'img/ekan4.jpg)');
+		$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + 'img/mela.jpg)');
 		}
 
 	$('#submit-login').removeAttr('disabled');				
@@ -519,17 +503,18 @@ function logoutWithoutReload(doShake) {
 	$('.dropdown-menu.quitter-settings li.language').css('display','none');	
 	$('#settingslink').fadeOut('slow');	
 	$('#search').fadeOut('slow');											
-	$('input#username').focus();	
+	$('input#nickname').focus();	
 	$('.front-signup').animate({opacity:'1'},200);
-	if(doShake) {
-		$('input#username').css('background-color','pink');
+	if(doShake || localStorage.doShake) {
+		$('input#nickname').css('background-color','pink');
 		$('input#password').css('background-color','pink');		
 		}
 	$('#login-content').animate({opacity:'1'},200, function(){
-		if(doShake) {
+		if(doShake || localStorage.doShake) {
 			$('#login-content').effect('shake',{distance:5,times:2},function(){
-				$('input#username').animate({backgroundColor:'#fff'},1000);
+				$('input#nickname').animate({backgroundColor:'#fff'},1000);
 				$('input#password').animate({backgroundColor:'#fff'},1000);					
+				delete localStorage.doShake;
 				});
 			}
 		$('.front-welcome-text').fadeIn(3000);						

@@ -34,56 +34,65 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
-require_once('settings.php');
+class QvitterApiAction extends ApiAction
+{
 
-header("Content-type: application/json; charset=utf-8"); 
+    protected $needPost = true;
 
-// add slash if missing
-if(substr($apiroot,-1) != '/') {
-	$apiroot .= '/';
-}
+    protected function prepare(array $args=array())
+    {
+        parent::prepare($args);
 
-// post requests
-if(isset($_POST['postRequest'])) {
-	$query = http_build_query($_POST, '', '&');
-	$ch=curl_init();
-	curl_setopt($ch, CURLOPT_URL, $apiroot.urldecode($_POST['postRequest']));
-	curl_setopt($ch, CURLOPT_USERPWD, $_POST['username'].":".$_POST['password']);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-	session_write_close(); // fix problem with curling to local
-	$reply=curl_exec($ch);
-	curl_close($ch);
+        return true;
+    }
 
-// get requests
-} elseif(isset($_POST['getRequest'])) {
-	$ch=curl_init();
-	curl_setopt($ch, CURLOPT_URL, $apiroot.$_POST['getRequest']);
+    protected function handle()
+    {
+        parent::handle();
+        
+		$apiroot = common_path('api/', true);
+
+		header("Content-type: application/json; charset=utf-8"); 
+
+		// post requests
+		if(isset($_POST['postRequest'])) {
+			$query = http_build_query($_POST, '', '&');
+			$ch=curl_init();
+			curl_setopt($ch, CURLOPT_URL, $apiroot.urldecode($_POST['postRequest']));
+			curl_setopt($ch, CURLOPT_USERPWD, $_POST['username'].":".$_POST['password']);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+			session_write_close(); // fix problem with curling to local
+			$reply=curl_exec($ch);
+			curl_close($ch);
+
+		// get requests
+		} elseif(isset($_POST['getRequest'])) {
+			$ch=curl_init();
+			curl_setopt($ch, CURLOPT_URL, $apiroot.$_POST['getRequest']);
 	
-	if(isset($_POST['username'])) {
-		curl_setopt($ch, CURLOPT_USERPWD, $_POST['username'].":".$_POST['password']);
-	}
+			if(isset($_POST['username'])) {
+				curl_setopt($ch, CURLOPT_USERPWD, $_POST['username'].":".$_POST['password']);
+			}
 	
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	session_write_close(); 
-	$reply=curl_exec($ch);
-	curl_close($ch);
-} else {
-	// 400 Bad request, since neither postRequest or getRequest were included
-	http_response_code(400);
-	exit;
-}
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			session_write_close(); 
+			$reply=curl_exec($ch);
+			curl_close($ch);
+		} else {
+			// 400 Bad request, since neither postRequest or getRequest were included
+			http_response_code(400);
+			exit;
+		}
 
-session_start();
+		session_start();
 
-// force ssl on our domain
-if($forcessl) {
-	$reply = str_replace('http://'.$siterootdomain,'https://'.$siterootdomain, $reply);
-}
+		echo $reply;
 
-echo $reply;
-	
+    }
+    
+}	
 	
  /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
   ·                                                                             · 

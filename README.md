@@ -2,8 +2,8 @@ Qvitter
 ==========================================
 
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
-* Last mod.: November, 2013
-* Version:   2
+* Last mod.: May, 2014
+* Version:   3
 * GitHub:    <https://github.com/hannesmannerheim/qvitter>
 
 Qvitter is free  software:  you can  redistribute it  and / or  modify it  
@@ -22,20 +22,21 @@ along with Qvitter. If not, see <http://www.gnu.org/licenses/>.
 Setup
 -----
 
-1. You need a webserver with PHP support.
+1. Install GNU Social
 
-2. Edit settings.php.
+2. Put all files in /plugins/Qvitter
 
-3. You should really put some security-by-obscurity-stuff in the registration process. E-mail h@nnesmannerhe.im if you want to copy mine. 
+3. Add `addPlugin('Qvitter')` to your /config.php file;
 
-Qvitter uses a slightly modified statusnet API. Some things will not work
-if you connect to a site with standard API. Files are included if you want
-to Qvitter-mod your Statusnet API.
+4. There are a few settings in /plugins/Qvitter/QvitterPlugin.php. By default Qvitter is 
+opt-out for users. If you set `$settings['enabledbydefault'] = false;` Qvitter will
+be opt-in instead.
 
-Recently MMN-o has implemented these API-changes in GNU Social. The API changes should
-only be needed if you are running Statusnet 1.1.1, not if you have a recent GNU Social
-version. 
-   
+5. Users can go to ://{instance}/settings/qvitter and enable or disable Qvitter.
+
+NOTE: Qvitter is now a plugin for GNU Social. There will probably be bugs because of
+this change.
+
 
 TODO
 ----
@@ -52,7 +53,7 @@ TODO
 
 7. Settings (e.g. don't show replies to people I don't follow)
 
-9. Image/file upload, drag-n-drop!
+9. Image/file upload
 
 10. Search users
 
@@ -60,13 +61,15 @@ TODO
 
 12. Filters (hide queets containing strings, e.g. mute users)
 
-14. More languages
+14. More languages, maybe make proper po/mo-files
 
-15. Queet-page
+15. Notice-page
 
 16. Admin-interface
 
-16. New api for serving _number_ of new items in several streams (to show number of new items in menu/history) 
+16. New api for serving _number_ of new items in several streams (to show number of new items in menu/history)
+
+17. Notifications-page with likes and repeats 
 
 17. New "expand queet" api for getting conversation, retweets, favs and attachment in the same request
 

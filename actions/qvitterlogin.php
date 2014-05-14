@@ -1,6 +1,6 @@
 <?php
 
-/* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+ /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
@@ -34,42 +34,104 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+if (!defined('GNUSOCIAL')) { exit(1); }
 
-// SITE TITLE
-$sitetitle = 'qvitter front-end';
+class QvitterLoginAction extends FormAction
+{
+    protected $needLogin = false;
 
-// SITE DOMAIN
-$siterootdomain = 'qvitter.example.com'; // no http:// or https:// and no ending slash
+    /**
+     * Prepare page to run
+     *
+     *
+     * @param $args
+     * @return string title
+     */
+    protected function prepare(array $args=array())
+    {
+        // @todo this check should really be in index.php for all sensitive actions
+        $ssl = common_config('site', 'ssl');
+        if (empty($_SERVER['HTTPS']) && ($ssl == 'always' || $ssl == 'sometimes')) {
+            common_redirect(common_local_url('login'));
+        }
 
-// API ROOT (GNU social instance)
-$apiroot = 'https://social.example.com/api/';
+        return parent::prepare($args);
+    }
 
-// DEFAULT BACKGROUND COLOR
-$defaultbackgroundcolor = '#f4f4f4';
+    /**
+     * Handle input, produce output
+     *
+     * Switches on request method; either shows the form or handles its input.
+     *
+     * @return void
+     */
+    protected function handle()
+    {
+        if (common_is_real_login()) {
+            common_redirect(common_local_url('all', array('nickname' => $this->scoped->nickname)), 307);
+        }
 
-// DEFAULT LINK COLOR
-$defaultlinkcolor = '#0084B4';
+        return parent::handle();
+    }
 
-// TIME BETWEEN POLLING
-$timebetweenpolling = 5000; // ms
+    /**
+     * Check the login data
+     *
+     * Determines if the login data is valid. If so, logs the user
+     * in, and redirects to the 'with friends' page, or to the stored
+     * return-to URL.
+     *
+     * @return void
+     */
+    protected function handlePost()
+    {
+        parent::handlePost();
 
-// FORCE SSL ON AVATAR URLS AND SUCH
-$forcessl = false;
+        // XXX: login throttle
 
-// USE history.pushState TO REWRITE URLS IN THE LOCATION BAR (use with mod_rewrite)
-// Try this rule in .htaccess:
-// RewriteRule ^(search/)?(notice\?q=|group/|tag/)?([a-z0-9%]+)?(/all|/subscriptions|/subscribers|/groups|/replies|/favorites|/members|/admins)?$ /theme/quitter-theme2/qvitter/index.php [L]    
-$usehistorypushstate = false;
+        $nickname = $this->trimmed('nickname');
+        $password = $this->arg('password');
 
-// FULL PATH TO THIS QVITTER APP
-// (can be left blank, but if you're not doing mod_rewrites you need this)
-$qvitterpath = ''; // WITH trailing slash!!
+        $user = common_check_user($nickname, $password);
+
+        if (!$user instanceof User) {
+            // TRANS: Form validation error displayed when trying to log in with incorrect credentials.
+            throw new ServerException(_('Incorrect username or password.'));
+        }
+
+        // success!
+        if (!common_set_user($user)) {
+            // TRANS: Server error displayed when during login a server error occurs.
+            throw new ServerException(_('Error setting user. You are probably not authorized.'));
+        }
+
+        common_real_login(true);
+        $this->updateScopedProfile(); 
+
+        if ($this->boolean('rememberme')) {
+            common_rememberme($user);
+        }
+
+        $url = common_get_returnto();
+
+        if ($url) {
+            // We don't have to return to it again
+            common_set_returnto(null);
+            $url = common_inject_session($url);
+        } else {
+            $url = common_local_url('all',
+                                    array('nickname' => $this->scoped->nickname));
+        }
+
+        common_redirect($url, 303);
+    }
 
 
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
-  ·                                                                             · 
-  ·                (o>                                  >o)                     ·
-  ·            \\\\_\                                    /_////                 .
-  ·             \____)                                  (____/                  · 
-  ·                                                                             ·
-  · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
+    function showPage()
+    {
+
+		QvitterAction::showQvitter();
+
+    }
+
+}

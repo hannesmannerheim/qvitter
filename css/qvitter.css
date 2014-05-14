@@ -76,7 +76,7 @@ button.icon.nav-search,
 #birds-top,
 #logo,
 .topbar .global-nav {	
-	background-image: url("../img/sprite-2x-v3.png");	
+	background-image: url("../img/sprite.png");	
 	background-size: 500px 1329px;
 	}
 	
@@ -518,7 +518,7 @@ body.rtl .front-welcome-text {
 	}
 	
 .front-signup input,
-#login-content input#username,
+#login-content input#nickname,
 #login-content input#password {
 	font-family: Arial,​sans-serif;
 	font-size: 13px;
@@ -594,7 +594,7 @@ body.rtl .front-welcome-text {
 	}	
 	
 .front-signup input:focus,
-#login-content input#username:focus,
+#login-content input#nickname:focus,
 #login-content input#password:focus {	
     border: 1px solid #56B4EF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) inset, 0 0 8px rgba(82, 168, 236, 0.6);	
@@ -875,7 +875,7 @@ button#submit-login:hover {
 #page-container {
 	width:837px;
 	padding:14px 14px 0 14px;
-	background-color:rgba(0,0,0,0.3);
+	background-color:rgba(0,0,0,0.4);
 	margin-left:-432.5px;
 	opacity:0;
 	}
@@ -3323,7 +3323,7 @@ body.rtl #user-body {
 	}	
 
 body.rtl #remember-forgot,
-body.rtl #login-content input#username,
+body.rtl #login-content input#nickname,
 body.rtl #login-content input#password,
 body.rtl .queet-box,
 body.rtl #user-header,
@@ -3814,7 +3814,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 		}
 
 	#search-query {
-		background-image: url("../img/sprite-2x-v3.png");
+		background-image: url("../img/sprite.png");
 		background-size: 500px 1329px;
 		background-position: -100px -804px;
 		border: 0 none;
@@ -3873,7 +3873,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 
 
 	#top-compose {
-		background-image: url("../img/sprite-2x-v3.png");
+		background-image: url("../img/sprite.png");
 		background-size: 500px 1329px;
 		background-position: -55px -800px;
 		cursor: pointer;
@@ -4054,7 +4054,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 		display:none;
 		}		
 	.nav-session {
-		background-image: url("../img/sprite-2x-v3.png");
+		background-image: url("../img/sprite.png");
 		background-size: 500px 1329px;
 		background-position: 0 -800px;
 		height: 49px;
@@ -4117,7 +4117,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 		padding:0;
 		margin:0;
 		border-radius:0 0 0 0 !important;
-		background-image: url("../img/sprite-2x-v3.png");
+		background-image: url("../img/sprite.png");
 		background-size: 500px 1329px;
 		background-position: center -1003px;		
 		}
@@ -4151,7 +4151,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 		margin-left: -35px; 
 		width: 70px; 
 		height: 55px;
-		background-image: url("../img/sprite-2x-v3.png");
+		background-image: url("../img/sprite.png");
 		background-size: 500px 1329px;
 		background-color:#ccc;
 		}
@@ -4297,7 +4297,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 	ul.queet-actions li .icon.sm-rt,	
 	ul.queet-actions li .icon.sm-trash,		
 	ul.queet-actions li .icon.sm-reply {	
-		background-image: url("../img/sprite-2x-v3.png");
+		background-image: url("../img/sprite.png");
 		background-size: 500px 1329px;
 		width:35px;
 		height:35px;

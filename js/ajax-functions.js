@@ -45,7 +45,7 @@
    · · · · · · · · · */
     
 function checkLogin(username,password,actionOnSuccess) { 
- 	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+ 	$.ajax({ url: window.qvitterApiRoot, 
 	 	type: 'POST',
 		data: {
 			getRequest: "account/verify_credentials.json",
@@ -94,7 +94,7 @@ function getFromAPI(stream, actionOnSuccess) {
 	
 	// request without username/password
 	if(typeof window.loginUsername == 'undefined') {
-		$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+		$.ajax({ url: window.qvitterApiRoot, 
 			type: "POST", 
 			data: {
 				getRequest: stream
@@ -112,7 +112,7 @@ function getFromAPI(stream, actionOnSuccess) {
 		}
 	// with username/password if set
 	else {
-		$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+		$.ajax({ url: window.qvitterApiRoot, 
 			type: "POST", 
 			data: {
 				getRequest: stream,
@@ -144,7 +144,7 @@ function getFromAPI(stream, actionOnSuccess) {
    · · · · · · · · · · · · · */ 
    
 function postQueetToAPI(queetText_txt, actionOnSuccess) {
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+	$.ajax({ url: window.qvitterApiRoot, 
 		type: "POST", 
 		data: { 
 			postRequest: 'statuses/update.json',
@@ -169,10 +169,10 @@ function postQueetToAPI(queetText_txt, actionOnSuccess) {
    · · · · · · · · · · · · · */ 
 
 function postNewLinkColor(newLinkColor) {
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+	$.ajax({ url: window.qvitterApiRoot, 
 		type: "POST", 
 		data: { 
-			postRequest: 'account/update_link_color.json',
+			postRequest: 'qvitter/update_link_color.json',
 			linkcolor: newLinkColor,
 			username: window.loginUsername,
 			password: window.loginPassword
@@ -196,10 +196,10 @@ function postNewLinkColor(newLinkColor) {
    · · · · · · · · · · · · · */ 
 
 function postNewBackgroundColor(newBackgroundColor) {
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+	$.ajax({ url: window.qvitterApiRoot, 
 		type: "POST", 
 		data: { 
-			postRequest: 'account/update_background_color.json',
+			postRequest: 'qvitter/update_background_color.json',
 			backgroundcolor: newBackgroundColor,
 			username: window.loginUsername,
 			password: window.loginPassword
@@ -233,7 +233,7 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
 		var postRequest = 'friendships/destroy.json';
 		}
 	
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+	$.ajax({ url: window.qvitterApiRoot, 
 		type: "POST", 
 		data: { 
 			postRequest: postRequest,
@@ -259,7 +259,7 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
    · · · · · · · · · · · · · */ 	
 	
 function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) {
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+	$.ajax({ url: window.qvitterApiRoot, 
 		type: "POST", 
 		data: { 
 			postRequest: 'statusnet/groups/' + joinOrLeave + '.json',
@@ -285,7 +285,7 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
    · · · · · · · · · · · · · */ 
    
 function postReplyToAPI(queetText_txt, in_reply_to_status_id, actionOnSuccess) {
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+	$.ajax({ url: window.qvitterApiRoot, 
 		type: "POST", 
 		data: { 
 			postRequest: 'statuses/update.json',
@@ -314,7 +314,7 @@ function postReplyToAPI(queetText_txt, in_reply_to_status_id, actionOnSuccess) {
    · · · · · · · · · · · · · */ 
    
 function postActionToAPI(action, actionOnSuccess) {
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php', 
+	$.ajax({ url: window.qvitterApiRoot, 
 		type: "POST", 
 		data: { 
 			postRequest: action,
@@ -373,7 +373,7 @@ function unRequeet(this_stream_item, this_action, my_rq_id) {
     
 function getFavsOrRequeetsForQueet(apiaction,qid,actionOnSuccess) { 
 	if(apiaction=="requeets") { apiaction="retweets"; } // we might mix this up...
-	$.ajax({ url: window.fullUrlToThisQvitterApp + 'API.php',
+	$.ajax({ url: window.qvitterApiRoot,
 		type: "POST", 
 		data: {
 			getRequest: "statuses/" + apiaction + "/" + qid + ".json",

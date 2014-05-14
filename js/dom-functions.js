@@ -304,7 +304,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	window.oldStreams[window.currentStream] = $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML();
 
 	// set location bar from stream
-	if(setLocation && window.useHistoryPushState) {
+	if(setLocation) {
 		setUrlFromStream(stream);
 		}
 
