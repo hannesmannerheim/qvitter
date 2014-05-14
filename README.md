@@ -26,7 +26,7 @@ Setup
 
 2. Put all files in /plugins/Qvitter
 
-3. Add `addPlugin('Qvitter')` to your /config.php file;
+3. Add `addPlugin('Qvitter');` to your /config.php file.
 
 4. There are a few settings in /plugins/Qvitter/QvitterPlugin.php. By default Qvitter is 
 opt-out for users. If you set `$settings['enabledbydefault'] = false;` Qvitter will
