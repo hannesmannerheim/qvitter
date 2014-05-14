@@ -142,7 +142,7 @@ class QvitterAction extends Action
 		
 				?>
 				<script>
-					window.siteTitle = '<?php print $sitetitle ?>';
+					window.siteTitle = <?php print json_encode($sitetitle) ?>;
 					window.isLoggedIn = <?php if($logged_in_user) { print 'true'; } else { print 'false'; }  ?>;
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
 					window.qvitterApiRoot = '<?php print common_path("api/qvitter.json", true); ?>';
