@@ -344,7 +344,7 @@ class QvitterAction extends Action
 		</html>
 
 	
-			<?
+			<?php
     }
 
 }
