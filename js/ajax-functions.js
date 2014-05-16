@@ -57,7 +57,7 @@ function timeNow() {
    · · · · · · · · · */
     
 function checkLogin(username,password,actionOnSuccess) { 
- 	$.ajax({ url: 'http://qvitter.dev/api/qvitter/checklogin.json', 
+ 	$.ajax({ url: window.apiRoot + 'qvitter/checklogin.json', 
 	 	type: 'POST',
 	 	data: { 
 			username: username,
