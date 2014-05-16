@@ -84,6 +84,9 @@ class QvitterPlugin extends Plugin {
 		$m->connect('api/qvitter/update_background_color.json',
 					array('action' => 'apiqvitterupdatebackgroundcolor'));
 
+		$m->connect('api/qvitter/checklogin.json',
+					array('action' => 'apiqvitterchecklogin'));					
+
         $m->connect('settings/qvitter',
                     array('action' => 'qvittersettings'));
         $m->connect('main/qlogin',

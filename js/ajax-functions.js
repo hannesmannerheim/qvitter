@@ -57,14 +57,18 @@ function timeNow() {
    · · · · · · · · · */
     
 function checkLogin(username,password,actionOnSuccess) { 
- 	$.ajax({ url: 'http://' + username + ':' + password + '@qvitter.dev/api/account/verify_credentials.json', 
-	 	type: 'GET',	 	
+ 	$.ajax({ url: 'http://qvitter.dev/api/qvitter/checklogin.json', 
+	 	type: 'POST',
+	 	data: { 
+			username: username,
+			password: password
+			},	 	
 	 	dataType: 'json', 
 	 	error: function() {
 	 		logoutWithoutReload(true);
 	 		},
  		success: function(data) { 					
-			if(typeof data.error == 'undefined') {
+			if(typeof data.error == 'undefined' && data !== false) {
 				actionOnSuccess(data);
 				}
 			else {

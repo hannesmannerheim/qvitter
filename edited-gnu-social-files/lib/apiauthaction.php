@@ -85,9 +85,10 @@ class ApiAuthAction extends ApiAction
         // NOTE: $this->auth_user has to get set in prepare(), not handle(),
         // because subclasses do stuff with it in their prepares.
 
-		// qvitterfix
-        if (common_current_user()) {
-        	$this->auth_user = common_current_user();
+
+		// qvitterfix, accepts regular login session
+        if ($this->scoped) {
+        	$this->auth_user = $this->scoped;
         	$this->access = self::READ_WRITE;
         }
         
@@ -293,34 +294,42 @@ class ApiAuthAction extends ApiAction
 
         } else {
 
-            $user = common_check_user($this->auth_user_nickname,
-                                      $this->auth_user_password);
+// 				COMMENTED OUT BECAUSE MAKES NO SENSE!! 
+// 				THIS IS PUBLIC AND SHOULD BE SHOWN EVEN 
+// 				IF LOGIN CREDENTIALS ARE INVALID /Hannes 2014-05-16
 
-            if (Event::handle('StartSetApiUser', array(&$user))) {
-
-                if (!empty($user)) {
-                    if (!$user->hasRight(Right::API)) {
-                        // TRANS: Authorization exception thrown when a user without API access tries to access the API.
-                        throw new AuthorizationException(_('Not allowed to use API.'));
-                    }
-                    $this->auth_user = $user;
-                }
-
-                Event::handle('EndSetApiUser', array($user));
-            }
+//             $user = common_check_user($this->auth_user_nickname,
+//                                       $this->auth_user_password);
+// 
+//             if (Event::handle('StartSetApiUser', array(&$user))) {
+// 
+//                 if (!empty($user)) {
+//                     if (!$user->hasRight(Right::API)) {
+//                         // TRANS: Authorization exception thrown when a user without API access tries to access the API.
+//                         throw new AuthorizationException(_('Not allowed to use API.'));
+//                     }
+//                     $this->auth_user = $user;
+//                 }
+// 
+//                 Event::handle('EndSetApiUser', array($user));
+//             }
 
             // By default, basic auth users have rw access
             $this->access = self::READ_WRITE;
+            
+// 				COMMENTED OUT BECAUSE MAKES NO SENSE!! 
+// 				THIS IS PUBLIC AND SHOULD BE SHOWN EVEN 
+// 				IF LOGIN CREDENTIALS ARE INVALID /Hannes 2014-05-16            
 
-            if (empty($this->auth_user) && ($required || isset($_SERVER['PHP_AUTH_USER']))) {
-                $msg = sprintf(
-                    "basic auth nickname = %s",
-                    $this->auth_user_nickname
-                );
-                $this->logAuthFailure($msg);
-                // TRANS: Client error thrown when authentication fails.
-                $this->clientError(_('Could not authenticate you.'), 401);
-            }
+//             if (empty($this->auth_user) && ($required || isset($_SERVER['PHP_AUTH_USER']))) {
+//                 $msg = sprintf(
+//                     "basic auth nickname = %s",
+//                     $this->auth_user_nickname
+//                 );
+//                 $this->logAuthFailure($msg);
+//                 // TRANS: Client error thrown when authentication fails.
+//                 $this->clientError(_('Could not authenticate you.'), 401);
+//             }
         }
     }
 
