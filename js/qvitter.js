@@ -92,133 +92,133 @@ $('#what-is-federation').on('mouseleave',function(){
    · 
    · · · · · · · · · · · · · */ 
 
-$('.front-signup input, .front-signup button').removeAttr('disabled'); // clear this onload
-$('#signup-btn-step1').click(function(){
+if(!window.registrationsClosed) {
+	$('.front-signup input, .front-signup button').removeAttr('disabled'); // clear this onload
+	$('#signup-btn-step1').click(function(){
 		
-	display_spinner();
-	$('.front-signup input, .front-signup button').addClass('disabled');
-	$('.front-signup input, .front-signup button').attr('disabled','disabled');
-	// 7 s timeout to annoy human spammers
-	setTimeout(function(){
-		remove_spinner();
-		popUpAction('popup-register',window.sL.signUp,'<div id="popup-signup" class="front-signup">' + 
-													      '<div class="signup-input-container"><div id="atsign">@</div><input placeholder="' + window.sL.registerNickname + '" type="text" autocomplete="off" class="text-input" id="signup-user-nickname-step2"><div class="fieldhelp">a-z0-9</div></div>' +
-													      '<div class="signup-input-container"><input placeholder="' + window.sL.signUpFullName + '" type="text" autocomplete="off" class="text-input" id="signup-user-name-step2" value="' + $('#signup-user-name').val() + '"></div>' +
-													      '<div class="signup-input-container"><input placeholder="' + window.sL.signUpEmail + '" type="text" autocomplete="off" id="signup-user-email-step2" value="' + $('#signup-user-email').val() + '"></div>' + 
-													      '<div class="signup-input-container"><input placeholder="' + window.sL.registerHomepage + '" type="text" autocomplete="off" class="text-input" id="signup-user-homepage-step2"></div>' +
-													      '<div class="signup-input-container"><input placeholder="' + window.sL.registerBio + '" type="text"  autocomplete="off" class="text-input" id="signup-user-bio-step2"></div>' +
-													      '<div class="signup-input-container"><input placeholder="' + window.sL.registerLocation + '" type="text" autocomplete="off" class="text-input" id="signup-user-location-step2"></div>' +													      													      
-													      '<div class="signup-input-container"><input placeholder="' + window.sL.loginPassword + '" type="password" class="text-input" id="signup-user-password1-step2" value="' + $('#signup-user-password').val() + '"><div class="fieldhelp">>5</div></div>' + 
-													      '<div class="signup-input-container"><input placeholder="' + window.sL.registerRepeatPassword + '" type="password" class="text-input" id="signup-user-password2-step2"></div>' + 													      
-													      '<button id="signup-btn-step2" class="signup-btn disabled" type="submit">' + window.sL.signUpButtonText + '</button>' +
-													   '</div>',false);		
+		display_spinner();
+		$('.front-signup input, .front-signup button').addClass('disabled');
+		$('.front-signup input, .front-signup button').attr('disabled','disabled');
+		// 7 s timeout to annoy human spammers
+		setTimeout(function(){
+			remove_spinner();
+			popUpAction('popup-register',window.sL.signUp,'<div id="popup-signup" class="front-signup">' + 
+															  '<div class="signup-input-container"><div id="atsign">@</div><input placeholder="' + window.sL.registerNickname + '" type="text" autocomplete="off" class="text-input" id="signup-user-nickname-step2"><div class="fieldhelp">a-z0-9</div></div>' +
+															  '<div class="signup-input-container"><input placeholder="' + window.sL.signUpFullName + '" type="text" autocomplete="off" class="text-input" id="signup-user-name-step2" value="' + $('#signup-user-name').val() + '"></div>' +
+															  '<div class="signup-input-container"><input placeholder="' + window.sL.signUpEmail + '" type="text" autocomplete="off" id="signup-user-email-step2" value="' + $('#signup-user-email').val() + '"></div>' + 
+															  '<div class="signup-input-container"><input placeholder="' + window.sL.registerHomepage + '" type="text" autocomplete="off" class="text-input" id="signup-user-homepage-step2"></div>' +
+															  '<div class="signup-input-container"><input placeholder="' + window.sL.registerBio + '" type="text"  autocomplete="off" class="text-input" id="signup-user-bio-step2"></div>' +
+															  '<div class="signup-input-container"><input placeholder="' + window.sL.registerLocation + '" type="text" autocomplete="off" class="text-input" id="signup-user-location-step2"></div>' +													      													      
+															  '<div class="signup-input-container"><input placeholder="' + window.sL.loginPassword + '" type="password" class="text-input" id="signup-user-password1-step2" value="' + $('#signup-user-password').val() + '"><div class="fieldhelp">>5</div></div>' + 
+															  '<div class="signup-input-container"><input placeholder="' + window.sL.registerRepeatPassword + '" type="password" class="text-input" id="signup-user-password2-step2"></div>' + 													      
+															  '<button id="signup-btn-step2" class="signup-btn disabled" type="submit">' + window.sL.signUpButtonText + '</button>' +
+														   '</div>',false);		
 		
-		// ask api if nickname is ok, if no typing for 1 s
-		$('#signup-user-nickname-step2').on('keyup',function(){
-			clearTimeout(window.checkNicknameTimeout);
-			if($('#signup-user-nickname-step2').val().length>1 && /^[a-zA-Z0-9]+$/.test($('#signup-user-nickname-step2').val())) {
-				$('#signup-user-nickname-step2').addClass('nickname-taken');
-				if($('.spinner-wrap').length==0) {
-					$('#signup-user-nickname-step2').after('<div class="spinner-wrap"><div class="spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>');
-					}				
-				window.checkNicknameTimeout = setTimeout(function(){					
-					getFromAPI('check_nickname.json?nickname=' + encodeURIComponent($('#signup-user-nickname-step2').val()),function(data){
-						$('.spinner-wrap').remove();
-						console.log($('.spinner-wrap').length);
-						if(data==0) {
-							$('#signup-user-password2-step2').trigger('keyup'); // revalidates	
-							}
-						else {
-							$('#signup-user-nickname-step2').removeClass('nickname-taken');			
-							$('#signup-user-password2-step2').trigger('keyup');
-							}
-						});
-					},1000);
-				}
-			else {
-				$('.spinner-wrap').remove();				
-				}
-			});
-
-		
-		// validate on keyup
-		$('#popup-register input').on('keyup',function(){
-			if(validateRegisterForm($('#popup-register'))) {
-				if(!$('#signup-user-nickname-step2').hasClass('nickname-taken')) {
-					$('#signup-btn-step2').removeClass('disabled');
+			// ask api if nickname is ok, if no typing for 1 s
+			$('#signup-user-nickname-step2').on('keyup',function(){
+				clearTimeout(window.checkNicknameTimeout);
+				if($('#signup-user-nickname-step2').val().length>1 && /^[a-zA-Z0-9]+$/.test($('#signup-user-nickname-step2').val())) {
+					$('#signup-user-nickname-step2').addClass('nickname-taken');
+					if($('.spinner-wrap').length==0) {
+						$('#signup-user-nickname-step2').after('<div class="spinner-wrap"><div class="spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>');
+						}				
+					window.checkNicknameTimeout = setTimeout(function(){					
+						getFromAPI('check_nickname.json?nickname=' + encodeURIComponent($('#signup-user-nickname-step2').val()),function(data){
+							$('.spinner-wrap').remove();
+							console.log($('.spinner-wrap').length);
+							if(data==0) {
+								$('#signup-user-password2-step2').trigger('keyup'); // revalidates	
+								}
+							else {
+								$('#signup-user-nickname-step2').removeClass('nickname-taken');			
+								$('#signup-user-password2-step2').trigger('keyup');
+								}
+							});
+						},1000);
 					}
 				else {
-					$('#signup-btn-step2').addClass('disabled');
+					$('.spinner-wrap').remove();				
 					}
-				}
-			else {
-				$('#signup-btn-step2').addClass('disabled');				
-				}
-			});				
-		$('#popup-register input').trigger('keyup');
-		
-		// submit on enter
-		$('input#signup-user-name-step2,input#signup-user-email-step2,input#signup-user-password1-step2, input#signup-user-password2-step2').keyup(function(e){ 
-			if(e.keyCode==13) { 
-				$('#signup-btn-step2').trigger('click');
-				}
-			});	
-			
-		$('#signup-btn-step2').click(function(){
-			$('#popup-register input,#popup-register button').addClass('disabled');
-			display_spinner();
-			$.ajax({ url: window.qvitterApiRoot, 
-				type: "POST", 
-				data: { 
-					postRequest: 	'account/register.json',
-					nickname: 		$('#signup-user-nickname-step2').val(),
-					email: 			$('#signup-user-email-step2').val(),
-					fullname: 		$('#signup-user-name-step2').val(),
-					homepage: 		$('#signup-user-homepage-step2').val(),
-					bio: 			$('#signup-user-bio-step2').val(),
-					location: 		$('#signup-user-location-step2').val(),																									
-					password: 		$('#signup-user-password1-step2').val(),																									
-					confirm: 		$('#signup-user-password2-step2').val(),
-					cBS: 			window.cBS,
-					cBSm: 			window.cBSm,										
-					username: 		'none',
-					},
-				dataType:"json",
-				error: function(data){ console.log('error'); console.log(data); },
-				success: function(data) {
-					remove_spinner();					 
-					if(typeof data.error == 'undefined') {
-						 $('input#nickname').val($('#signup-user-nickname-step2').val());
-						 $('input#password').val($('#signup-user-password1-step2').val());
-						 $('input#rememberme').prop('checked', true);
-						 $('#submit-login').trigger('click');
-						 $('#popup-register').remove();
-					 	 }
-					 else {
-					 	alert('Try again! ' + data.error);
-						$('#popup-register input,#popup-register button').removeClass('disabled');
-					 	}
-					 
-					 
-					 }
 				});
 
-			});
+		
+			// validate on keyup
+			$('#popup-register input').on('keyup',function(){
+				if(validateRegisterForm($('#popup-register'))) {
+					if(!$('#signup-user-nickname-step2').hasClass('nickname-taken')) {
+						$('#signup-btn-step2').removeClass('disabled');
+						}
+					else {
+						$('#signup-btn-step2').addClass('disabled');
+						}
+					}
+				else {
+					$('#signup-btn-step2').addClass('disabled');				
+					}
+				});				
+			$('#popup-register input').trigger('keyup');
+		
+			// submit on enter
+			$('input#signup-user-name-step2,input#signup-user-email-step2,input#signup-user-password1-step2, input#signup-user-password2-step2').keyup(function(e){ 
+				if(e.keyCode==13) { 
+					$('#signup-btn-step2').trigger('click');
+					}
+				});	
 			
-		// reactivate register form on popup close
-		$('#popup-register').on('remove',function(){
-			$('.front-signup input, .front-signup button').removeAttr('disabled');
-			$('.front-signup input, .front-signup button').removeClass('disabled');
-			});		
-		},7000);
-	});
-// submit on enter
-$('input#signup-user-name,input#signup-user-email,input#signup-user-password').keyup(function(e){ 
-	if(e.keyCode==13) { 
-		$('#signup-btn-step1').trigger('click');
-		}
-	});
-	
+			$('#signup-btn-step2').click(function(){
+				$('#popup-register input,#popup-register button').addClass('disabled');
+				display_spinner();
+				$.ajax({ url: window.apiRoot + 'account/register.json', 
+					type: "POST", 
+					data: { 
+						nickname: 		$('#signup-user-nickname-step2').val(),
+						email: 			$('#signup-user-email-step2').val(),
+						fullname: 		$('#signup-user-name-step2').val(),
+						homepage: 		$('#signup-user-homepage-step2').val(),
+						bio: 			$('#signup-user-bio-step2').val(),
+						location: 		$('#signup-user-location-step2').val(),																									
+						password: 		$('#signup-user-password1-step2').val(),																									
+						confirm: 		$('#signup-user-password2-step2').val(),
+						cBS: 			window.cBS,
+						cBSm: 			window.cBSm,										
+						username: 		'none',
+						},
+					dataType:"json",
+					error: function(data){ console.log('error'); console.log(data); },
+					success: function(data) {
+						remove_spinner();					 
+						if(typeof data.error == 'undefined') {
+							 $('input#nickname').val($('#signup-user-nickname-step2').val());
+							 $('input#password').val($('#signup-user-password1-step2').val());
+							 $('input#rememberme').prop('checked', true);
+							 $('#submit-login').trigger('click');
+							 $('#popup-register').remove();
+							 }
+						 else {
+							alert('Try again! ' + data.error);
+							$('#popup-register input,#popup-register button').removeClass('disabled');
+							}
+					 
+					 
+						 }
+					});
+
+				});
+			
+			// reactivate register form on popup close
+			$('#popup-register').on('remove',function(){
+				$('.front-signup input, .front-signup button').removeAttr('disabled');
+				$('.front-signup input, .front-signup button').removeClass('disabled');
+				});		
+			},7000);
+		});
+	// submit on enter
+	$('input#signup-user-name,input#signup-user-email,input#signup-user-password').keyup(function(e){ 
+		if(e.keyCode==13) { 
+			$('#signup-btn-step1').trigger('click');
+			}
+		});
+	}	
 	
 	
 	
@@ -235,32 +235,10 @@ $(window).load(function() {
 	$('#user-container').css('display','block');
 	$('#feed').css('display','block');		
 
-	// check for localstorage, if none, we remove possibility to remember login
-	var userInLocalStorage = false;
-	if(localStorageIsEnabled()) {
-		if(typeof localStorage.autologinPassword != 'undefined') {
-			userInLocalStorage = true;
-			}
-		}
-
-	// if we have a user logged in to localStorage, but not to gnusocial, delete
-	// and send them to front page and tell it to shake loginbox
-	if(!window.isLoggedIn && userInLocalStorage) {
-		localStorage.doShake = true;
-		delete localStorage.autologinUsername;
-		delete localStorage.autologinPassword;
-		window.location.href =window.siteInstanceURL;
-		}
-	
-	// if login credentials in localstorage got lost somewhere, logout
-	if(window.isLoggedIn && !userInLocalStorage) {
-		window.location.href =window.siteInstanceURL + 'main/logout';		
-		}		
-	// autologin
-	else if(window.isLoggedIn && userInLocalStorage) {
-		$('input#nickname').val(localStorage.autologinUsername);
-		$('input#password').val(localStorage.autologinPassword);
-		doLogin("get stream from url");		
+	// login or not
+	if(window.loggedIn) {
+		console.log('logged in user: ' + window.loggedIn.screen_name);	
+		doLogin(getStreamFromUrl());		
 		}
 	else {
 		display_spinner();
@@ -272,51 +250,34 @@ $(window).load(function() {
 		}	
 	});	
 
-
-
 /* · 
    · 
    ·   Login action
    · 
    · · · · · · · · · · · · · */ 
-
-$('#form_login').submit(function(e) {		
-	
-	// store username and password in localstorage before submitting
-	if(typeof localStorage.autologinPassword == 'undefined') {
+   
+$('#form_login').submit(function(e) {	
+	if(typeof window.loginCheckSuccessful == 'undefined') {
 		e.preventDefault();
-		localStorage.autologinPassword = $('input#password').val();
-		localStorage.autologinUsername = $('input#nickname').val();	
-		$(this).submit();
-		}	
-	});
+		checkLogin($('input#nickname').val(),$('input#password').val(),function(data){
+			window.loginCheckSuccessful = true;
+			$('#form_login').submit();
+			});
+		}
+	});   
 
 function doLogin(streamToSet) {
 	$('#submit-login').attr('disabled','disabled');
 	$('#submit-login').focus(); // prevents submit on enter to close alert-popup on wrong credentials
 	display_spinner();
-
-	// login with ajax
-	checkLogin($('input#nickname').val(),$('input#password').val(),function(user){
-
-		console.log(user);
-		
-		// store credentials in global var
-		window.loginUsername = user.screen_name;
-		window.loginPassword = $('input#password').val();
-		
-		// maybe get stream from url (UGLY SORRRRRY)
-		if(streamToSet == "get stream from url") {
-			streamToSet = getStreamFromUrl(); // called now becuase we want window.loginUsername to be set first...
-			}
 		
 		// set colors if the api supports it
-		if(typeof user.linkcolor != 'undefined' &&
-	       typeof user.backgroundcolor != 'undefined') {
-			user.linkcolor = user.linkcolor || '';	// no null value		
-			user.backgroundcolor = user.backgroundcolor || ''; // no null value
-			window.userLinkColor = user.linkcolor;
-			window.userBackgroundColor = user.backgroundcolor;			       
+		if(typeof window.loggedIn.linkcolor != 'undefined' &&
+	       typeof window.loggedIn.backgroundcolor != 'undefined') {
+			window.loggedIn.linkcolor = window.loggedIn.linkcolor || '';	// no null value		
+			window.loggedIn.backgroundcolor = window.loggedIn.backgroundcolor || ''; // no null value
+			window.userLinkColor = window.loggedIn.linkcolor;
+			window.userBackgroundColor = window.loggedIn.backgroundcolor;			       
 			if(window.userLinkColor.length != 6) {
 				window.userLinkColor = window.defaultLinkColor;
 				}	
@@ -328,27 +289,19 @@ function doLogin(streamToSet) {
 		// add user data to DOM, show search form, remeber user id, show the feed
 		$('#user-container').css('z-index','1000');
 		$('#top-compose').removeClass('hidden');
-		$('#user-avatar').attr('src', user.profile_image_url_profile_size);
-		$('#user-name').append(user.name);
-		$('#user-screen-name').append(user.screen_name);
-		$('#user-profile-link').append('<a href="' + user.statusnet_profile_url + '">' + window.sL.viewMyProfilePage + '</a>');
-		$('#user-queets strong').html(user.statuses_count);
-		$('#user-following strong').html(user.friends_count);			
-		$('#user-followers strong').html(user.followers_count);		
-		$('#user-groups strong').html(user.groups_count);
-		$('.stream-selection.friends-timeline').attr('href', user.statusnet_profile_url + '/all');
-		$('.stream-selection.mentions').attr('href', user.statusnet_profile_url + '/replies');
-		$('.stream-selection.my-timeline').attr('href', user.statusnet_profile_url);				
-		$('.stream-selection.favorites').attr('href', user.statusnet_profile_url + '/favorites');								
-		window.myUserID = user.id;				
-		
-		// if remeber me is checked, save credentials in local storage
-		if($('#rememberme').is(':checked')) {
-			if(localStorageIsEnabled()) {
-				localStorage.autologinPassword = $('input#password').val();
-				localStorage.autologinUsername = $('input#nickname').val();					
-				}
-			}
+		$('#user-avatar').attr('src', window.loggedIn.profile_image_url_profile_size);
+		$('#user-name').append(window.loggedIn.name);
+		$('#user-screen-name').append(window.loggedIn.screen_name);
+		$('#user-profile-link').append('<a href="' + window.loggedIn.statusnet_profile_url + '">' + window.sL.viewMyProfilePage + '</a>');
+		$('#user-queets strong').html(window.loggedIn.statuses_count);
+		$('#user-following strong').html(window.loggedIn.friends_count);			
+		$('#user-followers strong').html(window.loggedIn.followers_count);		
+		$('#user-groups strong').html(window.loggedIn.groups_count);
+		$('.stream-selection.friends-timeline').attr('href', window.loggedIn.statusnet_profile_url + '/all');
+		$('.stream-selection.mentions').attr('href', window.loggedIn.statusnet_profile_url + '/replies');
+		$('.stream-selection.my-timeline').attr('href', window.loggedIn.statusnet_profile_url);				
+		$('.stream-selection.favorites').attr('href', window.loggedIn.statusnet_profile_url + '/favorites');								
+		window.myUserID = window.loggedIn.id;				
 			
 		// load history
 		loadHistoryFromLocalStorage();			
@@ -371,7 +324,6 @@ function doLogin(streamToSet) {
 			remove_spinner();			
 			},true);
 
-		});		
 	}
 
 
@@ -396,15 +348,11 @@ $('#rememberme_label').disableSelection();
 
 /* · 
    · 
-   ·   Logout by deleting local storage credentials (if there are any) and reload
+   ·   Logout
    · 
    · · · · · · · · · · · · · */ 
    
 $('#logout').click(function(){
-	if(localStorageIsEnabled()) {
-		delete localStorage.autologinUsername;
-		delete localStorage.autologinPassword;		
-		}
 	window.location.href =window.siteInstanceURL + 'main/logout';		
 	});		
 
@@ -486,23 +434,7 @@ function logoutWithoutReload(doShake) {
 	if(window.currentStream == 'statuses/public_timeline.json') {
 		$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + 'img/mela.jpg)');
 		}
-
-	$('#submit-login').removeAttr('disabled');				
-
-	// delete any locally stored credentials
-	if(localStorageIsEnabled()) {
-		delete localStorage.autologinUsername;
-		delete localStorage.autologinPassword;		
-		}
-
-	$('#user-header').animate({opacity:'0'},200);
-	$('#user-body').animate({opacity:'0'},200);
-	$('#user-footer').animate({opacity:'0'},200);
-	$('.menu-container').animate({opacity:'0'},200);									
-	$('.language-dropdown').css('display','block');
-	$('.dropdown-menu.quitter-settings li.language').css('display','none');	
-	$('#settingslink').fadeOut('slow');	
-	$('#search').fadeOut('slow');											
+											
 	$('input#nickname').focus();	
 	$('.front-signup').animate({opacity:'1'},200);
 	if(doShake || localStorage.doShake) {
@@ -679,7 +611,7 @@ $('body').on('click','.member-button',function(event){
 
 $('#user-header, #user-queets, #user-following, #user-followers, #user-groups').on('click',function(){
 	if($(this).attr('id') == 'user-header' || $(this).attr('id') == 'user-queets') {
-		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loginUsername,function(){},true);	
+		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name,function(){},true);	
 		}
 	else if($(this).attr('id') == 'user-following') {
 		setNewCurrentStream('statuses/friends.json?count=20',function(){},true);	
@@ -780,22 +712,22 @@ $(document).on('click','a', function(e) {
 		// whole network feed
 		else if($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'') == '/main/all') {
 			e.preventDefault();
-			setNewCurrentStream('statuses/public_and_external_timeline.json?since_id=1',function(){},true);	
+			setNewCurrentStream('statuses/public_and_external_timeline.json',function(){},true);	
 			}			
 		// logged in users streams
-		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loginUsername,'') == '/all') {
+		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/all') {
 			e.preventDefault();			
 			setNewCurrentStream('statuses/friends_timeline.json',function(){},true);	
 			}
-		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loginUsername,'') == '/replies') {
+		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/replies') {
 			e.preventDefault();			
 			setNewCurrentStream('statuses/mentions.json',function(){},true);				
 			}			
-// 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','') == window.loginUsername) {
+// 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','') == window.loggedIn.screen_name) {
 // 			e.preventDefault();			
 // 			setNewCurrentStream('statuses/user_timeline.json',function(){},true);				
 // 			}			
-		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loginUsername,'') == '/favorites') {
+		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/favorites') {
 			e.preventDefault();			
 			setNewCurrentStream('favorites.json',function(){},true);				
 			}			
@@ -803,7 +735,7 @@ $(document).on('click','a', function(e) {
 		else if ((/^[a-zA-Z0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','')))) {
 			e.preventDefault();
 			if($(this).parent().attr('id') == 'user-profile-link') { // logged in user
-				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loginUsername,function(){},true);	
+				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name,function(){},true);	
 				}
 			else if($(this).hasClass('account-group')) { // any user
 				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + $(this).find('.screen-name').text().substring(1).toLowerCase(),function(){},true);	
@@ -853,7 +785,7 @@ $(document).on('click','a', function(e) {
 		else if (($(this).children('span.mention').length>0 // if it's a mention
 				 || ($(this).hasClass('account-group') && $(this).attr('href').indexOf('/group/')==-1) // or if this is queet stream item header but not a group
 		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')==-1)) // or if it's a activity notice but not a group link
-		         && typeof window.loginUsername != 'undefined') { // if logged in
+		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in
 			e.preventDefault();
 			display_spinner();
 			getFromAPI('externalprofile/show.json?profileurl=' + encodeURIComponent($(this).attr('href')),function(data){
@@ -920,7 +852,7 @@ $(document).on('click','a', function(e) {
 		else if (($(this).children('span.group').length>0 // if it's a group mention
 				 || ($(this).hasClass('account-group') && $(this).attr('href').indexOf('/group/')>-1) // or if this is group stream item header
 		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')>-1)) // or if it's a activity notice
-		         && typeof window.loginUsername != 'undefined') { // if logged in
+		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in
 			e.preventDefault();
 			display_spinner();	
 			getFromAPI('statusnet/groups/show.json?id=foo&uri=' + encodeURIComponent($(this).attr('href')), function(data){ if(data){

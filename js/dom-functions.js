@@ -174,12 +174,12 @@ function profileCardFromFirstObject(data,screen_name) {
 			followingClass = 'following';
 			}	
 		var followButton = '';				
-		if(typeof window.loginUsername != 'undefined' && window.myUserID != first.user.id) {			
+		if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID != first.user.id) {			
 			var followButton = '<div class="user-actions"><button data-follow-user-id="' + first.user.id + '" data-follow-user="' + first.user.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
 			}
 		
 		// follow from external instance if logged out
-		if(typeof window.loginUsername == 'undefined') {			
+		if(typeof window.loggedIn.screen_name == 'undefined') {			
 			var followButton = '<div class="user-actions"><button type="button" class="external-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';	
 			}
 		
@@ -217,7 +217,7 @@ function profileCardFromFirstObject(data,screen_name) {
 				followingClass = 'following';
 				}			
 			var followButton = '';
-			if(typeof window.loginUsername != 'undefined' && window.myUserID != data.id) {			
+			if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID != data.id) {			
 				var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
 				}
 				
@@ -262,12 +262,12 @@ function groupProfileCard(groupAlias) {
 			memberClass = 'member';
 			}			
 		var memberButton = '';
-		if(typeof window.loginUsername != 'undefined') {			
+		if(typeof window.loggedIn.screen_name != 'undefined') {			
 			var memberButton = '<div class="user-actions"><button data-group-id="' + data.id + '" type="button" class="member-button ' + memberClass + '"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinGroup + '</span><span class="button-text ismember-text">' + window.sL.isMemberOfGroup + '</span><span class="button-text leave-text">' + window.sL.leaveGroup + '</span></button></div>';	
 			}
 			
 		// follow from external instance if logged out
-		if(typeof window.loginUsername == 'undefined') {			
+		if(typeof window.loggedIn.screen_name == 'undefined') {			
 			var memberButton = '<div class="user-actions"><button type="button" class="external-member-button"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinExternalGroup + '</span></button></div>';	
 			}			
 		
@@ -334,14 +334,14 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	|| stream == 'statuses/friends.json?count=20'
 	|| stream == 'statusnet/groups/list.json?count=10')	{
 		var defaultStreamName = stream;
-		var streamHeader = '@' + window.loginUsername;
+		var streamHeader = '@' + window.loggedIn.screen_name;
 		}		
 	// if this is one of the default streams, get header from DOM
 	else if(stream == 'statuses/friends_timeline.json'
 	|| stream == 'statuses/mentions.json'
 	|| stream == 'favorites.json'	
 	|| stream == 'statuses/public_timeline.json'
-	|| stream == 'statuses/public_and_external_timeline.json?since_id=1')	{	
+	|| stream == 'statuses/public_and_external_timeline.json')	{	
 		var defaultStreamName = stream;
 		var streamHeader = $('.stream-selection[data-stream-name="' + stream + '"]').attr('data-stream-header');
 		}	
@@ -420,8 +420,8 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 			
 	// add this stream to history menu if it doesn't exist there (but not if this is me or if we're not logged in)
 	if($('.stream-selection[data-stream-header="' + streamHeader + '"]').length==0
-	&& streamHeader != '@' + window.loginUsername
-	&& typeof window.loginUsername != 'undefined') { 			
+	&& streamHeader != '@' + window.loggedIn.screen_name
+	&& typeof window.loggedIn.screen_name != 'undefined') { 			
 		$('#history-container').append('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + $('.stream-selection.public-timeline').attr('href') + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="chev-right"></i></a>');
 		updateHistoryLocalStorage();
 		}
@@ -452,7 +452,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 								var thisUsersScreenName = stream.substring(stream.indexOf('screen_name=')+12);
 								}
 							else {
-								var thisUsersScreenName = window.loginUsername;
+								var thisUsersScreenName = window.loggedIn.screen_name;
 								}
 													
 							profileCardFromFirstObject(profile_data,thisUsersScreenName); // show profile card
@@ -541,38 +541,38 @@ function convertStreamToPath(stream) {
 		return screenName + '/groups';
 		}		
 	else if(stream == 'statuses/followers.json?count=20') {
-		return window.loginUsername + '/subscribers';
+		return window.loggedIn.screen_name + '/subscribers';
 		}
 	else if(stream == 'statuses/friends.json?count=20') {
-		return window.loginUsername + '/subscriptions';
+		return window.loggedIn.screen_name + '/subscriptions';
 		}
 	else if(stream == 'statuses/mentions.json') {
-		return window.loginUsername + '/replies';
+		return window.loggedIn.screen_name + '/replies';
 		}
 	else if(stream == 'favorites.json') {
-		return window.loginUsername + '/favorites';
+		return window.loggedIn.screen_name + '/favorites';
 		}						
 	else if(stream == 'statusnet/groups/list.json?count=10') {
-		return window.loginUsername + '/groups';
+		return window.loggedIn.screen_name + '/groups';
 		}	
 	else if (stream.substring(0,27) == 'statuses/user_timeline.json') {
 		var screenName = stream.substring(stream.indexOf('=')+1);
 		return screenName;		
 		}
 	else if(stream == 'statuses/friends_timeline.json') {
-		return window.loginUsername + '/all';
+		return window.loggedIn.screen_name + '/all';
 		}
 	else if(stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=') {
 		var screenName = stream.substring(stream.indexOf('=')+1);
 		return screenName + '/all';
 		}		
 	else if (stream == 'statuses/mentions.json') {
-		return window.loginUsername + '/replies';		
+		return window.loggedIn.screen_name + '/replies';		
 		}
 	else if(stream == 'statuses/public_timeline.json')	{
 		return '';
 		}
-	else if(stream == 'statuses/public_and_external_timeline.json?since_id=1')	{
+	else if(stream == 'statuses/public_and_external_timeline.json')	{
 		return 'main/all';
 		}		
 	else if(stream.substring(0,26) == 'statusnet/groups/timeline/')	{
@@ -628,7 +628,7 @@ function getStreamFromUrl() {
 	
 	// main/all, i.e. full network
 	if (loc == '/main/all') {
-		streamToSet = 'statuses/public_and_external_timeline.json?since_id=1';
+		streamToSet = 'statuses/public_and_external_timeline.json';
 		}
 
 	// {domain}/{screen_name} or {domain}/{screen_name}/
@@ -643,7 +643,7 @@ function getStreamFromUrl() {
 	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/all','')))) {
 		var userToStream = loc.replace('/','').replace('/all','');
 		if(userToStream.length>0) {
-			if(window.loginUsername == userToStream) {
+			if(window.loggedIn.screen_name == userToStream) {
 				streamToSet = 'statuses/friends_timeline.json';					
 				}
 			else {
@@ -656,7 +656,7 @@ function getStreamFromUrl() {
 	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/replies','')))) {
 		var userToStream = loc.replace('/','').replace('/replies','');
 		if(userToStream.length>0) {
-			if(window.loginUsername == userToStream) {
+			if(window.loggedIn.screen_name == userToStream) {
 				streamToSet = 'statuses/mentions.json';					
 				}
 			else {
@@ -669,7 +669,7 @@ function getStreamFromUrl() {
 	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/favorites','')))) {
 		var userToStream = loc.replace('/','').replace('/favorites','');
 		if(userToStream.length>0) {
-			if(window.loginUsername == userToStream) {
+			if(window.loggedIn.screen_name == userToStream) {
 				streamToSet = 'favorites.json';					
 				}
 			else {
@@ -682,7 +682,7 @@ function getStreamFromUrl() {
 	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/subscribers','')))) {
 		var userToStream = loc.replace('/','').replace('/subscribers','');
 		if(userToStream.length>0) {
-			if(window.loginUsername == userToStream) {
+			if(window.loggedIn.screen_name == userToStream) {
 				streamToSet = 'statuses/followers.json?count=20';					
 				}
 			else {
@@ -695,7 +695,7 @@ function getStreamFromUrl() {
 	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/subscriptions','')))) {
 		var userToStream = loc.replace('/','').replace('/subscriptions','');
 		if(userToStream.length>0) {
-			if(window.loginUsername == userToStream) {
+			if(window.loggedIn.screen_name == userToStream) {
 				streamToSet = 'statuses/friends.json?count=20';					
 				}
 			else {
@@ -708,7 +708,7 @@ function getStreamFromUrl() {
 	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/groups','')))) {
 		var userToStream = loc.replace('/','').replace('/groups','');
 		if(userToStream.length>0) {
-			if(window.loginUsername == userToStream) {
+			if(window.loggedIn.screen_name == userToStream) {
 				streamToSet = 'statusnet/groups/list.json?count=10';					
 				}
 			else {
@@ -905,8 +905,8 @@ function expand_queet(q,doScrolling) {
 					}
 				});
 			
-			// get favs and rq:s (not if external)
-			if(!q.hasClass('external-conversation')) {
+			// get favs and rq:s (not if external) (and only if logged in because API demands that)
+			if(!q.hasClass('external-conversation') && window.loggedIn) {
 				
 				// get and show favs
 				getFavsOrRequeetsForQueet('favs',qid,function(favs){
@@ -934,7 +934,7 @@ function expand_queet(q,doScrolling) {
 				showConversation(qid);	
 				
 				// show inline reply form if logged in
-				if(typeof window.loginUsername != 'undefined') {			
+				if(typeof window.loggedIn.screen_name != 'undefined') {			
 					q.find('#q-' + qid).append(replyFormHtml(q,qid));	
 					}
 							
@@ -1155,7 +1155,7 @@ function showConversation(qid) {
 							
 						// actions only for logged in users
 						var queetActions = '';
-						if(typeof window.loginUsername != 'undefined') {			
+						if(typeof window.loggedIn.screen_name != 'undefined') {			
 							queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply"></span> <b>' + window.sL.replyVerb + '</b></a></li>' +  requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul>';
 							}
 
@@ -1380,7 +1380,7 @@ function addToFeed(feed, after, extraClasses) {
 					followingClass = 'following';
 					}			
 				var followButton = '';
-				if(typeof window.loginUsername != 'undefined'  	// if logged in
+				if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
 				   && window.myUserID != obj.id) {	// not if this is me	
 					if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users	
 						var followButton = '<div class="user-actions"><button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
@@ -1413,7 +1413,7 @@ function addToFeed(feed, after, extraClasses) {
 					memberClass = 'member';
 					}			
 				var memberButton = '';
-				if(typeof window.loginUsername != 'undefined') {			
+				if(typeof window.loggedIn.screen_name != 'undefined') {			
 					console.log(obj);
 					var memberButton = '<div class="user-actions"><button data-group-id="' + obj.id + '" type="button" class="member-button ' + memberClass + '"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinGroup + '</span><span class="button-text ismember-text">' + window.sL.isMemberOfGroup + '</span><span class="button-text leave-text">' + window.sL.leaveGroup + '</span></button></div>';	
 					}			
@@ -1486,7 +1486,7 @@ function addToFeed(feed, after, extraClasses) {
 					
 				// actions only for logged in users
 				var queetActions = '';
-				if(typeof window.loginUsername != 'undefined') {			
+				if(typeof window.loggedIn.screen_name != 'undefined') {			
 					queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply"></span> <b>' + window.sL.replyVerb + '</b></a></li>' +  requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul>';
 					}
 
@@ -1610,7 +1610,7 @@ function addToFeed(feed, after, extraClasses) {
 
 					// actions only for logged in users
 					var queetActions = '';
-					if(typeof window.loginUsername != 'undefined') {			
+					if(typeof window.loggedIn.screen_name != 'undefined') {			
 						queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply"></span> <b>' + window.sL.replyVerb + '</b></a></li>' + requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul>';
 						}
 						

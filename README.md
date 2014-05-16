@@ -26,16 +26,16 @@ Setup
 
 2. Put all files in /plugins/Qvitter
 
-3. Add `addPlugin('Qvitter');` to your /config.php file.
+3. Replace your lib/apiauthaction.php file with the one supplied in edited-gnu-social-files/lib/apiauthaction.php
 
-4. There are a few settings in /plugins/Qvitter/QvitterPlugin.php. By default Qvitter is 
+4. Add `addPlugin('Qvitter');` to your /config.php file.
+
+5. There are a few settings in /plugins/Qvitter/QvitterPlugin.php. By default Qvitter is 
 opt-out for users. If you set `$settings['enabledbydefault'] = false;` Qvitter will
 be opt-in instead.
 
-5. Users can go to ://{instance}/settings/qvitter and enable or disable Qvitter.
+6. Users can go to ://{instance}/settings/qvitter and enable or disable Qvitter.
 
-NOTE: Qvitter is now a plugin for GNU Social. There will probably be bugs because of
-this change.
 
 
 TODO

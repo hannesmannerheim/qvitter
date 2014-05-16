@@ -33,7 +33,7 @@
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
-class QvitterAction extends Action
+class QvitterAction extends ApiAction
 {
 
     function isReadOnly($args)
@@ -63,11 +63,18 @@ class QvitterAction extends Action
 
 
 		$logged_in_user_nickname = '';
+		$logged_in_user_obj = false;		
 		$logged_in_user = common_current_user();
 		if($logged_in_user) {
 			$logged_in_user_nickname = $logged_in_user->nickname;
+			$logged_in_user_obj = ApiAction::twitterUserArray($logged_in_user->getProfile());
 			}
-	
+			
+		$registrationsclosed = false;
+		if(common_config('site','closed') == 1 || common_config('site','inviteonly') == 1) {
+			$registrationsclosed = true;
+			}
+			
 		$sitetitle = common_config('site','name');
 		$siterootdomain = common_config('site','server');
 		$qvitterpath = Plugin::staticPath('Qvitter', '');
@@ -139,13 +146,17 @@ class QvitterAction extends Action
 						print '		<link rel="meta" href="'.$instanceurl.'group/'.$group_name.'/foaf" type="application/rdf+xml" title="FOAF for '.$group_id_or_name.' group"/>'."\n";						
 						}
 					}			
-		
+				
+				
+				
 				?>
 				<script>
+					window.textLimit = <?php print json_encode((int)common_config('site','textlimit')) ?>;
+					window.registrationsClosed = <?php print json_encode($registrationsclosed) ?>;
 					window.siteTitle = <?php print json_encode($sitetitle) ?>;
-					window.isLoggedIn = <?php if($logged_in_user) { print 'true'; } else { print 'false'; }  ?>;
+					window.loggedIn = <?php print json_encode($logged_in_user_obj) ?>;
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
-					window.qvitterApiRoot = '<?php print common_path("api/qvitter.json", true); ?>';
+					window.apiRoot = '<?php print common_path("api/", true); ?>';
 					window.fullUrlToThisQvitterApp = '<?php print $qvitterpath; ?>';
 					window.siteRootDomain = '<?php print $siterootdomain; ?>';
 					window.siteInstanceURL = '<?php print $instanceurl; ?>';			
@@ -277,14 +288,16 @@ class QvitterAction extends Action
 								</div>
 							</form>
 						</div>
-						<div class="front-signup">
+						<?php
+						if($registrationsclosed === false) {
+						?><div class="front-signup">
 							<h2></h2>
 							<div class="signup-input-container"><input placeholder="" type="text" name="user[name]" autocomplete="off" class="text-input" id="signup-user-name"></div>
 							<div class="signup-input-container"><input placeholder="" type="text" name="user[email]" autocomplete="off" id="signup-user-email"></div>
 							<div class="signup-input-container"><input placeholder="" type="password" name="user[user_password]" class="text-input" id="signup-user-password"></div>
 							<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
 							<div id="other-servers-link"></div>
-						</div>
+						</div><?php } ?>
 						<div id="user-header">
 							<img id="user-avatar" src="" />
 							<div id="user-name"></div>
@@ -314,7 +327,7 @@ class QvitterAction extends Action
 							<a class="stream-selection my-timeline" data-stream-header="@statuses/user_timeline.json" data-stream-name="statuses/user_timeline.json"><i class="chev-right"></i></a>				
 							<a class="stream-selection favorites" data-stream-header="" data-stream-name="favorites.json"><i class="chev-right"></i></a>									
 							<a href="<?php print $instanceurl ?>" class="stream-selection public-timeline" data-stream-header="" data-stream-name="statuses/public_timeline.json"><i class="chev-right"></i></a>
-							<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline" data-stream-header="" data-stream-name="statuses/public_and_external_timeline.json?since_id=1"><i class="chev-right"></i></a>					
+							<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline" data-stream-header="" data-stream-name="statuses/public_and_external_timeline.json"><i class="chev-right"></i></a>					
 						</div>
 						<div class="menu-container" id="history-container"></div>				
 					</div>						
@@ -348,3 +361,4 @@ class QvitterAction extends Action
     }
 
 }
+

@@ -381,7 +381,7 @@ function placeCaretAtEnd(el) {
 function updateHistoryLocalStorage() {
 	if(localStorageIsEnabled()) {
 		var i=0;
-		var localStorageName = window.loginUsername + '-history-container-v2';
+		var localStorageName = window.loggedIn.screen_name + '-history-container-v2';
 		var historyContainer = new Object();
 		$.each($('#history-container .stream-selection'), function(key,obj) {
 			historyContainer[i] = new Object();
@@ -410,7 +410,7 @@ function updateHistoryLocalStorage() {
    
 function loadHistoryFromLocalStorage() {
 	if(localStorageIsEnabled()) {
-		var localStorageName = window.loginUsername + '-history-container-v2';
+		var localStorageName = window.loggedIn.screen_name + '-history-container-v2';
 		if(typeof localStorage[localStorageName] != "undefined") {
 			$('#history-container').css('display','block');
 			$('#history-container').html('');																										
@@ -452,35 +452,37 @@ function qOrAmp(stream) {
    · · · · · · · · · · · · · */ 
 
 function countCharsInQueetBox(src,trgt,btn) {
-	var numchars = $.trim(src).length;
-	trgt.html(140 - numchars);
+	if(window.textLimit > 0) {
+		var numchars = $.trim(src).length;
+		trgt.html(window.textLimit - numchars);
 
-	// activate/deactivare button
-	if(numchars > 0 && numchars < 141) {
-		btn.removeClass('disabled');
-		btn.addClass('enabled');
+		// activate/deactivare button
+		if(numchars > 0 && numchars < window.textLimit+1) {
+			btn.removeClass('disabled');
+			btn.addClass('enabled');
 
-		// deactivate button if it's equal to the start text
-		var startText = btn.closest('.inline-reply-queetbox').children('.queet-box-template').attr('data-start-text');
-		if(typeof startText != 'undefined') {
-			if($.trim(startText) == $.trim(src)) {
-				btn.removeClass('enabled');
-				btn.addClass('disabled');			
+			// deactivate button if it's equal to the start text
+			var startText = btn.closest('.inline-reply-queetbox').children('.queet-box-template').attr('data-start-text');
+			if(typeof startText != 'undefined') {
+				if($.trim(startText) == $.trim(src)) {
+					btn.removeClass('enabled');
+					btn.addClass('disabled');			
+					}
 				}
 			}
-		}
-	else {
-		btn.removeClass('enabled');
-		btn.addClass('disabled');
-		}	
+		else {
+			btn.removeClass('enabled');
+			btn.addClass('disabled');
+			}	
 	
 		
-	// counter color		
-	if((140-numchars) < 0) {
-		trgt.css('color','#D40D12');
-		}
-	else {
-		trgt.removeAttr('style');			
+		// counter color		
+		if((window.textLimit-numchars) < 0) {
+			trgt.css('color','#D40D12');
+			}
+		else {
+			trgt.removeAttr('style');			
+			}
 		}
 	}		
 	

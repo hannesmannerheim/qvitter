@@ -137,7 +137,7 @@ window.l.es.signUpFullName          = 'Nombre completo';
 window.l.es.signUpEmail             = 'Correo electrónico';
 window.l.es.signUpButtonText        = 'Regístrate en ' + window.siteTitle;
 window.l.es.welcomeHeading          = 'Bienvenido a ' + window.siteTitle + '.';
-window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que no debes tener una cuenta de ' + window.siteTitle + ' para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puedes registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debes registrarse en cualquier servicio para participar - simplemente instala el software GNU Social en tu propio servidor. (:</div>federación</span> de microblogueros que, como tú, estan motivados por ética y solidaridad y quieren abandonar los servicios centralizados capitalistas. Estamos aquí desde 2010 y siempre vamos a ser no-profit.';
+window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que no debes tener una cuenta de ' + window.siteTitle + ' para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puedes registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debes registrarse en cualquier servicio para participar - simplemente instala el software GNU Social en tu propio servidor. (:</div>federación</span> de microblogueros que, como tú, estan motivados por ética y solidaridad y quieren abandonar los servicios centralizados capitalistas.';
 window.l.es.registerNickname        = 'Nombre de usuario';
 window.l.es.registerHomepage        = 'Sitio web';
 window.l.es.registerBio             = 'Biografía';
@@ -248,7 +248,7 @@ window.l.fr.signUpFullName          = 'Nom complet';
 window.l.fr.signUpEmail             = 'Email';
 window.l.fr.signUpButtonText        = 'S\'inscrire sur ' + window.siteTitle;
 window.l.fr.welcomeHeading          = 'Bienvenue sur ' + window.siteTitle + '.';
-window.l.fr.welcomeText             = 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte ' + window.siteTitle + ' pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés capitalistes. Nous sommes en ligne depuis 2010 et resterons toujours sans but lucratif.';
+window.l.fr.welcomeText             = 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte ' + window.siteTitle + ' pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés capitalistes.';
 window.l.fr.registerNickname        = 'Nom d\'utilisateur';
 window.l.fr.registerHomepage        = 'Site Web';
 window.l.fr.registerBio             = 'Biographie';
@@ -370,7 +370,7 @@ window.l.de.welcomeText             = 'Wir sind eine Community von Microbloggern
                                        GNU-Social-Server, auch bekannt als StatusNet. Wir sind genau das Richtige für \
                                        <strong>Leute wie dich</strong>, denen Ethik und Solidarität etwas bedeuten und \
                                        die sich nicht mehr an zentralisierten kommerziellen Diensten beteiligen \
-                                        wollen. Es gibt uns schon seit 2010, und wir werden immer Non-Profit bleiben.';
+                                        wollen. ';
 window.l.de.registerNickname        = 'Nutzername';
 window.l.de.registerHomepage        = 'Webseite';
 window.l.de.registerBio             = 'Bio';
@@ -488,8 +488,7 @@ window.l.en.welcomeText             = 'We are a <span id="federated-tooltip"><di
                                        You don\'t even have to join a service – try installing the lovely \
                                        <a href="http://www.gnu.org/software/social/">GNU Social</a> software on your own server! :)\
                                        </div>federation</span> of microbloggers who care about ethics and \
-                                       solidarity and want to quit the centralised capitalist services. We have been around \
-                                       since 2010 and will always be non-profit.';
+                                       solidarity and want to quit the centralised capitalist services.';
 window.l.en.registerNickname        = 'Nickname';
 window.l.en.registerHomepage        = 'Homepage';
 window.l.en.registerBio             = 'Bio';
@@ -599,7 +598,7 @@ window.l.sv.signUpFullName          = 'Fullständigt namn';
 window.l.sv.signUpEmail             = 'E-post';
 window.l.sv.signUpButtonText        = 'Registrera dig på ' + window.siteTitle + '';
 window.l.sv.welcomeHeading          = 'Välkommen till ' + window.siteTitle + '.';
-window.l.sv.welcomeText             = 'Vi är en <span id="federated-tooltip"><div id="what-is-federation">"Federering" betyder att du inte behöver ha ett ' + window.siteTitle + '-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href="http://www.gnu.org/software/social/">GNU Social</a> (som ' + window.siteTitle + ' bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt. Vi har funnits sedan 2010 och sajten drivs helt ideellt.';
+window.l.sv.welcomeText             = 'Vi är en <span id="federated-tooltip"><div id="what-is-federation">"Federering" betyder att du inte behöver ha ett ' + window.siteTitle + '-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href="http://www.gnu.org/software/social/">GNU Social</a> (som ' + window.siteTitle + ' bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt.';
 window.l.sv.registerNickname        = 'Användarnamn';
 window.l.sv.registerHomepage        = 'Webbplats';
 window.l.sv.registerBio             = 'Biografi';
@@ -939,7 +938,7 @@ window.l.eo.welcomeText             = 'Ni estas <span id="federated-tooltip"><di
                                        Vi eĉ ne bezonas membriĝi al servaĵo – peni instali la belan\
                                        programon GNU Social ĉe via propra servaĵo! :)</div>federaĵon</span> de mikroblogantoj,\
                                        kiu ĉagrenas pri etiko kaj solidareco, kaj kiu volas forlasi la centralizantajn\
-                                       kapitalismajn servaĵojn. Ni ekzistas\ ekde 2010, kaj ĉiam estos senprofitcela.';
+                                       kapitalismajn servaĵojn.';
 window.l.eo.registerNickname        = 'Nomo de uzanto';
 window.l.eo.registerHomepage        = 'Afiŝinto';
 window.l.eo.registerBio             = 'Biografio';
@@ -1058,7 +1057,7 @@ o qualsiasi altro servizio basato sul protocollo \
 nemmeno bisogno di far parte di un servizio - provate a installare il meraviglioso \
 software GNU Social sul vostro server! :-)</div>federazione</span> di microbloggers \
 che hanno a cuore l\'etica, la solidarietà, e che vogliono uscire dai servizi \
-centralizzati capitalisti. Esistiamo dal 2010 e saremo sempre non-profit.';
+centralizzati capitalisti.';
 window.l.it.registerNickname = 'Nickname';
 window.l.it.registerHomepage = 'Sito web';
 window.l.it.registerBio = 'Biografia';
@@ -1126,6 +1125,6 @@ $('.stream-selection[data-stream-name="favorites.json"]').prepend(window.sL.favo
 $('.stream-selection[data-stream-name="favorites.json"]').attr('data-stream-header',window.sL.favoritesNoun);
 $('.stream-selection[data-stream-name="statuses/public_timeline.json"]').prepend(window.sL.publicTimeline);
 $('.stream-selection[data-stream-name="statuses/public_timeline.json"]').attr('data-stream-header',window.sL.publicTimeline);
-$('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json?since_id=1"]').prepend(window.sL.publicAndExtTimeline);
-$('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json?since_id=1"]').attr('data-stream-header',window.sL.publicAndExtTimeline);
+$('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json"]').prepend(window.sL.publicAndExtTimeline);
+$('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json"]').attr('data-stream-header',window.sL.publicAndExtTimeline);
 $('#search-query').attr('placeholder',window.sL.searchVerb);

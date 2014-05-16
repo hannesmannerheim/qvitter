@@ -33,6 +33,18 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+/* · 
+   · 
+   ·   Current time in milliseconds, to send with each request to make sure 
+   ·   we're not getting 304 responses.
+   ·
+   ·   
+   · · · · · · · · · · · · · */ 
+
+function timeNow() {
+	return new Date().getTime();
+	}
+
 
 /* ·  
    · 
@@ -45,40 +57,22 @@
    · · · · · · · · · */
     
 function checkLogin(username,password,actionOnSuccess) { 
- 	$.ajax({ url: window.qvitterApiRoot, 
-	 	type: 'POST',
-		data: {
-			getRequest: "account/verify_credentials.json",
-			username: username,
-			password: password
-			},	 	
+ 	$.ajax({ url: 'http://' + username + ':' + password + '@qvitter.dev/api/account/verify_credentials.json', 
+	 	type: 'GET',	 	
 	 	dataType: 'json', 
 	 	error: function() {
 	 		logoutWithoutReload(true);
 	 		},
- 		success: function(data) { 
- 						
+ 		success: function(data) { 					
 			if(typeof data.error == 'undefined') {
 				actionOnSuccess(data);
 				}
 			else {
-				// if no stream is set, get the one from the url
-				if(typeof window.currentStream == 'undefined' || window.currentStream == '') {
-					setNewCurrentStream(getStreamFromUrl(),function(){
-						logoutWithoutReload(true);
-						remove_spinner();			
-						},true);					
-					}
-				// if we have a strem, just just do logout and shake...
-				else {
-					logoutWithoutReload(true);									
-					remove_spinner();					
-					}
+		 		logoutWithoutReload(true);
 				}
 			}
 		});				
 	}
-
 
 
 /* · 
@@ -91,45 +85,18 @@ function checkLogin(username,password,actionOnSuccess) {
    · · · · · · · · · · · · · */ 
    
 function getFromAPI(stream, actionOnSuccess) {
-	
-	// request without username/password
-	if(typeof window.loginUsername == 'undefined') {
-		$.ajax({ url: window.qvitterApiRoot, 
-			type: "POST", 
-			data: {
-				getRequest: stream
-				},			
-			dataType: 'json', 
-			success: function(data) { 
-				actionOnSuccess(data);				
-				},
-			error: function(data) {
-				actionOnSuccess(false);
-				console.log(data);
-				remove_spinner();	
-				}
-			});			
-		}
-	// with username/password if set
-	else {
-		$.ajax({ url: window.qvitterApiRoot, 
-			type: "POST", 
-			data: {
-				getRequest: stream,
-				username: window.loginUsername,
-				password: window.loginPassword
-				},			
-			dataType: 'json', 
-			success: function(data) { 
-				actionOnSuccess(data);				
-				},
-			error: function(data) {
-				actionOnSuccess(false);
-				console.log(data);	
-				remove_spinner();				
-				}
-			});			
-		}	
+	$.ajax({ url: window.apiRoot + stream + qOrAmp(stream) + 't=' + timeNow(), 
+		type: "GET",		
+		dataType: 'json', 
+		success: function(data) { 
+			actionOnSuccess(data);				
+			},
+		error: function(data) {
+			actionOnSuccess(false);
+			console.log(data);
+			remove_spinner();	
+			}
+		});			
 	}	
 
 	
@@ -144,14 +111,11 @@ function getFromAPI(stream, actionOnSuccess) {
    · · · · · · · · · · · · · */ 
    
 function postQueetToAPI(queetText_txt, actionOnSuccess) {
-	$.ajax({ url: window.qvitterApiRoot, 
+	$.ajax({ url: window.apiRoot + 'statuses/update.json?t=' + timeNow(), 
 		type: "POST", 
 		data: { 
-			postRequest: 'statuses/update.json',
 			status: queetText_txt,
-			source: 'Qvitter',
-			username: window.loginUsername,
-			password: window.loginPassword
+			source: 'Qvitter'
 			},
 		dataType: "json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
@@ -169,13 +133,10 @@ function postQueetToAPI(queetText_txt, actionOnSuccess) {
    · · · · · · · · · · · · · */ 
 
 function postNewLinkColor(newLinkColor) {
-	$.ajax({ url: window.qvitterApiRoot, 
+	$.ajax({ url: window.apiRoot + 'qvitter/update_link_color.json?t=' + timeNow(), 
 		type: "POST", 
 		data: { 
-			postRequest: 'qvitter/update_link_color.json',
-			linkcolor: newLinkColor,
-			username: window.loginUsername,
-			password: window.loginPassword
+			linkcolor: newLinkColor
 			},
 		dataType:"json",
 		error: function(data){ console.log(data); },
@@ -196,13 +157,10 @@ function postNewLinkColor(newLinkColor) {
    · · · · · · · · · · · · · */ 
 
 function postNewBackgroundColor(newBackgroundColor) {
-	$.ajax({ url: window.qvitterApiRoot, 
+	$.ajax({ url: window.apiRoot + 'qvitter/update_background_color.json?t=' + timeNow(), 
 		type: "POST", 
 		data: { 
-			postRequest: 'qvitter/update_background_color.json',
-			backgroundcolor: newBackgroundColor,
-			username: window.loginUsername,
-			password: window.loginPassword
+			backgroundcolor: newBackgroundColor
 			},
 		dataType:"json",
 		error: function(data){ console.log(data); },
@@ -227,19 +185,16 @@ function postNewBackgroundColor(newBackgroundColor) {
 function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnSuccess) {
 	
 	if(followOrUnfollow == 'follow') {
-		var postRequest = 'friendships/create.json';
+		var postRequest = 'friendships/create.json?t=' + timeNow();
 		}
 	else if (followOrUnfollow == 'unfollow') {
-		var postRequest = 'friendships/destroy.json';
+		var postRequest = 'friendships/destroy.json?t=' + timeNow();
 		}
 	
-	$.ajax({ url: window.qvitterApiRoot, 
+	$.ajax({ url: window.apiRoot + postRequest, 
 		type: "POST", 
 		data: { 
-			postRequest: postRequest,
-			user_id: user_id,
-			username: window.loginUsername,
-			password: window.loginPassword
+			user_id: user_id
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false,this_element); console.log(data); },
@@ -259,13 +214,10 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
    · · · · · · · · · · · · · */ 	
 	
 function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) {
-	$.ajax({ url: window.qvitterApiRoot, 
+	$.ajax({ url: window.apiRoot + 'statusnet/groups/' + joinOrLeave + '.json?t=' + timeNow(), 
 		type: "POST", 
 		data: { 
-			postRequest: 'statusnet/groups/' + joinOrLeave + '.json',
-			id: group_id,
-			username: window.loginUsername,
-			password: window.loginPassword
+			id: group_id
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false,this_element); console.log(data); },
@@ -285,14 +237,11 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
    · · · · · · · · · · · · · */ 
    
 function postReplyToAPI(queetText_txt, in_reply_to_status_id, actionOnSuccess) {
-	$.ajax({ url: window.qvitterApiRoot, 
+	$.ajax({ url: window.apiRoot + 'statuses/update.json?t=' + timeNow(), 
 		type: "POST", 
 		data: { 
-			postRequest: 'statuses/update.json',
 			status: queetText_txt,
 			source: 'Qvitter',
-			username: window.loginUsername,
-			password: window.loginPassword,
 			in_reply_to_status_id: in_reply_to_status_id
 			},
 		dataType:"json",
@@ -314,13 +263,10 @@ function postReplyToAPI(queetText_txt, in_reply_to_status_id, actionOnSuccess) {
    · · · · · · · · · · · · · */ 
    
 function postActionToAPI(action, actionOnSuccess) {
-	$.ajax({ url: window.qvitterApiRoot, 
+	$.ajax({ url: window.apiRoot + action + qOrAmp(action) + 't=' + timeNow(), 
 		type: "POST", 
 		data: { 
-			postRequest: action,
-			source: 'Qvitter',
-			username: window.loginUsername,
-			password: window.loginPassword
+			source: 'Qvitter'
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
@@ -373,13 +319,8 @@ function unRequeet(this_stream_item, this_action, my_rq_id) {
     
 function getFavsOrRequeetsForQueet(apiaction,qid,actionOnSuccess) { 
 	if(apiaction=="requeets") { apiaction="retweets"; } // we might mix this up...
-	$.ajax({ url: window.qvitterApiRoot,
-		type: "POST", 
-		data: {
-			getRequest: "statuses/" + apiaction + "/" + qid + ".json",
-			username: window.loginUsername,
-			password: window.loginPassword			
-			},
+	$.ajax({ url: window.apiRoot + "statuses/" + apiaction + "/" + qid + ".json?t=" + timeNow(),
+		type: "GET", 
 		dataType: 'json', 
 		success: function(data) { 			
 			if(data.length > 0) {
