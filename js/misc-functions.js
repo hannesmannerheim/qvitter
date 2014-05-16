@@ -452,8 +452,11 @@ function qOrAmp(stream) {
    · · · · · · · · · · · · · */ 
 
 function countCharsInQueetBox(src,trgt,btn) {
+
+	var numchars = $.trim(src).length;
+
+	// limited
 	if(window.textLimit > 0) {
-		var numchars = $.trim(src).length;
 		trgt.html(window.textLimit - numchars);
 
 		// activate/deactivare button
@@ -482,6 +485,17 @@ function countCharsInQueetBox(src,trgt,btn) {
 			}
 		else {
 			trgt.removeAttr('style');			
+			}
+		}
+	// unlimited
+	else {
+		if(numchars > 0) {
+			btn.removeClass('disabled');
+			btn.addClass('enabled');		
+			}
+		else {
+			btn.removeClass('enabled');
+			btn.addClass('disabled');			
 			}
 		}
 	}		
