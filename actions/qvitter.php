@@ -348,11 +348,11 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-ui-1.10.3.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.easing.1.3.js"></script>	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=18"></script>		    	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=11"></script>		    		    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=5"></script>		    		    	    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=14"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=13"></script>		
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=19"></script>		    	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=12"></script>		    		    
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=6"></script>		    		    	    
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=15"></script>	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=14"></script>		
 			</body>
 		</html>
 
