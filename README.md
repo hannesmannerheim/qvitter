@@ -26,7 +26,8 @@ Setup
 
 2. Put all files in /plugins/Qvitter
 
-3. Replace your lib/apiauthaction.php file with the one supplied in edited-gnu-social-files/lib/apiauthaction.php
+3. Replace your lib/apiauthaction.php file with the one supplied in 
+edited-gnu-social-files/lib/apiauthaction.php. 
 
 4. Add `addPlugin('Qvitter');` to your /config.php file.
 
@@ -36,6 +37,14 @@ be opt-in instead.
 
 6. Users can go to ://{instance}/settings/qvitter and enable or disable Qvitter.
 
+Extras
+-----
+
+1. There is a bug in GNUsocial that won't let you see groups' members lists. Replace your
+actions/apigroupmembership.php file with the one supplied to fix it.
+
+2. If you want notice headers to show which group a notice is posted in, replace your
+lib/apiaction.php file.
 
 
 TODO
