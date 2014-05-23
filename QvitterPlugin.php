@@ -77,16 +77,22 @@ class QvitterPlugin extends Plugin {
 		$m->connect('api/statuses/public_and_external_timeline.:format',
 					array('action' => 'ApiTimelinePublicAndExternal',
 						  'format' => '(xml|json|rss|atom|as)'));
-
 		$m->connect('api/qvitter/update_link_color.json',
 					array('action' => 'apiqvitterupdatelinkcolor'));
-			
 		$m->connect('api/qvitter/update_background_color.json',
 					array('action' => 'apiqvitterupdatebackgroundcolor'));
-
 		$m->connect('api/qvitter/checklogin.json',
-					array('action' => 'apiqvitterchecklogin'));					
-
+					array('action' => 'apiqvitterchecklogin'));						
+		$m->connect('api/qvitter/statuses/friends_timeline.json',
+					array('action' => 'apiqvitterfriends'));	
+		$m->connect('api/qvitter/statuses/friends_timeline/:id.json',
+					array('action' => 'apiqvitterfriends',
+						  'id' => Nickname::INPUT_FMT));							
+		$m->connect('api/qvitter/statuses/mentions/:id.json',
+					array('action' => 'apiqvittermentions',
+						  'id' => Nickname::INPUT_FMT));
+		$m->connect('api/qvitter/statuses/mentions.:format',
+					array('action' => 'apiqvittermentions'));
         $m->connect('settings/qvitter',
                     array('action' => 'qvittersettings'));
         $m->connect('main/qlogin',

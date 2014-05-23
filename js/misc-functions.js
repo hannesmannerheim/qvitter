@@ -283,7 +283,90 @@ function parseTwitterLongDate(tdate) {
 	if(ampm == 'am') { time12hours = window.sL.time12am.replace('{time}',time12hours + ':' + minutes);}
 	else { time12hours = window.sL.time12pm.replace('{time}',time12hours + ':' + minutes); }
 	return window.sL.longDateFormat.replace('{time24}',time24hours).replace('{hours}',hours).replace('{minutes}',minutes).replace('{time12}',time12hours).replace('{day}',system_date.getDate()).replace('{month}',month_names[system_date.getMonth()]).replace('{year}',system_date.getFullYear());
-	}	  	
+	}	 
+function timestampToTwitterDate(timestamp) {
+	 var a = new Date(timestamp*1000);
+	 var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	 var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];						 
+	 var day = days[a.getUTCDay()];
+	 var year = a.getUTCFullYear();
+	 var month = months[a.getUTCMonth()];
+	 var date = (a.getUTCDate()<10?'0':'')+a.getUTCDate();
+	 var hour = (a.getUTCHours()<10?'0':'')+a.getUTCHours();
+	 var min = (a.getUTCMinutes()<10?'0':'')+a.getUTCMinutes();
+	 var sec = (a.getUTCSeconds()<10?'0':'')+a.getUTCSeconds();
+	 return day+' '+month+' '+date+' '+hour+':'+min+':'+sec+' +0000 '+year;
+	 }	 	
+	
+	
+	
+	
+/* ·
+   · 
+   ·   Decode Qvitter's compact API reponse
+   · 
+   ·   @param data: the data returned from qvitter's compact api response
+   ·
+   ·   @return data formatted as the non-compact "[old] twitter style" api response
+   · 
+   · · · · · · · · · · */
+   
+function decodeQvitterCompactFormat(data) {	
+	
+	// leave data unchanged if we don't recognize it
+	if(typeof data.s == 'undefined') {
+		return data;
+		}
+	// decode
+	else {
+		var users = new Object();						
+		var i = 0;
+		$.each(data.u, function(k,v){
+			users[k] = new Object;							
+			users[k].screen_name = v[0];
+			users[k].name = (v[1]==0?null:v[1]);
+			users[k].location = (v[2]==0?null:v[2]);
+			users[k].description = (v[3]==0?null:v[3]);																																						
+			users[k].profile_image_url_profile_size = v[4];																																						
+			users[k].profile_image_url_original = v[5];																																						
+			users[k].groups_count = v[6];																																						
+			users[k].linkcolor = (v[7]==0?false:v[7]);																																						
+			users[k].backgroundcolor = (v[8]==0?false:v[8]);																																						
+			users[k].url = (v[9]==0?null:v[9]);																																						
+			users[k].followers_count = v[10];																																						
+			users[k].friends_count = v[11];																																						
+			users[k].favourites_count = v[12];																																						
+			users[k].statuses_count = v[13];																																						
+			users[k].following = (v[14]==0?false:v[14]);																																						
+			users[k].statusnet_blocking = (v[15]==0?false:v[15]);																																						
+			users[k].statusnet_profile_url = v[16];
+			i++;
+			});								
+		var unqvitter = Array();	
+		var i = 0;		
+		$.each(data.s, function(k,v){
+			unqvitter[i] = new Object;							
+			unqvitter[i].id = v[0];
+			unqvitter[i].created_at = timestampToTwitterDate(v[1]);							
+			unqvitter[i].text = v[2];
+			unqvitter[i].statusnet_html = v[3];
+			unqvitter[i].in_reply_to_status_id = (v[4]==0?null:v[4]);
+			unqvitter[i].in_reply_to_user_id = (v[5]==0?null:v[5]);
+			unqvitter[i].in_reply_to_screen_name = (v[6]==0?null:v[6]);
+			unqvitter[i].favorited = (v[7]==0?false:v[7]);
+			unqvitter[i].repeated = (v[8]==0?false:v[8]);
+			unqvitter[i].statusnet_in_groups = (v[9]==0?false:v[9]);
+			unqvitter[i].user = users[v[10]];
+			unqvitter[i].statusnet_conversation_id = v[11];				
+			unqvitter[i].uri = window.siteInstanceURL + 'notice/' + v[0];															
+			unqvitter[i].source = (v[12]==0?null:v[12]);
+			i++;
+			});
+		return unqvitter;	
+		}
+	}
+	
+	
 	
 	
 /* ·

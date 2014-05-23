@@ -93,6 +93,10 @@ function getFromAPI(stream, actionOnSuccess) {
 		type: "GET",		
 		dataType: 'json', 
 		success: function(data) { 
+
+			// decode if we have a qvitter compact stream
+			data = decodeQvitterCompactFormat(data);		
+
 			actionOnSuccess(data);				
 			},
 		error: function(data) {
@@ -123,7 +127,9 @@ function postQueetToAPI(queetText_txt, actionOnSuccess) {
 			},
 		dataType: "json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
-		success: function(data) { actionOnSuccess(data);}
+		success: function(data) { 
+			actionOnSuccess(data);
+			}
 		});	
 	}			
 
@@ -274,7 +280,13 @@ function postActionToAPI(action, actionOnSuccess) {
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
-		success: function(data) { actionOnSuccess(data);}
+		success: function(data) { 
+
+			// decode if we have a qvitter compact stream
+			data = decodeQvitterCompactFormat(data);		
+
+			actionOnSuccess(data);
+			}
 		});	
 	}	
 	

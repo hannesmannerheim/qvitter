@@ -649,7 +649,7 @@ $('body').on('click','.profile-banner-footer .stats li a, .queet-stream',functio
 		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + screenName,function(){},true);			
 		}
 	else if($(this).hasClass('mentions')) {
-		setNewCurrentStream('statuses/mentions.json?screen_name=' + screenName,function(){},true);			
+		setNewCurrentStream('qvitter/statuses/mentions.json?screen_name=' + screenName,function(){},true);			
 		}
 	else if($(this).hasClass('favorites')) {
 		setNewCurrentStream('favorites.json?screen_name=' + screenName,function(){},true);			
@@ -717,16 +717,12 @@ $(document).on('click','a', function(e) {
 		// logged in users streams
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/all') {
 			e.preventDefault();			
-			setNewCurrentStream('statuses/friends_timeline.json',function(){},true);	
+			setNewCurrentStream('qvitter/statuses/friends_timeline.json',function(){},true);	
 			}
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/replies') {
 			e.preventDefault();			
-			setNewCurrentStream('statuses/mentions.json',function(){},true);				
-			}			
-// 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','') == window.loggedIn.screen_name) {
-// 			e.preventDefault();			
-// 			setNewCurrentStream('statuses/user_timeline.json',function(){},true);				
-// 			}			
+			setNewCurrentStream('qvitter/statuses/mentions.json',function(){},true);				
+			}					
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/favorites') {
 			e.preventDefault();			
 			setNewCurrentStream('favorites.json',function(){},true);				
