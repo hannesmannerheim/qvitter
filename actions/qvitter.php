@@ -151,12 +151,14 @@ class QvitterAction extends ApiAction
 				
 				?>
 				<script>
+					window.defaultAvatarStreamSize = <?php print json_encode(Avatar::defaultImage(AVATAR_STREAM_SIZE)) ?>;
 					window.textLimit = <?php print json_encode((int)common_config('site','textlimit')) ?>;
 					window.registrationsClosed = <?php print json_encode($registrationsclosed) ?>;
 					window.siteTitle = <?php print json_encode($sitetitle) ?>;
 					window.loggedIn = <?php print json_encode($logged_in_user_obj) ?>;
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
 					window.apiRoot = '<?php print common_path("api/", true); ?>';
+					window.avatarRoot = '<?php print common_path("avatar/", true); ?>';					
 					window.fullUrlToThisQvitterApp = '<?php print $qvitterpath; ?>';
 					window.siteRootDomain = '<?php print $siterootdomain; ?>';
 					window.siteInstanceURL = '<?php print $instanceurl; ?>';			
@@ -180,7 +182,8 @@ class QvitterAction extends ApiAction
 					#new-queets-bar,
 					.menu-container div,	
 					#user-header:hover #user-name,
-					.cm-mention, .cm-tag, .cm-group, .cm-url, .cm-email {
+					.cm-mention, .cm-tag, .cm-group, .cm-url, .cm-email,
+					div.syntax-middle span {
 						color:#0084B4;/*COLOREND*/
 						}			
 					.topbar .global-nav,
@@ -211,12 +214,15 @@ class QvitterAction extends ApiAction
 						<li><a id="logout"></a></li>
 						<li class="language dropdown-divider"></li>				
 						<li class="language"><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>	
+						<li class="language"><a class="language-link" title="简体中文" data-lang-code="zh_cn">简体中文</a></li>
+						<li class="language"><a class="language-link" title="繁體中文" data-lang-code="zh_tw">繁體中文</a></li>													
 						<li class="language"><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
 						<li class="language"><a class="language-link" title="English" data-lang-code="en">English</a></li>
 						<li class="language"><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>	
 						<li class="language"><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>													
 						<li class="language"><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
 						<li class="language"><a class="language-link" title="French" data-lang-code="fr">français</a></li>									
+						<li class="language"><a class="language-link" title="Galego" data-lang-code="gl">Galego</a></li>															
 						<li class="language"><a class="language-link" title="Italian" data-lang-code="it">Italiano</a></li>													
 						<li class="language"><a class="language-link" title="Swedish" data-lang-code="sv">svenska</a></li>					
 					</ul>			
@@ -246,12 +252,15 @@ class QvitterAction extends ApiAction
 												<span class="caret-inner"></span>
 											</li>
 											<li><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>	
+											<li><a class="language-link" title="简体中文" data-lang-code="zh_cn">简体中文</a></li>	
+											<li><a class="language-link" title="繁體中文" data-lang-code="zh_tw">繁體中文</a></li>																						
 											<li><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
 											<li><a class="language-link" title="English" data-lang-code="en">English</a></li>
 											<li><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>									
 											<li><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>																		
 											<li><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
 											<li><a class="language-link" title="French" data-lang-code="fr">français</a></li>	
+											<li><a class="language-link" title="Galego" data-lang-code="gl">Galego</a></li>	
 											<li><a class="language-link" title="Italian" data-lang-code="it">Italiano</a></li>																														
 											<li><a class="language-link" title="Swedish" data-lang-code="sv">svenska</a></li>								
 										</ul>
@@ -311,13 +320,15 @@ class QvitterAction extends ApiAction
 							<a><div id="user-groups"><strong></strong><div class="label"></div></div></a>									
 						</div>				
 						<div id="user-footer">
-							<textarea id="codemirror-queet-box"></textarea>
-							<div id="queet-box" class="queet-box"></div>
-							<div id="queet-toolbar">
-								<div id="queet-box-extras"></div>
-								<div id="queet-button">
-									<span id="queet-counter"></span>
-									<button id="queet"></button>
+							<div id="queet-box" class="queet-box queet-box-syntax" data-start-text=""></div>
+							<div class="syntax-middle"></div>
+							<div class="syntax-two" contenteditable="true"></div>							
+							<div class="mentions-suggestions"></div>			
+							<div class="queet-toolbar">
+								<div class="queet-box-extras"></div>
+								<div class="queet-button">
+									<span class="queet-counter"></span>
+									<button></button>
 								</div>						
 							</div>
 						</div>										
@@ -343,16 +354,15 @@ class QvitterAction extends ApiAction
 			
 					<div id="footer"></div>
 				</div>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/codemirror.4.0.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.0.2.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-ui-1.10.3.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.easing.1.3.js"></script>	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=19"></script>		    	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=13"></script>		    		    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=7"></script>		    		    	    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=15"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=14"></script>		
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=20"></script>		    	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=14"></script>		    		    
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=8"></script>		    		    	    
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=17"></script>	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=16"></script>		
 			</body>
 		</html>
 

@@ -93,7 +93,7 @@ class ApiQvitterAction extends ApiAction
         	$simplified_statuses->s[$i][9] = $s['statusnet_in_groups'];
         	$simplified_statuses->s[$i][10] = $s['user']['id'];        
         	$simplified_statuses->s[$i][11] = $s['statusnet_conversation_id'];
-        	$simplified_statuses->s[$i][12] = $s['source'];        	        		
+        	$simplified_statuses->s[$i][12] = $s['source'];
 
 			$simplified_statuses->u[$s['user']['id']][0] = $s['user']['screen_name'];
 			$simplified_statuses->u[$s['user']['id']][1] = $s['user']['name'];
@@ -111,7 +111,41 @@ class ApiQvitterAction extends ApiAction
 			$simplified_statuses->u[$s['user']['id']][13] = $s['user']['statuses_count'];
 			$simplified_statuses->u[$s['user']['id']][14] = $s['user']['following'];
 			$simplified_statuses->u[$s['user']['id']][15] = $s['user']['statusnet_blocking'];
-			$simplified_statuses->u[$s['user']['id']][16] = $s['user']['statusnet_profile_url'];															
+			$simplified_statuses->u[$s['user']['id']][16] = $s['user']['statusnet_profile_url'];
+			
+        	if(isset($s['retweeted_status'])) {
+				$simplified_statuses->s[$i][13][0] = $s['retweeted_status']['id'];
+				$simplified_statuses->s[$i][13][1] = strtotime($s['retweeted_status']['created_at']);
+				$simplified_statuses->s[$i][13][2] = $s['retweeted_status']['text'];
+				$simplified_statuses->s[$i][13][3] = $s['retweeted_status']['statusnet_html'];        	
+				$simplified_statuses->s[$i][13][4] = $s['retweeted_status']['in_reply_to_status_id'];
+				$simplified_statuses->s[$i][13][5] = $s['retweeted_status']['in_reply_to_user_id'];
+				$simplified_statuses->s[$i][13][6] = $s['retweeted_status']['in_reply_to_screen_name'];
+				$simplified_statuses->s[$i][13][7] = $s['retweeted_status']['favorited'];
+				$simplified_statuses->s[$i][13][8] = $s['retweeted_status']['repeated'];
+				$simplified_statuses->s[$i][13][9] = $s['retweeted_status']['statusnet_in_groups'];
+				$simplified_statuses->s[$i][13][10] = $s['retweeted_status']['user']['id'];        
+				$simplified_statuses->s[$i][13][11] = $s['retweeted_status']['statusnet_conversation_id'];
+				$simplified_statuses->s[$i][13][12] = $s['retweeted_status']['source'];
+				
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][0] = $s['retweeted_status']['user']['screen_name'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][1] = $s['retweeted_status']['user']['name'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][2] = $s['retweeted_status']['user']['location'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][3] = $s['retweeted_status']['user']['description'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][4] = $s['retweeted_status']['user']['profile_image_url_profile_size'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][5] = $s['retweeted_status']['user']['profile_image_url_original'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][6] = $s['retweeted_status']['user']['groups_count'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][7] = $s['retweeted_status']['user']['linkcolor'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][8] = $s['retweeted_status']['user']['backgroundcolor'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][9] = $s['retweeted_status']['user']['url'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][10] = $s['retweeted_status']['user']['followers_count'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][11] = $s['retweeted_status']['user']['friends_count'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][12] = $s['retweeted_status']['user']['favourites_count'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][13] = $s['retweeted_status']['user']['statuses_count'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][14] = $s['retweeted_status']['user']['following'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][15] = $s['retweeted_status']['user']['statusnet_blocking'];
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][16] = $s['retweeted_status']['user']['statusnet_profile_url'];				
+        		}																		
 
         	$i++;
         }

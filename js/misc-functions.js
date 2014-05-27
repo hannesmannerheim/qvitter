@@ -313,16 +313,21 @@ function timestampToTwitterDate(timestamp) {
    
 function decodeQvitterCompactFormat(data) {	
 	
-	// leave data unchanged if we don't recognize it
-	if(typeof data.s == 'undefined') {
-		return data;
+	// empty object? return empty array instead...
+	if($.isEmptyObject(data)) {
+		return [];
 		}
+	// leave data unchanged if we don't recognize it
+	else if(typeof data.s == 'undefined') {
+		return data;
+		}		
 	// decode
 	else {
 		var users = new Object();						
 		var i = 0;
 		$.each(data.u, function(k,v){
 			users[k] = new Object;							
+			users[k].id = k;
 			users[k].screen_name = v[0];
 			users[k].name = (v[1]==0?null:v[1]);
 			users[k].location = (v[2]==0?null:v[2]);
@@ -360,6 +365,25 @@ function decodeQvitterCompactFormat(data) {
 			unqvitter[i].statusnet_conversation_id = v[11];				
 			unqvitter[i].uri = window.siteInstanceURL + 'notice/' + v[0];															
 			unqvitter[i].source = (v[12]==0?null:v[12]);
+
+			if(typeof v[13] != 'undefined') {
+				unqvitter[i].retweeted_status = new Object;							
+				unqvitter[i].retweeted_status.id = v[13][0];
+				unqvitter[i].retweeted_status.created_at = timestampToTwitterDate(v[13][1]);							
+				unqvitter[i].retweeted_status.text = v[13][2];
+				unqvitter[i].retweeted_status.statusnet_html = v[13][3];
+				unqvitter[i].retweeted_status.in_reply_to_status_id = (v[13][4]==0?null:v[13][4]);
+				unqvitter[i].retweeted_status.in_reply_to_user_id = (v[13][5]==0?null:v[13][5]);
+				unqvitter[i].retweeted_status.in_reply_to_screen_name = (v[13][6]==0?null:v[13][6]);
+				unqvitter[i].retweeted_status.favorited = (v[13][7]==0?false:v[13][7]);
+				unqvitter[i].retweeted_status.repeated = (v[13][8]==0?false:v[13][8]);
+				unqvitter[i].retweeted_status.statusnet_in_groups = (v[13][9]==0?false:v[13][9]);
+				unqvitter[i].retweeted_status.user = users[v[13][10]];
+				unqvitter[i].retweeted_status.statusnet_conversation_id = v[13][11];				
+				unqvitter[i].retweeted_status.uri = window.siteInstanceURL + 'notice/' + v[13][0];															
+				unqvitter[i].retweeted_status.source = (v[13][12]==0?null:v[13][12]);				
+				}
+
 			i++;
 			});
 		return unqvitter;	
@@ -427,32 +451,6 @@ function convertAttachmentMoreHref() {
 		});
 	}
 
-
-/* · 
-   · 
-   ·   Places the caret at the end of the contenteditable 
-   ·
-   ·   @param el: the contenteditable-element
-   · 
-   · · · · · · · · · · · · · */
-   
-function placeCaretAtEnd(el) {
-    el.focus();
-    if (typeof window.getSelection != "undefined"
-            && typeof document.createRange != "undefined") {
-        var range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        var sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-    } else if (typeof document.body.createTextRange != "undefined") {
-        var textRange = document.body.createTextRange();
-        textRange.moveToElementText(el);
-        textRange.collapse(false);
-        textRange.select();
-    }
-}
 
 
 /* · 
@@ -536,7 +534,8 @@ function qOrAmp(stream) {
 
 function countCharsInQueetBox(src,trgt,btn) {
 
-	var numchars = $.trim(src).length;
+	var $src_txt = $('<div/>').append($.trim(src.html()).replace(/&nbsp;/gi,' ').replace(/<br>/i,'').replace(/<br>/gi,"x"));
+	var numchars = ($.trim($src_txt.text())).length;
 
 	// limited
 	if(window.textLimit > 0) {
@@ -548,9 +547,10 @@ function countCharsInQueetBox(src,trgt,btn) {
 			btn.addClass('enabled');
 
 			// deactivate button if it's equal to the start text
-			var startText = btn.closest('.inline-reply-queetbox').children('.queet-box-template').attr('data-start-text');
-			if(typeof startText != 'undefined') {
-				if($.trim(startText) == $.trim(src)) {
+			var queetBox = btn.closest('.inline-reply-queetbox').children('.queet-box-syntax');
+			if(typeof queetBox.attr('data-replies-text') != 'undefined') {
+				var $startText = $('<div/>').append(decodeURIComponent(queetBox.attr('data-replies-text')));
+				if($.trim($startText.text()) == $.trim($src_txt.text())) {
 					btn.removeClass('enabled');
 					btn.addClass('disabled');			
 					}
@@ -647,3 +647,119 @@ jQuery.fn.outerHTML = function(s) {
         ? this.before(s).remove()
         : jQuery("<p>").append(this.eq(0).clone()).html();
 };
+
+
+
+
+/* · 
+   · 
+   ·   Stuff to get and set selection/caret in contenteditables 
+   ·   
+   · · · · · · · · · · · · · */ 
+	
+function getSelectionInElement(element) {
+	var caretOffset = Array(0,0);
+	var doc = element.ownerDocument || element.document;
+	var win = doc.defaultView || doc.parentWindow;
+	var sel;
+	var range = win.getSelection().getRangeAt(0);
+	var preCaretRangeEnd = range.cloneRange();
+	preCaretRangeEnd.selectNodeContents(element);
+	preCaretRangeEnd.setEnd(range.endContainer, range.endOffset);
+	caretOffset[1] = preCaretRangeEnd.toString().length;
+	var preCaretRangeStart = range.cloneRange();
+	preCaretRangeStart.selectNodeContents(element);
+	preCaretRangeStart.setEnd(range.startContainer, range.startOffset);
+	caretOffset[0] = preCaretRangeStart.toString().length;			
+	return caretOffset;
+	}					
+function getTextNodesIn(node) {
+	var textNodes = [];
+	if (node.nodeType == 3) {
+		textNodes.push(node);
+		}
+	else {
+		var children = node.childNodes;
+		for (var i = 0, len = children.length; i < len; ++i) {
+			textNodes.push.apply(textNodes, getTextNodesIn(children[i]));
+			}
+		}
+	return textNodes;
+	}
+
+function setSelectionRange(el, start, end) {
+    if (document.createRange && window.getSelection) {
+        var range = document.createRange();
+        range.selectNodeContents(el);
+        var textNodes = getTextNodesIn(el);
+        var foundStart = false;
+        var charCount = 0, endCharCount;
+
+        for (var i = 0, textNode; textNode = textNodes[i++]; ) {
+            endCharCount = charCount + textNode.length;
+			if(endCharCount == start && endCharCount == end) {
+				endCharCount = endCharCount+1;
+				}            
+            if (!foundStart && start >= charCount
+                    && (start < endCharCount ||
+                    (start == endCharCount && i < textNodes.length))) {
+                range.setStart(textNode, start - charCount);
+                foundStart = true;
+            }
+            if (foundStart && end <= endCharCount) {
+                range.setEnd(textNode, end - charCount);
+                break;
+            }
+            charCount = endCharCount;
+        }
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    } else if (document.selection && document.body.createTextRange) {
+        var textRange = document.body.createTextRange();
+        textRange.moveToElementText(el);
+        textRange.collapse(true);
+        textRange.moveEnd("character", end);
+        textRange.moveStart("character", start);
+        textRange.select();
+    }
+}
+function createRangeFromCharacterIndices(containerEl, start, end) {
+    var charIndex = 0, range = document.createRange(), foundStart = false, stop = {};
+    range.setStart(containerEl, 0);
+    range.collapse(true);
+
+    function traverseTextNodes(node) {
+        if (node.nodeType == 3) {
+            var nextCharIndex = charIndex + node.length;
+            if (!foundStart && start >= charIndex && start <= nextCharIndex) {
+                range.setStart(node, start - charIndex);
+                foundStart = true;
+            }
+            if (foundStart && end >= charIndex && end <= nextCharIndex) {
+                range.setEnd(node, end - charIndex);
+                throw stop;
+            }
+            charIndex = nextCharIndex;
+        } else {
+            for (var i = 0, len = node.childNodes.length; i < len; ++i) {
+                traverseTextNodes(node.childNodes[i]);
+            }
+        }
+    }
+
+    try {
+        traverseTextNodes(containerEl);
+    } catch (ex) {
+        if (ex == stop) {
+            return range;
+        } else {
+            throw ex;
+        }
+    }
+}
+
+function deleteBetweenCharacterIndices(el, from, to) {
+    var range = createRangeFromCharacterIndices(el, from, to);
+    range.deleteContents();
+}

@@ -83,6 +83,9 @@ class QvitterPlugin extends Plugin {
 					array('action' => 'apiqvitterupdatebackgroundcolor'));
 		$m->connect('api/qvitter/checklogin.json',
 					array('action' => 'apiqvitterchecklogin'));						
+		$m->connect('api/qvitter/allfollowing/:id.json',
+					array('action' => 'apiqvitterallfollowing',
+						  'id' => Nickname::INPUT_FMT));							
 		$m->connect('api/qvitter/statuses/friends_timeline.json',
 					array('action' => 'apiqvitterfriends'));	
 		$m->connect('api/qvitter/statuses/friends_timeline/:id.json',

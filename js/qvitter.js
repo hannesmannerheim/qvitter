@@ -125,11 +125,10 @@ if(!window.registrationsClosed) {
 					window.checkNicknameTimeout = setTimeout(function(){					
 						getFromAPI('check_nickname.json?nickname=' + encodeURIComponent($('#signup-user-nickname-step2').val()),function(data){
 							$('.spinner-wrap').remove();
-							console.log($('.spinner-wrap').length);
-							if(data==0) {
+							if(data=='taken') {
 								$('#signup-user-password2-step2').trigger('keyup'); // revalidates	
 								}
-							else {
+							else {							
 								$('#signup-user-nickname-step2').removeClass('nickname-taken');			
 								$('#signup-user-password2-step2').trigger('keyup');
 								}
@@ -302,7 +301,21 @@ function doLogin(streamToSet) {
 		$('.stream-selection.my-timeline').attr('href', window.loggedIn.statusnet_profile_url);				
 		$('.stream-selection.favorites').attr('href', window.loggedIn.statusnet_profile_url + '/favorites');								
 		window.myUserID = window.loggedIn.id;				
-			
+		
+		// get all users i'm following for autosuggestion
+		window.following = new Array();
+		getFromAPI('qvitter/allfollowing/' + window.loggedIn.screen_name + '.json',function(data){
+			if(data) {
+				var i=0;
+				$.each(data,function(k,v){
+					if(v[2] === false) { var avatar = window.defaultAvatarStreamSize; }
+					else { 	var avatar = window.avatarRoot + v[2]; }
+					window.following[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar };
+					i++;
+					});
+				}
+			});
+		
 		// load history
 		loadHistoryFromLocalStorage();			
 		
@@ -819,20 +832,20 @@ $(document).on('click','a', function(e) {
 					popUpAction('popup-external-profile', screenNameWithServer,profileCard,false);
 					
 					// if remote server is https, do jsonp request directly, otherwise proxy
-					if(serverUrl.substring(0,8) == 'https://') {
-						console.log(userApiUrl);
-						$.ajax({ url: userApiUrl, type: "GET", dataType: "jsonp", success: function(data) { 
-								console.log(data);
-								}
-							});
-						}
-					else {
-						getFromAPI('externalproxy.json?url=' + encodeURIComponent(userApiUrl),function(data){
-							if(data) {
-							
-								}
-							});
-						}
+// 					if(serverUrl.substring(0,8) == 'https://') {
+// 						console.log(userApiUrl);
+// 						$.ajax({ url: userApiUrl, type: "GET", dataType: "jsonp", success: function(data) { 
+// 								console.log(data);
+// 								}
+// 							});
+// 						}
+// 					else {
+// 						getFromAPI('externalproxy.json?url=' + encodeURIComponent(userApiUrl),function(data){
+// 							if(data) {
+// 							
+// 								}
+// 							});
+// 						}
 					
 					
 					remove_spinner();	
@@ -1081,7 +1094,7 @@ $('body').on('click','.queet',function (event) {
 		&& !$(event.target).is('.cm-url')						
 		&& !$(event.target).is('pre')		
 		&& !$(event.target).is('.name')
-		&& !$(event.target).is('.queet-box-template')	
+		&& !$(event.target).is('.queet-box')	
 		&& !$(event.target).is('img')				
 		&& !$(event.target).is('button')				
 		&& !$(event.target).is('.show-full-conversation')						
@@ -1294,8 +1307,8 @@ $('body').on('click','.action-reply-container',function(){
 	$queetHtmlExpandedContent.remove();		
 	var queetHtmlWithoutFooter = $queetHtml.html();
 	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
-	expandInlineQueetBox($('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box-template'));
-
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').width($('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox').width()-20);
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
 	});
 	
 
@@ -1306,8 +1319,9 @@ $('body').on('click','.action-reply-container',function(){
    · · · · · · · · · · · · · */ 
 
 $('body').on('click','#top-compose',function(){
-	popUpAction('popup-compose', window.sL.compose,'<div class="inline-reply-queetbox"><div class="queet-box-template"></div></div>',false);
-	expandInlineQueetBox($('#popup-compose').find('.queet-box-template'));
+	popUpAction('popup-compose', window.sL.compose,queetBoxHtml(),false);
+	$('#popup-compose').find('.queet-box').width($('#popup-compose').find('.inline-reply-queetbox').width()-20);
+	$('#popup-compose').find('.queet-box').trigger('click');
 	});
 
 
@@ -1331,23 +1345,10 @@ $(document).keyup(function(e){
 	});	
 
 
-/* · 
-   · 
-   ·   Expand inline reply form when clicked
-   ·   
-   · · · · · · · · · · · · · */ 
-
-$('body').on('click','.queet-box-template',function(){
-	// expand inline queet box
-	expandInlineQueetBox($(this));
-	});
-	
-
-
 
 /* · 
    · 
-   ·   Post inline and popup replies
+   ·   Post queets, inline and popup replies
    ·   
    · · · · · · · · · · · · · */ 
 
@@ -1363,48 +1364,49 @@ $('body').on('click', '.queet-toolbar button',function () {
 			var tempPostId = $('.temp-post').attr('id') + 'i';			
 			}
 			
-		var queetBoxID = $(this).parent().parent().parent().find('.queet-box-template').attr('id');
+		var queetBox = $(this).parent().parent().siblings('.queet-box');
+		var queetBoxID = queetBox.attr('id');
 
-		var queetText = window['codemirror-' + queetBoxID].getValue();		
-		var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText + '</div><div class="stream-item-footer"><span class="stream-item-expand">&nbsp;</span></div></div></div></div>';
+		var queetText =  $.trim(queetBox.html().replace(/\n/g,'').replace(/<br>/g,"\n"));
+		var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText.replace(/\n/g,'<br>') + '</div><div class="stream-item-footer"><span class="stream-item-expand">&nbsp;</span></div></div></div></div>';
 		queetHtml = detectRTL(queetHtml);		
 
-
-		// get reply to id and add temp queet
-		if($('.modal-container').find('.queet-toolbar button').length>0) { // from popup
-			var in_reply_to_status_id = $('.modal-container').attr('id').substring(12); // removes "popup-reply-" from popups id
-			$('.modal-container').remove();			
-			queetHtml = detectRTL(queetHtml);
-
-			// try to find an expanded queet to add the temp queet to
-			if($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').length > 0) {
-				$('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').append(queetHtml);
-				}
-			else if($('.stream-item.conversation[data-quitter-id="' + in_reply_to_status_id + '"]').not('.hidden-conversation').length > 0) {
-				$('.stream-item.conversation[data-quitter-id="' + in_reply_to_status_id + '"]').not('.hidden-conversation').parent().append(queetHtml);
-				}
-			// if we cant find a proper place, just add it to top and remove conversation class
-			else {
-				$('#feed-body').prepend(queetHtml.replace('class="stream-item conversation','class="stream-item'));				
-				}
+		// popup reply
+		if($('.modal-container').find('.toolbar-reply button').length>0){
+			var in_reply_to_status_id = $('.modal-container').attr('id').substring(12);
 			}
-		else { // from inline reply
-			var in_reply_to_status_id = $(this).parent().parent().parent().parent().parent().attr('data-quitter-id');
-			$(this).parent().parent().parent().parent().parent().append(queetHtml);			
-			}		
+		// if this is a inline reply
+		else if(queetBox.parent().hasClass('inline-reply-queetbox')) {
+			var in_reply_to_status_id = queetBox.closest('.stream-item').attr('data-quitter-id');
+			}			
+		// not a reply
+		else {
+			var in_reply_to_status_id = false;
+			}
+
+		// try to find an expanded queet to add the temp queet to
+		if($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').length > 0) {
+			$('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').append(queetHtml);
+			}
+		else if($('.stream-item.conversation[data-quitter-id="' + in_reply_to_status_id + '"]').not('.hidden-conversation').length > 0) {
+			$('.stream-item.conversation[data-quitter-id="' + in_reply_to_status_id + '"]').not('.hidden-conversation').parent().append(queetHtml);
+			}
+		// if we cant find a proper place, just add it to top and remove conversation class
+		else {
+			$('#feed-body').prepend(queetHtml.replace('class="stream-item conversation','class="stream-item'));				
+			}
+		
+		// remove any popups
+		$('.modal-container').remove();			
 		
 		// null reply box
-		$(this).parent().parent().parent().find('.queet-box-template').css('display','block');	
-		$(this).parent().parent().parent().find('.CodeMirror').remove();
-		$(this).parent().parent().parent().find('textarea#codemirror-' + queetBoxID).remove();		
-		$(this).parent().parent().parent().find('.queet-toolbar').remove();
-		delete window['codemirror-' + queetBoxID];
-				
+		collapseQueetBox(queetBox)				
+		
 		// check for new queets (one second from) NOW 
 		setTimeout('checkForNewQueets()', 1000);
 
 		// post queet
-		postReplyToAPI(queetText, in_reply_to_status_id, function(data){ if(data) {
+		postQueetToAPI(queetText, in_reply_to_status_id, function(data){ if(data) {
 
 			// show real queet
 			var new_queet = Array();
@@ -1426,147 +1428,12 @@ $('body').on('click', '.queet-toolbar button',function () {
 
 /* · 
    · 
-   ·   Post queet
-   ·   
-   · · · · · · · · · · · · · */ 
-
-$('#queet-toolbar button').click(function () {
-	if($(this).hasClass('enabled')) {
-		
-		// set temp post id
-		if($('.temp-post').length == 0) {
-			var tempPostId = 'stream-item-temp-post-i';
-			}
-		else {
-			var tempPostId = $('.temp-post').attr('id') + 'i';			
-			}
-			
-		var queetText = codemirrorQueetBox.getValue();
-
-		// remove trailing <br> and convert other <br> to newline
-		queetText = $.trim(queetText);	
-
-		// show temporary queet
-		var queetHtml = '<div id="' + tempPostId + '" class="stream-item temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText + '</div><div class="stream-item-footer"><span class="stream-item-expand">&nbsp;</span></div></div></div></div>';
-
-		// detect rtl
-		queetHtml = detectRTL(queetHtml);						
-
-		$('#feed-body').prepend(queetHtml);
-		
-		// check for new queets (one second from) NOW 
-		setTimeout('checkForNewQueets()', 1000);
-		
-		// null post form
-		codemirrorQueetBox.setValue('');
-		$('#queet-toolbar').css('display','none');	
-		$('#queet-box').css('display','block');	
-		$('#user-footer .CodeMirror-wrap').css('display','none');	
-
-		// post queet
-		postQueetToAPI(queetText, function(data){ if(data) {
-
-			// show real queet
-			var new_queet = Array();
-			new_queet[0] = data;
-			addToFeed(new_queet,tempPostId,'visible');
-
-			// remove temp queet
-			$('#' + tempPostId).remove();
-			
-			// queet count
-			$('#user-queets strong').html(parseInt($('#user-queets strong').html(),10)+1);
-			
-			}});
-		}
-	});
-
-
-/* · 
-   · 
-   ·   Codemirror configuration for queet box
-   ·   
-   · · · · · · · · · · · · · */ 
-
-
-CodeMirror.defaults.lineWrapping = true;        
-CodeMirror.defineMode("gnusocial", function(config, parserConfig) {	
-	function tokenBase(stream, state) {
-		
-		stream.string = stream.string + ' '; // makes regexping easier..
-		var ch = stream.next();
-		
-		// regexps
-		var externalMentionInBeginningRE = /[a-zA-Z0-9]+(@)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))/;
-		var mentionInBeginningRE = /[a-zA-Z0-9]+/;		
-		var tagInBeginningRE = /[\wåäö\-]+/;	
-		var groupInBeginningRE = /[a-zA-Z0-9]+/;			
-		var externalMentionRE = /([ ]+)?@[a-zA-Z0-9]+(@)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))/;
-		var mentionRE = /([ ]+)?@[a-zA-Z0-9]+/;		
-		var tagRE = /([ ]+)?#[\wåäö\-]+/;	
-		var groupRE = /([ ]+)?![a-zA-Z0-9]+/;	
-		var urlWithoutHttpInBeginningRE = /([\wåäö\-\.]+)?(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?( )/;
-		var urlWithoutHttpRE = /([ ]+)?[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?( )/;
-		var urlInBeginningRE = /(ttp\:\/\/|ttps\:\/\/)([\wåäö\-\.]+)?(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?( )/;
-		var urlRE = /([ ]+)?(http\:\/\/|https\:\/\/)([\wåäö\-\.]+)?(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?( )/;		
-		var emailRE = /([ ]+)?([a-zA-Z0-9\!\#\$\%\&\'\*\+\-\/\=\?\^\_\`\{\|\}\~\.]+)?(@)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))( )/;
-		
-		if (stream.start == 0 && ch == "@" && stream.match(externalMentionInBeginningRE)) { return "mention"}		
-		else if (stream.start == 0 && ch == "@" && stream.match(mentionInBeginningRE)) { return "mention"}
-		else if (stream.start == 0 && ch == "#" && stream.match(tagInBeginningRE)) { return "mention"}
-		else if (stream.start == 0 && ch == "!" && stream.match(groupInBeginningRE)) { return "mention"}				
-		else if (stream.start == 0 && ch.match(/[a-z0-9]/) && stream.match(urlWithoutHttpInBeginningRE)) { stream.backUp(1); return "url"; }
-		else if (stream.start == 0 && ch == "h" && stream.match(urlInBeginningRE)) { stream.backUp(1); return "url"; }
-		else if (ch == " " && stream.match(externalMentionRE)) { return "mention"}		
-		else if (ch == " " && stream.match(mentionRE)) { return "mention"}		
-		else if (ch == " " && stream.match(tagRE)) { return "tag"; }   
-		else if (ch == " " && stream.match(groupRE)) { return "group"; }
-		else if (ch == " " && stream.match(urlWithoutHttpRE)) { stream.backUp(1); return "url"; }
-		else if (ch == " " && stream.match(urlRE)) { stream.backUp(1); return "url"; }
-		else if(!(ch == ' ' && stream.next() == '.') && !(stream.start == 0 && ch == '.') && (stream.start == 0 || ch == ' ') && stream.match(emailRE)) {
-			stream.backUp(1);
-			return "email";
-			}
-		}
-	
-	return {
-		startState: function(base) {
-			return {tokenize: tokenBase };
-			},
-		token: function(stream, state) {
-			state.tokenize = state.tokenize || tokenBase;
-			var style = state.tokenize(stream, state);	
-			return style;
-			}
-		};
-	});
-
-// activate queet box
-var codemirrorQueetBox = CodeMirror.fromTextArea(document.getElementById("codemirror-queet-box"), { 
-	// submit on enter
-	onKeyEvent: function(editor, event) {
-		event = $.event.fix(event);
-		var enterKeyHasBeenPressed = event.type == "keyup" && event.keyCode == 13 && (event.ctrlKey || event.altKey);		
-		if(enterKeyHasBeenPressed ){
-			$('#queet-toolbar button').trigger('click');
-			}
-		
-		}
-  });
-
-
-
-/* · 
-   · 
    ·   Count chars in queet box on keyup
    ·   
    · · · · · · · · · · · · · */ 
-
-codemirrorQueetBox.on('change',function () {
-	countCharsInQueetBox(codemirrorQueetBox.getValue(),$('#queet-counter'),$('#queet-toolbar button'));
+$('body').on('keyup input paste','.queet-box-syntax',function () {
+	countCharsInQueetBox($(this),$(this).siblings('.queet-toolbar').find('.queet-counter'),$(this).siblings('.queet-toolbar').find('.queet-button button'));
 	});	
-	
-	
 	
 	
 	
@@ -1576,39 +1443,258 @@ codemirrorQueetBox.on('change',function () {
    ·   
    · · · · · · · · · · · · · */ 	
 
-$('#queet-box').click(function () {
-	$('#queet-box').css('display','none');	
-	$('#user-footer .CodeMirror-wrap').css('display','block');
-	$('#queet-toolbar').css('display','block');	
-	$('#queet-toolbar button').addClass('disabled');	
-	codemirrorQueetBox.setValue('');
-	codemirrorQueetBox.focus();
-	countCharsInQueetBox(codemirrorQueetBox.getValue(),$('#queet-counter'),$('#queet-toolbar button'));	
-	});
-codemirrorQueetBox.on("blur", function(){	
-	if(codemirrorQueetBox.getValue().length == 0) {
-		$('#queet-toolbar').css('display','none');	
-		$('#queet-box').css('display','block');	
-		$('#user-footer .CodeMirror-wrap').css('display','none');		
+$('body').on('click','.queet-box-syntax',function () {
+	if($(this).html() == decodeURIComponent($(this).attr('data-start-text'))) {
+		$(this).attr('contenteditable','true');	
+		$(this).focus();		
+		$(this).siblings('.syntax-middle').html('&nbsp;');			
+		$(this).siblings('.syntax-two').html('&nbsp;');							
+		$(this).siblings('.queet-toolbar').css('display','block');	
+		$(this).siblings('.syntax-middle').css('display','block');			
+		$(this).siblings('.mentions-suggestions').css('display','block');					
+		$(this).siblings('.syntax-two').css('display','block');					
+		$(this).siblings('.queet-toolbar').find('.queet-button button').addClass('disabled');	
+		countCharsInQueetBox($(this),$(this).siblings('.queet-toolbar .queet-counter'),$(this).siblings('.queet-toolbar button'));	
+		$(this)[0].addEventListener("paste", stripHtmlFromPaste);
+		if(typeof $(this).attr('data-replies-text') != 'undefined') {
+			$(this).html(decodeURIComponent($(this).attr('data-replies-text')));
+			var repliesLen = decodeURIComponent($(this).attr('data-replies-text')).length-11;			
+			setSelectionRange($(this)[0], repliesLen, repliesLen);	 			
+			}
+		else {
+			$(this).html('&nbsp;');			
+			}
+		$(this).trigger('input');		
 		}
-	});	
+	});
+$('body').on('blur','.queet-box-syntax',function () {
+	if($(this).parent().parent().hasClass('modal-body')) {	
+		// don't collapse if in a modal
+		}
+	else if($(this).attr('data-replies-text') != 'undefined') {
+		var $startText = $('<div/>').append(decodeURIComponent($(this).attr('data-replies-text')));
+		if($.trim($startText.text()) == $.trim($(this).text()) || $(this).html().length == 0 || $(this).html() == '<br>'  || $(this).html() == '<br />' || $(this).html() == '&nbsp;' || $(this).html() == '&nbsp;<br>') {
+			collapseQueetBox($(this));			
+			}
+		}
+	else if($(this).html().length == 0 || $(this).html() == '<br>'  || $(this).html() == '<br />' || $(this).html() == '&nbsp;' || $(this).html() == '&nbsp;<br>') {
+		collapseQueetBox($(this));
+		}
+	});
 	
+function collapseQueetBox(qB) {
+	qB.siblings('.syntax-middle').css('display','none');			
+	qB.siblings('.syntax-two').css('display','none');					
+	qB.siblings('.mentions-suggestions').css('display','none');							
+	qB.attr('contenteditable','false');	
+	qB.html(decodeURIComponent(qB.attr('data-start-text')));
+	qB.siblings('.queet-toolbar').find('button').removeClass('enabled');
+	qB.siblings('.queet-toolbar').css('display','none');	
+	qB.removeAttr('style'); 
+	qB[0].removeEventListener("paste", stripHtmlFromPaste);	
+	}
+
+	
+	
+
+
 /* · 
    · 
-   ·   Shorten URL:s in queet boxes on space
+   ·   Syntax highlighting in queetbox
    ·   
-   · · · · · · · · · · · · · */ 	
-  
-// $('body').on('keyup','#queet-box',function(e){
-// 	if(e.keyCode == 32) {
-// 		shortenUrlsInBox($('#queet-box'),$('#queet-counter'),$('#queet-toolbar button'));	
-// 		}
-// 	});
-// $('body').on('keyup','.queet-box-template',function(e){
-// 	if(e.keyCode == 32) {
-// 		shortenUrlsInBox($(this),$(this).find('.queet-counter'),$(this).find('.queet-toolbar button'));	
-// 		}
-// 	});	
+   · · · · · · · · · · · · · */ 		
+	
+// transfer focus and position/selection to background div
+$('body').on('mouseup', 'div.syntax-two', function(e){
+		var caretPos = getSelectionInElement($(this)[0]);
+		var thisQueetBox = $(this).siblings('div.queet-box-syntax');
+		thisQueetBox.focus();
+		setSelectionRange(thisQueetBox[0], caretPos[0], caretPos[1]);	        
+		// fixes problem with caret not showing after delete, unfocus and refocus
+		if(thisQueetBox.html() == '<br>') {
+			thisQueetBox.html(' ');
+			}
+	});
+
+
+// strip html from paste
+function stripHtmlFromPaste(e) {
+	e.preventDefault();
+	var text = e.clipboardData.getData("text/plain");
+	document.execCommand("insertHTML", false, text);	
+	}
+	
+// sync divs
+$('body').on('keyup paste input', 'div.queet-box-syntax', function() {
+	
+	var currentVal = $(this).html();
+	currentVal = currentVal.replace(/<br>$/, '').replace(/&nbsp;$/, '').replace(/ $/, ''); // fix
+	$(this).siblings('.syntax-two').html(currentVal);
+
+	// regexps
+	var regexps = Object();
+	regexps.externalMention = /(^|\s|\.|<br>)(@)[a-zA-Z0-9]+(@)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))($|\s|\.|\,|\:|\-|\<|\!|\?|\&)/;		
+	regexps.mention = /(^|\s|\.|<br>)(@)[a-zA-Z0-9]+($|\s|\.|\,|\:|\-|\<|\!|\?|\&)/;				
+	regexps.tag = /(^|\s|\.|<br>)(\#)[\wåäöÅÄÖ\-]+($|\s|\.|\,|\:|\-|\<|\!|\?|\&)/;	
+	regexps.group = /(^|\s|\.|<br>)(\!)[a-zA-Z0-9]+($|\s|\.|\,|\:|\-|\<|\!|\?|\&)/;					
+	regexps.url = /(^|\s|\.|<br>)(http\:\/\/|https\:\/\/)([\wåäö\-\.]+)?(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?($|\s|\,|\:|\-|\<|\!|\?|\&)/;		
+	regexps.urlWithoutProtocol = /(^|\s|\.|<br>)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))(\/[\wåäö\%\!\*\'\(\)\;\:\@\&\=\+\$\,\/\?\#\[\]\-\_\.\~]+)?(\/)?($|\s|\.|\,|\:|\-|\<|\!|\?|\&)/;
+	regexps.email = /(^|\s|\.|<br>)([a-zA-Z0-9\!\#\$\%\&\'\*\+\-\/\=\?\^\_\`\{\|\}\~\.]+)?(@)[\wåäö\-\.]+(\.)((ac|ad|aero|af|ag|ai|al|am|an|ao|aq|arpa|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|com|coop|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|info|int|io|iq|ir|is|it|je|jm|jobs|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mil|mk|ml|mm|mn|mobi|mp|mq|mr|ms|mt|museum|mv|mw|mx|my|mz|name|nc|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|post|pro|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|travel|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|xxx|ye|yt|za|zm|zw)|(ae|ar|as|bi|co|in|jo|mo|mu|na|ne|pr|tr))($|\s|\.|\,|\:|\-|\<|\!|\?|\&)/;			
+
+
+	$.each(regexps,function(k,v){
+		while(currentVal.match(v)) {
+			var currentMatch = currentVal.match(v);
+			if(currentMatch[0].slice(-1) == '<'
+			|| currentMatch[0].slice(-1) == '&'
+			|| currentMatch[0].slice(-1) == '?'
+			|| currentMatch[0].slice(-1) == '!'
+			|| currentMatch[0].slice(-1) == ' '
+			|| currentMatch[0].slice(-1) == '-'
+			|| currentMatch[0].slice(-1) == ':'
+			|| currentMatch[0].slice(-1) == '.'
+			|| currentMatch[0].slice(-1) == ',') {
+				currentMatch[0] = currentMatch[0].slice(0,-1);
+				}
+			currentVal = currentVal.replace(currentMatch[0],'<span class="' + k + '">' + currentMatch[0].replace('#','&#35;').replace('@','&#64;').replace('.','&#046;').replace('!','&#33;') + '</span>')
+			}				
+		});
+	$(this).siblings('.syntax-middle').html(currentVal);			
+	});	
+
+
+
+
+/* · 
+   · 
+   ·   Auto suggest mentions in queet-box
+   ·   
+   · · · · · · · · · · · · · */ 		
+
+// navigate in mentions with mouse
+$('body').on('mouseenter', '.mentions-suggestions > div', function(){
+	$('.mentions-suggestions > div').removeClass('selected');
+	$(this).addClass('selected');
+	}).on('mouseleave', '.mentions-suggestions > div', function(){
+		$(this).removeClass('selected');		
+		});
+$('body').on('click', '.mentions-suggestions > div', function(){
+	$(this).parent().siblings('.queet-box-syntax').focus();
+	$(this).siblings().removeClass('selected');
+	$(this).addClass('selected');
+	useSelectedMention($(this).parent().siblings('.queet-box-syntax'));	
+	});
+	
+// navigate in mentions with keyboard
+$('body').on('keydown', '.queet-box-syntax', function(e) {	
+	if($(this).siblings('.mentions-suggestions').children('div').length > 0) {
+
+		// enter or tab
+		if (e.keyCode == '13' || e.keyCode == '9') {
+			e.preventDefault();	
+			useSelectedMention($(this));			
+			}
+								
+		// downkey					
+		else if (e.keyCode == '40') {
+			e.preventDefault();				
+			if($(this).siblings('.mentions-suggestions').children('div.selected').length > 0) {
+				var selected = $(this).siblings('.mentions-suggestions').children('div.selected');
+				selected.removeClass('selected');
+				selected.next().addClass('selected');
+				}
+			else {
+				$(this).siblings('.mentions-suggestions').children('div').first().addClass('selected');			
+				}
+			}
+		
+		// upkey
+		else if (e.keyCode == '38') {
+			e.preventDefault();				
+			if($(this).siblings('.mentions-suggestions').children('div.selected').length > 0) {
+				var selected = $(this).siblings('.mentions-suggestions').children('div.selected');
+				selected.removeClass('selected');
+				selected.prev().addClass('selected');
+				}
+			else {
+				$(this).siblings('.mentions-suggestions').children('div').last().addClass('selected');			
+				}
+			}
+		}
+	});
+
+function useSelectedMention(queetBox){
+	// use selected
+	if(queetBox.siblings('.mentions-suggestions').children('div.selected').length > 0) {	
+		var username = queetBox.siblings('.mentions-suggestions').children('div.selected').children('span').html();
+		}
+	// if none selected, take top suggestion
+	else {
+		var username = queetBox.siblings('.mentions-suggestions').children('div').first().children('span').html();			
+		}
+
+	// replace the halfwritten username with the one we want
+	deleteBetweenCharacterIndices(queetBox[0], window.lastMention.mentionPos+1, window.lastMention.cursorPos);
+	var range = createRangeFromCharacterIndices(queetBox[0], window.lastMention.mentionPos+1, window.lastMention.mentionPos+1);
+	range.insertNode(document.createTextNode(username + ' '));	
+	
+	// put caret after
+	setSelectionRange(queetBox[0], window.lastMention.mentionPos+username.length+2, window.lastMention.mentionPos+username.length+2);					
+	queetBox.siblings('.mentions-suggestions').empty();
+	queetBox.trigger('input'); // avoid some flickering	
+	}
+
+// check for mentions
+window.lastMention = new Object();
+$('body').on('keyup', 'div.queet-box-syntax', function(e) {		
+
+	var queetBox = $(this);	
+	var cursorPosArray = getSelectionInElement(queetBox[0]);
+	var cursorPos = cursorPosArray[0];		
+	
+	// add space before linebreaks (to separate mentions in beginning of new lines when .text():ing later)
+	if(e.keyCode == '13') {
+		e.preventDefault();		
+		var range = createRangeFromCharacterIndices(queetBox[0], cursorPos, cursorPos);
+		range.insertNode(document.createTextNode(" \n"));		
+		}
+	else if(e.keyCode != '40' && e.keyCode != '38' && e.keyCode != '13' && e.keyCode != '9') {						
+		var contents = queetBox.text().substring(0,cursorPos);
+		var mentionPos = contents.lastIndexOf('@');
+		var check_contents = contents.substring(mentionPos - 1, cursorPos);
+		var regex = /(^|\s|\.|\n)(@)[a-zA-Z0-9]+/;
+		var match = check_contents.match(regex);
+		if (contents.indexOf('@') >= 0 && match) {
+	
+			if(contents.lastIndexOf('@') > 1) {
+				match[0] = match[0].substring(1,match[0].length);
+				}
+			if((contents.lastIndexOf('@')+match[0].length) == cursorPos) {
+
+				queetBox.siblings('.mentions-suggestions').empty();
+				queetBox.siblings('.mentions-suggestions').css('top',(queetBox.height()+20) + 'px');
+				var term = match[0].substring(match[0].lastIndexOf('@')+1, match[0].length).toLowerCase();
+				window.lastMention.mentionPos = mentionPos;
+				window.lastMention.cursorPos = cursorPos;				
+				$.each(window.following,function(){
+					var userregex = new RegExp(term);
+					if(this.username.toLowerCase().match(userregex) || this.name.toLowerCase().match(userregex)) {
+						queetBox.siblings('.mentions-suggestions').append('<div><img height="24" width="24" src="' + this.avatar + '" /><strong>' + this.name + '</strong> @<span>' + this.username + '</span></div>')
+						}
+					});				
+
+				}
+			else {
+				queetBox.siblings('.mentions-suggestions').empty();
+				}			
+
+			}
+		else {
+			queetBox.siblings('.mentions-suggestions').empty();
+			}		
+		}
+	});
+			
 
 
 /* · 

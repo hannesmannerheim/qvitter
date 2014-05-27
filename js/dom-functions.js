@@ -779,6 +779,7 @@ function expand_queet(q,doScrolling) {
     	
     	if(!sel && !q.find('.queet-button').children('button').hasClass('enabled')) { // don't collapse if text is selected, or if queet has an active queet button
 			q.addClass('collapsing');
+			q.css('overflow','hidden');
 			q.find('.stream-item-expand').html(window.sL.expand);
 			if(q.hasClass('conversation')) {
 				q.removeClass('expanded');	         
@@ -946,6 +947,23 @@ function expand_queet(q,doScrolling) {
 	
 
 
+
+
+/* ·  
+   · 
+   ·   Get an inline queet box
+   · 
+   ·   @return the html for the queet box
+   ·
+   · · · · · · · · · */
+    
+function queetBoxHtml() {
+	var startText = encodeURIComponent(window.sL.compose);
+	return '<div class="inline-reply-queetbox"><div class="queet-box queet-box-syntax" data-start-text="' + startText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';	
+	}
+	
+	
+
 /* ·  
    · 
    ·   Get a reply form
@@ -981,7 +999,9 @@ function replyFormHtml(q,qid) {
 			}
 		});
 	
-	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box-template" id="queet-box-template-' + qid + '" data-start-text="' + user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '">' + window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br></div></div>';	
+	var startText = encodeURIComponent(window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br>');
+	var repliesText = encodeURIComponent(user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '&nbsp;&nbsp;');	
+	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box queet-box-syntax" id="queet-box-' + qid + '" data-start-text="' + startText + '" data-replies-text="' + repliesText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';	
 	}
 	
 
@@ -1017,54 +1037,6 @@ function popUpAction(popupId, heading, bodyHtml, footerHtml){
 	$('#' + popupId).children('.modal-header').disableSelection();
 	}	
 	
-	
-	
-/* · 
-   · 
-   ·   Expand inline reply form
-   · 
-   ·   @param box: jQuery object for the queet box that we want to expand
-   ·   
-   · · · · · · · · · · · · · */ 
-   
-function expandInlineQueetBox(box) {
-	
-	// remove the "reply/svara/etc" before the mentions
-	var new_mentions_html = '';
-	$.each(box.find('a'),function(key,obj){
-		new_mentions_html = new_mentions_html + $(obj).html() + ' ';
-		});
-	
-	// insert textarea before, activate and display codemirror
-	box.before('<textarea id="codemirror-' + box.attr('id') + '"></textarea>');
-	window['codemirror-' + box.attr('id')] = CodeMirror.fromTextArea(document.getElementById('codemirror-' + box.attr('id')), { 
-		// submit on enter
-		onKeyEvent: function(editor, event) {
-			event = $.event.fix(event);
-			var enterKeyHasBeenPressed = event.type == "keyup" && event.keyCode == 13 && (event.ctrlKey || event.altKey);		
-			if(enterKeyHasBeenPressed ){
-				console.log('#q-' + box.attr('id') + ' .queet-toolbar button');
-				$('#' + box.attr('id')).siblings('.queet-toolbar').find('button').trigger('click');
-				}
-			}
-		});
-	box.siblings('.CodeMirror').css('display','block');
-	window['codemirror-' + box.attr('id')].setValue(new_mentions_html);
-	window['codemirror-' + box.attr('id')].focus();
-	window['codemirror-' + box.attr('id')].setCursor(window['codemirror-' + box.attr('id')].lineCount(), 0)		
-	box.css('display','none');
-
-	// show toolbar/button
-	box.after('<div class="queet-toolbar"><div class="queet-box-extras"></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div><div style="clear:both;"></div></div>');
-
-	// count chars
-	countCharsInQueetBox(window['codemirror-' + box.attr('id')].getValue(),box.parent().find('.queet-toolbar .queet-counter'),box.parent().find('.queet-toolbar button'));	
-	
-	// activate char counter
-	window['codemirror-' + box.attr('id')].on('change',function () {
-		countCharsInQueetBox(window['codemirror-' + box.attr('id')].getValue(),box.parent().find('.queet-toolbar .queet-counter'),box.parent().find('.queet-toolbar button'));	
-		});		
-	}		
 	
 
 
@@ -1357,7 +1329,7 @@ function checkForHiddenConversationQueets(qid) {
    · · · · · · · · · · · · · */ 	
   	
 function addToFeed(feed, after, extraClasses) {
-
+		
 	$.each(feed.reverse(), function (key,obj) {
 		
 		var extraClassesThisRun = extraClasses;			

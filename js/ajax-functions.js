@@ -107,32 +107,6 @@ function getFromAPI(stream, actionOnSuccess) {
 		});			
 	}	
 
-	
-	
-/* · 
-   · 
-   ·   Post queet
-   ·
-   ·   @param queetText_txt: the text to post
-   ·   @param actionOnSuccess: callback function, false on error, data on success
-   ·   
-   · · · · · · · · · · · · · */ 
-   
-function postQueetToAPI(queetText_txt, actionOnSuccess) {
-	$.ajax({ url: window.apiRoot + 'statuses/update.json?t=' + timeNow(), 
-		type: "POST", 
-		data: { 
-			status: queetText_txt,
-			source: 'Qvitter'
-			},
-		dataType: "json",
-		error: function(data){ actionOnSuccess(false); console.log(data); },
-		success: function(data) { 
-			actionOnSuccess(data);
-			}
-		});	
-	}			
-
 
 /* · 
    · 
@@ -238,7 +212,7 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
 
 /* · 
    · 
-   ·   Post reply
+   ·   Post queet
    ·
    ·   @param queetText_txt: the text to post
    ·   @param in_reply_to_status_id: the local id for the queet to reply to
@@ -246,7 +220,7 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
    ·   
    · · · · · · · · · · · · · */ 
    
-function postReplyToAPI(queetText_txt, in_reply_to_status_id, actionOnSuccess) {
+function postQueetToAPI(queetText_txt, in_reply_to_status_id, actionOnSuccess) {
 	$.ajax({ url: window.apiRoot + 'statuses/update.json?t=' + timeNow(), 
 		type: "POST", 
 		data: { 
@@ -353,44 +327,3 @@ function getFavsOrRequeetsForQueet(apiaction,qid,actionOnSuccess) {
 		});  
 	}
 	
-/* · 
-   · 
-   ·   Shorten urls in box 
-   ·
-   ·   @param apiaction: i.e. 'favs' or 'requeets' 
-   ·   @param qid: the queet id
-   ·   @param actionOnSuccess: callback function
-   ·
-   ·   params included to pass along to countCharsInQueetBox
-   ·   
-   · · · · · · · · · · · · · */ 	
-   
-function shortenUrlsInBox(box,cnt,btn) {
-	// wrap urls
-//	var allurls = findUrls(box.html().replace(/&amp;/gi,'&').replace(/&nbsp;/gi,' '));
-//	$.each(allurls,function(key,obj){
-//		if(obj.substring(0,15) != 'http://qttr.at/' && obj.length > 20) { // don't shorten if link is qttr.at or very short already
-//			box.html(box.html().replace(/&amp;/gi,'&').replace(obj,'<a class="shortening">' + obj + '</a>'));
-//			placeCaretAtEnd(document.getElementById(box.attr('id')));		
-//			}
-//		});		
-//	
-//	// shorten urls vith qttr.at
-//	$.each(box.find('a.shortening'),function(key,obj){
-//		display_spinner();
-//		var urlEncodedUrl = encodeURIComponent($(obj).html().replace(/&amp;/gi,'&'));
-//		$.ajax({ url: "http://qttr.at/yourls-api.php?format=jsonp&action=shorturl&signature=b6afeec983&url=" + urlEncodedUrl, type: "GET", dataType: "jsonp", success: function(data) { 				
-//			if(typeof data.shorturl != 'undefined') {
-//				$(obj).before(data.shorturl);
-//				}
-//			else {
-//				$(obj).before($(obj).html());								
-//				}
-//			$(obj).remove();					
-//			remove_spinner();	
-//			placeCaretAtEnd(document.getElementById(box.attr('id')));
-//			countCharsInQueetBox(box,cnt,btn);				
-//			}});
-//		});	
-	}	
-
