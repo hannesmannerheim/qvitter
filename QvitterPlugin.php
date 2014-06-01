@@ -86,6 +86,8 @@ class QvitterPlugin extends Plugin {
 		$m->connect('api/qvitter/allfollowing/:id.json',
 					array('action' => 'apiqvitterallfollowing',
 						  'id' => Nickname::INPUT_FMT));							
+		$m->connect('api/qvitter/update_cover_photo.json',
+					array('action' => 'ApiUpdateCoverPhoto'));	
 		$m->connect('api/qvitter/statuses/friends_timeline.json',
 					array('action' => 'apiqvitterfriends'));	
 		$m->connect('api/qvitter/statuses/friends_timeline/:id.json',
@@ -100,7 +102,6 @@ class QvitterPlugin extends Plugin {
                     array('action' => 'qvittersettings'));
         $m->connect('main/qlogin',
                     array('action' => 'qvitterlogin'));                    		
-		
 		
 		// check if we should reroute UI to qvitter
 		$logged_in_user = common_current_user();

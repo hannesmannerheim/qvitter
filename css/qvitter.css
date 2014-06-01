@@ -35,6 +35,10 @@
 html {
     overflow-y: scroll;
 	}
+html.fixed {
+	position:fixed;
+	width:100%;
+	}
 
 a:active {
     outline: none;
@@ -75,8 +79,9 @@ button.icon.nav-search,
 .follow-button .follow-text i,
 #birds-top,
 #logo,
-.topbar .global-nav {	
-	background-image: url("../img/sprite.png");	
+.topbar .global-nav,
+.upload-cover-photo {	
+	background-image: url("../img/sprite.png?v=2");	
 	background-size: 500px 1329px;
 	}
 	
@@ -2563,7 +2568,8 @@ div.syntax-middle {
 button.signup-btn.disabled:hover,
 button.signup-btn.disabled:focus,
 button.signup-btn.disabled,
-.queet-toolbar button.disabled {	
+.queet-toolbar button.disabled,
+.save-profile-button.disabled {	
 	background-color: #DDDDDD;
     background-image: none;
     border-color: #CCCCCC;
@@ -2696,15 +2702,18 @@ button.signup-btn.disabled,
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
     width: 85%;        	
 	}
-.profile-header-inner .profile-card-inner h1.fullname {
+.profile-header-inner .profile-card-inner .fullname {
 	text-rendering: optimizelegibility;
 	font-weight: bold;
 	line-height: 1;
-    margin-bottom: 2px;
+    margin: 0 auto 2px auto;
     color: #FFFFFF;
     font-size: 24px;
     white-space: nowrap;
-    margin-top:0;
+    padding:0;
+    height:24px;
+    line-height:24px;    
+	display:block;	
 	}
 .profile-header-inner .profile-card-inner h1.fullname span {	
     font-size: 24px;
@@ -2723,7 +2732,8 @@ button.signup-btn.disabled,
 .profile-header-inner .profile-card-inner h2.username a {
 	color:#fff;	
 	}	
-.profile-header-inner .profile-card-inner .bio-container {
+.profile-header-inner .profile-card-inner .bio-container,
+.profile-header-inner .profile-card-inner .bio-container textarea {
     line-height: 18px;
     margin-bottom: 4px;
     font-size: 14px;	
@@ -2732,7 +2742,8 @@ button.signup-btn.disabled,
 	color: #FFFFFF;
 	margin:0;
 	}
-.profile-header-inner .profile-card-inner .location-and-url	{
+.profile-header-inner .profile-card-inner .location-and-url,
+.profile-header-inner .profile-card-inner .location-and-url input {
 	font-size: 14px;	
 	color: #FFFFFF;	
 	line-height: 18px;	
@@ -2783,7 +2794,10 @@ div.clearfix {
 .member-button,
 .external-member-button,
 .external-follow-button,
-.follow-button {
+.follow-button,
+.edit-profile-button,
+.save-profile-button,
+.abort-edit-profile-button {
 	font-family: "Helvetica Neue",Arial,sans-serif;	
     margin: 0;
     position: relative;
@@ -2810,7 +2824,9 @@ div.clearfix {
 .external-member-button.disabled,
 .member-button.disabled,
 .external-follow-button.disabled,
-.follow-button.disabled {
+.follow-button.disabled,
+.edit-profile-button.disabled,
+.save-profile-button.disabled {
 	color:#ccc;
 	}
 .external-member-button.disabled i,
@@ -2822,7 +2838,9 @@ div.clearfix {
 .external-member-button:not(.disabled):not(.member):hover,
 .member-button:not(.disabled):not(.member):hover,
 .external-follow-button:not(.disabled):not(.following):hover,
-.follow-button:not(.disabled):not(.following):hover {	
+.follow-button:not(.disabled):not(.following):hover,
+.edit-profile-button:hover,
+.abort-edit-profile-button:hover {	
     background-color: #D8D8D8;
 	background: -moz-linear-gradient(top, rgba(248,248,248,1) 0%, rgba(216,216,216,1) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(248,248,248,1)), color-stop(100%,rgba(216,216,216,1)));
@@ -2845,7 +2863,10 @@ div.clearfix {
 .external-member-button .button-text,
 .member-button .button-text,
 .external-follow-button .button-text,
-.follow-button .button-text {
+.follow-button .button-text,
+.edit-profile-button .button-text,
+.save-profile-button .button-text,
+.abort-edit-profile-button .button-text {
 	display:none;
     font-family: "Helvetica Neue",Arial,sans-serif;	
     min-width: 70px;
@@ -2874,7 +2895,8 @@ div.clearfix {
 	}	
 .member-button.member,
 .external-follow-button.following,
-.follow-button.following {
+.follow-button.following,
+.save-profile-button {
     background-color: #019AD2;
 	background: -moz-linear-gradient(top, rgba(51,188,239,1) 0%, rgba(1,154,210,1) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(51,188,239,1)), color-stop(100%,rgba(1,154,210,1)));
@@ -2888,9 +2910,13 @@ div.clearfix {
     color: #FFFFFF;
     text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);	
 	}	
+.save-profile-button {
+	margin-left:10px;
+	}	
 .member-button.member:hover,
 .external-follow-button.following:hover,
-.follow-button.following:hover {
+.follow-button.following:hover,
+.save-profile-button:not(.disabled):hover {
     background-color: #c43c35;
 	background: -moz-linear-gradient(top, rgba(238,95,91,1) 0%, rgba(196,60,53,1) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,95,91,1)), color-stop(100%,rgba(196,60,53,1)));
@@ -2904,7 +2930,10 @@ div.clearfix {
 .external-member-button .join-text,
 .member-button .join-text,
 .external-follow-button .follow-text,
-.follow-button .follow-text {
+.follow-button .follow-text,
+.edit-profile-button .edit-profile-text,
+.save-profile-button .edit-profile-text,
+.abort-edit-profile-button .edit-profile-text {
 	display:block;
 	}	
 .member-button.member .join-text,
@@ -3263,8 +3292,106 @@ body.rtl .modal-footer button {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) inset, 0 0 8px rgba(82, 168, 236, 0.6);	
     }
 
+
+/* edit profile
+------------------------- */
+.edit-profile-container {
+    margin: 53px auto 0 auto;
+    width: 837px;		
+    background:green;
+	text-align: right;    
+	position:relative;
+	}
+.edit-profile-container .profile-header-inner .profile-header-inner-overlay {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.65) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 260px;
+    top: 0;	
+    }
+.edit-profile-container .profile-card {
+	float:none;
+	position:absolute;
+	right:0;
+	}
+.profile-header-inner input,
+.profile-header-inner textarea {
+	background:rgba(0,0,0,0.4);
+	border:0 none;
+	text-align:center;
+	width:84%;
+	font-family: "Helvetica Neue",Arial,sans-serif;	
+	}		
+.profile-header-inner input:focus,
+.profile-header-inner textarea:focus {
+	outline: none;	
+	}
+.profile-header-inner input.invalid,
+.profile-header-inner textarea.invalid {
+	background:rgba(217,91,9,0.4);	
+	}	
+.profile-header-inner textarea {
+	height:50px;
+	color:#fff;
+	resize: none;
+	}	
+.profile-header-inner input.location {
+	width:40%;
+	text-align:right;
+	padding-right:5px;
+	}	
+.profile-header-inner input.url {
+	width:40%;
+	text-align:left;
+	padding-left:5px;	
+	}		
+
+.upload-cover-photo {
+	background-position: -245px -45px;
+	width:35px;
+	height:35px;
+	position:absolute;
+	right:5px;
+	top:5px;
+	z-index:1000;
+	cursor:pointer;
+	}
+.upload-cover-photo:hover {
+	background-position: -245px -85px;
+	}	
+input#cover-photo-input {
+	display:none;
+	}
 	
-	
+/* jWindowCrop defaults */
+.jwc_frame {
+} .jwc_image {
+cursor:move;
+} .jwc_controls {
+background-color:#000;
+width:100%; height:26px;
+opacity:0.6; filter:alpha(opacity=6);
+position:absolute; z-index:100; bottom:0px; left:0px;
+} .jwc_controls span {
+display:block; float:left;
+color:#FFF; font-size:11px;
+margin:7px 0px 0px 5px;
+} .jwc_zoom_in, .jwc_zoom_out {
+display:block; background-color:#FFF;
+cursor:pointer;
+border-radius:100px;
+width:18px; height:18px;
+float:right; margin:4px 4px 0px 0px;
+text-decoration:none; text-align:center;
+font-size:16px; font-weight:bold; color:#000;
+} .jwc_zoom_in::after {
+content:"+";
+} .jwc_zoom_out::after {
+content:"-";
+}
+/* end jWindowCrop defaults */
+
+.jwc_frame{
+	z-index:100;
+	}
 	
 /* RTL 
 --------- */
@@ -3580,7 +3707,7 @@ body.rtl #feed-header-inner h2  {
 		}
 
 	#search-query {
-		background-image: url("../img/sprite.png");
+		background-image: url("../img/sprite.png?v=2");
 		background-size: 500px 1329px;
 		background-position: -100px -804px;
 		border: 0 none;
@@ -3639,7 +3766,7 @@ body.rtl #feed-header-inner h2  {
 
 
 	#top-compose {
-		background-image: url("../img/sprite.png");
+		background-image: url("../img/sprite.png?v=2");
 		background-size: 500px 1329px;
 		background-position: -55px -800px;
 		cursor: pointer;
@@ -3820,7 +3947,7 @@ body.rtl #feed-header-inner h2  {
 		display:none;
 		}		
 	.nav-session {
-		background-image: url("../img/sprite.png");
+		background-image: url("../img/sprite.png?v=2");
 		background-size: 500px 1329px;
 		background-position: 0 -800px;
 		height: 49px;
@@ -3883,7 +4010,7 @@ body.rtl #feed-header-inner h2  {
 		padding:0;
 		margin:0;
 		border-radius:0 0 0 0 !important;
-		background-image: url("../img/sprite.png");
+		background-image: url("../img/sprite.png?v=2");
 		background-size: 500px 1329px;
 		background-position: center -1003px;		
 		}
@@ -3917,7 +4044,7 @@ body.rtl #feed-header-inner h2  {
 		margin-left: -35px; 
 		width: 70px; 
 		height: 55px;
-		background-image: url("../img/sprite.png");
+		background-image: url("../img/sprite.png?v=2");
 		background-size: 500px 1329px;
 		background-color:#ccc;
 		}
@@ -3945,6 +4072,10 @@ body.rtl #feed-header-inner h2  {
 		margin-bottom:0;
 		border-bottom:1px solid #E8E8E8;
 		border-radius:0 0 0 0;
+		}
+	.edit-profile-container {
+		width:100%;
+		margin-top:108px;
 		}
 	.profile-card ul.stats {
 		width:100%;
@@ -4063,7 +4194,7 @@ body.rtl #feed-header-inner h2  {
 	ul.queet-actions li .icon.sm-rt,	
 	ul.queet-actions li .icon.sm-trash,		
 	ul.queet-actions li .icon.sm-reply {	
-		background-image: url("../img/sprite.png");
+		background-image: url("../img/sprite.png?v=2");
 		background-size: 500px 1329px;
 		width:35px;
 		height:35px;

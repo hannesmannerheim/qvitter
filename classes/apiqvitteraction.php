@@ -112,6 +112,7 @@ class ApiQvitterAction extends ApiAction
 			$simplified_statuses->u[$s['user']['id']][14] = $s['user']['following'];
 			$simplified_statuses->u[$s['user']['id']][15] = $s['user']['statusnet_blocking'];
 			$simplified_statuses->u[$s['user']['id']][16] = $s['user']['statusnet_profile_url'];
+			$simplified_statuses->u[$s['user']['id']][17] = $s['user']['cover_photo'];			
 			
         	if(isset($s['retweeted_status'])) {
 				$simplified_statuses->s[$i][13][0] = $s['retweeted_status']['id'];
@@ -145,14 +146,11 @@ class ApiQvitterAction extends ApiAction
 				$simplified_statuses->u[$s['retweeted_status']['user']['id']][14] = $s['retweeted_status']['user']['following'];
 				$simplified_statuses->u[$s['retweeted_status']['user']['id']][15] = $s['retweeted_status']['user']['statusnet_blocking'];
 				$simplified_statuses->u[$s['retweeted_status']['user']['id']][16] = $s['retweeted_status']['user']['statusnet_profile_url'];				
+				$simplified_statuses->u[$s['retweeted_status']['user']['id']][17] = $s['retweeted_status']['user']['cover_photo'];								
         		}																		
 
         	$i++;
         }
-        
-// 		print_r($simplified_statuses);
-//        print_r($statuses);        
-//         
 
         $this->showJsonObjects($simplified_statuses);
 

@@ -310,6 +310,7 @@ function doLogin(streamToSet) {
 				$.each(data,function(k,v){
 					if(v[2] === false) { var avatar = window.defaultAvatarStreamSize; }
 					else { 	var avatar = window.avatarRoot + v[2]; }
+					v[0] = v[0] || v[1]; // if name is null we go with username there too
 					window.following[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar };
 					i++;
 					});
@@ -804,18 +805,7 @@ $(document).on('click','a', function(e) {
 					console.log(data);
 					
 					// empty strings and zeros instead of null
-					data.name = data.name || '';
-					data.profile_image_url = data.profile_image_url || '';
-					data.profile_image_url_profile_size = data.profile_image_url_profile_size || '';
-					data.profile_image_url_original = data.profile_image_url_original || '';						
-					data.screen_name = data.screen_name || '';						
-					data.description = data.description || '';
-					data.location = data.location || '';
-					data.url = data.url || '';
-					data.statusnet_profile_url = data.statusnet_profile_url || '';
-					data.statuses_count = data.statuses_count || 0;
-					data.followers_count = data.followers_count || 0;
-					data.friends_count = data.friends_count || 0;
+					data = cleanUpUserObject(data);
 					
 					// profile card
 					var followingClass = '';
@@ -1087,7 +1077,6 @@ $('body').on('click','#new-queets-bar',function(){
 
 $('body').on('click','.queet',function (event) {
 	if(!$(event.target).is('a')
-		&& !$(event.target).is('.CodeMirror-scroll')
 		&& !$(event.target).is('.cm-mention')
 		&& !$(event.target).is('.cm-tag')
 		&& !$(event.target).is('.cm-group')
@@ -1341,6 +1330,7 @@ $('body').on('click','.modal-close',function(){
 $(document).keyup(function(e){
 	if(e.keyCode==27) {
 		$('.modal-container').remove();
+		abortEditProfile();
 		}
 	});	
 
@@ -1753,3 +1743,222 @@ $('body').on('click','.show-full-conversation',function(){
 	backToMyScrollPos(this_q,this_qid,false);
 	});
 
+
+
+/* · 
+   · 
+   ·   Edit profile
+   ·   
+   · · · · · · · · · · · · · */ 	
+
+$('body').on('click','.edit-profile-button',function(){
+	if(!$(this).hasClass('disabled')) {
+		$(this).addClass('disabled');
+		$('html').scrollTop(0);
+		$('html').addClass('fixed');
+		$('body').prepend('<div id="edit-profile-popup" class="modal-container"></div>');	
+		display_spinner();
+		getFromAPI('users/show/' + window.loggedIn.screen_name + '.json', function(data){ 
+			remove_spinner();
+			if(data){
+				data = cleanUpUserObject(data);
+				// use avatar if no cover photo
+				if(data.cover_photo === false) {
+					data.cover_photo = data.profile_image_url_original;
+					}				
+				$('#edit-profile-popup').prepend('\
+					<div class="edit-profile-container">\
+						<div class="profile-card">\
+							<div class="profile-header-inner" style="background-image:url(' + data.cover_photo + ')">\
+							   <input type="file" name="cover-photo-input" id="cover-photo-input" />\
+							   <div class="upload-cover-photo"></div>\
+							   <div class="profile-header-inner-overlay"></div>\
+							   <a class="profile-picture" href="' + data.profile_image_url_original + '"><img src="' + data.profile_image_url_profile_size + '" /></a>\
+							   <div class="profile-card-inner">\
+								   <input class="fullname" id="edit-profile-fullname" placeholder="' + window.sL.signUpFullName + '" value="' + data.name + '" />\
+								   <h2 class="username"><span class="screen-name">@' + data.screen_name + '</span><span class="follow-status"></span></h2>\
+								   <div class="bio-container">\
+									   <textarea class="bio" id="edit-profile-bio" placeholder="' + window.sL.registerBio + '">' + data.description + '</textarea>\
+								   </div>\
+								   <p class="location-and-url">\
+									   <input class="location" id="edit-profile-location" placeholder="' + window.sL.registerLocation + '" value="' + data.location + '" />\
+									   <span class="divider"> · </span>\
+									   <input class="url" id="edit-profile-url" placeholder="' + window.sL.registerHomepage + '" value="' + data.url + '" />\
+								   </p>\
+							   </div>\
+							</div>\
+							<div class="profile-banner-footer">\
+							   <div class="user-actions">\
+							       <button type="button" class="abort-edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.cancelVerb + '</span>\
+								   <button type="button" class="save-profile-button"><span class="button-text edit-profile-text">' + window.sL.saveChanges + '</span>\
+							   </div>\
+							   <div class="clearfix"></div>\
+							</div>\
+						</div>\
+					</div>');
+				}
+			else {
+				abortEditProfile();
+				}
+			});				
+		}	
+	});
+// cancel
+$('body').on('click','.abort-edit-profile-button',function(){
+	// if this is the cover photo
+	if($('#edit-profile-popup .jwc_frame').length>0) {
+		cleanUpAfterCropping();		
+		}
+	// if profile info		
+	else {
+		abortEditProfile();
+		}
+	});
+function abortEditProfile() {
+	$('#edit-profile-popup').remove();
+	$('.edit-profile-button').removeClass('disabled');
+	$('html').removeClass('fixed');
+	}
+// validate
+$('body').on('keyup paste input', '#edit-profile-popup input,#edit-profile-popup textarea', function() {
+	if(validateEditProfileForm($('#edit-profile-popup'))){
+		$('.save-profile-button').removeAttr('disabled');
+		$('.save-profile-button').removeClass('disabled');		
+		}
+	else {
+		$('.save-profile-button').attr('disabled','disabled');		
+		$('.save-profile-button').addClass('disabled');
+		}
+	});
+// submit
+$('body').on('click','.save-profile-button',function(){
+	$('.save-profile-button').attr('disabled','disabled');		
+	$('.save-profile-button').addClass('disabled');
+	display_spinner();
+
+	// if this is the cover photo
+	if($('#edit-profile-popup .jwc_frame').length>0) {
+		$.ajax({ url: window.apiRoot + 'qvitter/update_cover_photo.json', 
+			type: "POST", 
+			data: { 
+				cropH: 	window.jwc.result.cropH,
+				cropW: 	window.jwc.result.cropW,
+				cropX:	window.jwc.result.cropX,
+				cropY: 	window.jwc.result.cropY,
+				img:	$('#cover-photo-to-crop').attr('src')
+				},
+			dataType:"json",
+			error: function(data){ console.log('error'); console.log(data); },
+			success: function(data) {
+				remove_spinner();					 
+				if(typeof data.error == 'undefined') {
+					$('.save-profile-button').removeAttr('disabled');		
+					$('.save-profile-button').removeClass('disabled');
+					cleanUpAfterCropping();
+					$('.profile-header-inner').css('background-image','url(' + data.url + ')');
+					}
+				 else {
+					alert('Try again! ' + data.error);
+					$('.save-profile-button').removeAttr('disabled');		
+					$('.save-profile-button').removeClass('disabled');
+					}
+				 }
+			});							
+		}
+	// if profile info
+	else {
+		if(validateEditProfileForm($('#edit-profile-popup'))) {
+			$.ajax({ url: window.apiRoot + 'account/update_profile.json', 
+				type: "POST", 
+				data: { 
+					name: 			$('#edit-profile-popup input.fullname').val(),
+					url: 			$('#edit-profile-popup input.url').val(),
+					location: 		$('#edit-profile-popup input.location').val(),
+					description:	$('#edit-profile-popup textarea.bio').val(),
+					},
+				dataType:"json",
+				error: function(data){ console.log('error'); console.log(data); },
+				success: function(data) {
+					remove_spinner();					 
+					if(typeof data.error == 'undefined') {
+						location.reload(); // reload, hopefully the new profile is saved	
+						}
+					 else {
+						alert('Try again! ' + data.error);
+						$('.save-profile-button').removeAttr('disabled');		
+						$('.save-profile-button').removeClass('disabled');
+						}
+					 }
+				});		
+			}
+		}
+	});
+// cover photo select and crop
+$('body').on('click','.upload-cover-photo',function(){
+	$('input:file').click(function(){ $(this).one('change',function(e){ // trick to make the change event only fire once when selecting a file		
+		renderFileInput2(e);
+		})});
+	
+	// trigger click for firefox
+	if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+		$('#cover-photo-input').trigger('click');
+		}
+	// other browsers
+	else {
+		var evt = document.createEvent("HTMLEvents");
+		evt.initEvent("click", true, true); 
+		$('#cover-photo-input')[0].dispatchEvent(evt);		
+		}	
+	});
+
+// load image from file input
+function renderFileInput2(e) {
+	
+	// get orientation
+	loadImage.parseMetaData(e.target.files[0], function (data) {
+		if (data.exif) {
+			var orientation = data.exif.get('Orientation'); 
+			}
+		else {
+			var orientation = 1; 
+			}
+
+		display_spinner();
+
+		// clean up 
+		cleanUpAfterCropping();
+		
+		// create image
+		loadImage(e.target.files[0],
+				function (img) {    
+					if(typeof img.target == 'undefined') {
+						var appendedImg = $('#edit-profile-popup .profile-header-inner').prepend('<img id="cover-photo-to-crop" src="' + img.toDataURL('image/jpeg') +  '" />');
+					
+						// enable cropping
+						$('#cover-photo-to-crop').jWindowCrop({
+							targetWidth:520,
+							targetHeight:260,
+							onChange: function(result) {
+								remove_spinner();    
+								}
+							});
+						window.jwc = $('#cover-photo-to-crop').getjWindowCrop();						
+						}
+					else {
+						remove_spinner();  
+						alert('could not read image');
+						}
+					},
+				{ maxWidth: 1040,
+				  orientation: orientation } // Options
+			);	
+		});						
+	}
+function cleanUpAfterCropping(){
+	if(typeof window.jwc != 'undefined') {
+		window.jwc.destroy();
+		}
+	$('.jwc_frame').remove();
+	$('#cover-photo-to-crop').remove();
+	$('input:file').unbind('click');	
+	}

@@ -231,6 +231,7 @@ class ApiAction extends Action
         foreach (array('linkcolor', 'backgroundcolor') as $key) {
             $twitter_user[$key] = Profile_prefs::getConfigData($profile, 'theme', $key);
         }
+        $twitter_user['cover_photo'] = Profile_prefs::getConfigData($profile, 'qvitter', 'cover_photo');        
         // END introduced by qvitter API, not necessary for StatusNet API
 
         $twitter_user['url'] = ($profile->homepage) ? $profile->homepage : null;

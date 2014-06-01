@@ -145,12 +145,14 @@ window.l.es.registerLocation        = 'Ubicación';
 window.l.es.registerRepeatPassword  = 'Verificar contraseña';
 window.l.es.moreSettings            = 'Más configuraciones';
 window.l.es.otherServers            = 'De manera alternativa, puedes crear una cuenta en otro servidor de la red GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativa</a>';
+window.l.es.editMyProfile           = 'Editar perfil';
+
 
 
 // galician
 window.l.gl = new Object();
 window.l.gl.languageName = 'Galego';
-window.l.gl.loginUsername = 'Nome de usuario o mail';
+window.l.gl.loginUsername = 'Nome de usuario ou mail';
 window.l.gl.loginPassword = 'Clave';
 window.l.gl.loginSignIn = 'Entre';
 window.l.gl.loginRememberMe = 'lembrarme';
@@ -162,7 +164,7 @@ window.l.gl.groups = 'Grupos';
 window.l.gl.compose = 'Novo Queet';
 window.l.gl.queetVerb = 'Queet';
 window.l.gl.queetsNounPlural = 'Queets';
-window.l.gl.logout = 'Salir';
+window.l.gl.logout = 'Saír';
 window.l.gl.languageSelected = 'Linguaxe:';
 window.l.gl.viewMyProfilePage = 'Ver o meu perfil';
 window.l.gl.expand = 'Abrir';
@@ -187,8 +189,8 @@ window.l.gl.longmonthsFebruary = 'febreiro';
 window.l.gl.longmonthsMars = 'marzo';
 window.l.gl.longmonthsApril = 'abril';
 window.l.gl.longmonthsMay = 'maio';
-window.l.gl.longmonthsJune = 'xunio';
-window.l.gl.longmonthsJuly = 'xulio';
+window.l.gl.longmonthsJune = 'xuño';
+window.l.gl.longmonthsJuly = 'xullo ';
 window.l.gl.longmonthsAugust = 'agosto';
 window.l.gl.longmonthsSeptember = 'setembro';
 window.l.gl.longmonthsOctober = 'outubro';
@@ -199,13 +201,13 @@ window.l.gl.shortmonthsFebruary = 'feb';
 window.l.gl.shortmonthsMars = 'marzo';
 window.l.gl.shortmonthsApril = 'abr';
 window.l.gl.shortmonthsMay = 'maio';
-window.l.gl.shortmonthsJune = 'xun';
-window.l.gl.shortmonthsJuly = 'jul';
+window.l.gl.shortmonthsJune = 'xuñ ';
+window.l.gl.shortmonthsJuly = 'xull ';
 window.l.gl.shortmonthsAugust = 'agosto';
 window.l.gl.shortmonthsSeptember = 'set';
 window.l.gl.shortmonthsOctober = 'out';
 window.l.gl.shortmonthsNovember = 'nov';
-window.l.gl.shortmonthsDecember = 'dic';
+window.l.gl.shortmonthsDecember = 'dec ';
 window.l.gl.time12am = '{time} AM';
 window.l.gl.time12pm = '{time} PM';
 window.l.gl.longDateFormat = '{time24} - {day} {month} {year}';
@@ -217,11 +219,11 @@ window.l.gl.shortDateFormatDateAndY = '{day} {month} {year}';
 window.l.gl.now = 'agora';
 window.l.gl.posting = 'enviando';
 window.l.gl.viewMoreInConvBefore = '←  Ver máis na conversación';
-window.l.gl.viewMoreInConvAfter = 'Ver más en la conversación →';
+window.l.gl.viewMoreInConvAfter = 'Ver máis na conversación →  ';
 window.l.gl.mentions = 'Menciones';
 window.l.gl.timeline = 'Líña temporal';
 window.l.gl.publicTimeline = 'Líña temporal pública';
-window.l.gl.publicAndExtTimeline    = 'Toda a rede coñecida';
+window.l.gl.publicAndExtTimeline = 'Toda a rede coñecida';
 window.l.gl.searchVerb = 'Buscar';
 window.l.gl.deleteVerb = 'Eliminar';
 window.l.gl.cancelVerb = 'Cancelar';
@@ -229,8 +231,8 @@ window.l.gl.deleteConfirmation = 'Estás seguro de que queres eliminar este quee
 window.l.gl.userExternalFollow = 'Seguir';
 window.l.gl.userExternalFollowHelp = 'Identificador da súa conta (p.e. user@rainbowdash.net).';
 window.l.gl.userFollow = 'Seguir';
-window.l.gl.userFollowing = 'Sigendo';
-window.l.gl.userUnfollow = 'Dejar de seguir';
+window.l.gl.userFollowing = 'Seguindo';
+window.l.gl.userUnfollow = 'Deixar de seguir  ';
 window.l.gl.joinGroup = 'Unirse ao grupo';
 window.l.gl.joinExternalGroup = 'Unirse ao grupo ';
 window.l.gl.isMemberOfGroup = 'Membro';
@@ -241,7 +243,7 @@ window.l.gl.settings = 'Configuración';
 window.l.gl.saveChanges = 'Gardar cambios';
 window.l.gl.linkColor = 'Cor do enlace';
 window.l.gl.backgroundColor = 'Cor de fondo';
-window.l.gl.newToQuitter = 'Eres n ovo en Quitter?';
+window.l.gl.newToQuitter = 'Eres novo en Quitter? ';
 window.l.gl.signUp = 'Rexístrate';
 window.l.gl.signUpFullName = 'Nome completo';
 window.l.gl.signUpEmail = 'Correo electrónico';
@@ -255,6 +257,8 @@ window.l.gl.registerLocation = 'Ubicación';
 window.l.gl.registerRepeatPassword = 'Verificar contrasinal';
 window.l.gl.moreSettings = 'máis opcións';
 window.l.gl.otherServers = 'De maneira alternativa, podes crear unha conta noutro servidor da rede GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativa</a>';
+window.l.gl.editMyProfile = 'Editar o perfil';
+
 
 
 // french
@@ -365,6 +369,7 @@ window.l.fr.registerLocation        = 'Localisation';
 window.l.fr.registerRepeatPassword  = 'Vérifiez votre mot de passe';
 window.l.fr.moreSettings            = 'Plus de paramètres';
 window.l.fr.otherServers            = '';
+window.l.fr.editMyProfile           = 'Éditer le profil';
 
 
 // deutsch
@@ -487,6 +492,7 @@ window.l.de.registerLocation        = 'Standort';
 window.l.de.registerRepeatPassword  = 'Passwort bestätigen';
 window.l.de.moreSettings            = 'Weitere Einstellungen';
 window.l.de.otherServers            = 'Du kannst Dir auch gerne ein Konto auf einem anderen Server des GNUsocial-Netzwerks einrichten. <a href="http://federation.skilledtests.com/select_your_server.html">Übersicht</a>';
+window.l.de.editMyProfile           = 'Profil bearbeiten';
 
 
 // english
@@ -605,7 +611,7 @@ window.l.en.registerLocation        = 'Location';
 window.l.en.registerRepeatPassword  = 'Repeat password';
 window.l.en.moreSettings            = 'More settings';
 window.l.en.otherServers            = 'Alternatively you can create an account on another server of the GNU social network. <a href="http://federation.skilledtests.com/select_your_server.html">Comparison</a>';
-
+window.l.en.editMyProfile           = 'Edit profile';
 
 // simplified chinese
 window.l.zh_cn = new Object();
@@ -715,7 +721,7 @@ window.l.zh_cn.registerLocation        = '地点';
 window.l.zh_cn.registerRepeatPassword  = '重复密码';
 window.l.zh_cn.moreSettings            = '更多的设置';
 window.l.zh_cn.otherServers            = '其他服务器: <a href="http://federation.skilledtests.com/select_your_server.html">对照</a>';
-
+window.l.zh_cn.editMyProfile           = '编辑个人资料';
 
 // traditional chinese
 window.l.zh_tw = new Object();
@@ -825,7 +831,7 @@ window.l.zh_tw.registerLocation        = '地點';
 window.l.zh_tw.registerRepeatPassword  = '重複密碼';
 window.l.zh_tw.moreSettings            = '更多的設置';
 window.l.zh_tw.otherServers            = '其他服務器: <a href="http://federation.skilledtests.com/select_your_server.html">對照</a>';
-
+window.l.zh_tw.editMyProfile     	   = '編輯個人檔案';
 
 // svenska
 window.l.sv = new Object();
@@ -935,7 +941,7 @@ window.l.sv.registerLocation        = 'Plats';
 window.l.sv.registerRepeatPassword  = 'Upprepa lösenord';
 window.l.sv.moreSettings            = 'Fler inställningar';
 window.l.sv.otherServers            = 'Men du kan lika gärna skapa ett konto på en annan server som är del av GNU social-nätverket. <a href="http://federation.skilledtests.com/select_your_server.html">Här är en jämförelse.</a>';
-
+window.l.sv.editMyProfile     	    = 'Redigera profil';
 
 
 // farsi/persian
@@ -1046,7 +1052,7 @@ window.l.fa.registerLocation        = 'مکان';
 window.l.fa.registerRepeatPassword  = 'تایید گذرواژه';
 window.l.fa.moreSettings            = 'تنظیمات بیشتر';
 window.l.fa.otherServers            = '';
-
+window.l.fa.editMyProfile     	    = 'ویرایش نمایه';
 
 // arabic
 window.l.ar = new Object();
@@ -1156,7 +1162,7 @@ window.l.ar.registerLocation        = 'الموقع الجغرافي';
 window.l.ar.registerRepeatPassword  = 'تأكيد كلمة المرور';
 window.l.ar.moreSettings            = 'مزيد من الإعدادات';
 window.l.ar.otherServers            = '';
-
+window.l.ar.editMyProfile     	    = 'تعديل الملف الشخصي';
 
 // esperanto
 window.l.eo = new Object();
@@ -1275,6 +1281,7 @@ window.l.eo.registerLocation        = 'Loko';
 window.l.eo.registerRepeatPassword  = 'Ripeti pasvorton';
 window.l.eo.moreSettings            = 'Pli agordoj';
 window.l.eo.otherServers            = '';
+window.l.eo.editMyProfile     	    = 'Redaktu profilon';
 
 
 // italian
@@ -1394,6 +1401,8 @@ window.l.it.registerLocation = 'Posizione';
 window.l.it.registerRepeatPassword = 'Ripetere la password';
 window.l.it.moreSettings = 'Altre opzioni';
 window.l.it.otherServers = 'In alternativa puoi creare un account su un altro server della rete GNU Social. <a href="http://federation.skilledtests.com/select_your_server.html">Confronto</a>';
+window.l.it.editMyProfile = 'Modifica profilo';
+
 
 
 // set language, from local storage, else browser language, else english (english also if no localstorage availible)

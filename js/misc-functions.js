@@ -101,6 +101,38 @@ function validateRegisterForm(o) {
 		
 	return allFieldsValid;
 	}	
+
+/* ·  
+   · 
+   ·   Checks if edit profile form is valid
+   · 
+   ·   @returns true or false
+   ·
+   · · · · · · · · · */  
+
+function validateEditProfileForm(o) {
+	
+	var fullname 	= o.find('input.fullname');	
+	var homepage 	= o.find('input.url');
+	var bio 		= o.find('textarea.bio');
+	var loc		 	= o.find('input.location');
+	
+	var allFieldsValid = true;
+
+	if(fullname.val().length < 255) {
+		fullname.removeClass('invalid'); } else { fullname.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+
+	if($.trim(homepage.val()).length==0 || /^(ftp|http|https):\/\/[^ "]+$/.test(homepage.val())) {
+		homepage.removeClass('invalid'); } else { homepage.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+
+	if(bio.val().length < 140) {
+		bio.removeClass('invalid'); } else { bio.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+
+	if(loc.val().length < 255) {
+		loc.removeClass('invalid'); } else { loc.addClass('invalid'); if(allFieldsValid)allFieldsValid=false; }		
+		
+	return allFieldsValid;
+	}	
     
 
     
@@ -345,6 +377,7 @@ function decodeQvitterCompactFormat(data) {
 			users[k].following = (v[14]==0?false:v[14]);																																						
 			users[k].statusnet_blocking = (v[15]==0?false:v[15]);																																						
 			users[k].statusnet_profile_url = v[16];
+			users[k].cover_photo = (v[17]==0?false:v[17]);			
 			i++;
 			});								
 		var unqvitter = Array();	
@@ -634,6 +667,32 @@ function backToMyScrollPos(obj,id,animate,callback) {
 		}			
 	}		
 	
+
+
+/* · 
+   · 
+   ·   Clean up user object, remove null etc
+   ·   
+   · · · · · · · · · · · · · */ 
+
+function cleanUpUserObject(data) {
+	data.name = data.name || '';
+	data.profile_image_url = data.profile_image_url || '';
+	data.profile_image_url_profile_size = data.profile_image_url_profile_size || '';
+	data.profile_image_url_original = data.profile_image_url_original || '';						
+	data.screen_name = data.screen_name || '';						
+	data.description = data.description || '';
+	data.location = data.location || '';
+	data.url = data.url || '';
+	data.statusnet_profile_url = data.statusnet_profile_url || '';
+	data.statuses_count = data.statuses_count || 0;
+	data.followers_count = data.followers_count || 0;
+	data.groups_count = data.groups_count || 0;			
+	data.friends_count = data.friends_count || 0;
+	return data;		
+	}		
+	
+
 
 
 /* · 

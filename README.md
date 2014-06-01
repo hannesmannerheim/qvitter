@@ -43,20 +43,20 @@ Extras
 1. There is a bug in GNUsocial that won't let you see groups' members lists. Replace your
 actions/apigroupmembership.php file with the one supplied to fix it.
 
-2. If you want notice headers to show which group a notice is posted in, replace your
-lib/apiaction.php file.
+2. If you want notice headers to show which group a notice is posted in, and if you want 
+cover photos to work, replace your lib/apiaction.php file.
 
 
 TODO
 ----
+
+1. "following you" badge on other peoples profiles
 
 1. Join _new_ external groups and follow _new_ external users ("New" meaning users/groups that the server don't know yet) 
 
 2. Creating groups, make admin, block user
 
 3. Background image uploading/editing
-
-4. Auto suggest mentions 
 
 6. Auto url-shortening setting under queet box
 
