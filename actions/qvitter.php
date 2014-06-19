@@ -220,6 +220,7 @@ class QvitterAction extends ApiAction
 						<li class="language"><a class="language-link" title="English" data-lang-code="en">English</a></li>
 						<li class="language"><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>	
 						<li class="language"><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>													
+						<li class="language"><a class="language-link" title="Basque" data-lang-code="eu">Euskara</a></li>																			
 						<li class="language"><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
 						<li class="language"><a class="language-link" title="French" data-lang-code="fr">français</a></li>									
 						<li class="language"><a class="language-link" title="Galego" data-lang-code="gl">Galego</a></li>															
@@ -257,6 +258,7 @@ class QvitterAction extends ApiAction
 											<li><a class="language-link" title="English" data-lang-code="en">English</a></li>
 											<li><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>									
 											<li><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>																		
+											<li><a class="language-link" title="Basque" data-lang-code="eu">Euskara</a></li>																														
 											<li><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
 											<li><a class="language-link" title="French" data-lang-code="fr">français</a></li>	
 											<li><a class="language-link" title="Galego" data-lang-code="gl">Galego</a></li>	
@@ -362,7 +364,7 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=21"></script>		    	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=15"></script>		    		    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=9"></script>		    		    	    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=19"></script>	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=20"></script>	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=17"></script>		
 			</body>
 		</html>
