@@ -2,7 +2,7 @@ Qvitter
 ==========================================
 
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
-* Last mod.: May, 2014
+* Last mod.: Sept, 2014
 * Version:   3
 * GitHub:    <https://github.com/hannesmannerheim/qvitter>
 
@@ -37,14 +37,7 @@ be opt-in instead.
 
 6. Users can go to ://{instance}/settings/qvitter and enable or disable Qvitter.
 
-Extras
------
-
-1. There is a bug in GNUsocial that won't let you see groups' members lists. Replace your
-actions/apigroupmembership.php file with the one supplied to fix it.
-
-2. If you want notice headers to show which group a notice is posted in, and if you want 
-cover photos to work, replace your lib/apiaction.php file.
+Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).
 
 
 TODO

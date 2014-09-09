@@ -98,7 +98,7 @@ class ApiUpdateCoverPhotoAction extends ApiAuthAction
 		$base64img_mimetype = MediaFile::getUploadedMimeType($base64img_path, $base64img_filename);
 		$mediafile = new MediaFile($profile, $base64img_filename, $base64img_mimetype);
  		$imagefile = new ImageFile($mediafile->fileRecord->id, File::path($mediafile->filename));
-  		$imagefile->resizeTo(File::path($mediafile->filename), $this->cropW, $this->cropH, $this->cropX, $this->cropY, $this->cropW, $this->cropH);			
+  		$imagefile->resizeTo(File::path($mediafile->filename), array($this->cropW, $this->cropH, $this->cropX, $this->cropY, $this->cropW, $this->cropH));			
 		$result['url'] = File::url($mediafile->filename);
 		
 		Profile_prefs::setData($profile, 'qvitter', 'cover_photo', $result['url']);			

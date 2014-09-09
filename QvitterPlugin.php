@@ -203,7 +203,51 @@ class QvitterPlugin extends Plugin {
 
         return true;
     }
+
+
+    /**
+     * Group addresses in API response
+     *
+     * @param Action $action action being executed
+     *
+     * @return boolean hook return
+     */
+
+    function onNoticeSimpleStatusArray($notice, &$twitter_status)
+    {
+    
+		$notice_groups = $notice->getGroups();
+		$group_addressees = false;
+		foreach($notice_groups as $g) {
+		$group_addressees .= '!'.$g->nickname.' ';
+		}
+		$group_addressees = trim($group_addressees);
+		if($group_addressees == '') $group_addressees = false;
+		$twitter_status['statusnet_in_groups'] = $group_addressees;    
+
+        return true;
+    }
+    
+    
+    /**
+     * Cover photo in API response
+     *
+     * @param Action $action action being executed
+     *
+     * @return boolean hook return
+     */
+
+    function onTwitterUserArray($profile, &$twitter_user)
+    {
+
+        $twitter_user['cover_photo'] = Profile_prefs::getConfigData($profile, 'qvitter', 'cover_photo');        
+
+        return true;
+    }    
+    
 }
+
+
 
 
 /**
