@@ -34,6 +34,7 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+
 if (!defined('GNUSOCIAL')) { exit(1); }
 
 class ApiQvitterAction extends ApiAction 
