@@ -249,7 +249,7 @@ function detectRTL(s) {
     else if ($queetText.html().length==0 && $('body').hasClass('rtl')) {
     	$streamItem.children('.stream-item').children('.queet').addClass('rtl');
     	}	    	    	    	
-	return $streamItem.html().replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">'); // hacky way to get @#! into mention tags to stop bidirection (css sets an @ with before content method)
+	return $streamItem.html().replace(/@<a href="/gi,'<a href="').replace(/!<a href="/gi,'<a href="').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">'); // hacky way to get @#! into mention tags to stop bidirection (css sets an @ with before content method)
 	}
 	
 	

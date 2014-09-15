@@ -2097,7 +2097,14 @@ span.inline-reply-caret .caret-inner {
     position: absolute;
 	}
 
+.queet-box-syntax {
+	white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	}
+
 .inline-reply-queetbox .queet-box-syntax[contenteditable="true"] {
+	white-space:normal;	
 	z-index:101;
 	position:relative;
 	}
@@ -3415,22 +3422,28 @@ body.rtl .profile-banner-footer ul.stats {
 .queet.rtl .queet-text .tag a {
 	direction:rtl;
 	}
-.queet-text .vcard .mention:before {
+.queet-text .vcard .mention:before,
+.queet-text .h-card.mention:before {
 	content:"@";
 	}
-.queet.rtl .queet-text .vcard .mention:before {
+.queet.rtl .queet-text .vcard .mention:before,
+.queet.rtl .queet-text .h-card.mention:before {
 	content: "";
 	}		
-.queet.rtl .queet-text .vcard .mention:after {
+.queet.rtl .queet-text .vcard .mention:after,
+.queet.rtl .queet-text .h-card.mention:after {
 	content: "@";
 	}				
-.queet-text .vcard .group:before {
+.queet-text .vcard .group:before,
+.queet-text .h-card .group:before {
 	content:"!";
 	}	
-.queet.rtl .queet-text .vcard .group:before {
+.queet.rtl .queet-text .vcard .group:before,
+.queet.rtl .queet-text .h-card.group:before {
 	content: "";
 	}		
-.queet.rtl .queet-text .vcard .group:after {
+.queet.rtl .queet-text .vcard .group:after,
+.queet.rtl .queet-text .h-card.group:after {
 	content: "!";
 	}			
 .queet-text .tag a:before {
