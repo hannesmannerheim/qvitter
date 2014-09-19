@@ -2097,7 +2097,7 @@ span.inline-reply-caret .caret-inner {
     position: absolute;
 	}
 
-.queet-box-syntax {
+.inline-reply-queetbox .queet-box-syntax {
 	white-space:nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
