@@ -458,14 +458,30 @@ function findUrls(text) {
    · · · · · · · · · · · · */
    
 function display_spinner() { 
-	if($('.spinner-wrap').length==0) {
-		$('body').prepend('<div class="spinner-wrap"><div class="spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>');
-		}
+	$('body').prepend('\
+<div class="loader">\
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\
+   width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">\
+<path opacity="0.2" enable-background="new    " d="M20.201,8.503c-6.413,0-11.612,5.199-11.612,11.612s5.199,11.611,11.612,11.611\
+	c6.412,0,11.611-5.198,11.611-11.611S26.613,8.503,20.201,8.503z M20.201,29.153c-4.992,0-9.039-4.046-9.039-9.038\
+	s4.047-9.039,9.039-9.039c4.991,0,9.038,4.047,9.038,9.039S25.192,29.153,20.201,29.153z"/>\
+<path d="M24.717,12.293l1.285-2.227c-1.708-0.988-3.686-1.563-5.801-1.563l0,0v2.573l0,0C21.848,11.076,23.386,11.524,24.717,12.293 z">\
+<animateTransform attributeType="xml"\
+      attributeName="transform"\
+      type="rotate"\
+      from="0 20 20"\
+      to="360 20 20"\
+      dur="1s"\
+      repeatCount="indefinite"/>\
+    </path>\
+  </svg>\
+</div>\
+');
 	}	
 function remove_spinner() {	
-	$('.spinner-wrap').remove();
+	$('.loader').remove();
 	}	
-	
+		
 	
 
 /* · 
@@ -569,6 +585,16 @@ function countCharsInQueetBox(src,trgt,btn) {
 
 	var $src_txt = $('<div/>').append($.trim(src.html()).replace(/&nbsp;/gi,' ').replace(/<br>/i,'').replace(/<br>/gi,"x"));
 	var numchars = ($.trim($src_txt.text())).length;
+
+	// check for long urls and disable/enable url shorten button if present
+	var longurls = 0;
+	$.each(src.siblings('.syntax-middle').find('span.url'),function(key,obj){
+		if($.trim($(obj).html().replace(/&nbsp;/gi,'').replace(/<br>/gi,'')).length > 20) {
+			longurls++;
+			}
+		});
+	if(longurls>0) src.siblings('.queet-toolbar').find('button.shorten').removeClass('disabled');
+	else src.siblings('.queet-toolbar').find('button.shorten').addClass('disabled');
 
 	// limited
 	if(window.textLimit > 0) {
@@ -822,3 +848,31 @@ function deleteBetweenCharacterIndices(el, from, to) {
     var range = createRangeFromCharacterIndices(el, from, to);
     range.deleteContents();
 }
+
+
+/* · 
+   · 
+   ·   Shorten urls in a queet-box
+   ·   
+   · · · · · · · · · · · · · */ 
+
+function shortenUrlsInBox(shortenButton) {
+	shortenButton.addClass('disabled');
+	
+	$.each(shortenButton.parent().parent().siblings('.syntax-middle').find('span.url'),function(key,obj){
+
+		var url = $.trim($(obj).html().replace(/&amp;/gi,'&').replace(/&nbsp;/gi,'').replace(/<br>/gi,''));
+		
+		display_spinner();
+		
+		$.ajax({ url: window.urlShortenerAPIURL + '?format=jsonp&action=shorturl&signature=' + window.urlShortenerSignature + '&url=' + encodeURIComponent(url), type: "GET", dataType: "jsonp", success: function(data) {
+
+			if(typeof data.shorturl != 'undefined') {
+				shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace(data.url.url, data.shorturl));
+				shortenButton.parent().parent().siblings('.queet-box-syntax').trigger('keyup');
+				shortenButton.addClass('disabled'); // make sure the button is disabled right after
+				}
+			remove_spinner();
+			}});
+		});
+}	

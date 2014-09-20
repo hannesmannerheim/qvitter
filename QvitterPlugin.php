@@ -56,6 +56,10 @@ class QvitterPlugin extends Plugin {
 
 		// TIME BETWEEN POLLING
 		$settings['timebetweenpolling'] = 5000; // ms
+		
+		// URL SHORTENER
+		$settings['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';
+		$settings['urlshortenersignature'] = 'b6afeec983';		
 
 
 		 /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·

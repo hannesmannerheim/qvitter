@@ -1425,6 +1425,29 @@ $('body').on('keyup input paste','.queet-box-syntax',function () {
 	countCharsInQueetBox($(this),$(this).siblings('.queet-toolbar').find('.queet-counter'),$(this).siblings('.queet-toolbar').find('.queet-button button'));
 	});	
 	
+
+/* · 
+   · 
+   ·   Shorten URL's
+   ·   
+   · · · · · · · · · · · · · */ 
+$('body').on('click','button.shorten',function () {
+	shortenUrlsInBox($(this));
+	});	
+
+
+/* · 
+   · 
+   ·   Reload current stream
+   ·   
+   · · · · · · · · · · · · · */ 
+$('body').on('click','.reload-stream',function () {
+	$('.reload-stream').hide();
+	setNewCurrentStream(window.currentStream,function(){
+		$('.reload-stream').show();
+		},false);	
+	});	
+	
 	
 	
 /* · 
@@ -1950,6 +1973,8 @@ function renderFileInput2(e) {
 						}
 					},
 				{ maxWidth: 1040,
+				  minWidth:1040,
+				  canvas: true,
 				  orientation: orientation } // Options
 			);	
 		});						

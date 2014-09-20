@@ -39,6 +39,12 @@ html.fixed {
 	position:fixed;
 	width:100%;
 	}
+	
+.androidFix {
+    overflow:hidden !important;
+    overflow-y:hidden !important;
+    overflow-x:hidden !important;
+	}	
 
 a:active {
     outline: none;
@@ -80,8 +86,10 @@ button.icon.nav-search,
 #birds-top,
 #logo,
 .topbar .global-nav,
-.upload-cover-photo {	
-	background-image: url("../img/sprite.png?v=2");	
+.upload-cover-photo,
+button.shorten i,
+.reload-stream {	
+	background-image: url("../img/sprite.png?v=4");	
 	background-size: 500px 1329px;
 	}
 	
@@ -98,7 +106,7 @@ button.icon.nav-search,
 	cursor:pointer;
 	}
 #logo:hover {
-	background-position: 0 -24px;
+	background-position: 0 -30px;
 	}	
 
 #top-compose {
@@ -1081,6 +1089,7 @@ button#submit-login:hover {
 	border-image-width: 1 1 1 1: 
 	}
 #feed-header-inner {	
+	position:relative;
 	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 14px;
 	color: #333333;
@@ -2108,7 +2117,10 @@ span.inline-reply-caret .caret-inner {
 	z-index:101;
 	position:relative;
 	}
- 	
+.inline-reply-queetbox .queet-box-syntax,
+.inline-reply-queetbox .syntax-two {
+	cursor:text;	
+	}
 .inline-reply-queetbox .queet-box-syntax,
 .inline-reply-queetbox .queet-box-syntax[contenteditable="true"],
 .inline-reply-queetbox .syntax-middle,
@@ -2804,7 +2816,8 @@ div.clearfix {
 .follow-button,
 .edit-profile-button,
 .save-profile-button,
-.abort-edit-profile-button {
+.abort-edit-profile-button,
+button.shorten {
 	font-family: "Helvetica Neue",Arial,sans-serif;	
     margin: 0;
     position: relative;
@@ -2828,6 +2841,15 @@ div.clearfix {
     background-repeat: repeat-x;
     padding: 0;	
 	}
+button.shorten i {
+    background-position: 2px -557px;
+	height:26px;
+	width:36px;
+	display:block;
+	}	
+button.shorten.disabled i {
+	opacity:0.2;
+	}	
 .external-member-button.disabled,
 .member-button.disabled,
 .external-follow-button.disabled,
@@ -2841,13 +2863,14 @@ div.clearfix {
 .external-follow-button.disabled i,
 .follow-button.disabled i {
 	opacity:0.2;
-	}	
+	}
 .external-member-button:not(.disabled):not(.member):hover,
 .member-button:not(.disabled):not(.member):hover,
 .external-follow-button:not(.disabled):not(.following):hover,
 .follow-button:not(.disabled):not(.following):hover,
 .edit-profile-button:hover,
-.abort-edit-profile-button:hover {	
+.abort-edit-profile-button:hover,
+button.shorten:not(.disabled):hover {	
     background-color: #D8D8D8;
 	background: -moz-linear-gradient(top, rgba(248,248,248,1) 0%, rgba(216,216,216,1) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(248,248,248,1)), color-stop(100%,rgba(216,216,216,1)));
@@ -2861,7 +2884,8 @@ div.clearfix {
 .external-member-button:not(.disabled):not(.member):active,
 .member-button:not(.disabled):not(.member):active,
 .external-follow-button:not(.disabled):not(.following):active,
-.follow-button:not(.disabled):not(.following):active {	
+.follow-button:not(.disabled):not(.following):active,
+button.shorten:not(.disabled):active {	
     background: none;
     background-color: #D8D8D8;
     border-color: #BBBBBB;
@@ -2966,6 +2990,33 @@ div.clearfix {
 		
 	
 /* SPINNER */
+
+.loader {
+    display: block;
+    position: fixed;
+	left:50%;
+	margin-left:-20px;
+    top: 0;
+    z-index:10000;
+	}
+.reload-stream {
+    display: block;
+    position: absolute;
+    right: 5px;
+    background-position: 0 -600px;	
+    width:35px;
+    height:35px;
+    top:5px;
+    opacity:0.5;
+    cursor:pointer;
+	}	
+.reload-stream:hover {
+	opacity:1;
+	}	
+svg path,
+svg rect{
+	fill: #ccc;
+	}
 
 .spinner-wrap {
   position: fixed;

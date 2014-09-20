@@ -292,16 +292,6 @@ function groupProfileCard(groupAlias) {
     
 function setNewCurrentStream(stream,actionOnSuccess,setLocation) { 
 	
-	// don't do anything if this stream is already the current
-	if(window.currentStream == stream) {
-
-		// scroll to top if we are downscrolled
-		
-		// refresh if we are at top
-
-		return;
-		}
-	
 	// remember state of old stream (including profile card)
 	window.oldStreams[window.currentStream] = $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML();
 
@@ -314,7 +304,11 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	window.clearInterval(checkForNewQueetsInterval);
 		
 	display_spinner();
-	$(window).scrollTop(0);	
+	
+	// scroll to top
+	$(window).scrollTop(0);
+	$('body').addClass('androidFix').scrollTop(0).removeClass('androidFix');
+	
 	$('#feed-body').removeAttr('data-search-page-number'); // null any searches
 	
 	// remember the most recent stream selection in global var
@@ -406,8 +400,10 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		$('#user-container').after(window.oldStreams[window.currentStream]);
 		$('.profile-card').css('display','none');
 		$('#feed').css('display','none');		
-		$('.profile-card').fadeIn(300);
-		$('#feed').fadeIn(300);
+		$('.profile-card').show();
+		$('#feed').show();
+		$('#feed-header-inner h2').css('opacity','0.2');
+		$('#feed-header-inner h2').animate({opacity:'1'},1000);
 		}
 
 	// otherwise we fade out and wait for stream to load
@@ -961,7 +957,7 @@ function expand_queet(q,doScrolling) {
     
 function queetBoxHtml() {
 	var startText = encodeURIComponent(window.sL.compose);
-	return '<div class="inline-reply-queetbox"><div class="queet-box queet-box-syntax" data-start-text="' + startText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';	
+	return '<div class="inline-reply-queetbox"><div class="queet-box queet-box-syntax" data-start-text="' + startText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button class="shorten disabled"><i></i></button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';	
 	}
 	
 	
@@ -1003,7 +999,7 @@ function replyFormHtml(q,qid) {
 	
 	var startText = encodeURIComponent(window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br>');
 	var repliesText = encodeURIComponent(user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '&nbsp;&nbsp;');	
-	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box queet-box-syntax" id="queet-box-' + qid + '" data-start-text="' + startText + '" data-replies-text="' + repliesText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';	
+	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box queet-box-syntax" id="queet-box-' + qid + '" data-start-text="' + startText + '" data-replies-text="' + repliesText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button class="shorten disabled"><i></i></button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';	
 	}
 	
 
