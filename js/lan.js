@@ -1728,7 +1728,7 @@ window.l.no.registerBio = 'Informasjon om deg';
 window.l.no.registerLocation = 'Lokasjon';
 window.l.no.registerRepeatPassword = 'Gjenta passord';
 window.l.no.moreSettings = 'Flere instillinger';
-window.l.no.otherServers = 'Det finnes flere instanser i GNUsocial nettverket som alternativ kan benyttes. <a href="http://gnu.io/social/try/">Følger du denne lenken finner du noen anbefalinger.</a>';
+window.l.no.otherServers = 'Det finnes flere instanser i GNUsocial nettverket som alternativt kan benyttes. <a href="http://gnu.io/social/try/">Følger du denne lenken finner du noen anbefalinger.</a>';
 window.l.no.editMyProfile = 'Rediger profil';
 
 
