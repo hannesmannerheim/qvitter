@@ -189,7 +189,9 @@ class QvitterAction extends ApiAction
 						color:#0084B4;/*COLOREND*/
 						}			
 					.topbar .global-nav,
-					.menu-container {
+					.menu-container,
+					#unseen-notifications,
+					.stream-item.notification .not-seen {
 						background-color:#0084B4;/*BACKGROUNDCOLOREND*/
 						}			
 				</style>
@@ -278,7 +280,14 @@ class QvitterAction extends ApiAction
 					</div>
 				</div>
 				<div id="page-container">
-					<div class="front-welcome-text">
+					<?php
+					
+					$site_notice = common_config('site', 'notice');
+					if(!empty($site_notice)) {
+						print '<div id="site-notice">'.common_config('site', 'notice').'</div>';
+						}														
+					
+					?><div class="front-welcome-text">
 						<h1></h1>
 						<p></p>
 					</div>		
@@ -343,6 +352,7 @@ class QvitterAction extends ApiAction
 						</div>										
 						<div class="menu-container">
 							<a class="stream-selection friends-timeline" data-stream-header="" data-stream-name="qvitter/statuses/friends_timeline.json"><i class="chev-right"></i></a>
+							<a class="stream-selection notifications" data-stream-header="" data-stream-name="qvitter/statuses/notifications.json"><span id="unseen-notifications"></span><i class="chev-right"></i></a>											
 							<a class="stream-selection mentions" data-stream-header="" data-stream-name="qvitter/statuses/mentions.json"><i class="chev-right"></i></a>				
 							<a class="stream-selection my-timeline" data-stream-header="@statuses/user_timeline.json" data-stream-name="statuses/user_timeline.json"><i class="chev-right"></i></a>				
 							<a class="stream-selection favorites" data-stream-header="" data-stream-name="favorites.json"><i class="chev-right"></i></a>									
@@ -350,6 +360,7 @@ class QvitterAction extends ApiAction
 							<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline" data-stream-header="" data-stream-name="statuses/public_and_external_timeline.json"><i class="chev-right"></i></a>					
 						</div>
 						<div class="menu-container" id="history-container"></div>				
+						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div>																
 					</div>						
 					<div id="feed">
 						<div id="feed-header">
@@ -364,7 +375,7 @@ class QvitterAction extends ApiAction
 			
 					<div id="footer"></div>
 				</div>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.0.2.min.js"></script>
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.1.1.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-ui-1.10.3.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.easing.1.3.js"></script>	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    

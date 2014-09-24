@@ -326,4 +326,53 @@ function getFavsOrRequeetsForQueet(apiaction,qid,actionOnSuccess) {
 			}
 		});  
 	}
+
+
+/* ·  
+   · 
+   ·   Check for unseen notifications
+   · 
+   ·   @param actionOnSuccess: callback function
+   · 
+   · · · · · · · · · */
+    
+function checkForNewNotifications() { 
+	$.ajax({ url: window.apiRoot + "qvitter/newnotifications.json",
+		type: "GET", 
+		dataType: 'json', 
+		success: function(data) { 			
+
+			if(data.length == 0) {
+				$('#unseen-notifications').hide();
+				document.title = window.siteTitle;				
+				}
+			else {
+
+				var totNotif = 0;
+				$.each(data,function(k,v){
+					totNotif = totNotif + parseInt(v,10);
+					});
+
+				if(totNotif>0) {
+					$('#unseen-notifications').html(totNotif);
+					document.title = window.siteTitle + ' (' + totNotif + ')'; // update html page title
+					$('#unseen-notifications').show();	
+					}
+				else {
+					$('#unseen-notifications').hide();	
+					document.title = window.siteTitle;
+					}
+				}
+
+				
+			}, 
+		error: function(data) { 
+			$('#unseen-notifications').hide();
+			document.title = window.siteTitle;			
+			remove_spinner();
+			console.log(data); 
+			}
+		});  
+	}
+	
 	

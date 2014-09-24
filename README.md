@@ -45,13 +45,23 @@ TODO
 
 1. "following you" badge on other peoples profiles
 
+1. better user popup, with e.g. latest queets
+
+1. Faq
+
+1. DM's
+
+1. lists
+
+1. user actions-cog wheel in users lists, with block, list etc
+
+1. proxy to non-https for getting conversations the instance doesn't have via jsonp
+
+1. preview different types of attachments, not just images. e.g. mp3's, torrents etc etc
+
 1. Join _new_ external groups and follow _new_ external users ("New" meaning users/groups that the server don't know yet) 
 
 2. Creating groups, make admin, block user
-
-3. Background image uploading/editing
-
-6. Auto url-shortening setting under queet box
 
 7. Settings (e.g. don't show replies to people I don't follow)
 
@@ -65,13 +75,7 @@ TODO
 
 14. More languages, maybe make proper po/mo-files
 
-15. Notice-page
-
 16. Admin-interface
-
-16. New api for serving _number_ of new items in several streams (to show number of new items in menu/history)
-
-17. Notifications-page with likes and repeats 
 
 17. New "expand queet" api for getting conversation, retweets, favs and attachment in the same request
 

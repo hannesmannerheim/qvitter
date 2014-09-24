@@ -74,6 +74,16 @@ class QvitterPlugin extends Plugin {
 		return $settings[$setting];
 	}
 	
+	
+    // make sure we have a notifications table
+    function onCheckSchema()
+    {
+        $schema = Schema::get();
+        $schema->ensureTable('qvitternotification', QvitterNotification::schemaDef());
+        return true;
+    }
+	
+	// route/reroute urls
     public function onRouterInitialized($m)
     {
 		
@@ -102,8 +112,18 @@ class QvitterPlugin extends Plugin {
 						  'id' => Nickname::INPUT_FMT));
 		$m->connect('api/qvitter/statuses/mentions.:format',
 					array('action' => 'apiqvittermentions'));
+		$m->connect('api/qvitter/statuses/notifications.json',
+					array('action' => 'apiqvitternotifications'));					
+		$m->connect(':nickname/notifications',
+					array('action' => 'qvitter',
+						  'nickname' => Nickname::INPUT_FMT));					
+		$m->connect('api/qvitter/newnotifications.json',
+					array('action' => 'ApiNewNotifications'));						  
         $m->connect('settings/qvitter',
                     array('action' => 'qvittersettings'));
+        $m->connect('panel/qvitter',
+                    array('action' => 'qvitteradminsettings')); 
+        common_config_append('admin', 'panels', 'qvitteradm');
         $m->connect('main/qlogin',
                     array('action' => 'qvitterlogin'));                    		
 		
@@ -181,7 +201,11 @@ class QvitterPlugin extends Plugin {
 			URLMapperOverwrite::overwrite_variable($m, 'tag/:tag',
 									array('action' => 'showstream'),
 									array('tag' => Router::REGEX_TAG), 
-									'qvitter');                                 					
+									'qvitter'); 
+			URLMapperOverwrite::overwrite_variable($m, 'notice/:notice',
+									array('action' => 'shownotice'),
+									array('notice' => '[0-9]+'), 
+									'qvitter'); 									                                					
 		}					
 						
     }
@@ -207,6 +231,31 @@ class QvitterPlugin extends Plugin {
 
         return true;
     }
+    
+    /**
+     * Menu item for admin panel
+     *
+     * @param Action $action action being executed
+     *
+     * @return boolean hook return
+     */
+
+    function onEndAdminPanelNav($action)
+    {
+        
+        $action_name = $action->trimmed('action');
+
+        $action->out->menuItem(common_local_url('qvitteradminsettings'),
+                          // TRANS: Poll plugin menu item on user settings page.
+                          _m('MENU', 'Qvitter'),
+                          // TRANS: Poll plugin tooltip for user settings menu item.
+                          _m('Qvitter Sidebar Notice'),
+                          $action_name === 'qvitteradminsettings');
+
+        return true;
+    }    
+
+
 
 
     /**
@@ -248,6 +297,163 @@ class QvitterPlugin extends Plugin {
 
         return true;
     }    
+    
+
+
+   /**
+     * Insert into notification table
+     */
+    function insertNotification($to_profile_id, $from_profile_id, $ntype, $notice_id=false)
+    {
+		
+		// never notify myself
+		if($to_profile_id != $from_profile_id) {
+					
+			// insert				
+			$notif = new QvitterNotification();
+			$notif->to_profile_id = $to_profile_id;
+			$notif->from_profile_id = $from_profile_id;		
+			$notif->ntype = $ntype;
+			$notif->notice_id = $notice_id;		
+			$notif->created = common_sql_now();	
+			if (!$notif->insert()) {
+				common_log_db_error($notif, 'INSERT', __FILE__);
+				return false;
+				}
+			}
+        return true;
+    }   
+    
+
+    /**
+     * Insert likes in notification table
+     */
+    public function onEndFavorNotice($profile, $notice)
+    {
+	
+		// don't notify people favoriting their own notices 
+ 		if($notice->profile_id != $profile->id) {
+            $this->insertNotification($notice->profile_id, $profile->id, 'like', $notice->id, $notice->id);
+ 			}   
+    }   
+    
+   
+    /**
+     * Remove likes in notification table on dislike
+     */
+    public function onEndDisfavorNotice($profile, $notice)
+    {
+		$notif = new QvitterNotification();
+		$notif->from_profile_id = $profile->id;		
+		$notif->notice_id = $notice->id;
+		$notif->ntype = 'like';
+		$notif->delete();
+        return true;
+    }     
+    
+    
+    
+    /**
+     * Insert notifications for replies, mentions and repeats
+     *
+     * @return boolean hook flag
+     */
+    function onStartNoticeDistribute($notice) {
+
+
+		// repeats
+        if ($notice->isRepeat()) {
+			$repeated_notice = Notice::getKV('id', $notice->repeat_of);
+			if ($repeated_notice instanceof Notice) {        	
+	            $this->insertNotification($repeated_notice->profile_id, $notice->profile_id, 'repeat', $repeated_notice->id);
+				}
+ 			}  
+
+		// replies and mentions (no notifications for these if this is a repeat)
+ 		else {
+			// check for reply to insert in notifications
+			if($notice->reply_to) {
+				$replyparent = $notice->getParent();
+				$replyauthor = $replyparent->getProfile();
+				if ($replyauthor instanceof Profile) {
+					$reply_notification_to = $replyauthor->id;
+					$this->insertNotification($replyauthor->id, $notice->profile_id, 'reply', $notice->id);
+					}
+				}
+
+			// check for mentions to insert in notifications
+			$mentions = common_find_mentions($notice->content, $notice);
+			$sender = Profile::getKV($notice->profile_id);        
+			foreach ($mentions as $mention) {
+				foreach ($mention['mentioned'] as $mentioned) {
+
+					// Not from blocked profile
+					$mentioned_user = User::getKV('id', $mentioned->id);
+					if ($mentioned_user instanceof User && $mentioned_user->hasBlocked($sender)) {
+						continue;
+						}
+				
+					// only notify if mentioned user is not already notified for reply
+					if($reply_notification_to != $mentioned->id) {
+						$this->insertNotification($mentioned->id, $notice->profile_id, 'mention', $notice->id);                	
+						}
+					}
+				}		 			
+ 			}
+		
+        return true;
+    	}
+
+   /**
+     * Delete any notifications tied to deleted notices and un-repeats
+     *
+     * @return boolean hook flag
+     */
+    public function onNoticeDeleteRelated($notice)
+    {
+
+		$notif = new QvitterNotification();
+
+		// unrepeats
+        if ($notice->isRepeat()) {
+			$repeated_notice = Notice::getKV('id', $notice->repeat_of);
+			$notif->notice_id = $repeated_notice->id;		
+			$notif->from_profile_id = $notice->profile_id;					
+ 			}  
+		// notices
+		else {
+			$notif->notice_id = $notice->id;
+			}		
+
+		$notif->delete();			
+        return true;
+    }  
+    
+   /**
+     * Add notification on subscription, remove on unsubscribe
+     *
+     * @return boolean hook flag
+     */
+    public function onEndSubscribe($subscriber, $other)
+    {
+		if(Subscription::exists($subscriber, $other)) {
+			$this->insertNotification($other->id, $subscriber->id, 'follow');            					
+			}
+		
+        return true;
+    }      
+    public function onEndUnsubscribe($subscriber, $other)
+    {
+		if(!Subscription::exists($subscriber, $other)) {
+			$notif = new QvitterNotification();
+			$notif->to_profile_id = $other->id;		
+			$notif->from_profile_id = $subscriber->id;		
+			$notif->ntype = 'follow';
+			$notif->delete();
+			}
+		
+        return true;
+    }             
     
 }
 
