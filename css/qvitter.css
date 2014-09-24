@@ -89,7 +89,7 @@ button.icon.nav-search,
 .upload-cover-photo,
 button.shorten i,
 .reload-stream {	
-	background-image: url("../img/sprite.png?v=4");	
+	background-image: url("../img/sprite.png?v=5");	
 	background-size: 500px 1329px;
 	}
 	
@@ -3896,7 +3896,7 @@ body.rtl #feed-header-inner h2  {
 		}
 
 	#search-query {
-		background-image: url("../img/sprite.png?v=2");
+		background-image: url("../img/sprite.png?v=5");
 		background-size: 500px 1329px;
 		background-position: -100px -804px;
 		border: 0 none;
@@ -3955,7 +3955,7 @@ body.rtl #feed-header-inner h2  {
 
 
 	#top-compose {
-		background-image: url("../img/sprite.png?v=2");
+		background-image: url("../img/sprite.png?v=5");
 		background-size: 500px 1329px;
 		background-position: -55px -800px;
 		cursor: pointer;
@@ -4136,7 +4136,7 @@ body.rtl #feed-header-inner h2  {
 		display:none;
 		}		
 	.nav-session {
-		background-image: url("../img/sprite.png?v=2");
+		background-image: url("../img/sprite.png?v=5");
 		background-size: 500px 1329px;
 		background-position: 0 -800px;
 		height: 49px;
@@ -4200,7 +4200,7 @@ body.rtl #feed-header-inner h2  {
 		padding:0 !important;
 		margin:0;
 		border-radius:0 0 0 0 !important;
-		background-image: url("../img/sprite.png?v=2");
+		background-image: url("../img/sprite.png?v=5");
 		background-size: 500px 1329px;
 		background-position: center -1003px;		
 		}
@@ -4234,7 +4234,7 @@ body.rtl #feed-header-inner h2  {
 		margin-left: -35px; 
 		width: 70px; 
 		height: 55px;
-		background-image: url("../img/sprite.png?v=2");
+		background-image: url("../img/sprite.png?v=5");
 		background-size: 500px 1329px;
 		background-color:#ccc;
 		}
@@ -4388,7 +4388,7 @@ body.rtl #feed-header-inner h2  {
 	ul.queet-actions li .icon.sm-rt,	
 	ul.queet-actions li .icon.sm-trash,		
 	ul.queet-actions li .icon.sm-reply {	
-		background-image: url("../img/sprite.png?v=2");
+		background-image: url("../img/sprite.png?v=5");
 		background-size: 500px 1329px;
 		width:35px;
 		height:35px;
