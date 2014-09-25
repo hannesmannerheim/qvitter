@@ -863,14 +863,17 @@ function shortenUrlsInBox(shortenButton) {
 	
 	$.each(shortenButton.parent().parent().siblings('.syntax-middle').find('span.url'),function(key,obj){
 
-		var url = $.trim($(obj).html().replace(/&amp;/gi,'&').replace(/&nbsp;/gi,'').replace(/<br>/gi,''));
+		var url = $.trim($(obj).text());
 		
 		display_spinner();
 		
 		$.ajax({ url: window.urlShortenerAPIURL + '?format=jsonp&action=shorturl&signature=' + window.urlShortenerSignature + '&url=' + encodeURIComponent(url), type: "GET", dataType: "jsonp", success: function(data) {
 
 			if(typeof data.shorturl != 'undefined') {
-				shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace(data.url.url, data.shorturl));
+				
+				console.log(data.url);
+				
+				shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace($('<div/>').text(data.url.url).html(), data.shorturl));
 				shortenButton.parent().parent().siblings('.queet-box-syntax').trigger('keyup');
 				shortenButton.addClass('disabled'); // make sure the button is disabled right after
 				}
