@@ -283,17 +283,21 @@ class QvitterPlugin extends Plugin {
     
     
     /**
-     * Cover photo in API response
-     *
-     * @param Action $action action being executed
+     * Cover photo in API response, also follows_you
      *
      * @return boolean hook return
      */
 
-    function onTwitterUserArray($profile, &$twitter_user)
+    function onTwitterUserArray($profile, &$twitter_user, $scoped)
     {
 
         $twitter_user['cover_photo'] = Profile_prefs::getConfigData($profile, 'qvitter', 'cover_photo');        
+
+		// follows me?
+		if ($scoped) {
+				$twitter_user['follows_you'] = $profile->isSubscribed($scoped);
+				}
+
 
         return true;
     }    
@@ -454,7 +458,7 @@ class QvitterPlugin extends Plugin {
 		
         return true;
     }             
-    
+        
 }
 
 

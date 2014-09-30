@@ -161,6 +161,12 @@ function profileCardFromFirstObject(data,screen_name) {
 			first.user.cover_photo = first.user.profile_image_url_original;
 			}
 		
+		// follows me?
+		var follows_you = '';
+		if(first.user.follows_you === true && window.myUserID != first.user.id) {
+			var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';			
+			}
+		
 		// show user actions if logged in
 		var followingClass = '';
 		if(first.user.following) {
@@ -189,7 +195,7 @@ function profileCardFromFirstObject(data,screen_name) {
 		$('#feed').siblings('.profile-card').remove();
 
 		// insert profile card into dom
-		$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + first.user.cover_photo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + first.user.profile_image_url_original + '"><img src="' + first.user.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + first.user.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + first.user.screen_name + '</span><span class="follow-status"></span></h2><div class="bio-container"><p>' + first.user.description + '</p></div><p class="location-and-url"><span class="location">' + first.user.location + '</span><span class="divider"> · </span><span class="url"><a href="' + first.user.url + '">' + first.user.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats"><strong>' + first.user.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a class="following-stats"><strong>' + first.user.friends_count + '</strong>' + window.sL.following + '</a></li><li><a class="follower-stats"><strong>' + first.user.followers_count + '</strong>' + window.sL.followers + '</a></li><li><a class="groups-stats"><strong>' + first.user.groups_count + '</strong>' + window.sL.groups + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
+		$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + first.user.cover_photo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + first.user.profile_image_url_original + '"><img src="' + first.user.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + first.user.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + first.user.screen_name + '</span>' + follows_you + '</h2><div class="bio-container"><p>' + first.user.description + '</p></div><p class="location-and-url"><span class="location">' + first.user.location + '</span><span class="divider"> · </span><span class="url"><a href="' + first.user.url + '">' + first.user.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats"><strong>' + first.user.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a class="following-stats"><strong>' + first.user.friends_count + '</strong>' + window.sL.following + '</a></li><li><a class="follower-stats"><strong>' + first.user.followers_count + '</strong>' + window.sL.followers + '</a></li><li><a class="groups-stats"><strong>' + first.user.groups_count + '</strong>' + window.sL.groups + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
 		}
 	
 	// if user hasn't queeted or if we're not allowed to read their queets
@@ -200,6 +206,12 @@ function profileCardFromFirstObject(data,screen_name) {
 			// use avatar if no cover photo
 			if(data.cover_photo === false) {
 				data.cover_photo = data.profile_image_url_original;
+				}
+
+			// follows me?
+			var follows_you = '';
+			if(data.follows_you === true  && window.myUserID != data.id) {
+				var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';			
 				}
 
 			// show user actions if logged in
@@ -228,7 +240,7 @@ function profileCardFromFirstObject(data,screen_name) {
 
 			// remove any old profile card and show profile card
 			$('#feed').siblings('.profile-card').remove();
-			$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.cover_photo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + data.profile_image_url_original + '"><img src="' + data.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + data.screen_name + '</span><span class="follow-status"></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"><span class="location">' + data.location + '</span><span class="divider"> · </span><span class="url"><a href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats"><strong>' + data.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a class="following-stats"><strong>' + data.friends_count + '</strong>' + window.sL.following + '</a></li><li><a class="follower-stats"><strong>' + data.followers_count + '</strong>' + window.sL.followers + '</a></li><li><a class="groups-stats"><strong>' + data.groups_count + '</strong>' + window.sL.groups + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
+			$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.cover_photo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + data.profile_image_url_original + '"><img src="' + data.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + data.screen_name + '</span>' + follows_you + '</span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"><span class="location">' + data.location + '</span><span class="divider"> · </span><span class="url"><a href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats"><strong>' + data.statuses_count + '</strong>' + window.sL.notices + '</a></li><li><a class="following-stats"><strong>' + data.friends_count + '</strong>' + window.sL.following + '</a></li><li><a class="follower-stats"><strong>' + data.followers_count + '</strong>' + window.sL.followers + '</a></li><li><a class="groups-stats"><strong>' + data.groups_count + '</strong>' + window.sL.groups + '</a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
 			}});		
 		}		
 	}

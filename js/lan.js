@@ -150,6 +150,7 @@ window.l.es.notifications           = 'Notificaciones';
 window.l.es.xFavedYourQueet         = 'marcó tu Queet como favorito';
 window.l.es.xRepeatedYourQueet      = 'te ha requitteado ';
 window.l.es.xStartedFollowingYou    = 'te ha seguido';
+window.l.es.followsYou			    = 'te sigue';
 
 
 
@@ -266,7 +267,7 @@ window.l.pt_br.notifications = 'Notificações';
 window.l.pt_br.xFavedYourQueet = 'curtiu seu Queet';
 window.l.pt_br.xRepeatedYourQueet = 'requeetou você';
 window.l.pt_br.xStartedFollowingYou = 'seguiu você';
-
+window.l.pt_br.followsYou = 'segue você';
 
 
 
@@ -383,7 +384,7 @@ window.l.gl.notifications = 'Notificacións';
 window.l.gl.xFavedYourQueet = 'marcou como favorito o teu chío';
 window.l.gl.xRepeatedYourQueet = 'rechouchioute';
 window.l.gl.xStartedFollowingYou = 'está a seguirte';
-
+window.l.gl.followsYou			    = 'séguete';
 
 // basque
 window.l.eu = new Object();
@@ -498,7 +499,7 @@ window.l.eu.notifications = 'Jakinarazpenak';
 window.l.eu.xFavedYourQueet = 'erabiltzaileak gustuko du zure Txioa';
 window.l.eu.xRepeatedYourQueet = 'erabiltzaileak bertxiotu zaitu';
 window.l.eu.xStartedFollowingYou = 'jarraitzen hasi zaizu';
-
+window.l.eu.followsYou = 'jarraitzen dizu';
 
 // french
 window.l.fr = new Object();
@@ -613,7 +614,7 @@ window.l.fr.notifications           = 'Notifications';
 window.l.fr.xFavedYourQueet         = 'a ajouté votre Queet à ses favoris ';
 window.l.fr.xRepeatedYourQueet      = 'vous a requeeté ';
 window.l.fr.xStartedFollowingYou    = 'vous a suivi';
-
+window.l.fr.followsYou			    = 'vous suit';
 
 // deutsch
 window.l.de = new Object();
@@ -740,7 +741,7 @@ window.l.de.notifications           = 'Mitteilungen';
 window.l.de.xFavedYourQueet         = 'favorisierte Deinen Queet';
 window.l.de.xRepeatedYourQueet      = 'hat Dich requeetet';
 window.l.de.xStartedFollowingYou    = 'folgt Dir jetzt';
-
+window.l.de.followsYou			    = 'folgt Dir';
 
 // english
 window.l.en = new Object();
@@ -863,7 +864,7 @@ window.l.en.notifications           = 'Notifications';
 window.l.en.xFavedYourQueet         = 'favorited your Queet';
 window.l.en.xRepeatedYourQueet      = 'requeeted you';
 window.l.en.xStartedFollowingYou    = 'followed you';
-
+window.l.en.followsYou			    = 'follows you';
 
 
 // simplified chinese
@@ -979,7 +980,7 @@ window.l.zh_cn.notifications           = '通知';
 window.l.zh_cn.xFavedYourQueet         = '收藏了你的推文';
 window.l.zh_cn.xRepeatedYourQueet      = '转推了你的推文';
 window.l.zh_cn.xStartedFollowingYou    = '关注了你';
-
+window.l.zh_cn.followsYou			   = '关注了你';
 
 
 // traditional chinese
@@ -1095,7 +1096,7 @@ window.l.zh_tw.notifications           = '通知';
 window.l.zh_tw.xFavedYourQueet         = '已收藏你的推文';
 window.l.zh_tw.xRepeatedYourQueet      = '已轉推你';
 window.l.zh_tw.xStartedFollowingYou    = '已跟隨你';
-
+window.l.zh_tw.followsYou			   = '跟隨你';
 
 
 // svenska
@@ -1211,6 +1212,7 @@ window.l.sv.notifications           = 'Notiser';
 window.l.sv.xFavedYourQueet         = 'favoritmarkerade ditt qvitter';
 window.l.sv.xRepeatedYourQueet      = 'requeetade dig';
 window.l.sv.xStartedFollowingYou    = 'följde dig';
+window.l.sv.followsYou			    = 'följer dig';
 
 // farsi/persian
 window.l.fa = new Object();
@@ -1325,6 +1327,7 @@ window.l.fa.notifications           = 'آگاه‌سازی‌ها';
 window.l.fa.xFavedYourQueet         = 'موارد دلخواه خود را صدای جیر جیر';
 window.l.fa.xRepeatedYourQueet      = 'توییت شما را باز توییت کرد.';
 window.l.fa.xStartedFollowingYou    = 'شما را دنبال کرد';
+window.l.fa.followsYou			    = 'شما را دنبال می‌کند';
 
 // arabic
 window.l.ar = new Object();
@@ -1439,6 +1442,7 @@ window.l.ar.notifications           = 'التنبيهات';
 window.l.ar.xFavedYourQueet         = 'بتفضيل تغريدتك';
 window.l.ar.xRepeatedYourQueet      = 'بإعادة تغريد';
 window.l.ar.xStartedFollowingYou    = 'بمتابعتك';
+window.l.ar.followsYou			    = 'يُتابعك';
 
 // esperanto
 window.l.eo = new Object();
@@ -1562,6 +1566,7 @@ window.l.eo.notifications           = 'Sciigoj';
 window.l.eo.xFavedYourQueet         = 'ŝatataj via avizo';
 window.l.eo.xRepeatedYourQueet      = 'ripetis vin';
 window.l.eo.xStartedFollowingYou    = 'sekvas vin';
+window.l.eo.followsYou			    = 'sekvas vin';
 
 // italian
 window.l.it = new Object();
@@ -1685,6 +1690,7 @@ window.l.it.notifications = 'Notifiche';
 window.l.it.xFavedYourQueet         = 'ha aggiunto ai preferiti il tuo Queet';
 window.l.it.xRepeatedYourQueet      = 'ti ha requittato';
 window.l.it.xStartedFollowingYou = 'ha iniziato a seguirti';
+window.l.it.followsYou = 'ti segue';
 
 // Norwegian
 window.l.no = new Object();
@@ -1799,6 +1805,7 @@ window.l.no.notifications = 'Varsler';
 window.l.no.xFavedYourQueet = 'favorittmarkerte queeten din';
 window.l.no.xRepeatedYourQueet = 'requeetet deg';
 window.l.no.xStartedFollowingYou = 'følger deg';
+window.l.no.followsYou = 'følger deg';
 
 
 // set language, from local storage, else browser language, else english (english also if no localstorage availible)

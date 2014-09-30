@@ -43,7 +43,7 @@ Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071
 TODO
 ----
 
-1. "following you" badge on other peoples profiles
+1. avatar upload from profile card
 
 1. better user popup, with e.g. latest queets
 

@@ -2860,13 +2860,27 @@ button.signup-btn.disabled,
 	}
 .profile-header-inner .profile-card-inner h2.username {	
     margin-top:0;
-   color: #FFFFFF;
+    color: #FFFFFF;
     font-size: 18px;
     font-weight: normal;
     line-height: 24px;
     margin-bottom: 1px;
     text-rendering: optimizelegibility;   	
 	}
+
+.profile-header-inner .profile-card-inner h2.username .follows-you {
+	display:inline-block;
+	font-size:11px;
+	color:#eee;
+	background-color:rgba(0,0,0,0.5);
+	padding:3px 5px;
+	height:15px;
+	line-height:15px;
+	border-radius:3px;
+	margin-left:7px;
+	text-transform:uppercase;
+	}	
+	
 .profile-header-inner .profile-card-inner h2.username a {
 	color:#fff;	
 	}	
