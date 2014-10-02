@@ -351,9 +351,9 @@ class QvitterAction extends ApiAction
 							</div>
 						</div>										
 						<div class="menu-container">
-							<a class="stream-selection friends-timeline" data-stream-header="" data-stream-name="qvitter/statuses/friends_timeline.json"><i class="chev-right"></i></a>
+							<a class="stream-selection friends-timeline" data-stream-header="" data-stream-name="statuses/friends_timeline.json"><i class="chev-right"></i></a>
 							<a class="stream-selection notifications" data-stream-header="" data-stream-name="qvitter/statuses/notifications.json"><span id="unseen-notifications"></span><i class="chev-right"></i></a>											
-							<a class="stream-selection mentions" data-stream-header="" data-stream-name="qvitter/statuses/mentions.json"><i class="chev-right"></i></a>				
+							<a class="stream-selection mentions" data-stream-header="" data-stream-name="statuses/mentions.json"><i class="chev-right"></i></a>				
 							<a class="stream-selection my-timeline" data-stream-header="@statuses/user_timeline.json" data-stream-name="statuses/user_timeline.json"><i class="chev-right"></i></a>				
 							<a class="stream-selection favorites" data-stream-header="" data-stream-name="favorites.json"><i class="chev-right"></i></a>									
 							<a href="<?php print $instanceurl ?>" class="stream-selection public-timeline" data-stream-header="" data-stream-name="statuses/public_timeline.json"><i class="chev-right"></i></a>

@@ -335,92 +335,21 @@ function timestampToTwitterDate(timestamp) {
 	
 /* ·
    · 
-   ·   Decode Qvitter's compact API reponse
-   · 
-   ·   @param data: the data returned from qvitter's compact api response
-   ·
-   ·   @return data formatted as the non-compact "[old] twitter style" api response
+   ·   If we want to make sure we have empty arrays, not empty objects
    · 
    · · · · · · · · · · */
    
-function decodeQvitterCompactFormat(data) {	
+function convertEmptyObjectToEmptyArray(data) {	
 	
 	// empty object? return empty array instead...
 	if($.isEmptyObject(data)) {
 		return [];
 		}
 	// leave data unchanged if we don't recognize it
-	else if(typeof data.s == 'undefined') {
+	else {
 		return data;
 		}		
-	// decode
-	else {
-		var users = new Object();						
-		var i = 0;
-		$.each(data.u, function(k,v){
-			users[k] = new Object;							
-			users[k].id = k;
-			users[k].screen_name = v[0];
-			users[k].name = (v[1]==0?null:v[1]);
-			users[k].location = (v[2]==0?null:v[2]);
-			users[k].description = (v[3]==0?null:v[3]);																																						
-			users[k].profile_image_url_profile_size = v[4];																																						
-			users[k].profile_image_url_original = v[5];																																						
-			users[k].groups_count = v[6];																																						
-			users[k].linkcolor = (v[7]==0?false:v[7]);																																						
-			users[k].backgroundcolor = (v[8]==0?false:v[8]);																																						
-			users[k].url = (v[9]==0?null:v[9]);																																						
-			users[k].followers_count = v[10];																																						
-			users[k].friends_count = v[11];																																						
-			users[k].favourites_count = v[12];																																						
-			users[k].statuses_count = v[13];																																						
-			users[k].following = (v[14]==0?false:v[14]);																																						
-			users[k].statusnet_blocking = (v[15]==0?false:v[15]);																																						
-			users[k].statusnet_profile_url = v[16];
-			users[k].cover_photo = (v[17]==0?false:v[17]);			
-			i++;
-			});								
-		var unqvitter = Array();	
-		var i = 0;		
-		$.each(data.s, function(k,v){
-			unqvitter[i] = new Object;							
-			unqvitter[i].id = v[0];
-			unqvitter[i].created_at = timestampToTwitterDate(v[1]);							
-			unqvitter[i].text = v[2];
-			unqvitter[i].statusnet_html = v[3];
-			unqvitter[i].in_reply_to_status_id = (v[4]==0?null:v[4]);
-			unqvitter[i].in_reply_to_user_id = (v[5]==0?null:v[5]);
-			unqvitter[i].in_reply_to_screen_name = (v[6]==0?null:v[6]);
-			unqvitter[i].favorited = (v[7]==0?false:v[7]);
-			unqvitter[i].repeated = (v[8]==0?false:v[8]);
-			unqvitter[i].statusnet_in_groups = (v[9]==0?false:v[9]);
-			unqvitter[i].user = users[v[10]];
-			unqvitter[i].statusnet_conversation_id = v[11];				
-			unqvitter[i].uri = window.siteInstanceURL + 'notice/' + v[0];															
-			unqvitter[i].source = (v[12]==0?null:v[12]);
 
-			if(typeof v[13] != 'undefined') {
-				unqvitter[i].retweeted_status = new Object;							
-				unqvitter[i].retweeted_status.id = v[13][0];
-				unqvitter[i].retweeted_status.created_at = timestampToTwitterDate(v[13][1]);							
-				unqvitter[i].retweeted_status.text = v[13][2];
-				unqvitter[i].retweeted_status.statusnet_html = v[13][3];
-				unqvitter[i].retweeted_status.in_reply_to_status_id = (v[13][4]==0?null:v[13][4]);
-				unqvitter[i].retweeted_status.in_reply_to_user_id = (v[13][5]==0?null:v[13][5]);
-				unqvitter[i].retweeted_status.in_reply_to_screen_name = (v[13][6]==0?null:v[13][6]);
-				unqvitter[i].retweeted_status.favorited = (v[13][7]==0?false:v[13][7]);
-				unqvitter[i].retweeted_status.repeated = (v[13][8]==0?false:v[13][8]);
-				unqvitter[i].retweeted_status.statusnet_in_groups = (v[13][9]==0?false:v[13][9]);
-				unqvitter[i].retweeted_status.user = users[v[13][10]];
-				unqvitter[i].retweeted_status.statusnet_conversation_id = v[13][11];				
-				unqvitter[i].retweeted_status.uri = window.siteInstanceURL + 'notice/' + v[13][0];															
-				unqvitter[i].retweeted_status.source = (v[13][12]==0?null:v[13][12]);				
-				}
-
-			i++;
-			});
-		return unqvitter;	
-		}
 	}
 	
 	

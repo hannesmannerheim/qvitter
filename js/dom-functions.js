@@ -331,9 +331,9 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	if(stream.substring(0,45) == 'statuses/followers.json?count=20&screen_name='
 	|| stream.substring(0,43) == 'statuses/friends.json?count=20&screen_name='
 	|| stream.substring(0,48) == 'statusnet/groups/list.json?count=10&screen_name='	
-	|| stream.substring(0,51) == 'qvitter/statuses/friends_timeline.json?screen_name='
+	|| stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name='
 	|| stream.substring(0,27) == 'favorites.json?screen_name='	
-	|| stream.substring(0,43) == 'qvitter/statuses/mentions.json?screen_name='	
+	|| stream.substring(0,35) == 'statuses/mentions.json?screen_name='	
 	|| stream.substring(0,27) == 'statuses/user_timeline.json')	{
 		var defaultStreamName = 'statuses/user_timeline.json?' + stream.substring(stream.indexOf('screen_name='));
 		var streamHeader = '@' + stream.substring(stream.lastIndexOf('=')+1);
@@ -346,8 +346,8 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		var streamHeader = '@' + window.loggedIn.screen_name;
 		}		
 	// if this is one of the default streams, get header from DOM
-	else if(stream == 'qvitter/statuses/friends_timeline.json'
-	|| stream == 'qvitter/statuses/mentions.json'
+	else if(stream == 'statuses/friends_timeline.json'
+	|| stream == 'statuses/mentions.json'
 	|| stream == 'qvitter/statuses/notifications.json'	
 	|| stream == 'favorites.json'	
 	|| stream == 'statuses/public_timeline.json'
@@ -389,7 +389,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	else if(stream.substring(0,40) == 'statuses/user_timeline.json?screen_name=') {
 		var h2FeedHeader = window.sL.notices + '<div class="queet-streams">/ <a class="queet-stream mentions">' + window.sL.mentions + '</a> / <a class="queet-stream favorites">' + window.sL.favoritesNoun +'</a></div>';		
 		}	
-	else if(stream.substring(0,43) == 'qvitter/statuses/mentions.json?screen_name=') {
+	else if(stream.substring(0,35) == 'statuses/mentions.json?screen_name=') {
 		var h2FeedHeader = '<div class="queet-streams"><a class="queet-stream queets">' + window.sL.notices + '</a> /</div>' + window.sL.mentions + '<div class="queet-streams">/ <a class="queet-stream favorites">' + window.sL.favoritesNoun + '</a></div>';		
 		}	
 	else if(stream.substring(0,27) == 'favorites.json?screen_name=') {
@@ -404,7 +404,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	else if(stream.substring(0,24) == 'statusnet/groups/admins/') {
 		var h2FeedHeader = window.sL.adminCount;
 		}						
-	else if(stream.substring(0,51) == 'qvitter/statuses/friends_timeline.json?screen_name=') {
+	else if(stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=') {
 		var h2FeedHeader = '<span style="unicode-bidi:bidi-override;direction:ltr;">' + streamHeader + '/all</span>'; // ugly rtl fix, sry, we should have translations for this stream header		
 		}			
 	else {
@@ -452,9 +452,9 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	if(stream.substring(0,23) == 'statuses/followers.json'
 	|| stream.substring(0,21) == 'statuses/friends.json'
 	|| stream.substring(0,26) == 'statusnet/groups/list.json'	
-	|| stream.substring(0,43) == 'qvitter/statuses/mentions.json?screen_name='
+	|| stream.substring(0,35) == 'statuses/mentions.json?screen_name='
 	|| stream.substring(0,27) == 'favorites.json?screen_name='			
-	|| stream.substring(0,51) == 'qvitter/statuses/friends_timeline.json?screen_name=')	{
+	|| stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=')	{
 		getFromAPI(defaultStreamName + '&count=1', function(profile_data){			
 			if(profile_data) {
 				getFromAPI(stream, function(user_data){
@@ -565,7 +565,7 @@ function convertStreamToPath(stream) {
 		var screenName = stream.substring(stream.lastIndexOf('=')+1);		
 		return screenName + '/subscriptions';
 		}
-	else if(stream.substring(0,43) == 'qvitter/statuses/mentions.json?screen_name=') {
+	else if(stream.substring(0,35) == 'statuses/mentions.json?screen_name=') {
 		var screenName = stream.substring(stream.indexOf('=')+1);
 		return screenName + '/replies';
 		}
@@ -583,7 +583,7 @@ function convertStreamToPath(stream) {
 	else if(stream == 'statuses/friends.json?count=20') {
 		return window.loggedIn.screen_name + '/subscriptions';
 		}
-	else if(stream == 'qvitter/statuses/mentions.json') {
+	else if(stream == 'statuses/mentions.json') {
 		return window.loggedIn.screen_name + '/replies';
 		}
 	else if(stream == 'qvitter/statuses/notifications.json') {
@@ -599,10 +599,10 @@ function convertStreamToPath(stream) {
 		var screenName = stream.substring(stream.indexOf('=')+1);
 		return screenName;		
 		}
-	else if(stream == 'qvitter/statuses/friends_timeline.json') {
+	else if(stream == 'statuses/friends_timeline.json') {
 		return window.loggedIn.screen_name + '/all';
 		}
-	else if(stream.substring(0,51) == 'qvitter/statuses/friends_timeline.json?screen_name=') {
+	else if(stream.substring(0,51) == 'statuses/friends_timeline.json?screen_name=') {
 		var screenName = stream.substring(stream.indexOf('=')+1);
 		return screenName + '/all';
 		}		
@@ -685,10 +685,10 @@ function getStreamFromUrl() {
 		var userToStream = loc.replace('/','').replace('/all','');
 		if(userToStream.length>0) {
 			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'qvitter/statuses/friends_timeline.json';					
+				streamToSet = 'statuses/friends_timeline.json';					
 				}
 			else {
-				streamToSet = 'qvitter/statuses/friends_timeline.json?screen_name=' + userToStream;				
+				streamToSet = 'statuses/friends_timeline.json?screen_name=' + userToStream;				
 				}
 			}
 		}		
@@ -698,10 +698,10 @@ function getStreamFromUrl() {
 		var userToStream = loc.replace('/','').replace('/replies','');
 		if(userToStream.length>0) {
 			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'qvitter/statuses/mentions.json';					
+				streamToSet = 'statuses/mentions.json';					
 				}
 			else {
-				streamToSet = 'qvitter/statuses/mentions.json?screen_name=' + userToStream;				
+				streamToSet = 'statuses/mentions.json?screen_name=' + userToStream;				
 				}
 			}
 		}

@@ -665,7 +665,7 @@ $('body').on('click','.profile-banner-footer .stats li a, .queet-stream',functio
 		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + screenName,function(){},true);			
 		}
 	else if($(this).hasClass('mentions')) {
-		setNewCurrentStream('qvitter/statuses/mentions.json?screen_name=' + screenName,function(){},true);			
+		setNewCurrentStream('statuses/mentions.json?screen_name=' + screenName,function(){},true);			
 		}
 	else if($(this).hasClass('favorites')) {
 		setNewCurrentStream('favorites.json?screen_name=' + screenName,function(){},true);			
@@ -739,11 +739,11 @@ $(document).on('click','a', function(e) {
 		// logged in users streams
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/all') {
 			e.preventDefault();			
-			setNewCurrentStream('qvitter/statuses/friends_timeline.json',function(){},true);	
+			setNewCurrentStream('statuses/friends_timeline.json',function(){},true);	
 			}
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/replies') {
 			e.preventDefault();			
-			setNewCurrentStream('qvitter/statuses/mentions.json',function(){},true);				
+			setNewCurrentStream('statuses/mentions.json',function(){},true);				
 			}					
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/notifications') {
 			e.preventDefault();			
@@ -1317,7 +1317,13 @@ $('body').on('click','.action-reply-container',function(){
 	$queetHtmlExpandedContent.remove();		
 	var queetHtmlWithoutFooter = $queetHtml.html();
 	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
-	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').width($('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox').width()-20);
+
+	// fix the width of the queet box, otherwise the syntax highlighting break
+	var queetBoxWidth = $('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox').width()-20;
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box-syntax').width(queetBoxWidth);
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.syntax-middle').width(queetBoxWidth);	
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.two').width(queetBoxWidth);		
+
 	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
 	});
 	

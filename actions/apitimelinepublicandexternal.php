@@ -141,7 +141,7 @@ class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
 
             break;
         case 'json':
-            ApiQvitterAction::showQvitterJsonTimeline($this->notices);
+            $this->showJsonTimeline($this->notices);
             break;
         case 'as':
             header('Content-Type: ' . ActivityStreamJSONDocument::CONTENT_TYPE);

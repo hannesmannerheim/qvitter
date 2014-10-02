@@ -101,17 +101,7 @@ class QvitterPlugin extends Plugin {
 					array('action' => 'apiqvitterallfollowing',
 						  'id' => Nickname::INPUT_FMT));							
 		$m->connect('api/qvitter/update_cover_photo.json',
-					array('action' => 'ApiUpdateCoverPhoto'));	
-		$m->connect('api/qvitter/statuses/friends_timeline.json',
-					array('action' => 'apiqvitterfriends'));	
-		$m->connect('api/qvitter/statuses/friends_timeline/:id.json',
-					array('action' => 'apiqvitterfriends',
-						  'id' => Nickname::INPUT_FMT));							
-		$m->connect('api/qvitter/statuses/mentions/:id.json',
-					array('action' => 'apiqvittermentions',
-						  'id' => Nickname::INPUT_FMT));
-		$m->connect('api/qvitter/statuses/mentions.:format',
-					array('action' => 'apiqvittermentions'));
+					array('action' => 'ApiUpdateCoverPhoto'));								
 		$m->connect('api/qvitter/statuses/notifications.json',
 					array('action' => 'apiqvitternotifications'));					
 		$m->connect(':nickname/notifications',
@@ -259,7 +249,7 @@ class QvitterPlugin extends Plugin {
 
 
     /**
-     * Group addresses in API response
+     * Add stuff to notices in API responses
      *
      * @param Action $action action being executed
      *
@@ -269,6 +259,7 @@ class QvitterPlugin extends Plugin {
     function onNoticeSimpleStatusArray($notice, &$twitter_status)
     {
     
+    	// groups
 		$notice_groups = $notice->getGroups();
 		$group_addressees = false;
 		foreach($notice_groups as $g) {
@@ -277,6 +268,35 @@ class QvitterPlugin extends Plugin {
 		$group_addressees = trim($group_addressees);
 		if($group_addressees == '') $group_addressees = false;
 		$twitter_status['statusnet_in_groups'] = $group_addressees;    
+
+
+		// thumb urls
+		
+        // find all thumbs
+        $attachments = $notice->attachments();
+        $attachment_url_to_thumb = array();
+        if (!empty($attachments)) {
+            foreach ($attachments as $attachment) {
+                try {
+                    $enclosure_o = $attachment->getEnclosure();
+	                $thumb = File_thumbnail::getKV('file_id', $attachment->id);    	                
+                    if(isset($thumb->url)) {
+	                    $attachment_url_to_thumb[$enclosure_o->url] = $thumb->url;
+	                    }                    
+                } catch (ServerException $e) {
+                    // There was not enough metadata available
+                }
+            }
+        }
+		
+		// add thumbs to $twitter_status
+        if (!empty($twitter_status['attachments'])) {
+            foreach ($twitter_status['attachments'] as &$attachment) {
+                if (!empty($attachment_url_to_thumb[$attachment['url']])) {
+                    $attachment['thumb_url'] = $attachment_url_to_thumb[$attachment['url']];
+                }
+            }
+        }		
 
         return true;
     }

@@ -94,8 +94,7 @@ function getFromAPI(stream, actionOnSuccess) {
 		dataType: 'json', 
 		success: function(data) { 
 
-			// decode if we have a qvitter compact stream
-			data = decodeQvitterCompactFormat(data);		
+			data = convertEmptyObjectToEmptyArray(data);		
 
 			actionOnSuccess(data);				
 			},
@@ -256,8 +255,7 @@ function postActionToAPI(action, actionOnSuccess) {
 		error: function(data){ actionOnSuccess(false); console.log(data); },
 		success: function(data) { 
 
-			// decode if we have a qvitter compact stream
-			data = decodeQvitterCompactFormat(data);		
+			data = convertEmptyObjectToEmptyArray(data);		
 
 			actionOnSuccess(data);
 			}
