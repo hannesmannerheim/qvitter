@@ -127,7 +127,11 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
         $notices = array();
 
         $profile = ($this->auth_user) ? $this->auth_user->getProfile() : null;
-
+		
+		if(!$profile instanceof Profile) {
+			return false;
+			}
+		
         $stream = new NotificationStream($profile);
 
         $notifications = $stream->getNotifications(($this->page - 1) * $this->count,

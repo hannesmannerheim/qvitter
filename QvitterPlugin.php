@@ -395,6 +395,7 @@ class QvitterPlugin extends Plugin {
 
 		// replies and mentions (no notifications for these if this is a repeat)
  		else {
+	 		$reply_notification_to = false; 		
 			// check for reply to insert in notifications
 			if($notice->reply_to) {
 				$replyparent = $notice->getParent();

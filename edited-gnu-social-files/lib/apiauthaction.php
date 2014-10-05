@@ -88,7 +88,7 @@ class ApiAuthAction extends ApiAction
 
 		// qvitterfix, accepts regular login session
         if ($this->scoped) {
-        	$this->auth_user = $this->scoped;
+        	$this->auth_user = $this->scoped->getUser();
         	$this->access = self::READ_WRITE;
         }
         

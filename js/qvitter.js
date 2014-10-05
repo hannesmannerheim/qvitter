@@ -427,16 +427,6 @@ function keyupSetBGColor(hex) {
 	}		
 
 
-// go to standard settingspage 
-$('body').on('click','#moresettings',function(){
-    $(document.body).append('<iframe id="logout-iframe" src="https://quitter.se/main/logout" style="display:none;">'); // we need to logout before login, otherwise redirection to settingspage doesn't work
-    $('iframe#logout-iframe').load(function() {
-        $('#moresettings').children('form').submit(); // submit hidden form and open settingspage in new tab
-	    });	
-	});		
-
-
-
 
 
 /* · 
@@ -807,6 +797,7 @@ $(document).on('click','a', function(e) {
 
 		// external profiles 
 		else if (($(this).children('span.mention').length>0 // if it's a mention
+				 || $(this).hasClass('h-card mention') // if it's a newer gnusocial group mention		
 				 || ($(this).hasClass('account-group') && $(this).attr('href').indexOf('/group/')==-1) // or if this is queet stream item header but not a group
 		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')==-1)) // or if it's a activity notice but not a group link
 		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in
@@ -863,6 +854,7 @@ $(document).on('click','a', function(e) {
 
 		// external groups
 		else if (($(this).children('span.group').length>0 // if it's a group mention
+				 || $(this).hasClass('h-card group') // if it's a newer gnusocial group mention
 				 || ($(this).hasClass('account-group') && $(this).attr('href').indexOf('/group/')>-1) // or if this is group stream item header
 		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')>-1)) // or if it's a activity notice
 		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in

@@ -89,7 +89,7 @@ button.icon.nav-search,
 .upload-cover-photo,
 button.shorten i,
 .reload-stream {	
-	background-image: url("../img/sprite.png?v=5");	
+	background-image: url("../img/sprite.png?v=6");	
 	background-size: 500px 1329px;
 	}
 	
@@ -411,9 +411,9 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
 	}
 
 #birds-top {
-	background-position: -193px -3px;
+	background-position: -385px -5px;
     display: block;
-    height: 64px;
+    height: 75px;
     position: fixed;
     right: 0;
     width: 103px;
@@ -3730,9 +3730,10 @@ body.rtl #feed {
 	float: left;
 	}	
 body.rtl #birds-top {
-	background-position: -205px -74px;
+	background-position: -400px -100px;
 	right:auto;
 	left:-3px;
+	width:100px;
 	}		
 body.rtl .language-dropdown {	
 	float:left;

@@ -55,9 +55,10 @@ class ApiNewNotificationsAction extends ApiAction
     {
         parent::handle();
 
-		$user_id = Profile::current()->id;
+
 		$new_notifications = array();
-		if($user_id) {
+		if(Profile::current()) {
+			$user_id = Profile::current()->id;
 			$notification = new QvitterNotification();
 
 			$notification->selectAdd();
