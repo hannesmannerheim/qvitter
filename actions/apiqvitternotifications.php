@@ -87,30 +87,34 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
         
         $notifications_populated = array();
         
-        foreach($this->notifications as $notification) {
-        	
-        	// all but follow has an notice
-        	if($notification->ntype != 'follow') {
-        		$notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));
-        		}
-        	
-        	$notifications_populated[] = array(
-        								'id'=> $notification->id,
-        								'from_profile'=> self::twitterUserArray(Profile::getKV($notification->from_profile_id)),
-        								'ntype'=> $notification->ntype,        								        								        								
-        								'notice'=> $notice,
-        								'created_at'=>self::dateTwitter($notification->created),
-        								'is_seen'=>$notification->is_seen        								
-        								);
-        	}
+        if(!empty($this->notifications)) {
 
-		// mark as seen
-        foreach($this->notifications as $notification) {
-			if($notification->is_seen == 0) {
-				$notification->is_seen = 1;
-				$notification->update();
-				}             
-			}    
+			foreach($this->notifications as $notification) {
+			
+				// all but follow has an notice
+				if($notification->ntype != 'follow') {
+					$notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));
+					}
+			
+				$notifications_populated[] = array(
+											'id'=> $notification->id,
+											'from_profile'=> self::twitterUserArray(Profile::getKV($notification->from_profile_id)),
+											'ntype'=> $notification->ntype,        								        								        								
+											'notice'=> $notice,
+											'created_at'=>self::dateTwitter($notification->created),
+											'is_seen'=>$notification->is_seen        								
+											);
+				}
+
+			// mark as seen
+			foreach($this->notifications as $notification) {
+				if($notification->is_seen == 0) {
+					$notification->is_seen = 1;
+					$notification->update();
+					}             
+				}
+        	
+        	}            
 
         $this->initDocument('json');
         $this->showJsonObjects($notifications_populated);
