@@ -146,6 +146,12 @@ window.l.es.registerRepeatPassword  = 'Verificar contraseña';
 window.l.es.moreSettings            = 'Más configuraciones';
 window.l.es.otherServers            = 'De manera alternativa, puedes crear una cuenta en otro servidor de la red GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativa</a>';
 window.l.es.editMyProfile           = 'Editar perfil';
+window.l.es.notifications           = 'Notificaciones';
+window.l.es.xFavedYourQueet         = 'marcó tu Queet como favorito';
+window.l.es.xRepeatedYourQueet      = 'te ha requitteado ';
+window.l.es.xStartedFollowingYou    = 'te ha seguido';
+window.l.es.followsYou			    = 'te sigue';
+
 
 
 // Português-Brasil
@@ -257,6 +263,13 @@ window.l.pt_br.registerRepeatPassword = 'Repetir senha';
 window.l.pt_br.moreSettings = 'Mais configurações';
 window.l.pt_br.otherServers = 'De manera alternativa, você pode criar uma conta em outro servidor da rede GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativo</a>';
 window.l.pt_br.editMyProfile = 'Editar perfil';
+window.l.pt_br.notifications = 'Notificações';
+window.l.pt_br.xFavedYourQueet = 'curtiu seu Queet';
+window.l.pt_br.xRepeatedYourQueet = 'requeetou você';
+window.l.pt_br.xStartedFollowingYou = 'seguiu você';
+window.l.pt_br.followsYou = 'segue você';
+
+
 
 // galician
 window.l.gl = new Object();
@@ -367,7 +380,11 @@ window.l.gl.registerRepeatPassword = 'Verificar contrasinal';
 window.l.gl.moreSettings = 'máis opcións';
 window.l.gl.otherServers = 'De maneira alternativa, podes crear unha conta noutro servidor da rede GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativa</a>';
 window.l.gl.editMyProfile = 'Editar o perfil';
-
+window.l.gl.notifications = 'Notificacións';
+window.l.gl.xFavedYourQueet = 'marcou como favorito o teu chío';
+window.l.gl.xRepeatedYourQueet = 'rechouchioute';
+window.l.gl.xStartedFollowingYou = 'está a seguirte';
+window.l.gl.followsYou			    = 'séguete';
 
 // basque
 window.l.eu = new Object();
@@ -478,6 +495,11 @@ window.l.eu.registerRepeatPassword = 'Errepikatu pasahitza';
 window.l.eu.moreSettings = 'Aukera gehiago';
 window.l.eu.otherServers = 'GNU social sareko beste nodo batean sor dezakezu kontu bat nahi izanez gero. <a href="http://federation.skilledtests.com/select_your_server.html">Alderatu</a>';
 window.l.eu.editMyProfile = 'Editatu profila';
+window.l.eu.notifications = 'Jakinarazpenak';
+window.l.eu.xFavedYourQueet = 'erabiltzaileak gustuko du zure Txioa';
+window.l.eu.xRepeatedYourQueet = 'erabiltzaileak bertxiotu zaitu';
+window.l.eu.xStartedFollowingYou = 'jarraitzen hasi zaizu';
+window.l.eu.followsYou = 'jarraitzen dizu';
 
 // french
 window.l.fr = new Object();
@@ -588,7 +610,11 @@ window.l.fr.registerRepeatPassword  = 'Vérifiez votre mot de passe';
 window.l.fr.moreSettings            = 'Plus de paramètres';
 window.l.fr.otherServers            = '';
 window.l.fr.editMyProfile           = 'Éditer le profil';
-
+window.l.fr.notifications           = 'Notifications';
+window.l.fr.xFavedYourQueet         = 'a ajouté votre Queet à ses favoris ';
+window.l.fr.xRepeatedYourQueet      = 'vous a requeeté ';
+window.l.fr.xStartedFollowingYou    = 'vous a suivi';
+window.l.fr.followsYou			    = 'vous suit';
 
 // deutsch
 window.l.de = new Object();
@@ -711,7 +737,11 @@ window.l.de.registerRepeatPassword  = 'Passwort bestätigen';
 window.l.de.moreSettings            = 'Weitere Einstellungen';
 window.l.de.otherServers            = 'Du kannst Dir auch gerne ein Konto auf einem anderen Server des GNUsocial-Netzwerks einrichten. <a href="http://federation.skilledtests.com/select_your_server.html">Übersicht</a>';
 window.l.de.editMyProfile           = 'Profil bearbeiten';
-
+window.l.de.notifications           = 'Mitteilungen';
+window.l.de.xFavedYourQueet         = 'favorisierte Deinen Queet';
+window.l.de.xRepeatedYourQueet      = 'hat Dich requeetet';
+window.l.de.xStartedFollowingYou    = 'folgt Dir jetzt';
+window.l.de.followsYou			    = 'folgt Dir';
 
 // english
 window.l.en = new Object();
@@ -830,6 +860,12 @@ window.l.en.registerRepeatPassword  = 'Repeat password';
 window.l.en.moreSettings            = 'More settings';
 window.l.en.otherServers            = 'Alternatively you can create an account on another server of the GNU social network. <a href="http://federation.skilledtests.com/select_your_server.html">Comparison</a>';
 window.l.en.editMyProfile           = 'Edit profile';
+window.l.en.notifications           = 'Notifications';
+window.l.en.xFavedYourQueet         = 'favorited your Queet';
+window.l.en.xRepeatedYourQueet      = 'requeeted you';
+window.l.en.xStartedFollowingYou    = 'followed you';
+window.l.en.followsYou			    = 'follows you';
+
 
 // simplified chinese
 window.l.zh_cn = new Object();
@@ -940,6 +976,12 @@ window.l.zh_cn.registerRepeatPassword  = '重复密码';
 window.l.zh_cn.moreSettings            = '更多的设置';
 window.l.zh_cn.otherServers            = '其他服务器: <a href="http://federation.skilledtests.com/select_your_server.html">对照</a>';
 window.l.zh_cn.editMyProfile           = '编辑个人资料';
+window.l.zh_cn.notifications           = '通知';
+window.l.zh_cn.xFavedYourQueet         = '收藏了你的推文';
+window.l.zh_cn.xRepeatedYourQueet      = '转推了你的推文';
+window.l.zh_cn.xStartedFollowingYou    = '关注了你';
+window.l.zh_cn.followsYou			   = '关注了你';
+
 
 // traditional chinese
 window.l.zh_tw = new Object();
@@ -1050,6 +1092,12 @@ window.l.zh_tw.registerRepeatPassword  = '重複密碼';
 window.l.zh_tw.moreSettings            = '更多的設置';
 window.l.zh_tw.otherServers            = '其他服務器: <a href="http://federation.skilledtests.com/select_your_server.html">對照</a>';
 window.l.zh_tw.editMyProfile     	   = '編輯個人檔案';
+window.l.zh_tw.notifications           = '通知';
+window.l.zh_tw.xFavedYourQueet         = '已收藏你的推文';
+window.l.zh_tw.xRepeatedYourQueet      = '已轉推你';
+window.l.zh_tw.xStartedFollowingYou    = '已跟隨你';
+window.l.zh_tw.followsYou			   = '跟隨你';
+
 
 // svenska
 window.l.sv = new Object();
@@ -1160,7 +1208,11 @@ window.l.sv.registerRepeatPassword  = 'Upprepa lösenord';
 window.l.sv.moreSettings            = 'Fler inställningar';
 window.l.sv.otherServers            = 'Men du kan lika gärna skapa ett konto på en annan server som är del av GNU social-nätverket. <a href="http://federation.skilledtests.com/select_your_server.html">Här är en jämförelse.</a>';
 window.l.sv.editMyProfile     	    = 'Redigera profil';
-
+window.l.sv.notifications           = 'Notiser';
+window.l.sv.xFavedYourQueet         = 'favoritmarkerade ditt qvitter';
+window.l.sv.xRepeatedYourQueet      = 'requeetade dig';
+window.l.sv.xStartedFollowingYou    = 'följde dig';
+window.l.sv.followsYou			    = 'följer dig';
 
 // farsi/persian
 window.l.fa = new Object();
@@ -1271,6 +1323,11 @@ window.l.fa.registerRepeatPassword  = 'تایید گذرواژه';
 window.l.fa.moreSettings            = 'تنظیمات بیشتر';
 window.l.fa.otherServers            = '';
 window.l.fa.editMyProfile     	    = 'ویرایش نمایه';
+window.l.fa.notifications           = 'آگاه‌سازی‌ها';
+window.l.fa.xFavedYourQueet         = 'موارد دلخواه خود را صدای جیر جیر';
+window.l.fa.xRepeatedYourQueet      = 'توییت شما را باز توییت کرد.';
+window.l.fa.xStartedFollowingYou    = 'شما را دنبال کرد';
+window.l.fa.followsYou			    = 'شما را دنبال می‌کند';
 
 // arabic
 window.l.ar = new Object();
@@ -1381,6 +1438,11 @@ window.l.ar.registerRepeatPassword  = 'تأكيد كلمة المرور';
 window.l.ar.moreSettings            = 'مزيد من الإعدادات';
 window.l.ar.otherServers            = '';
 window.l.ar.editMyProfile     	    = 'تعديل الملف الشخصي';
+window.l.ar.notifications           = 'التنبيهات';
+window.l.ar.xFavedYourQueet         = 'بتفضيل تغريدتك';
+window.l.ar.xRepeatedYourQueet      = 'بإعادة تغريد';
+window.l.ar.xStartedFollowingYou    = 'بمتابعتك';
+window.l.ar.followsYou			    = 'يُتابعك';
 
 // esperanto
 window.l.eo = new Object();
@@ -1500,7 +1562,11 @@ window.l.eo.registerRepeatPassword  = 'Ripeti pasvorton';
 window.l.eo.moreSettings            = 'Pli agordoj';
 window.l.eo.otherServers            = '';
 window.l.eo.editMyProfile     	    = 'Redaktu profilon';
-
+window.l.eo.notifications           = 'Sciigoj';
+window.l.eo.xFavedYourQueet         = 'ŝatataj via avizo';
+window.l.eo.xRepeatedYourQueet      = 'ripetis vin';
+window.l.eo.xStartedFollowingYou    = 'sekvas vin';
+window.l.eo.followsYou			    = 'sekvas vin';
 
 // italian
 window.l.it = new Object();
@@ -1620,6 +1686,11 @@ window.l.it.registerRepeatPassword = 'Ripetere la password';
 window.l.it.moreSettings = 'Altre opzioni';
 window.l.it.otherServers = 'In alternativa puoi creare un account su un altro server della rete GNU Social. <a href="http://federation.skilledtests.com/select_your_server.html">Confronto</a>';
 window.l.it.editMyProfile = 'Modifica profilo';
+window.l.it.notifications = 'Notifiche';
+window.l.it.xFavedYourQueet         = 'ha aggiunto ai preferiti il tuo Queet';
+window.l.it.xRepeatedYourQueet      = 'ti ha requittato';
+window.l.it.xStartedFollowingYou = 'ha iniziato a seguirti';
+window.l.it.followsYou = 'ti segue';
 
 // Norwegian
 window.l.no = new Object();
@@ -1730,6 +1801,11 @@ window.l.no.registerRepeatPassword = 'Gjenta passord';
 window.l.no.moreSettings = 'Flere instillinger';
 window.l.no.otherServers = 'Det finnes flere instanser i GNUsocial nettverket som alternativt kan benyttes. <a href="http://gnu.io/social/try/">Følger du denne lenken finner du noen anbefalinger.</a>';
 window.l.no.editMyProfile = 'Rediger profil';
+window.l.no.notifications = 'Varsler';
+window.l.no.xFavedYourQueet = 'favorittmarkerte queeten din';
+window.l.no.xRepeatedYourQueet = 'requeetet deg';
+window.l.no.xStartedFollowingYou = 'følger deg';
+window.l.no.followsYou = 'følger deg';
 
 
 // set language, from local storage, else browser language, else english (english also if no localstorage availible)
@@ -1793,10 +1869,12 @@ $('#settings').html(window.sL.settings);
 $('#other-servers-link').html(window.sL.otherServers);
 $('.language-dropdown .dropdown-toggle small').html(window.sL.languageSelected);
 $('.language-dropdown .current-language').html(window.sL.languageName);
-$('.stream-selection[data-stream-name="qvitter/statuses/friends_timeline.json"]').prepend(window.sL.timeline);
-$('.stream-selection[data-stream-name="qvitter/statuses/friends_timeline.json"]').attr('data-stream-header',window.sL.timeline);
-$('.stream-selection[data-stream-name="qvitter/statuses/mentions.json"]').prepend(window.sL.mentions);
-$('.stream-selection[data-stream-name="qvitter/statuses/mentions.json"]').attr('data-stream-header',window.sL.mentions);
+$('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').prepend(window.sL.timeline);
+$('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').attr('data-stream-header',window.sL.timeline);
+$('.stream-selection[data-stream-name="statuses/mentions.json"]').prepend(window.sL.mentions);
+$('.stream-selection[data-stream-name="statuses/mentions.json"]').attr('data-stream-header',window.sL.mentions);
+$('.stream-selection[data-stream-name="qvitter/statuses/notifications.json"]').prepend(window.sL.notifications);
+$('.stream-selection[data-stream-name="qvitter/statuses/notifications.json"]').attr('data-stream-header',window.sL.notifications);
 $('.stream-selection[data-stream-name="favorites.json"]').prepend(window.sL.favoritesNoun);
 $('.stream-selection[data-stream-name="favorites.json"]').attr('data-stream-header',window.sL.favoritesNoun);
 $('.stream-selection[data-stream-name="statuses/public_timeline.json"]').prepend(window.sL.publicTimeline);

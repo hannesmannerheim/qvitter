@@ -102,9 +102,9 @@ class QvitterAction extends ApiAction
 				<title><?php print $sitetitle; ?></title>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">		
-				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?v=18" />
+				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?v=20" />
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
-				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>favicon.ico?v=2">
+				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>favicon.ico?v=3">
 				<?php
 
 				// if qvitter is a webapp and this is a users url we add feeds
@@ -155,7 +155,13 @@ class QvitterAction extends ApiAction
 					window.textLimit = <?php print json_encode((int)common_config('site','textlimit')) ?>;
 					window.registrationsClosed = <?php print json_encode($registrationsclosed) ?>;
 					window.siteTitle = <?php print json_encode($sitetitle) ?>;
-					window.loggedIn = <?php print json_encode($logged_in_user_obj) ?>;
+					window.loggedIn = <?php 
+					
+					$logged_in_user_json = json_encode($logged_in_user_obj);
+					$logged_in_user_json = str_replace('http:\/\/quitter.se\/','https:\/\/quitter.se\/',$logged_in_user_json);    	
+					print $logged_in_user_json; 
+					
+					?>;
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
 					window.apiRoot = '<?php print common_path("api/", true); ?>';
 					window.avatarRoot = '<?php print common_path("avatar/", true); ?>';					
@@ -189,7 +195,9 @@ class QvitterAction extends ApiAction
 						color:#0084B4;/*COLOREND*/
 						}			
 					.topbar .global-nav,
-					.menu-container {
+					.menu-container,
+					#unseen-notifications,
+					.stream-item.notification .not-seen {
 						background-color:#0084B4;/*BACKGROUNDCOLOREND*/
 						}			
 				</style>
@@ -210,9 +218,7 @@ class QvitterAction extends ApiAction
 							<span class="caret-inner"></span>
 						</li>
 						<li><a id="settings"></a></li>
-						<?php
-						if($siterootdomain == 'quitter.se') { print '<li><a id="classic" href="https://old.quitter.se/">Classic Quitter</a></li>'; } // sry for this junk				
-						?><li class="dropdown-divider"></li>				
+						<li class="dropdown-divider"></li>				
 						<li><a id="logout"></a></li>
 						<li class="language dropdown-divider"></li>				
 						<li class="language"><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>	
@@ -230,7 +236,8 @@ class QvitterAction extends ApiAction
 						<li class="language"><a class="language-link" title="Norwegian" data-lang-code="no">Norsk</a></li>						
 						<li class="language"><a class="language-link" title="Português-Brasil" data-lang-code="pt_br">Português-Brasil</a></li>													
 						<li class="language"><a class="language-link" title="Swedish" data-lang-code="sv">svenska</a></li>					
-					</ul>			
+					</ul>	
+					<div id="birds-top"></div>							
 					<div class="global-nav">
 						<div class="global-nav-inner">
 							<div class="container">				
@@ -278,7 +285,14 @@ class QvitterAction extends ApiAction
 					</div>
 				</div>
 				<div id="page-container">
-					<div class="front-welcome-text">
+					<?php
+					
+					$site_notice = common_config('site', 'notice');
+					if(!empty($site_notice)) {
+						print '<div id="site-notice">'.common_config('site', 'notice').'</div>';
+						}														
+					
+					?><div class="front-welcome-text">
 						<h1></h1>
 						<p></p>
 					</div>		
@@ -342,14 +356,16 @@ class QvitterAction extends ApiAction
 							</div>
 						</div>										
 						<div class="menu-container">
-							<a class="stream-selection friends-timeline" data-stream-header="" data-stream-name="qvitter/statuses/friends_timeline.json"><i class="chev-right"></i></a>
-							<a class="stream-selection mentions" data-stream-header="" data-stream-name="qvitter/statuses/mentions.json"><i class="chev-right"></i></a>				
+							<a class="stream-selection friends-timeline" data-stream-header="" data-stream-name="statuses/friends_timeline.json"><i class="chev-right"></i></a>
+							<a class="stream-selection notifications" data-stream-header="" data-stream-name="qvitter/statuses/notifications.json"><span id="unseen-notifications"></span><i class="chev-right"></i></a>											
+							<a class="stream-selection mentions" data-stream-header="" data-stream-name="statuses/mentions.json"><i class="chev-right"></i></a>				
 							<a class="stream-selection my-timeline" data-stream-header="@statuses/user_timeline.json" data-stream-name="statuses/user_timeline.json"><i class="chev-right"></i></a>				
 							<a class="stream-selection favorites" data-stream-header="" data-stream-name="favorites.json"><i class="chev-right"></i></a>									
 							<a href="<?php print $instanceurl ?>" class="stream-selection public-timeline" data-stream-header="" data-stream-name="statuses/public_timeline.json"><i class="chev-right"></i></a>
 							<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline" data-stream-header="" data-stream-name="statuses/public_and_external_timeline.json"><i class="chev-right"></i></a>					
 						</div>
 						<div class="menu-container" id="history-container"></div>				
+						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div>																
 					</div>						
 					<div id="feed">
 						<div id="feed-header">
@@ -364,17 +380,17 @@ class QvitterAction extends ApiAction
 			
 					<div id="footer"></div>
 				</div>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.0.2.min.js"></script>
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.1.1.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-ui-1.10.3.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.easing.1.3.js"></script>	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.jWindowCrop.js"></script>	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=22"></script>		    	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=17"></script>		    		    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=9"></script>		    		    	    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=23"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=18"></script>		
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=24"></script>		    	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=19"></script>		    		    
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=11"></script>		    		    	    
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=25"></script>	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=20"></script>		
 			</body>
 		</html>
 

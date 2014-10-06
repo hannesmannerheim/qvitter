@@ -19,8 +19,10 @@ GitHub: => https://github.com/knuthollund
 
 
 	$query = $_SERVER['QUERY_STRING'];
-	$shortenerUrl = 'http://qttr.at/yourls-api.php?' . $query;
- 	print file_get_contents($shortenerUrl);
+	if(strlen($query)>0) {
+		$shortenerUrl = 'http://qttr.at/yourls-api.php?' . $query;
+		print file_get_contents($shortenerUrl);
+		}
 
 
 ?>

@@ -59,12 +59,12 @@ window.onpopstate = function(event) {
    · 
    · · · · · · · · · · · · · */ 
 	
-window.loginContentStartPos = $('.front-welcome-text').height()+45;
 $(window).scroll(function(e){ 
-	if ($(this).scrollTop() > window.loginContentStartPos && $('#login-content').css('position') != 'fixed'){ 
+// 	console.log($('#feed').offset().top);
+	if ($(this).scrollTop() > ($('#feed').offset().top-50) && $('#login-content').css('position') != 'fixed'){ 
 		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'fixed', 'top': '50px'}); 
 		}
-	else if ($(this).scrollTop() < window.loginContentStartPos && $('#login-content').css('position') != 'absolute'){ 
+	else if ($(this).scrollTop() < ($('#feed').offset().top-50) && $('#login-content').css('position') != 'absolute'){ 
 		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'absolute', 'top': 'auto'}); 
 		}		
  	});	
@@ -123,9 +123,9 @@ if(!window.registrationsClosed) {
 						$('#signup-user-nickname-step2').after('<div class="spinner-wrap"><div class="spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>');
 						}				
 					window.checkNicknameTimeout = setTimeout(function(){					
-						getFromAPI('check_nickname.json?nickname=' + encodeURIComponent($('#signup-user-nickname-step2').val()),function(data){
+						$.get(window.apiRoot + 'check_nickname.json?nickname=' + encodeURIComponent($('#signup-user-nickname-step2').val()),function(data){
 							$('.spinner-wrap').remove();
-							if(data=='taken') {
+							if(data==0) {
 								$('#signup-user-password2-step2').trigger('keyup'); // revalidates	
 								}
 							else {							
@@ -288,6 +288,7 @@ function doLogin(streamToSet) {
 		// add user data to DOM, show search form, remeber user id, show the feed
 		$('#user-container').css('z-index','1000');
 		$('#top-compose').removeClass('hidden');
+		$('#qvitter-notice').show();
 		$('#user-avatar').attr('src', window.loggedIn.profile_image_url_profile_size);
 		$('#user-name').append(window.loggedIn.name);
 		$('#user-screen-name').append(window.loggedIn.screen_name);
@@ -298,6 +299,7 @@ function doLogin(streamToSet) {
 		$('#user-groups strong').html(window.loggedIn.groups_count);
 		$('.stream-selection.friends-timeline').attr('href', window.loggedIn.statusnet_profile_url + '/all');
 		$('.stream-selection.mentions').attr('href', window.loggedIn.statusnet_profile_url + '/replies');
+		$('.stream-selection.notifications').attr('href', window.loggedIn.statusnet_profile_url + '/notifications');		
 		$('.stream-selection.my-timeline').attr('href', window.loggedIn.statusnet_profile_url);				
 		$('.stream-selection.favorites').attr('href', window.loggedIn.statusnet_profile_url + '/favorites');								
 		window.myUserID = window.loggedIn.id;				
@@ -423,16 +425,6 @@ function keyupSetBGColor(hex) {
 		postNewBackgroundColor($('#background-color-selection').val().substring(1));		
 		}, 500);
 	}		
-
-
-// go to standard settingspage 
-$('body').on('click','#moresettings',function(){
-    $(document.body).append('<iframe id="logout-iframe" src="https://quitter.se/main/logout" style="display:none;">'); // we need to logout before login, otherwise redirection to settingspage doesn't work
-    $('iframe#logout-iframe').load(function() {
-        $('#moresettings').children('form').submit(); // submit hidden form and open settingspage in new tab
-	    });	
-	});		
-
 
 
 
@@ -663,11 +655,17 @@ $('body').on('click','.profile-banner-footer .stats li a, .queet-stream',functio
 		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + screenName,function(){},true);			
 		}
 	else if($(this).hasClass('mentions')) {
-		setNewCurrentStream('qvitter/statuses/mentions.json?screen_name=' + screenName,function(){},true);			
+		setNewCurrentStream('statuses/mentions.json?screen_name=' + screenName,function(){},true);			
 		}
 	else if($(this).hasClass('favorites')) {
 		setNewCurrentStream('favorites.json?screen_name=' + screenName,function(){},true);			
 		}
+	else if($(this).hasClass('following')) {
+		setNewCurrentStream('statuses/friends.json?count=20',function(){},true);	
+		}		
+	else if($(this).hasClass('followers')) {
+		setNewCurrentStream('statuses/followers.json?count=20',function(){},true);
+		}		
 	else if($(this).hasClass('member-stats')) {
 		setNewCurrentStream('statusnet/groups/membership/' + screenName + '.json?count=20',function(){},true);			
 		}
@@ -731,12 +729,16 @@ $(document).on('click','a', function(e) {
 		// logged in users streams
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/all') {
 			e.preventDefault();			
-			setNewCurrentStream('qvitter/statuses/friends_timeline.json',function(){},true);	
+			setNewCurrentStream('statuses/friends_timeline.json',function(){},true);	
 			}
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/replies') {
 			e.preventDefault();			
-			setNewCurrentStream('qvitter/statuses/mentions.json',function(){},true);				
+			setNewCurrentStream('statuses/mentions.json',function(){},true);				
 			}					
+		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/notifications') {
+			e.preventDefault();			
+			setNewCurrentStream('qvitter/statuses/notifications.json',function(){},true);				
+			}								
 		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/favorites') {
 			e.preventDefault();			
 			setNewCurrentStream('favorites.json',function(){},true);				
@@ -747,9 +749,6 @@ $(document).on('click','a', function(e) {
 			if($(this).parent().attr('id') == 'user-profile-link') { // logged in user
 				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name,function(){},true);	
 				}
-			else if($(this).hasClass('account-group')) { // any user
-				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + $(this).find('.screen-name').text().substring(1).toLowerCase(),function(){},true);	
-				}				
 			else { // any user
 				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/',''),function(){},true);								
 				}			
@@ -762,6 +761,11 @@ $(document).on('click','a', function(e) {
 		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/tag/')>-1) {
 			e.preventDefault();
 			setNewCurrentStream('statusnet/tags/timeline/' + $(this).text().toLowerCase().replace('#','') + '.json',function(){},true);				
+			}	
+		// notices
+		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/notice/')>-1) {
+			e.preventDefault();
+			setNewCurrentStream('statuses/show/' + $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/notice/','') + '.json',function(){},true);				
 			}	
 		// groups
 		else if (/^[0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/group/','').replace('/id',''))) {
@@ -793,6 +797,7 @@ $(document).on('click','a', function(e) {
 
 		// external profiles 
 		else if (($(this).children('span.mention').length>0 // if it's a mention
+				 || $(this).hasClass('h-card mention') // if it's a newer gnusocial group mention		
 				 || ($(this).hasClass('account-group') && $(this).attr('href').indexOf('/group/')==-1) // or if this is queet stream item header but not a group
 		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')==-1)) // or if it's a activity notice but not a group link
 		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in
@@ -849,6 +854,7 @@ $(document).on('click','a', function(e) {
 
 		// external groups
 		else if (($(this).children('span.group').length>0 // if it's a group mention
+				 || $(this).hasClass('h-card group') // if it's a newer gnusocial group mention
 				 || ($(this).hasClass('account-group') && $(this).attr('href').indexOf('/group/')>-1) // or if this is group stream item header
 		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')>-1)) // or if it's a activity notice
 		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in
@@ -1005,10 +1011,12 @@ var updateTimesInterval=self.setInterval(function(){
 
 /* · 
    · 
-   ·   Check for new queets 
+   ·   Check for new queets and notifications
    ·   
    · · · · · · · · · · · · · */ 
 
+var checkForNewNotificationsInterval=window.setInterval(function(){checkForNewNotifications()},window.timeBetweenPolling);
+checkForNewNotifications();
 var checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
 function checkForNewQueets() {
 
@@ -1033,7 +1041,12 @@ function checkForNewQueets() {
 		// if we have hidden items, show new-queets-bar
 		if($('#feed-body').find('.stream-item.hidden').length > 0) {
 			var new_queets_num = $('#feed-body').find('.stream-item.hidden').length;
-			document.title = window.siteTitle + ' (' + new_queets_num + ')';
+
+			// if this is notifications page, update site title with hidden notification count
+			if(window.currentStream == 'qvitter/statuses/notifications.json') { 
+				document.title = window.siteTitle + ' (' + new_queets_num + ')';
+				}						
+
 			$('#new-queets-bar').parent().removeClass('hidden');
 	
 			// text plural	
@@ -1050,8 +1063,6 @@ function checkForNewQueets() {
 	}
 
 
-
-
 /* · 
    · 
    ·   Show hidden queets when user clicks on new-queets-bar
@@ -1059,7 +1070,9 @@ function checkForNewQueets() {
    · · · · · · · · · · · · · */ 
 
 $('body').on('click','#new-queets-bar',function(){
-	document.title = window.siteTitle;
+	if(window.currentStream == 'qvitter/statuses/notifications.json') {
+		document.title = window.siteTitle;		
+		}
 	$('.stream-item.hidden').css('opacity','0')
 	$('.stream-item.hidden').animate({opacity:'1'}, 200);
 	$('.stream-item.hidden').removeClass('hidden');	
@@ -1296,7 +1309,13 @@ $('body').on('click','.action-reply-container',function(){
 	$queetHtmlExpandedContent.remove();		
 	var queetHtmlWithoutFooter = $queetHtml.html();
 	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
-	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').width($('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox').width()-20);
+
+	// fix the width of the queet box, otherwise the syntax highlighting break
+	var queetBoxWidth = $('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox').width()-20;
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box-syntax').width(queetBoxWidth);
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.syntax-middle').width(queetBoxWidth);	
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.syntax-two').width(queetBoxWidth);		
+
 	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
 	});
 	
@@ -1819,6 +1838,7 @@ $('body').on('click','.edit-profile-button',function(){
 							</div>\
 						</div>\
 					</div>');
+				$('#edit-profile-popup .profile-card').css('top',$('#page-container .profile-card').offset().top-53 + 'px'); // position exactly over
 				}
 			else {
 				abortEditProfile();

@@ -37,25 +37,11 @@ if (!defined('STATUSNET')) {
     exit(1);
 }
 
-/**
- * Returns the most recent notices (default 20) posted by everybody
- *
- * @category API
- * @package  StatusNet
- * @author   Craig Andrews <candrews@integralblue.com>
- * @author   Evan Prodromou <evan@status.net>
- * @author   Jeffery To <jeffery.to@gmail.com>
- * @author   mac65 <mac65@mac65.com>
- * @author   Mike Cochrane <mikec@mikenz.geek.nz>
- * @author   Robin Millette <robin@millette.info>
- * @author   Zach Copley <zach@status.net>
- * @license  http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License version 3.0
- * @link     http://status.net/
- */
-
-class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
+class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
 {
+    var $notifications = null;
     var $notices = null;
+    var $profiles = null;
 
     /**
      * Take arguments for running
@@ -69,7 +55,7 @@ class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
     {
         parent::prepare($args);
 
-        $this->notices = $this->getNotices();
+        $this->notifications = $this->getNotifications();
 
         return true;
     }
@@ -96,66 +82,43 @@ class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
      */
     function showTimeline()
     {
-        $sitename   = common_config('site', 'name');
-        $sitelogo   = (common_config('site', 'logo')) ? common_config('site', 'logo') : Theme::path('logo.png');
-        // TRANS: Title for site timeline. %s is the StatusNet sitename.
-        $title      = sprintf(_("%s public and external timeline"), $sitename);
-        $taguribase = TagURI::base();
-        $id         = "tag:$taguribase:PublicAndExternalTimeline";
-        $link       = common_local_url('public');
-        $self       = $this->getSelfUri();
-        // TRANS: Subtitle for site timeline. %s is the StatusNet sitename.
-        $subtitle   = sprintf(_("%s updates from the whole known network!"), $sitename);
+        
+        $notice = null;        
+        
+        $notifications_populated = array();
+        
+        if(!empty($this->notifications)) {
 
-        switch($this->format) {
-        case 'xml':
-            $this->showXmlTimeline($this->notices);
-            break;
-        case 'rss':
-            $this->showRssTimeline(
-                $this->notices,
-                $title,
-                $link,
-                $subtitle,
-                null,
-                $sitelogo,
-                $self
-            );
-            break;
-        case 'atom':
+			foreach($this->notifications as $notification) {
+			
+				// all but follow has an notice
+				if($notification->ntype != 'follow') {
+					$notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));
+					}
+			
+				$notifications_populated[] = array(
+											'id'=> $notification->id,
+											'from_profile'=> self::twitterUserArray(Profile::getKV($notification->from_profile_id)),
+											'ntype'=> $notification->ntype,        								        								        								
+											'notice'=> $notice,
+											'created_at'=>self::dateTwitter($notification->created),
+											'is_seen'=>$notification->is_seen        								
+											);
+				}
 
-            header('Content-Type: application/atom+xml; charset=utf-8');
+			// mark as seen
+			foreach($this->notifications as $notification) {
+				if($notification->is_seen == 0) {
+					$notification->is_seen = 1;
+					$notification->update();
+					}             
+				}
+        	
+        	}            
 
-            $atom = new AtomNoticeFeed($this->auth_user);
-
-            $atom->setId($id);
-            $atom->setTitle($title);
-            $atom->setSubtitle($subtitle);
-            $atom->setLogo($sitelogo);
-            $atom->setUpdated('now');
-            $atom->addLink(common_local_url('public'));
-            $atom->setSelfLink($self);
-            $atom->addEntryFromNotices($this->notices);
-
-            $this->raw($atom->getString());
-
-            break;
-        case 'json':
-            $this->showJsonTimeline($this->notices);
-            break;
-        case 'as':
-            header('Content-Type: ' . ActivityStreamJSONDocument::CONTENT_TYPE);
-            $doc = new ActivityStreamJSONDocument($this->auth_user);
-            $doc->setTitle($title);
-            $doc->addLink($link, 'alternate', 'text/html');
-            $doc->addItemsFromNotices($this->notices);
-            $this->raw($doc->asString());
-            break;
-        default:
-            // TRANS: Client error displayed when coming across a non-supported API method.
-            $this->clientError(_('API method not found.'), $code = 404);
-            break;
-        }
+        $this->initDocument('json');
+        $this->showJsonObjects($notifications_populated);
+        $this->endDocument('json');
     }
 
     /**
@@ -163,25 +126,28 @@ class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
      *
      * @return array notices
      */
-    function getNotices()
+    function getNotifications()
     {
         $notices = array();
 
         $profile = ($this->auth_user) ? $this->auth_user->getProfile() : null;
+		
+		if(!$profile instanceof Profile) {
+			return false;
+			}
+		
+        $stream = new NotificationStream($profile);
 
-        $stream = new PublicAndExternalNoticeStream($profile);
-
-        $notice = $stream->getNotices(($this->page - 1) * $this->count,
+        $notifications = $stream->getNotifications(($this->page - 1) * $this->count,
                                       $this->count,
                                       $this->since_id,
-                                      $this->max_id);
+                                      $this->max_id);                        
 
-        $notices = $notice->fetchAll();
+        $notifications = $notifications->fetchAll();
 
-        NoticeList::prefill($notices);
-
-        return $notices;
+        return $notifications;
     }
+
 
     /**
      * Is this action read only?
@@ -202,8 +168,8 @@ class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
      */
     function lastModified()
     {
-        if (!empty($this->notices) && (count($this->notices) > 0)) {
-            return strtotime($this->notices[0]->created);
+        if (!empty($this->notifications) && (count($this->notifications) > 0)) {
+            return strtotime($this->notifications[0]->created);
         }
 
         return null;
@@ -219,21 +185,22 @@ class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
      */
     function etag()
     {
-        if (!empty($this->notices) && (count($this->notices) > 0)) {
+        if (!empty($this->notifications) && (count($this->notifications) > 0)) {
 
-            $last = count($this->notices) - 1;
+            $last = count($this->notifications) - 1;
 
             return '"' . implode(
                 ':',
                 array($this->arg('action'),
                       common_user_cache_hash($this->auth_user),
                       common_language(),
-                      strtotime($this->notices[0]->created),
-                      strtotime($this->notices[$last]->created))
+                      strtotime($this->notifications[0]->created),
+                      strtotime($this->notifications[$last]->created))
             )
             . '"';
         }
 
         return null;
     }
+      
 }
