@@ -1314,7 +1314,7 @@ $('body').on('click','.action-reply-container',function(){
 	var queetBoxWidth = $('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox').width()-20;
 	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box-syntax').width(queetBoxWidth);
 	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.syntax-middle').width(queetBoxWidth);	
-	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.two').width(queetBoxWidth);		
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.syntax-two').width(queetBoxWidth);		
 
 	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
 	});
