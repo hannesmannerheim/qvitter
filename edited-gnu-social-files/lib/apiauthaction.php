@@ -87,7 +87,8 @@ class ApiAuthAction extends ApiAction
 
 
 		// qvitterfix, accepts regular login session
-        if ($this->scoped) {
+        if (common_logged_in()) {
+        	$this->scoped = Profile::current();
         	$this->auth_user = $this->scoped->getUser();
         	$this->access = self::READ_WRITE;
         }
@@ -290,7 +291,7 @@ class ApiAuthAction extends ApiAction
 
             // show error if the user clicks 'cancel'
             // TRANS: Client error thrown when authentication fails becaus a user clicked "Cancel".
-            $this->clientError(_('Could not authenticate you.'), 401);
+            $this->clientError(_('Could not authenticate you.'), 400);
 
         } elseif($required) {
 
@@ -319,7 +320,7 @@ class ApiAuthAction extends ApiAction
                 );
                 $this->logAuthFailure($msg);
                 // TRANS: Client error thrown when authentication fails.
-                $this->clientError(_('Could not authenticate you.'), 401);
+                $this->clientError(_('Could not authenticate you.'), 400);
             }
         } else {
 
