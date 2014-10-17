@@ -386,11 +386,11 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.jWindowCrop.js"></script>	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=24"></script>		    	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=25"></script>		    	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=19"></script>		    		    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=11"></script>		    		    	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=25"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=20"></script>		
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=22"></script>		
 			</body>
 		</html>
 

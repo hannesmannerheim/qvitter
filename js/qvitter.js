@@ -1420,7 +1420,7 @@ $('body').on('click', '.queet-toolbar button',function () {
 			// show real queet
 			var new_queet = Array();
 			new_queet[0] = data;
-			addToFeed(new_queet,tempPostId,'visible');
+			addToFeed(new_queet,tempPostId,'visible', true);
 
 			// remove temp queet
 			$('#' + tempPostId).remove();
