@@ -842,7 +842,9 @@ function expand_queet(q,doScrolling) {
 	if(q.hasClass('expanded') && !q.hasClass('collapsing')) {
 		var sel = getSelection().toString();
     	
-    	if(!sel && !q.find('.queet-button').children('button').hasClass('enabled')) { // don't collapse if text is selected, or if queet has an active queet button
+    	if(!sel 
+    	&& !q.find('.queet-button').children('button').hasClass('enabled')
+    	&& !q.find('.queet-button').children('button').hasClass('too-long')) { // don't collapse if text is selected, or if queet has an active queet button, or if queet text is too long
 			
 			// remove some things right away
 			q.find('.inline-reply-caret').remove();

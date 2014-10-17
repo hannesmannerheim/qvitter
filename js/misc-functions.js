@@ -514,8 +514,8 @@ function qOrAmp(stream) {
 
 function countCharsInQueetBox(src,trgt,btn) {
 
-	var $src_txt = $('<div/>').append($.trim(src.html()).replace(/&nbsp;/gi,' ').replace(/<br>/i,'').replace(/<br>/gi,"x"));
-	var numchars = ($.trim($src_txt.text())).length;
+	var $src_txt = $('<div/>').append($.trim(src.text().replace(/^\s+|\s+$/g, '')));
+	var numchars = ($src_txt.text()).length;
 
 	// check for long urls and disable/enable url shorten button if present
 	var longurls = 0;
@@ -535,6 +535,7 @@ function countCharsInQueetBox(src,trgt,btn) {
 		if(numchars > 0 && numchars < window.textLimit+1) {
 			btn.removeClass('disabled');
 			btn.addClass('enabled');
+			btn.removeClass('too-long');			
 
 			// deactivate button if it's equal to the start text
 			var queetBox = btn.closest('.inline-reply-queetbox').children('.queet-box-syntax');
@@ -546,9 +547,15 @@ function countCharsInQueetBox(src,trgt,btn) {
 					}
 				}
 			}
+		else if(numchars > window.textLimit){
+			btn.removeClass('enabled');
+			btn.addClass('disabled');
+			btn.addClass('too-long');						
+			}
 		else {
 			btn.removeClass('enabled');
 			btn.addClass('disabled');
+			btn.removeClass('too-long');	
 			}	
 	
 		
