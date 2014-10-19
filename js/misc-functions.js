@@ -809,7 +809,7 @@ function shortenUrlsInBox(shortenButton) {
 				
 				console.log(data.url);
 				
-				shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace($('<div/>').text(data.url.url).html(), data.shorturl));
+				shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace($('<div/>').text(decodeURIComponent(data.url.url)).html(), data.shorturl));
 				shortenButton.parent().parent().siblings('.queet-box-syntax').trigger('keyup');
 				shortenButton.addClass('disabled'); // make sure the button is disabled right after
 				}
