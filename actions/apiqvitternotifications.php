@@ -91,9 +91,17 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
 
 			foreach($this->notifications as $notification) {
 			
+				
 				// all but follow has an notice
 				if($notification->ntype != 'follow') {
-					$notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));
+					
+					// we need a notice id here, skip this notification if notice id is null
+					if($notification->notice_id === null) {
+						continue;
+						}
+					else {
+						$notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));						
+						}
 					}
 			
 				$notifications_populated[] = array(
