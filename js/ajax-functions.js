@@ -92,6 +92,14 @@ function getFromAPI(stream, actionOnSuccess) {
 	$.ajax({ url: window.apiRoot + stream + qOrAmp(stream) + 't=' + timeNow(), 
 		type: "GET",		
 		dataType: 'json', 
+		statusCode: {
+			400:function() { 
+				location.reload(); // we may have been logged out in another tab, reload page			
+				},
+			404:function() { 
+				window.location.replace(window.siteInstanceURL); // redirect to frontpage, probably when trying to access non-existing users
+				}				
+			},
 		success: function(data) { 
 
 			data = convertEmptyObjectToEmptyArray(data);		

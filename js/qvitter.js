@@ -1376,7 +1376,7 @@ $('body').on('click', '.queet-toolbar button',function () {
 		var queetBox = $(this).parent().parent().siblings('.queet-box');
 		var queetBoxID = queetBox.attr('id');
 
-		var queetText =  $.trim(queetBox.html().replace(/\n/g,'').replace(/<br>/g,"\n"));
+		var queetText =  $.trim(queetBox.text().replace(/^\s+|\s+$/g, ''));
 		var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText.replace(/\n/g,'<br>') + '</div><div class="stream-item-footer"><span class="stream-item-expand">&nbsp;</span></div></div></div></div>';
 		queetHtml = detectRTL(queetHtml);		
 
@@ -1420,7 +1420,7 @@ $('body').on('click', '.queet-toolbar button',function () {
 			// show real queet
 			var new_queet = Array();
 			new_queet[0] = data;
-			addToFeed(new_queet,tempPostId,'visible');
+			addToFeed(new_queet,tempPostId,'visible', true);
 
 			// remove temp queet
 			$('#' + tempPostId).remove();

@@ -197,6 +197,12 @@ class QvitterPlugin extends Plugin {
 									array('notice' => '[0-9]+'), 
 									'qvitter'); 									                                					
 		}					
+		
+		// if qvitter is opt-out, disable the default register page
+		if(self::settings('enabledbydefault')) {
+			$m->connect('main/register',
+						array('action' => 'qvitter')); 			
+			}
 						
     }
     
