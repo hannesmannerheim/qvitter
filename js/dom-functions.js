@@ -1420,6 +1420,10 @@ function addToFeed(feed, after, extraClasses, isReply) {
 		if(window.currentStream.substring(0,35) == 'qvitter/statuses/notifications.json'
 		&& !isReply) {					
 			
+			// don't show any notices with object_type "activity"
+			if(typeof obj.notice.uri != 'undefined' && obj.notice.uri.indexOf(':activity:') > -1) {
+				return true;
+				}
 			
 			// only if this notification isn't already in stream
 			if($('#stream-item-' + obj.id).length == 0) {		
@@ -1576,6 +1580,11 @@ function addToFeed(feed, after, extraClasses, isReply) {
 		
 		// ordinary tweet
 		else {
+
+			// don't show any notices with object_type "activity"
+			if(typeof obj.uri != 'undefined' && obj.uri.indexOf(':activity:') > -1) {
+				return true;
+				}
 			
 			// only if not already exist
 			if($('#q-' + obj.id).length == 0) {				
