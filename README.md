@@ -27,7 +27,8 @@ Setup
 2. Put all files in /plugins/Qvitter
 
 3. Replace your lib/apiauthaction.php file with the one supplied in 
-edited-gnu-social-files/lib/apiauthaction.php. 
+edited-gnu-social-files/lib/apiauthaction.php. (not needed if you
+are running the latest GNU Social nightly!)
 
 4. Add `addPlugin('Qvitter');` to your /config.php file.
 
@@ -42,6 +43,8 @@ Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071
 
 TODO
 ----
+
+1. image attachments
 
 1. avatar upload from profile card
 
@@ -64,8 +67,6 @@ TODO
 2. Creating groups, make admin, block user
 
 7. Settings (e.g. don't show replies to people I don't follow)
-
-9. Image/file upload
 
 10. Search users
 
