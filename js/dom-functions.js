@@ -1421,7 +1421,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 		&& !isReply) {					
 			
 			// don't show any notices with object_type "activity"
-			if(typeof obj.notice.uri != 'undefined' && obj.notice.uri.indexOf(':activity:') > -1) {
+			if(typeof obj.notice != 'undefined' && obj.notice !== null && (obj.notice.uri.indexOf(':activity:') > -1 || obj.notice.uri.indexOf(':favor:') > -1)) {
 				return true;
 				}
 			
@@ -1581,8 +1581,8 @@ function addToFeed(feed, after, extraClasses, isReply) {
 		// ordinary tweet
 		else {
 
-			// don't show any notices with object_type "activity"
-			if(typeof obj.uri != 'undefined' && obj.uri.indexOf(':activity:') > -1) {
+			// don't show any notices with object_type "activity" or "favor"
+			if(typeof obj.uri != 'undefined' && (obj.uri.indexOf(':activity:') > -1 || obj.uri.indexOf(':favor:') > -1 )) {
 				return true;
 				}
 			
