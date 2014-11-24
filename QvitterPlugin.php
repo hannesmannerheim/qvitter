@@ -39,7 +39,7 @@ class QvitterPlugin extends Plugin {
 	public function settings($setting)
 	{
 	
- 		/* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+ 		/* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
          ·        															 ·
          ·							S E T T I N G S							 ·
          ·         															 ·
@@ -101,7 +101,17 @@ class QvitterPlugin extends Plugin {
 					array('action' => 'apiqvitterallfollowing',
 						  'id' => Nickname::INPUT_FMT));							
 		$m->connect('api/qvitter/update_cover_photo.json',
-					array('action' => 'ApiUpdateCoverPhoto'));								
+					array('action' => 'ApiUpdateCoverPhoto'));	
+		$m->connect('api/qvitter/update_background_image.json',
+					array('action' => 'ApiUpdateBackgroundImage'));						
+		$m->connect('api/qvitter/update_avatar.json',
+					array('action' => 'ApiUpdateAvatar'));		
+		$m->connect('api/qvitter/upload_image.json',
+					array('action' => 'ApiUploadImage'));																		
+		$m->connect('api/qvitter/external_user_show.json',
+					array('action' => 'ApiExternalUserShow'));
+		$m->connect('api/qvitter/toggle_qvitter.json',
+					array('action' => 'ApiToggleQvitter'));																										
 		$m->connect('api/qvitter/statuses/notifications.json',
 					array('action' => 'apiqvitternotifications'));					
 		$m->connect(':nickname/notifications',
@@ -206,6 +216,165 @@ class QvitterPlugin extends Plugin {
 						
     }
     
+    
+    /**
+     * Add script to default ui, to be able to toggle Qvitter with one click
+     *
+     * @return boolean hook return
+     */    
+
+    function onEndShowScripts($action){
+
+        if (common_logged_in()) {		
+
+			$user = common_current_user();
+			$profile = $user->getProfile();
+			$qvitter_enabled='false';
+
+			// if qvitter is enabled by default but _not_ disabled by the user,
+			if(QvitterPlugin::settings('enabledbydefault')) {
+				$disabled = Profile_prefs::getConfigData($profile, 'qvitter', 'disable_qvitter');
+				if($disabled == 0) {
+					$qvitter_enabled='true';
+					}
+				}
+			// if qvitter is disabled by default and _enabled_ by the user,
+			else {
+				$enabled = Profile_prefs::getConfigData($profile, 'qvitter', 'enable_qvitter');
+				if($enabled == 1) {
+					$qvitter_enabled='true';
+					}
+				}
+
+            $action->inlineScript('var toggleQvitterAPIURL = \''.common_path('', true).'api/qvitter/toggle_qvitter.json\'; var toggleText = \'New '.str_replace("'","\'",common_config('site','name')).'\';var qvitterEnabled = '.$qvitter_enabled.';');        
+            $action->script($this->path('js/toggleqvitter.js'));
+        }
+    }
+
+    /**
+     * User colors in default UI too, if theme is neo-quitter
+     *
+     * @return boolean hook return
+     */    
+
+    function onEndShowStylesheets($action) {
+			
+		$theme = common_config('site','theme');
+
+        if (common_logged_in() && substr($theme,0,11) == 'neo-quitter') {		
+
+			$user = common_current_user();
+			$profile = $user->getProfile();
+
+			$backgroundcolor = Profile_prefs::getConfigData($profile, 'theme', 'backgroundcolor');
+			if(!$backgroundcolor) {
+				$backgroundcolor = substr(QvitterPlugin::settings('defaultbackgroundcolor'),1);
+				}
+			$linkcolor = Profile_prefs::getConfigData($profile, 'theme', 'linkcolor');
+			if(!$linkcolor) {
+				$linkcolor = substr(QvitterPlugin::settings('defaultlinkcolor'),1);				
+				}				
+			
+			$ligthen_elements = '';
+			if($this->darkness($backgroundcolor)<0.5) {
+			$ligthen_elements = "
+				#nav_profile a:before, 
+				#nav_timeline_replies a:before, 
+				#nav_timeline_personal a:before, 
+				#nav_local_default li:first-child ul.nav li:nth-child(4) a:before, 
+				#nav_timeline_favorites a:before, 
+				#nav_timeline_public a:before, 
+				#nav_groups a:before, 
+				#nav_recent-tags a:before, 
+				#nav_timeline_favorited a:before, 
+				#nav_directory a:before, 
+				#nav_lists a:before,
+				#site_nav_local_views h3,
+				#content h1,
+				#aside_primary h2,
+				#gnusocial-version p,
+				#page_notice,
+				#pagination .nav_next a {
+					color:rgba(255,255,255,0.4);
+					}
+				.nav li.current a:before,
+				.entity_actions a {
+					color: rgba(255,255,255, 0.6) !important;					
+					}
+				#aside_primary,
+				.entity_edit a:before, 
+				.entity_remote_subscribe:before, 
+				#export_data a:before, 
+				.peopletags_edit_button:before, 
+				.form_group_join:before, 
+				.form_group_leave:before, 
+				.form_group_delete:before,
+				#site_nav_object li.current a,
+				#pagination .nav_next a:hover,
+				#content .guide {
+					color: rgba(255,255,255, 0.6);
+					}				
+				#site_nav_local_views a, 
+				#site_nav_object a,
+				#aside_primary a:not(.invite_button) {
+					color: rgba(255,255,255, 0.7);
+					}
+				#site_nav_local_views li.current a,
+				.entity_edit a:hover:before,
+				.entity_remote_subscribe:hover:before,
+				.peopletags_edit_button:hover:before,
+				.form_group_join:hover:before,
+				.form_group_leave:hover:before,
+				.form_group_delete:hover:before	{
+					color: rgba(255,255,255, 0.8);
+					}	
+				#site_nav_local_views li.current a {
+					background-position: -3px 1px;
+					}				
+				#site_nav_local_views li a:hover {
+					background-position:-3px -24px;					
+					}
+				#gnusocial-version,
+				#pagination .nav_next a {
+					border-color: rgba(255,255,255, 0.3);					
+					}
+				#pagination .nav_next a:hover {
+					border-color: rgba(255,255,255, 0.5);					
+					}	
+				#site_nav_object li.current a {
+					background-position: -3px 2px;
+					}	
+				#site_nav_object li a:hover {
+					background-position: -3px -23px;
+					}						
+				";				
+				}
+
+			$action->style("
+				body {
+					background-color:#".$backgroundcolor.";
+					}
+				a,
+				a:hover,				
+				a:active,								
+				#site_nav_global_primary a:hover,
+				.threaded-replies .notice-faves:before, 
+				.threaded-replies .notice-repeats:before, 
+				.notice-reply-comments > a:before {
+					color:#".$linkcolor.";
+					}
+				#site_nav_global_primary a:hover {
+					border-color:#".$linkcolor.";
+					}
+				address {
+					background-color:#".$linkcolor.";
+					}										
+				".$ligthen_elements);
+			}
+    	}
+
+    
+    
     /**
      * Menu item for Qvitter
      *
@@ -269,11 +438,11 @@ class QvitterPlugin extends Plugin {
 		$notice_groups = $notice->getGroups();
 		$group_addressees = false;
 		foreach($notice_groups as $g) {
-		$group_addressees .= '!'.$g->nickname.' ';
-		}
-		$group_addressees = trim($group_addressees);
-		if($group_addressees == '') $group_addressees = false;
+			error_log(print_r($g,true));
+			$group_addressees = array('nickname'=>$g->nickname,'url'=>$g->mainpage);
+			}
 		$twitter_status['statusnet_in_groups'] = $group_addressees;    
+
 
 
 		// thumb urls
@@ -303,13 +472,39 @@ class QvitterPlugin extends Plugin {
                 }
             }
         }		
+        
+		// reply-to profile url
+        if ($notice->reply_to) {
+            $reply = Notice::getKV(intval($notice->reply_to));
+            if ($reply) {
+                $replier_profile = $reply->getProfile();
+            }
+        }
+        $twitter_status['in_reply_to_profileurl'] =
+            ($replier_profile) ? $replier_profile->profileurl : null;
+        		     	
+        
+        // some more metadata about notice
+		if($notice->is_local == '1') {
+			$twitter_status['is_local'] = true;            					
+			}
+		else {
+			$twitter_status['is_local'] = false;            					
+			$twitter_status['external_url'] = $notice->url;			
+			}
+		if($notice->object_type == 'activity') {
+			$twitter_status['is_activity'] = true;            					
+			}
+		else {
+			$twitter_status['is_activity'] = false;            					
+			}            								
 
         return true;
     }
     
     
     /**
-     * Cover photo in API response, also follows_you
+     * Cover photo in API response, also follows_you, etc
      *
      * @return boolean hook return
      */
@@ -318,11 +513,16 @@ class QvitterPlugin extends Plugin {
     {
 
         $twitter_user['cover_photo'] = Profile_prefs::getConfigData($profile, 'qvitter', 'cover_photo');        
+        $twitter_user['background_image'] = Profile_prefs::getConfigData($profile, 'qvitter', 'background_image');                
+        
 
 		// follows me?
 		if ($scoped) {
 				$twitter_user['follows_you'] = $profile->isSubscribed($scoped);
 				}
+		
+		// local user?		
+		$twitter_user['is_local'] = $profile->isLocal();
 
 
         return true;
@@ -486,6 +686,24 @@ class QvitterPlugin extends Plugin {
         return true;
     }             
         
+    function onPluginVersion(&$versions)
+    {
+        $versions[] = array('name' => 'Qvitter',
+                            'version' => '4',
+                            'author' => 'Hannes Mannerheim',
+                            'homepage' => 'https://github.com/hannesmannerheim/qvitter',
+                            'rawdescription' => _m('User interface'));
+        return true;
+    }
+
+
+	function darkness($hex) {
+		$r = hexdec($hex[0].$hex[1]);
+		$g = hexdec($hex[2].$hex[3]);
+		$b = hexdec($hex[4].$hex[5]);
+	    return (max($r, $g, $b) + min($r, $g, $b)) / 510.0; // HSL algorithm
+	}			
+
 }
 
 

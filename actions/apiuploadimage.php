@@ -1,6 +1,9 @@
 <?php
-
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+ /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ·                                                                             · 
+  ·  Upload image                                                               ·
+  ·                                                                             ·         
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
@@ -8,15 +11,15 @@
   ·              http://github.com/hannesmannerheim/qvitter                     ·
   ·                                                                             ·
   ·                                                                             ·
+  ·                                                                             ·
   ·                                 <o)                                         ·
   ·                                  /_////                                     ·
   ·                                 (____/                                      ·
   ·                                          (o<                                ·
   ·                                   o> \\\\_\                                 ·
-  ·                                 \\)   \____)                                ·
+  ·                                 \\)   \____)                                ·   
   ·                                                                             ·
-  ·                                                                             ·    
-  ·                                                                             ·
+  ·                                                                             ·  
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
   ·  the Free Software Foundation,  either version three of the License or (at  ·
@@ -34,12 +37,13 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
-if (!defined('GNUSOCIAL')) { exit(1); }
 
-class ApiQvitterUpdateBackgroundColorAction extends ApiAuthAction
+if (!defined('GNUSOCIAL')) {
+    exit(1);
+}
+
+class ApiUploadImageAction extends ApiAuthAction
 {
-    var $backgroundcolor = null;
-
     protected $needPost = true;
 
     /**
@@ -53,40 +57,53 @@ class ApiQvitterUpdateBackgroundColorAction extends ApiAuthAction
     {
         parent::prepare($args);
 
-        $this->backgroundcolor = $this->trimmed('backgroundcolor');
+        $this->user = $this->auth_user;       
+        $this->img  = $this->trimmed('img');       
+        
         return true;
     }
 
     /**
      * Handle the request
      *
-     * Try to save the user's colors in her design. Create a new design
-     * if the user doesn't already have one.
-     *
-     * @param array $args $_REQUEST data (unused)
-     *
      * @return void
      */
     protected function handle()
     {
         parent::handle();
-    
-        $validhex = preg_match('/^[a-f0-9]{6}$/i',$this->backgroundcolor);
-        if ($validhex === false || $validhex == 0) {
-            $this->clientError(_('Not a valid hex color.'), 400);
-        }
-    
-		Profile_prefs::setData($this->scoped, 'theme', 'backgroundcolor', $this->backgroundcolor);
+
+		$profile = $this->user->getProfile();
+		$base64img = $this->img;
+		if(stristr($base64img, 'image/jpeg')) {
+			$base64img_mime = 'image/jpeg';
+			}
+		elseif(stristr($base64img, 'image/png')) {
+			// should convert to jpg here!!
+			$base64img_mime = 'image/png';
+			}
+		$base64img = str_replace('data:image/jpeg;base64,', '', $base64img);
+		$base64img = str_replace('data:image/png;base64,', '', $base64img); 			 			
+		$base64img = str_replace(' ', '+', $base64img);
+		$base64img_hash = md5($base64img);
+		$base64img = base64_decode($base64img);
+		$base64img_basename = basename('qvitterupload');
+		$base64img_filename = File::filename($profile, $base64img_basename, $base64img_mime);
+		$base64img_path = File::path($base64img_filename);
+		$base64img_success = file_put_contents($base64img_path, $base64img);
+		$base64img_mimetype = MediaFile::getUploadedMimeType($base64img_path, $base64img_filename);
+		$mediafile = new MediaFile($profile, $base64img_filename, $base64img_mimetype);
+		$return['shorturl'] = $mediafile->shortUrl();
 		
-		// unset background-image
-		Profile_prefs::setData($this->scoped, 'qvitter', 'background_image', '');					
+		// create thumb
+		$file = File::getKV('filename',$base64img_filename);
+		$file->getThumbnail();
 
-        $twitter_user = $this->twitterUserArray($this->scoped, true);
-
+		if(strlen($return['shorturl']) < 1) {
+			$return['error'] = true;
+			}
+					
         $this->initDocument('json');
-        $this->showJsonObjects($twitter_user);
-        $this->endDocument('json');
+        $this->showJsonObjects($return);
+        $this->endDocument('json');		
     }
-
-
 }

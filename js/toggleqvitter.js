@@ -1,4 +1,3 @@
-<?php
 
  /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
   ·                                                                             ·
@@ -30,63 +29,31 @@
   ·  You should have received a copy of the  GNU Affero General Public License  ·
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
-  ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
+  ·   Contact h@nnesmannerhe.im if you have any questions.                      ·
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
-if (!defined('GNUSOCIAL')) { exit(1); }
 
-class ApiQvitterUpdateBackgroundColorAction extends ApiAuthAction
-{
-    var $backgroundcolor = null;
-
-    protected $needPost = true;
-
-    /**
-     * Take arguments for running
-     *
-     * @param array $args $_REQUEST args
-     *
-     * @return boolean success flag
-     */
-    protected function prepare(array $args=array())
-    {
-        parent::prepare($args);
-
-        $this->backgroundcolor = $this->trimmed('backgroundcolor');
-        return true;
-    }
-
-    /**
-     * Handle the request
-     *
-     * Try to save the user's colors in her design. Create a new design
-     * if the user doesn't already have one.
-     *
-     * @param array $args $_REQUEST data (unused)
-     *
-     * @return void
-     */
-    protected function handle()
-    {
-        parent::handle();
-    
-        $validhex = preg_match('/^[a-f0-9]{6}$/i',$this->backgroundcolor);
-        if ($validhex === false || $validhex == 0) {
-            $this->clientError(_('Not a valid hex color.'), 400);
-        }
-    
-		Profile_prefs::setData($this->scoped, 'theme', 'backgroundcolor', $this->backgroundcolor);
-		
-		// unset background-image
-		Profile_prefs::setData($this->scoped, 'qvitter', 'background_image', '');					
-
-        $twitter_user = $this->twitterUserArray($this->scoped, true);
-
-        $this->initDocument('json');
-        $this->showJsonObjects($twitter_user);
-        $this->endDocument('json');
-    }
+/* · 
+   · 
+   ·   Qvitter link in default GNU Social UI, toggle setting in api and reload page when finished
+   · 
+   · · · · · · · · · · · · · */ 
 
 
-}
+if(qvitterEnabled) {
+	$('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter"><a href="' + $('.home.bookmark').attr('href') + '">' + toggleText + '</a></li>');
+	}
+else {
+	$('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter"><a href="' + location.href + '">' + toggleText + '</a></li>');
+
+	$('#toggleqvitter > a').click(function(e){
+		e.preventDefault();		
+		$.get(toggleQvitterAPIURL,function(data){
+			if(data.success === true) {
+				location.reload(); // reload	
+				}
+			});
+	
+		});
+	}

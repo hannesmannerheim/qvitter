@@ -65,7 +65,7 @@ window.l.es.favoriteVerb            = 'Favorito';
 window.l.es.requeetedVerb           = 'Requitteado';
 window.l.es.favoritedVerb           = 'Marcado como favorito';
 window.l.es.replyTo                 = 'Responder a';
-window.l.es.requeetedBy             = 'Requitteado por';
+window.l.es.requeetedBy             = 'Requitteado por {requeeted-by}';
 window.l.es.favoriteNoun            = 'Favorito';
 window.l.es.favoritesNoun           = 'Favoritos';
 window.l.es.requeetNoun             = 'Requeet';
@@ -131,13 +131,13 @@ window.l.es.settings                = 'Configuración';
 window.l.es.saveChanges             = 'Guardar cambios';
 window.l.es.linkColor               = 'Color del enlace';
 window.l.es.backgroundColor         = 'Color de fondo';
-window.l.es.newToQuitter            = '¿Eres nuevo en ' + window.siteTitle + '?';
+window.l.es.newToQuitter            = '¿Eres nuevo en {site-title}?';
 window.l.es.signUp                  = 'Regístrate';
 window.l.es.signUpFullName          = 'Nombre completo';
 window.l.es.signUpEmail             = 'Correo electrónico';
-window.l.es.signUpButtonText        = 'Regístrate en ' + window.siteTitle;
-window.l.es.welcomeHeading          = 'Bienvenido a ' + window.siteTitle + '.';
-window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que no debes tener una cuenta de ' + window.siteTitle + ' para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puedes registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debes registrarse en cualquier servicio para participar - simplemente instala el software GNU Social en tu propio servidor. (:</div>federación</span> de microblogueros que, como tú, estan motivados por ética y solidaridad y quieren abandonar los servicios centralizados capitalistas.';
+window.l.es.signUpButtonText        = 'Regístrate en {site-title}';
+window.l.es.welcomeHeading          = 'Bienvenido a {site-title}.';
+window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que no debes tener una cuenta de {site-title} para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puedes registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debes registrarse en cualquier servicio para participar - simplemente instala el software GNU Social en tu propio servidor. (:</div>federación</span> de microblogueros que, como tú, estan motivados por ética y solidaridad y quieren abandonar los servicios centralizados capitalistas.';
 window.l.es.registerNickname        = 'Nombre de usuario';
 window.l.es.registerHomepage        = 'Sitio web';
 window.l.es.registerBio             = 'Biografía';
@@ -151,6 +151,9 @@ window.l.es.xFavedYourQueet         = 'marcó tu Queet como favorito';
 window.l.es.xRepeatedYourQueet      = 'te ha requitteado ';
 window.l.es.xStartedFollowingYou    = 'te ha seguido';
 window.l.es.followsYou			    = 'te sigue';
+window.l.es.FAQ					    = 'FAQ';
+window.l.es.goToExternalProfile		= 'Ir al perfil completo';
+window.l.es.cropAndSave			    = 'Crop and save';
 
 
 
@@ -182,7 +185,7 @@ window.l.pt_br.favoriteVerb = 'Favorito';
 window.l.pt_br.requeetedVerb = 'Requitteado';
 window.l.pt_br.favoritedVerb = 'Marcado como favorito';
 window.l.pt_br.replyTo = 'Responder para';
-window.l.pt_br.requeetedBy = 'Requitteado por';
+window.l.pt_br.requeetedBy = 'Requitteado por {requeeted-by}';
 window.l.pt_br.favoriteNoun = 'Favorito';
 window.l.pt_br.favoritesNoun = 'Favoritos';
 window.l.pt_br.requeetNoun = 'Requeet';
@@ -248,13 +251,13 @@ window.l.pt_br.settings = 'Configurações';
 window.l.pt_br.saveChanges = 'Salvar mudanças';
 window.l.pt_br.linkColor = 'Cor do link';
 window.l.pt_br.backgroundColor = 'Cor de fundo';
-window.l.pt_br.newToQuitter = 'Você é novo no Quitter?';
+window.l.pt_br.newToQuitter = 'Você é novo no {site-title}?';
 window.l.pt_br.signUp = 'Registre-se';
 window.l.pt_br.signUpFullName = 'Nome completo';
 window.l.pt_br.signUpEmail = 'E-mail';
-window.l.pt_br.signUpButtonText = 'Registre-se no Quitter';
-window.l.pt_br.welcomeHeading = 'Bem-vindo ao Quitter.';
-window.l.pt_br.welcomeText = 'Somos uma <span id="federated-tooltip"><div id="what-is-federation">« Federação » significa que você não deve ter uma conta do Quitter para seguir seus usuários, ser seguido por eles ou se comunicar com eles. Você pode se registrar em qualquer servidor StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou em qualquer serviço utilizando o protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Também não deve se registrar em qualquer serviço para participar - simplesmente instale o software GNU Social em seu próprio servidor. (:</div>federação</span> de microblogueiros que, como você, estão motivados pela ética e solidaridade, e querem abandonar os serviços centralizados capitalistas. Estamos aqui desde 2010 e sempre vamos ser non-profit.';
+window.l.pt_br.signUpButtonText = 'Registre-se no {site-title}';
+window.l.pt_br.welcomeHeading = 'Bem-vindo ao {site-title}.';
+window.l.pt_br.welcomeText = 'Somos uma <span id="federated-tooltip"><div id="what-is-federation">« Federação » significa que você não deve ter uma conta do {site-title} para seguir seus usuários, ser seguido por eles ou se comunicar com eles. Você pode se registrar em qualquer servidor StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou em qualquer serviço utilizando o protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Também não deve se registrar em qualquer serviço para participar - simplesmente instale o software GNU Social em seu próprio servidor. (:</div>federação</span> de microblogueiros que, como você, estão motivados pela ética e solidaridade, e querem abandonar os serviços centralizados capitalistas. Estamos aqui desde 2010 e sempre vamos ser non-profit.';
 window.l.pt_br.registerNickname = 'Nome de usuário';
 window.l.pt_br.registerHomepage = 'Site web';
 window.l.pt_br.registerBio = 'Biografia';
@@ -268,6 +271,9 @@ window.l.pt_br.xFavedYourQueet = 'curtiu seu Queet';
 window.l.pt_br.xRepeatedYourQueet = 'requeetou você';
 window.l.pt_br.xStartedFollowingYou = 'seguiu você';
 window.l.pt_br.followsYou = 'segue você';
+window.l.pt_br.FAQ	= 'FAQ';
+window.l.pt_br.goToExternalProfile = 'Ir para o perfil completo';
+window.l.pt_br.cropAndSave = 'Crop and save';
 
 
 
@@ -299,7 +305,7 @@ window.l.gl.favoriteVerb = 'Favoritos';
 window.l.gl.requeetedVerb = 'Requitteado';
 window.l.gl.favoritedVerb = 'Favorito';
 window.l.gl.replyTo = 'Responder a ';
-window.l.gl.requeetedBy = 'Requitteado por';
+window.l.gl.requeetedBy = 'Requitteado por {requeeted-by}';
 window.l.gl.favoriteNoun = 'Favorito';
 window.l.gl.favoritesNoun = 'Favoritos';
 window.l.gl.requeetNoun = 'Reueet';
@@ -365,13 +371,13 @@ window.l.gl.settings = 'Configuración';
 window.l.gl.saveChanges = 'Gardar cambios';
 window.l.gl.linkColor = 'Cor do enlace';
 window.l.gl.backgroundColor = 'Cor de fondo';
-window.l.gl.newToQuitter = 'Eres novo en Quitter? ';
+window.l.gl.newToQuitter = 'Eres novo en {site-title}? ';
 window.l.gl.signUp = 'Rexístrate';
 window.l.gl.signUpFullName = 'Nome completo';
 window.l.gl.signUpEmail = 'Correo electrónico';
-window.l.gl.signUpButtonText = 'Rexístrate en Quitter';
-window.l.gl.welcomeHeading = 'Benvido a Quitter.';
-window.l.gl.welcomeText = 'Somos unha <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que non debes ter unha conta de Quitter para seguir os seus usuarios, estar seguido por ou communicar con eles. Podes rexistrar con calquera servidor StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou calquera servizo utilizando o protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Tamén non debes rexistrarse en calquera servizo para participar - simplemente instala o software GNU Social no teu propio servidor. (:</div>federación</span> de microblogueros que, como ti, estan motivados por ética e solidariedade e queren abandonar os servizos centralizados capitalistas. Estamos aquí desde 2010 e sempre imos ser non-profit. ';
+window.l.gl.signUpButtonText = 'Rexístrate en {site-title}';
+window.l.gl.welcomeHeading = 'Benvido a {site-title}.';
+window.l.gl.welcomeText = 'Somos unha <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que non debes ter unha conta de {site-title} para seguir os seus usuarios, estar seguido por ou communicar con eles. Podes rexistrar con calquera servidor StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou calquera servizo utilizando o protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Tamén non debes rexistrarse en calquera servizo para participar - simplemente instala o software GNU Social no teu propio servidor. (:</div>federación</span> de microblogueros que, como ti, estan motivados por ética e solidariedade e queren abandonar os servizos centralizados capitalistas. Estamos aquí desde 2010 e sempre imos ser non-profit. ';
 window.l.gl.registerNickname = 'Nome de usuario';
 window.l.gl.registerHomepage = 'Sitio web';
 window.l.gl.registerBio = 'Biografía';
@@ -385,6 +391,9 @@ window.l.gl.xFavedYourQueet = 'marcou como favorito o teu chío';
 window.l.gl.xRepeatedYourQueet = 'rechouchioute';
 window.l.gl.xStartedFollowingYou = 'está a seguirte';
 window.l.gl.followsYou			    = 'séguete';
+window.l.gl.FAQ	= 'FAQ';
+window.l.gl.goToExternalProfile		= 'Ir ao perfil completo';
+window.l.gl.cropAndSave = 'Crop and save';
 
 // basque
 window.l.eu = new Object();
@@ -414,7 +423,7 @@ window.l.eu.favoriteVerb = 'Gogoko';
 window.l.eu.requeetedVerb = 'Bertxiotua';
 window.l.eu.favoritedVerb = 'Gogokoa';
 window.l.eu.replyTo = 'Erantzun';
-window.l.eu.requeetedBy = 'Bertxiotzailea';
+window.l.eu.requeetedBy = 'Bertxiotzailea {requeeted-by}';
 window.l.eu.favoriteNoun = 'Gogokoa';
 window.l.eu.favoritesNoun = 'Gogokoak';
 window.l.eu.requeetNoun = 'Bertxio';
@@ -480,13 +489,13 @@ window.l.eu.settings = 'Aukerak';
 window.l.eu.saveChanges = 'Gorde aldaketak';
 window.l.eu.linkColor = 'Esteka kolorea';
 window.l.eu.backgroundColor = 'Hondoko kolorea';
-window.l.eu.newToQuitter = 'Berria Quitterren?';
+window.l.eu.newToQuitter = 'Berria Quiterren?';
 window.l.eu.signUp = 'Izena eman';
 window.l.eu.signUpFullName = 'Izen osoa';
 window.l.eu.signUpEmail = 'Emaila';
-window.l.eu.signUpButtonText = 'Izen eman Quitterren';
+window.l.eu.signUpButtonText = 'Izen eman Quiterren';
 window.l.eu.welcomeHeading = 'Ongi etorri Quiterrera.';
-window.l.eu.welcomeText = 'Zerbitzu kapitalista zentralizatuetatik ihes egin nahi duen eta etika zein elkartasuna axola zaizkion mikroblogintza <span id="federated-tooltip"><div id="what-is-federation">"Federazioak" esan nahi duz ez duzula behar Quitter kontu bat jarraitzaile izan, jarraitua izateko edo Quitter erabiltzaileekin elkarreragiteko. StatusNet, GNU Social edo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a> protokoloa darabilen edozein zerbitzutan erregistratu zaitezke!  Zure zerbitzari propioan <a href="http://www.gnu.org/software/social/">GNU Social</a> maitagarria instalatzen baduzu, ez duzu besteen zerbitzutan zertan erregistratu ere! :)</div>federazio</span> bat gara. 2010 urteaz geroztik gabiltz hontan eta beti jarraituko dugu irabazi asmorik gabekoak izaten.';
+window.l.eu.welcomeText = 'Zerbitzu kapitalista zentralizatuetatik ihes egin nahi duen eta etika zein elkartasuna axola zaizkion mikroblogintza <span id="federated-tooltip"><div id="what-is-federation">"Federazioak" esan nahi duz ez duzula behar {site-title} kontu bat jarraitzaile izan, jarraitua izateko edo {site-title} erabiltzaileekin elkarreragiteko. StatusNet, GNU Social edo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a> protokoloa darabilen edozein zerbitzutan erregistratu zaitezke!  Zure zerbitzari propioan <a href="http://www.gnu.org/software/social/">GNU Social</a> maitagarria instalatzen baduzu, ez duzu besteen zerbitzutan zertan erregistratu ere! :)</div>federazio</span> bat gara. 2010 urteaz geroztik gabiltz hontan eta beti jarraituko dugu irabazi asmorik gabekoak izaten.';
 window.l.eu.registerNickname = 'Ezizena';
 window.l.eu.registerHomepage = 'Hasera';
 window.l.eu.registerBio = 'Biografia';
@@ -500,6 +509,9 @@ window.l.eu.xFavedYourQueet = 'erabiltzaileak gustuko du zure Txioa';
 window.l.eu.xRepeatedYourQueet = 'erabiltzaileak bertxiotu zaitu';
 window.l.eu.xStartedFollowingYou = 'jarraitzen hasi zaizu';
 window.l.eu.followsYou = 'jarraitzen dizu';
+window.l.eu.FAQ	= 'FAQ';
+window.l.eu.goToExternalProfile	= 'Profil osora joan';
+window.l.eu.cropAndSave = 'Crop and save';
 
 // french
 window.l.fr = new Object();
@@ -529,7 +541,7 @@ window.l.fr.favoriteVerb            = 'Favori';
 window.l.fr.requeetedVerb           = 'Requeeté';
 window.l.fr.favoritedVerb           = 'Ajouté aux favoris';
 window.l.fr.replyTo                 = 'Répondre à';
-window.l.fr.requeetedBy             = 'Requeeté par';
+window.l.fr.requeetedBy             = 'Requeeté par {requeeted-by}';
 window.l.fr.favoriteNoun            = 'Favori';
 window.l.fr.favoritesNoun           = 'Favoris';
 window.l.fr.requeetNoun             = 'Requeet';
@@ -595,13 +607,13 @@ window.l.fr.settings                = 'Paramètres';
 window.l.fr.saveChanges             = 'Sauvegarder les modifications';
 window.l.fr.linkColor               = 'Couleur des liens';
 window.l.fr.backgroundColor         = 'Couleur de l\'arrière-plan';
-window.l.fr.newToQuitter            = 'Nouveau sur ' + window.siteTitle + ' ?';
+window.l.fr.newToQuitter            = 'Nouveau sur {site-title} ?';
 window.l.fr.signUp                  = 'Inscrivez-vous';
 window.l.fr.signUpFullName          = 'Nom complet';
 window.l.fr.signUpEmail             = 'Email';
-window.l.fr.signUpButtonText        = 'S\'inscrire sur ' + window.siteTitle;
-window.l.fr.welcomeHeading          = 'Bienvenue sur ' + window.siteTitle + '.';
-window.l.fr.welcomeText             = 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte ' + window.siteTitle + ' pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés capitalistes.';
+window.l.fr.signUpButtonText        = 'S\'inscrire sur {site-title}';
+window.l.fr.welcomeHeading          = 'Bienvenue sur {site-title}.';
+window.l.fr.welcomeText             = 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte {site-title} pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés capitalistes.';
 window.l.fr.registerNickname        = 'Nom d\'utilisateur';
 window.l.fr.registerHomepage        = 'Site Web';
 window.l.fr.registerBio             = 'Biographie';
@@ -615,6 +627,9 @@ window.l.fr.xFavedYourQueet         = 'a ajouté votre Queet à ses favoris ';
 window.l.fr.xRepeatedYourQueet      = 'vous a requeeté ';
 window.l.fr.xStartedFollowingYou    = 'vous a suivi';
 window.l.fr.followsYou			    = 'vous suit';
+window.l.fr.FAQ						= 'FAQ';
+window.l.fr.goToExternalProfile		= 'Aller sur le profil complet';
+window.l.fr.cropAndSave 			= 'Crop and save';
 
 // deutsch
 window.l.de = new Object();
@@ -644,7 +659,7 @@ window.l.de.favoriteVerb            = 'Favorisieren';
 window.l.de.requeetedVerb           = 'Requeetet';
 window.l.de.favoritedVerb           = 'Favorisiert';
 window.l.de.replyTo                 = 'Antwort an';
-window.l.de.requeetedBy             = 'Requeetet von';
+window.l.de.requeetedBy             = 'Requeetet von {requeeted-by}';
 window.l.de.favoriteNoun            = 'Favorisieren';
 window.l.de.favoritesNoun           = 'Favoriten';
 window.l.de.requeetNoun             = 'Requeet';
@@ -710,16 +725,16 @@ window.l.de.settings                = 'Einstellungen';
 window.l.de.saveChanges             = 'Änderungen speichern';
 window.l.de.linkColor               = 'Linkfarbe';
 window.l.de.backgroundColor         = 'Hintergrundfarbe';
-window.l.de.newToQuitter            = 'Neu bei ' + window.siteTitle + '?';
+window.l.de.newToQuitter            = 'Neu bei {site-title}?';
 window.l.de.signUp                  = 'Registriere Dich!';
 window.l.de.signUpFullName          = 'Vollständiger Name';
 window.l.de.signUpEmail             = 'E-Mail';
-window.l.de.signUpButtonText        = 'Registriere Dich bei ' + window.siteTitle + '!';
-window.l.de.welcomeHeading          = 'Willkommen bei ' + window.siteTitle + '!';
+window.l.de.signUpButtonText        = 'Registriere Dich bei {site-title}!';
+window.l.de.welcomeHeading          = 'Willkommen bei {site-title}!';
 window.l.de.welcomeText             = 'Wir sind eine Community von Microbloggern, verteilt über einen weltweiten \
                                        <span id="federated-tooltip"><div id="what-is-federation">"Verbund" bedeutet, \
-                                       dass du nicht selbst einen ' + window.siteTitle + '-Account brauchst, um mit ' + window.siteTitle + '-Nutzern zu \
-                                       kommunizieren, ihnen zu folgen oder Follower bei ' + window.siteTitle + ' zu haben. Du kannst dich \
+                                       dass du nicht selbst einen {site-title}-Account brauchst, um mit {site-title}-Nutzern zu \
+                                       kommunizieren, ihnen zu folgen oder Follower bei {site-title} zu haben. Du kannst dich \
                                        genauso gut bei einem der anderen <a href="http://www.gnu.org/software/social/">\
                                        GNU-Social</a>-Server registrieren oder einem anderen Dienst, der das \
                                        <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>-Protokoll \
@@ -742,6 +757,9 @@ window.l.de.xFavedYourQueet         = 'favorisierte Deinen Queet';
 window.l.de.xRepeatedYourQueet      = 'hat Dich requeetet';
 window.l.de.xStartedFollowingYou    = 'folgt Dir jetzt';
 window.l.de.followsYou			    = 'folgt Dir';
+window.l.de.FAQ						= 'FAQ';
+window.l.de.goToExternalProfile		= 'Vollständiges Profil anzeigen';
+window.l.de.cropAndSave 			= 'Zuschneiden und Abspeichern';
 
 // english
 window.l.en = new Object();
@@ -771,7 +789,7 @@ window.l.en.favoriteVerb            = 'Favorite';
 window.l.en.requeetedVerb           = 'Repeated';
 window.l.en.favoritedVerb           = 'Favorited';
 window.l.en.replyTo                 = 'Reply to';
-window.l.en.requeetedBy             = 'Repeated by';
+window.l.en.requeetedBy             = 'Repeated by {requeeted-by}';
 window.l.en.favoriteNoun            = 'Favorite';
 window.l.en.favoritesNoun           = 'Favorites';
 window.l.en.requeetNoun             = 'Repeat';
@@ -837,15 +855,15 @@ window.l.en.settings                = 'Settings';
 window.l.en.saveChanges             = 'Save changes';
 window.l.en.linkColor               = 'Link color';
 window.l.en.backgroundColor         = 'Background color';
-window.l.en.newToQuitter            = 'New to ' + window.siteTitle + '?';
+window.l.en.newToQuitter            = 'New to {site-title}?';
 window.l.en.signUp                  = 'Sign up';
 window.l.en.signUpFullName          = 'Full name';
 window.l.en.signUpEmail             = 'Email';
-window.l.en.signUpButtonText        = 'Sign up to ' + window.siteTitle + '';
-window.l.en.welcomeHeading          = 'Welcome to ' + window.siteTitle + '.';
+window.l.en.signUpButtonText        = 'Sign up to {site-title}';
+window.l.en.welcomeHeading          = 'Welcome to {site-title}.';
 window.l.en.welcomeText             = 'We are a <span id="federated-tooltip"><div id="what-is-federation">"Federation" \
-                                       means that you don\'t need a ' + window.siteTitle + ' account to be able to follow, be followed \
-                                       by or interact with ' + window.siteTitle + ' users. You can register on any StatusNet or GNU Social server \
+                                       means that you don\'t need a {site-title} account to be able to follow, be followed \
+                                       by or interact with {site-title} users. You can register on any StatusNet or GNU Social server \
                                        or any service based on the the \
                                        <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a> protocol! \
                                        You don\'t even have to join a service – try installing the lovely \
@@ -865,6 +883,9 @@ window.l.en.xFavedYourQueet         = 'favorited your Queet';
 window.l.en.xRepeatedYourQueet      = 'requeeted you';
 window.l.en.xStartedFollowingYou    = 'followed you';
 window.l.en.followsYou			    = 'follows you';
+window.l.en.FAQ						= 'FAQ';
+window.l.en.goToExternalProfile		= 'Go to full profile';
+window.l.en.cropAndSave 			= 'Crop and save';
 
 
 // simplified chinese
@@ -895,7 +916,7 @@ window.l.zh_cn.favoriteVerb            = '收藏';
 window.l.zh_cn.requeetedVerb           = '已转推';
 window.l.zh_cn.favoritedVerb           = '已收藏';
 window.l.zh_cn.replyTo                 = '回复';
-window.l.zh_cn.requeetedBy             = '转推由';
+window.l.zh_cn.requeetedBy             = '转推由 {requeeted-by}';
 window.l.zh_cn.favoriteNoun            = '收藏';
 window.l.zh_cn.favoritesNoun           = '收藏';
 window.l.zh_cn.requeetNoun             = '转推';
@@ -961,12 +982,12 @@ window.l.zh_cn.settings                = '设置';
 window.l.zh_cn.saveChanges             = '保存更改';
 window.l.zh_cn.linkColor               = '主题颜色';
 window.l.zh_cn.backgroundColor         = '背景颜色';
-window.l.zh_cn.newToQuitter            = '新来 ' + window.siteTitle + '?';
+window.l.zh_cn.newToQuitter            = '新来 {site-title}?';
 window.l.zh_cn.signUp                  = '注册';
 window.l.zh_cn.signUpFullName          = '名称';
 window.l.zh_cn.signUpEmail             = '邮件地址';
-window.l.zh_cn.signUpButtonText        = '注册 ' + window.siteTitle + '';
-window.l.zh_cn.welcomeHeading          = '欢迎来到 ' + window.siteTitle + '。';
+window.l.zh_cn.signUpButtonText        = '注册 {site-title}';
+window.l.zh_cn.welcomeHeading          = '欢迎来到 {site-title}。';
 window.l.zh_cn.welcomeText             = '';
 window.l.zh_cn.registerNickname        = '选择你的用户名';
 window.l.zh_cn.registerHomepage        = '首页';
@@ -981,6 +1002,9 @@ window.l.zh_cn.xFavedYourQueet         = '收藏了你的推文';
 window.l.zh_cn.xRepeatedYourQueet      = '转推了你的推文';
 window.l.zh_cn.xStartedFollowingYou    = '关注了你';
 window.l.zh_cn.followsYou			   = '关注了你';
+window.l.zh_cn.FAQ	= 'FAQ';
+window.l.zh_cn.goToExternalProfile		= '前往完整的个人档案';
+window.l.zh_cn.cropAndSave = 'Crop and save';
 
 
 // traditional chinese
@@ -1011,7 +1035,7 @@ window.l.zh_tw.favoriteVerb            = '收藏';
 window.l.zh_tw.requeetedVerb           = '已轉推';
 window.l.zh_tw.favoritedVerb           = '已收藏';
 window.l.zh_tw.replyTo                 = '回覆給';
-window.l.zh_tw.requeetedBy             = '通過轉推';
+window.l.zh_tw.requeetedBy             = '通過轉推 {requeeted-by}';
 window.l.zh_tw.favoriteNoun            = '收藏';
 window.l.zh_tw.favoritesNoun           = '收藏';
 window.l.zh_tw.requeetNoun             = '轉推';
@@ -1077,12 +1101,12 @@ window.l.zh_tw.settings                = '設定';
 window.l.zh_tw.saveChanges             = '儲存變更';
 window.l.zh_tw.linkColor               = '佈景主題顏色';
 window.l.zh_tw.backgroundColor         = '背景顏色';
-window.l.zh_tw.newToQuitter            = '初次來到 ' + window.siteTitle + '?';
+window.l.zh_tw.newToQuitter            = '初次來到 {site-title}?';
 window.l.zh_tw.signUp                  = '註冊';
 window.l.zh_tw.signUpFullName          = '全名';
 window.l.zh_tw.signUpEmail             = '電子郵件';
-window.l.zh_tw.signUpButtonText        = '註冊 ' + window.siteTitle + '';
-window.l.zh_tw.welcomeHeading          = '歡迎來到 ' + window.siteTitle + '。';
+window.l.zh_tw.signUpButtonText        = '註冊 {site-title}';
+window.l.zh_tw.welcomeHeading          = '歡迎來到 {site-title}。';
 window.l.zh_tw.welcomeText             = '';
 window.l.zh_tw.registerNickname        = '選擇你的帳戶名稱';
 window.l.zh_tw.registerHomepage        = '主頁';
@@ -1097,6 +1121,9 @@ window.l.zh_tw.xFavedYourQueet         = '已收藏你的推文';
 window.l.zh_tw.xRepeatedYourQueet      = '已轉推你';
 window.l.zh_tw.xStartedFollowingYou    = '已跟隨你';
 window.l.zh_tw.followsYou			   = '跟隨你';
+window.l.zh_tw.FAQ	= 'FAQ';
+window.l.zh_tw.goToExternalProfile		= '前往詳細個人檔案';
+window.l.zh_tw.cropAndSave = 'Crop and save';
 
 
 // svenska
@@ -1127,7 +1154,7 @@ window.l.sv.favoriteVerb            = 'Favoritmarkera';
 window.l.sv.requeetedVerb           = 'Requeetad';
 window.l.sv.favoritedVerb           = 'Favoritmarkerad';
 window.l.sv.replyTo                 = 'Svara';
-window.l.sv.requeetedBy             = 'requeetad av';
+window.l.sv.requeetedBy             = '{requeeted-by} requeetade';
 window.l.sv.favoriteNoun            = 'favorit';
 window.l.sv.favoritesNoun           = 'Favoriter';
 window.l.sv.requeetNoun             = 'requeet';
@@ -1193,13 +1220,13 @@ window.l.sv.settings                = 'Inställningar';
 window.l.sv.saveChanges             = 'Spara ändringarna';
 window.l.sv.linkColor               = 'Länkfärg';
 window.l.sv.backgroundColor         = 'Bakgrundsfärg';
-window.l.sv.newToQuitter            = 'Ny på ' + window.siteTitle + '?';
+window.l.sv.newToQuitter            = 'Ny på {site-title}?';
 window.l.sv.signUp                  = 'Registrera dig';
 window.l.sv.signUpFullName          = 'Fullständigt namn';
 window.l.sv.signUpEmail             = 'E-post';
-window.l.sv.signUpButtonText        = 'Registrera dig på ' + window.siteTitle + '';
-window.l.sv.welcomeHeading          = 'Välkommen till ' + window.siteTitle + '.';
-window.l.sv.welcomeText             = 'Vi är en <span id="federated-tooltip"><div id="what-is-federation">"Federering" betyder att du inte behöver ha ett ' + window.siteTitle + '-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href="http://www.gnu.org/software/social/">GNU Social</a> (som ' + window.siteTitle + ' bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt.';
+window.l.sv.signUpButtonText        = 'Registrera dig på {site-title}';
+window.l.sv.welcomeHeading          = 'Välkommen till {site-title}.';
+window.l.sv.welcomeText             = 'Vi är en <span id="federated-tooltip"><div id="what-is-federation">"Federering" betyder att du inte behöver ha ett {site-title}-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href="http://www.gnu.org/software/social/">GNU Social</a> (som {site-title} bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt.';
 window.l.sv.registerNickname        = 'Användarnamn';
 window.l.sv.registerHomepage        = 'Webbplats';
 window.l.sv.registerBio             = 'Biografi';
@@ -1213,6 +1240,9 @@ window.l.sv.xFavedYourQueet         = 'favoritmarkerade ditt qvitter';
 window.l.sv.xRepeatedYourQueet      = 'requeetade dig';
 window.l.sv.xStartedFollowingYou    = 'följde dig';
 window.l.sv.followsYou			    = 'följer dig';
+window.l.sv.FAQ						= 'FAQ';
+window.l.sv.goToExternalProfile		= 'Gå till hela profilen';
+window.l.sv.cropAndSave 			= 'Beskär och spara';
 
 // suomi
 window.l.fi = new Object();
@@ -1222,13 +1252,13 @@ window.l.fi.loginPassword = 'Salasana';
 window.l.fi.loginSignIn = 'Kirjaudu sisään';
 window.l.fi.loginRememberMe = 'Muista minut';
 window.l.fi.loginForgotPassword = 'Unohditko salasanan?';
-window.l.fi.notices = 'Ilmoitukset';
+window.l.fi.notices = 'Viestit';
 window.l.fi.followers = 'Seuraajat';
 window.l.fi.following = 'Seuratut';
 window.l.fi.groups = 'Ryhmät';
-window.l.fi.compose = 'Kirjoita uusi ilmoitus...';
+window.l.fi.compose = 'Kirjoita uusi viesti...';
 window.l.fi.queetVerb = 'Lähetä';
-window.l.fi.queetsNounPlural = 'Ilmoitukset';
+window.l.fi.queetsNounPlural = 'Viestit';
 window.l.fi.logout = 'Kirjaudu ulos';
 window.l.fi.languageSelected = 'Kieli';
 window.l.fi.viewMyProfilePage = 'Näytä profiilini';
@@ -1242,25 +1272,25 @@ window.l.fi.favoriteVerb = 'Lisää suosikiksi';
 window.l.fi.requeetedVerb = 'Toistetut';
 window.l.fi.favoritedVerb = 'Suosikit';
 window.l.fi.replyTo = 'Vastaa käyttäjälle';
-window.l.fi.requeetedBy = '[requeetedBy]';
+window.l.fi.requeetedBy = 'henkilön {requeeted-by} toistama';
 window.l.fi.favoriteNoun = 'Lisää suosikiksi';
 window.l.fi.favoritesNoun = 'Suosikit';
 window.l.fi.requeetNoun = 'Toista';
 window.l.fi.requeetsNoun = 'Toistot';
 window.l.fi.newQueet = 'uusi ilmoitus';
 window.l.fi.newQueets = 'uudet ilmoitukset';
-window.l.fi.longmonthsJanuary = 'Tammikuu';
-window.l.fi.longmonthsFebruary = 'Helmikuu';
-window.l.fi.longmonthsMars = 'Maaliskuu';
-window.l.fi.longmonthsApril = 'Huhtikuu';
-window.l.fi.longmonthsMay = 'Toukokuu';
-window.l.fi.longmonthsJune = 'Kesäkuu';
-window.l.fi.longmonthsJuly = 'Heinäkuu';
-window.l.fi.longmonthsAugust = 'Elokuu';
-window.l.fi.longmonthsSeptember = 'Syyskuu';
-window.l.fi.longmonthsOctober = 'Lokakuu';
-window.l.fi.longmonthsNovember = 'Marraskuu';
-window.l.fi.longmonthsDecember = 'Joulukuu';
+window.l.fi.longmonthsJanuary = 'tammikuuta';
+window.l.fi.longmonthsFebruary = 'helmikuuta';
+window.l.fi.longmonthsMars = 'maaliskuuta';
+window.l.fi.longmonthsApril = 'huhtikuuta';
+window.l.fi.longmonthsMay = 'toukokuuta';
+window.l.fi.longmonthsJune = 'kesäkuuta';
+window.l.fi.longmonthsJuly = 'heinäkuuta';
+window.l.fi.longmonthsAugust = 'elokuuta';
+window.l.fi.longmonthsSeptember = 'syyskuuta';
+window.l.fi.longmonthsOctober = 'lokakuuta';
+window.l.fi.longmonthsNovember = 'marraskuuta';
+window.l.fi.longmonthsDecember = 'joulukuuta';
 window.l.fi.shortmonthsJanuary = 'tammi';
 window.l.fi.shortmonthsFebruary = 'helmi';
 window.l.fi.shortmonthsMars = 'maalis';
@@ -1279,55 +1309,58 @@ window.l.fi.longDateFormat = '{time24} - {day} {month} {year}';
 window.l.fi.shortDateFormatSeconds = '{seconds}s';
 window.l.fi.shortDateFormatMinutes = '{minutes}m';
 window.l.fi.shortDateFormatHours = '{hours}t';
-window.l.fi.shortDateFormatDate = '{day} {month}';
+window.l.fi.shortDateFormatDate = '{day}. {month}';
 window.l.fi.shortDateFormatDateAndY = '{day} {month} {year}';
 window.l.fi.now = 'nyt';
 window.l.fi.posting = '[posting]';
-window.l.fi.viewMoreInConvBefore = '[viewMoreInConvBefore]';
-window.l.fi.viewMoreInConvAfter = '[viewMoreInConvAfter]';
+window.l.fi.viewMoreInConvBefore = 'Keskustelun aiemmat viestit';
+window.l.fi.viewMoreInConvAfter = 'Keskustelun uudemmat viestit';
 window.l.fi.mentions = 'Maininnat';
 window.l.fi.timeline = 'Aikajana';
 window.l.fi.publicTimeline = 'Julkinen aikajana';
-window.l.fi.publicAndExtTimeline = '[publicAndExtTimeline]';
+window.l.fi.publicAndExtTimeline = 'Koko tunnettu verkosto';
 window.l.fi.searchVerb = 'Etsi';
 window.l.fi.deleteVerb = 'Poista';
 window.l.fi.cancelVerb = 'Peruuta';
-window.l.fi.deleteConfirmation = 'Oletko varma että haluat poistaa tämän ilmoituksen?';
-window.l.fi.userExternalFollow = '[userExternalFollow]';
-window.l.fi.userExternalFollowHelp = '[userExternalFollowHelp]';
+window.l.fi.deleteConfirmation = 'Haluatko varmasti poistaa tämän viestin?';
+window.l.fi.userExternalFollow = 'Etäseuraus';
+window.l.fi.userExternalFollowHelp = 'Tilisi ID (esim. henkilö@rainbowdash.net)';
 window.l.fi.userFollow = 'Seuraa';
 window.l.fi.userFollowing = 'Seurattu';
 window.l.fi.userUnfollow = 'Lopeta seuraaminen';
 window.l.fi.joinGroup = 'Liity';
-window.l.fi.joinExternalGroup = '[joinExternalGroup]';
+window.l.fi.joinExternalGroup = 'Liity etänä';
 window.l.fi.isMemberOfGroup = 'Jäsen';
 window.l.fi.leaveGroup = 'Poistu';
 window.l.fi.memberCount = 'Jäsenet';
-window.l.fi.adminCount = '[adminCount]';
+window.l.fi.adminCount = 'Ylläpitäjät';
 window.l.fi.settings = 'Asetukset';
 window.l.fi.saveChanges = 'Tallenna asetukset';
-window.l.fi.linkColor = '[linkColor]';
+window.l.fi.linkColor = 'Linkin väri';
 window.l.fi.backgroundColor = 'Taustan väri';
-window.l.fi.newToQuitter = '[newToQuitter]';
+window.l.fi.newToQuitter = 'Uusi {site-title}issä?';
 window.l.fi.signUp = 'Rekisteröidy';
 window.l.fi.signUpFullName = 'Koko nimi';
 window.l.fi.signUpEmail = 'Sähköposti';
-window.l.fi.signUpButtonText = '[signUpButtonText]';
-window.l.fi.welcomeHeading = '[welcomeHeading]';
-window.l.fi.welcomeText = '[welcomeText]';
-window.l.fi.registerNickname = '[registerNickname]';
+window.l.fi.signUpButtonText = 'Rekisteröidy {site-title}iin';
+window.l.fi.welcomeHeading = 'Tervetuloa {site-title}iin';
+window.l.fi.welcomeText = '';
+window.l.fi.registerNickname = 'Käyttäjänimi';
 window.l.fi.registerHomepage = 'Kotisivu';
-window.l.fi.registerBio = '[registerBio]';
+window.l.fi.registerBio = 'Tietoja sinusta';
 window.l.fi.registerLocation = 'Sijainti';
 window.l.fi.registerRepeatPassword = 'Kirjoita salasana uudelleen';
 window.l.fi.moreSettings = 'Lisää asetuksia';
-window.l.fi.otherServers = '[otherServers]';
+window.l.fi.otherServers = 'Voit myös luoda tilin toiseen GNU social -verkon palveluun.';
 window.l.fi.editMyProfile = 'Muokkaa profiilia';
-window.l.fi.notifications = '[notifications]';
-window.l.fi.xFavedYourQueet = 'lisäsi queettisi suosikkeihinsa';
-window.l.fi.xRepeatedYourQueet = 'requeettasi ilmoituksesi';
+window.l.fi.notifications = 'Ilmoitukset';
+window.l.fi.xFavedYourQueet = 'lisäsi viestisi suosikkeihinsa';
+window.l.fi.xRepeatedYourQueet = 'toisti viestisi';
 window.l.fi.xStartedFollowingYou = 'seurasi sinua';
 window.l.fi.followsYou = 'seuraa sinua';
+window.l.fi.FAQ	= 'FAQ';
+window.l.fi.goToExternalProfile		= 'Siirry täyteen profiiliin';
+window.l.fi.cropAndSave = 'Crop and save';
 
 // farsi/persian
 window.l.fa = new Object();
@@ -1357,7 +1390,7 @@ window.l.fa.favoriteVerb            = 'برگزیدن';
 window.l.fa.requeetedVerb           = 'بازتوییت شده';
 window.l.fa.favoritedVerb           = 'برگزیده شده';
 window.l.fa.replyTo                 = 'پاسخ به';
-window.l.fa.requeetedBy             = 'بازتوییت شده توسط';
+window.l.fa.requeetedBy             = '{requeeted-by} بازتوییت شده توسط';
 window.l.fa.favoriteNoun            = 'برگزیده';
 window.l.fa.favoritesNoun           = 'برگزیده';
 window.l.fa.requeetNoun             = 'بازتوییت';
@@ -1443,6 +1476,9 @@ window.l.fa.xFavedYourQueet         = 'موارد دلخواه خود را صد�
 window.l.fa.xRepeatedYourQueet      = 'توییت شما را باز توییت کرد.';
 window.l.fa.xStartedFollowingYou    = 'شما را دنبال کرد';
 window.l.fa.followsYou			    = 'شما را دنبال می‌کند';
+window.l.fa.FAQ	= 'FAQ';
+window.l.fa.goToExternalProfile		= 'رفتن به نمایه کامل';
+window.l.fa.cropAndSave = 'Crop and save';
 
 // arabic
 window.l.ar = new Object();
@@ -1472,7 +1508,7 @@ window.l.ar.favoriteVerb            = 'تفضيل';
 window.l.ar.requeetedVerb           = 'مُعاد تغريدها';
 window.l.ar.favoritedVerb           = 'مُفضّلة';
 window.l.ar.replyTo                 = 'أرسِل ردًا إلى';
-window.l.ar.requeetedBy             = 'مُعاد تغريدها بواسطة';
+window.l.ar.requeetedBy             = '{requeeted-by} مُعاد تغريدها بواسطة';
 window.l.ar.favoriteNoun            = 'مفضّلة';
 window.l.ar.favoritesNoun           = 'مفضّلة';
 window.l.ar.requeetNoun             = 'إعادة تغريد';
@@ -1558,6 +1594,9 @@ window.l.ar.xFavedYourQueet         = 'بتفضيل تغريدتك';
 window.l.ar.xRepeatedYourQueet      = 'بإعادة تغريد';
 window.l.ar.xStartedFollowingYou    = 'بمتابعتك';
 window.l.ar.followsYou			    = 'يُتابعك';
+window.l.ar.FAQ	= 'FAQ';
+window.l.ar.goToExternalProfile		= 'اذهب إلى الملف الشخصي الكامل';
+window.l.ar.cropAndSave = 'قُص و احفظ.';
 
 // esperanto
 window.l.eo = new Object();
@@ -1587,7 +1626,7 @@ window.l.eo.favoriteVerb            = 'Favorigi';
 window.l.eo.requeetedVerb           = 'Reavizita';
 window.l.eo.favoritedVerb           = 'Favorigita';
 window.l.eo.replyTo                 = 'Respondi al';
-window.l.eo.requeetedBy             = 'Reavizita de';
+window.l.eo.requeetedBy             = 'Reavizita de {requeeted-by}';
 window.l.eo.favoriteNoun            = 'Favorato';
 window.l.eo.favoritesNoun           = 'Favoratoj';
 window.l.eo.requeetNoun             = 'Reavizo';
@@ -1653,15 +1692,15 @@ window.l.eo.settings                = 'Agordo';
 window.l.eo.saveChanges             = 'Konservi ŝanĝojn';
 window.l.eo.linkColor               = 'Koloro de ligiloj';
 window.l.eo.backgroundColor         = 'Koloro de fono';
-window.l.eo.newToQuitter            = 'Ĉu vi estas novanto je ' + window.siteTitle + '?';
+window.l.eo.newToQuitter            = 'Ĉu vi estas novanto je {site-title}?';
 window.l.eo.signUp                  = 'Regístriĝi';
 window.l.eo.signUpFullName          = 'Plena nomo';
 window.l.eo.signUpEmail             = 'Retpoŝto';
-window.l.eo.signUpButtonText        = 'Regístriĝi ĉe ' + window.siteTitle + '';
-window.l.eo.welcomeHeading          = 'Bonvenon al ' + window.siteTitle + '.';
+window.l.eo.signUpButtonText        = 'Regístriĝi ĉe {site-title}';
+window.l.eo.welcomeHeading          = 'Bonvenon al {site-title}.';
 window.l.eo.welcomeText             = 'Ni estas <span id="federated-tooltip"><div id="what-is-federation">Helpindiko\
-                                       por “federaĵon”: “federaĵon” signifas, ke vi ne bezonas konton ĉe ' + window.siteTitle + ' por\
-                                       ebli sekvi, esti sekvanta far aliaj, aŭ interagi kun uzantoj de ' + window.siteTitle + '. Vi povas\
+                                       por “federaĵon”: “federaĵon” signifas, ke vi ne bezonas konton ĉe {site-title} por\
+                                       ebli sekvi, esti sekvanta far aliaj, aŭ interagi kun uzantoj de {site-title}. Vi povas\
                                        registriĝi ĉe ajna servaĵo de StatusNet aŭ\
                                        <a href="http://www.gnu.org/software/social/">GNU Social</a>, aŭ ajna servaĵo, kiu baziĝas\
                                        sur la protokolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>!\
@@ -1682,6 +1721,9 @@ window.l.eo.xFavedYourQueet         = 'ŝatataj via avizo';
 window.l.eo.xRepeatedYourQueet      = 'ripetis vin';
 window.l.eo.xStartedFollowingYou    = 'sekvas vin';
 window.l.eo.followsYou			    = 'sekvas vin';
+window.l.eo.FAQ						= 'FAQ';
+window.l.eo.goToExternalProfile		= 'iru al plena profilon';
+window.l.eo.cropAndSave 			= 'Crop and save';
 
 // italian
 window.l.it = new Object();
@@ -1711,7 +1753,7 @@ window.l.it.favoriteVerb = 'Favorire';
 window.l.it.requeetedVerb = 'Requittato';
 window.l.it.favoritedVerb = 'Favorito';
 window.l.it.replyTo = 'Rispondere a';
-window.l.it.requeetedBy = 'Requittato per';
+window.l.it.requeetedBy = 'Requittato per {requeeted-by}';
 window.l.it.favoriteNoun = 'Favorito';
 window.l.it.favoritesNoun = 'Favoriti';
 window.l.it.requeetNoun = 'Requeet';
@@ -1777,15 +1819,15 @@ window.l.it.settings = 'Opzioni';
 window.l.it.saveChanges = 'Salva modifiche';
 window.l.it.linkColor = 'Colore dei link';
 window.l.it.backgroundColor = 'Colore dello sfondo';
-window.l.it.newToQuitter = 'Sei nuovo su ' + window.siteTitle + '?';
+window.l.it.newToQuitter = 'Sei nuovo su {site-title}?';
 window.l.it.signUp = 'Registrati';
 window.l.it.signUpFullName = 'Nome e cognome';
 window.l.it.signUpEmail = 'Indirizzo di posta elettronica';
-window.l.it.signUpButtonText = 'Registrati su ' + window.siteTitle + '';
-window.l.it.welcomeHeading = 'Benvenuto su ' + window.siteTitle + '.';
+window.l.it.signUpButtonText = 'Registrati su {site-title}';
+window.l.it.welcomeHeading = 'Benvenuto su {site-title}.';
 window.l.it.welcomeText = 'Siamo una <span id="federated-tooltip"><div id="what-is-federation">"Federazione" \
-significa che non è necessario avere un account su ' + window.siteTitle + ' per essere in grado di seguire, \
-essere seguito, o interagire con gli altri utenti ' + window.siteTitle + '. Potete registrarvi su \
+significa che non è necessario avere un account su {site-title} per essere in grado di seguire, \
+essere seguito, o interagire con gli altri utenti {site-title}. Potete registrarvi su \
 qualsiasi server StatusNet, <a href="http://www.gnu.org/software/social/">GNU Social</a>, \
 o qualsiasi altro servizio basato sul protocollo \
 <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Non avete \
@@ -1806,6 +1848,9 @@ window.l.it.xFavedYourQueet         = 'ha aggiunto ai preferiti il tuo Queet';
 window.l.it.xRepeatedYourQueet      = 'ti ha requittato';
 window.l.it.xStartedFollowingYou = 'ha iniziato a seguirti';
 window.l.it.followsYou = 'ti segue';
+window.l.it.FAQ	= 'FAQ';
+window.l.it.goToExternalProfile		= 'Vai al profilo completo';
+window.l.it.cropAndSave = 'ritaglia e salva';
 
 // Norwegian
 window.l.no = new Object();
@@ -1835,7 +1880,7 @@ window.l.no.favoriteVerb = 'Favorittmarker';
 window.l.no.requeetedVerb = 'Requeeted deg';
 window.l.no.favoritedVerb = 'Favorittmarkert';
 window.l.no.replyTo = 'Svar';
-window.l.no.requeetedBy = 'Requeeted av';
+window.l.no.requeetedBy = 'Requeeted av {requeeted-by}';
 window.l.no.favoriteNoun = 'Favoritt';
 window.l.no.favoritesNoun = 'Favoritter';
 window.l.no.requeetNoun = 'Requeet';
@@ -1907,7 +1952,7 @@ window.l.no.signUpFullName = 'Fult navn';
 window.l.no.signUpEmail = 'e-Post';
 window.l.no.signUpButtonText = 'Registrere deg på Quitter';
 window.l.no.welcomeHeading = 'Velkommen til Quitter.';
-window.l.no.welcomeText = 'Vi er en <span id="federated-tooltip"><div id="what-is-federation">"Forenet eller (Federation)" betyr i denne konteksten at du ikke behøver å ha en ' + window.siteTitle + '-konto for å følge eller følges av andre og prate med andre i nettverket. Du kan registrere deg på hvilken som helst instans/server som støtter protokollen <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogge på en helt egen server, med den frie programvaren <a href="http://www.gnu.org/software/social/">GNU Social</a> (som ' + window.siteTitle + ' bygger på).</div>forenet</span> allmenhet, der du som har hoppet av de sentraliserte tjenestene kan mikroblogge etisk og solidarisk.';
+window.l.no.welcomeText = 'Vi er en <span id="federated-tooltip"><div id="what-is-federation">"Forenet eller (Federation)" betyr i denne konteksten at du ikke behøver å ha en {site-title}-konto for å følge eller følges av andre og prate med andre i nettverket. Du kan registrere deg på hvilken som helst instans/server som støtter protokollen <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a>, eller mikroblogge på en helt egen server, med den frie programvaren <a href="http://www.gnu.org/software/social/">GNU Social</a> (som {site-title} bygger på).</div>forenet</span> allmenhet, der du som har hoppet av de sentraliserte tjenestene kan mikroblogge etisk og solidarisk.';
 window.l.no.registerNickname = 'Kallenavn';
 window.l.no.registerHomepage = 'Hjemmeside';
 window.l.no.registerBio = 'Informasjon om deg';
@@ -1921,6 +1966,9 @@ window.l.no.xFavedYourQueet = 'favorittmarkerte queeten din';
 window.l.no.xRepeatedYourQueet = 'requeetet deg';
 window.l.no.xStartedFollowingYou = 'følger deg';
 window.l.no.followsYou = 'følger deg';
+window.l.no.FAQ	= 'FAQ';
+window.l.no.goToExternalProfile	= 'Gå til fullstendig profil';
+window.l.no.cropAndSave = 'Beskjær og lagre';
 
 
 // set language, from local storage, else browser language, else english (english also if no localstorage availible)
@@ -1957,6 +2005,11 @@ else if(selectedLanguage == 'fa') {
     }
 
 window.siteTitle = $('head title').html(); // remember this for later use
+
+// replace placeholders in translation
+$.each(window.sL,function(k,v){
+	window.sL[k] = v.replace('{site-title}',window.siteTitle);
+	});
 
 // set some static string
 $('.front-welcome-text h1').html(window.sL.welcomeHeading);
@@ -1997,3 +2050,6 @@ $('.stream-selection[data-stream-name="statuses/public_timeline.json"]').attr('d
 $('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json"]').prepend(window.sL.publicAndExtTimeline);
 $('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json"]').attr('data-stream-header',window.sL.publicAndExtTimeline);
 $('#search-query').attr('placeholder',window.sL.searchVerb);
+$('#faq-link').html(window.sL.FAQ);
+$('#classic-link').html('Classic ' + window.siteTitle);
+$('#edit-profile-header-link').html(window.sL.editMyProfile);

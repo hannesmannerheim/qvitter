@@ -33,14 +33,12 @@
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
-
+  
+  
 if (!defined('GNUSOCIAL')) { exit(1); }
 
-class ApiQvitterUpdateBackgroundColorAction extends ApiAuthAction
+class ApiToggleQvitterAction extends ApiAuthAction
 {
-    var $backgroundcolor = null;
-
-    protected $needPost = true;
 
     /**
      * Take arguments for running
@@ -53,7 +51,6 @@ class ApiQvitterUpdateBackgroundColorAction extends ApiAuthAction
     {
         parent::prepare($args);
 
-        $this->backgroundcolor = $this->trimmed('backgroundcolor');
         return true;
     }
 
@@ -70,23 +67,34 @@ class ApiQvitterUpdateBackgroundColorAction extends ApiAuthAction
     protected function handle()
     {
         parent::handle();
-    
-        $validhex = preg_match('/^[a-f0-9]{6}$/i',$this->backgroundcolor);
-        if ($validhex === false || $validhex == 0) {
-            $this->clientError(_('Not a valid hex color.'), 400);
-        }
-    
-		Profile_prefs::setData($this->scoped, 'theme', 'backgroundcolor', $this->backgroundcolor);
+
+        $user = common_current_user();
+		$profile = $user->getProfile();
 		
-		// unset background-image
-		Profile_prefs::setData($this->scoped, 'qvitter', 'background_image', '');					
-
-        $twitter_user = $this->twitterUserArray($this->scoped, true);
-
+		if(QvitterPlugin::settings('enabledbydefault')) {
+			$state = Profile_prefs::getConfigData($profile, 'qvitter', 'disable_qvitter');
+			if($state == 1) {
+				Profile_prefs::setData($profile, 'qvitter', 'disable_qvitter', 0);							
+				}
+			else {
+				Profile_prefs::setData($profile, 'qvitter', 'disable_qvitter', 1);											
+				}
+			}
+		else {
+			$state = Profile_prefs::getConfigData($profile, 'qvitter', 'enable_qvitter');
+			if($state == 1) {
+				Profile_prefs::setData($profile, 'qvitter', 'enable_qvitter', 0);							
+				}
+			else {
+				Profile_prefs::setData($profile, 'qvitter', 'enable_qvitter', 1);											
+				}
+			}
+			
+		
+		$result['success'] = true;
+		
         $this->initDocument('json');
-        $this->showJsonObjects($twitter_user);
+        $this->showJsonObjects($result);
         $this->endDocument('json');
     }
-
-
 }

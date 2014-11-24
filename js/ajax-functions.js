@@ -156,7 +156,9 @@ function postNewBackgroundColor(newBackgroundColor) {
 		dataType:"json",
 		error: function(data){ console.log(data); },
 		success: function(data) { 
-			window.userBackgroundColor = newBackgroundColor;			
+			window.userBackgroundColor = newBackgroundColor;
+	  		$('body').css('background-image','url(""'); // unset background image			
+			window.userBackgroundImage = '';	  		
 			}
 		});	
 	}
@@ -291,6 +293,10 @@ function unRequeet(this_stream_item, this_action, my_rq_id) {
 		if(data) {
 			remove_spinner();
 			this_stream_item.removeAttr('data-requeeted-by-me-id');			
+			this_stream_item.children('.queet').children('.context').find('.requeet-text').children('a[data-user-id="' + window.myUserID + '"]').remove();
+			if(this_stream_item.children('.queet').children('.context').find('.requeet-text').children('a').length<1) {
+				this_stream_item.children('.queet').children('.context').remove();
+				}
 			}
 		else {
 			remove_spinner();

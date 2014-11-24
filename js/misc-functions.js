@@ -166,7 +166,15 @@ function changeDesign(obj) {
 			}
 		else {
 			$('body').css('background-color',window.defaultBackgroundColor);
-			}							   
+			}				
+
+	  	// background image
+	  	if(obj.background_image.length > 0) {
+		  	$('body').css('background-image','url(\'' + obj.background_image + '\'');
+	  		}
+	  	else {
+	  		$('body').css('background-image','url(""');
+	  		}	  						   
 	   }
 	   
 	  // window object that might contain my colors
@@ -190,10 +198,16 @@ function changeDesign(obj) {
 		else {
 			$('body').css('background-color',window.defaultBackgroundColor);
 			}		  	
+
+	  	// background image
+	  	if(obj.userBackgroundImage.length > 0) {
+		  	$('body').css('background-image','url(\'' + obj.userBackgroundImage + '\'');
+	  		}
+	  	else {
+	  		$('body').css('background-image','url(""');
+	  		}
 	  	}
 	  	
-	  	// TODO BACKGROUND IMAGE!
-	  	$('body').css('background-image','none');
 	}
 
     
@@ -210,6 +224,26 @@ function changeLinkColor(newLinkColor) {
 	$('style').text(linkstyle.substring(0,linkstyle.indexOf('color:')+6) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*COLOREND*/')));
 	var linkstyle = $('style').html();
 	$('style').text(linkstyle.substring(0,linkstyle.indexOf('background-color:')+17) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BACKGROUNDCOLOREND*/')));		
+	var linkstyle = $('style').html();
+	$('style').text(linkstyle.substring(0,linkstyle.indexOf('border-color:')+13) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BORDERCOLOREND*/')));		
+	var linkstyle = $('style').html();
+	$('style').text(linkstyle.substring(0,linkstyle.indexOf('background-color:rgb(')+17) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBACKGROUNDCOLOREND*/')));		
+	var linkstyle = $('style').html();
+	$('style').text(linkstyle.substring(0,linkstyle.indexOf('border-color:rgb(')+13) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.6) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERCOLOREND*/')));		
+	var linkstyle = $('style').html();
+	$('style').text(linkstyle.substring(0,linkstyle.indexOf('border-bottom-color:rgb(')+20) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERBOTTOMCOLOREND*/')));		
+	}
+function blendRGBColors(c0, c1, p) {
+    var f=c0.split(","),t=c1.split(","),R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);
+    return "rgb("+(Math.round((parseInt(t[0].slice(4))-R)*p)+R)+","+(Math.round((parseInt(t[1])-G)*p)+G)+","+(Math.round((parseInt(t[2])-B)*p)+B)+")";
+	}
+function hex2rgb(hexStr){
+    // note: hexStr should be #rrggbb
+    var hex = parseInt(hexStr.substring(1), 16);
+    var r = (hex & 0xff0000) >> 16;
+    var g = (hex & 0x00ff00) >> 8;
+    var b = hex & 0x0000ff;
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
 	}
 
 
@@ -386,9 +420,15 @@ function findUrls(text) {
    · 
    · · · · · · · · · · · · */
    
-function display_spinner() { 
+function display_spinner(parent) { 
 	if($('.loader').length<1) {
-		$('body').prepend('\
+	
+		if(typeof parent == 'undefined') {
+			$('.global-nav').removeClass('show-logo');
+			var parent = 'body';
+			}	
+	
+		$(parent).prepend('\
 			<div class="loader">\
 			  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\
 			   width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">\
@@ -411,6 +451,7 @@ function display_spinner() {
 	}	
 function remove_spinner() {	
 	$('.loader').remove();
+	$('.global-nav').addClass('show-logo');	
 	}	
 		
 	
@@ -618,12 +659,12 @@ function backToMyScrollPos(obj,id,animate,callback) {
 			animate = 1000;
 			}
 	   if(typeof callback !== 'undefined'){
-			$('html, body').animate({ scrollTop: pos}, animate, 'linear',function(){
+			$('html, body').animate({ scrollTop: pos}, animate, 'swing',function(){
 				callback();
 				});		   	
 		   	}
 	    else {
-	    	$('html, body').animate({ scrollTop: pos }, animate, 'linear');
+	    	$('html, body').animate({ scrollTop: pos }, animate, 'swing');
 	    	}
 		}
 	else {
@@ -807,8 +848,7 @@ function shortenUrlsInBox(shortenButton) {
 
 			if(typeof data.shorturl != 'undefined') {
 				
-				console.log(data.url);
-				
+				shortenButton.closest('.queet-toolbar').siblings('.upload-image-container').children('img[data-shorturl="' + data.url.url + '"]').attr('data-shorturl',data.shorturl);
 				shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace($('<div/>').text(data.url.url).html(), data.shorturl));
 				shortenButton.parent().parent().siblings('.queet-box-syntax').trigger('keyup');
 				shortenButton.addClass('disabled'); // make sure the button is disabled right after

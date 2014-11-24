@@ -2,8 +2,8 @@ Qvitter
 ==========================================
 
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
-* Last mod.: Sept, 2014
-* Version:   3
+* Last mod.: Nov, 2014
+* Version:   4
 * GitHub:    <https://github.com/hannesmannerheim/qvitter>
 
 Qvitter is free  software:  you can  redistribute it  and / or  modify it  
@@ -44,19 +44,13 @@ Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071
 TODO
 ----
 
-1. image attachments
-
-1. avatar upload from profile card
-
-1. better user popup, with e.g. latest queets
-
-1. Faq
+1. rtl is a little broken, also mobile rtl
 
 1. DM's
 
-1. lists
+1. user actions-cog wheel in users lists, ellipsis button in queets, with block etc
 
-1. user actions-cog wheel in users lists, with block, list etc
+1. lists
 
 1. proxy to non-https for getting conversations the instance doesn't have via jsonp
 
@@ -65,8 +59,6 @@ TODO
 1. Join _new_ external groups and follow _new_ external users ("New" meaning users/groups that the server don't know yet) 
 
 2. Creating groups, make admin, block user
-
-7. Settings (e.g. don't show replies to people I don't follow)
 
 10. Search users
 
