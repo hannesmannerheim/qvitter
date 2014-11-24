@@ -906,8 +906,11 @@ $('body').on('click','a', function(e) {
 					var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';						
 					
 					// preview latest notice
-					data.status.user = data;
-					var noticeHtml = buildQueetHtml(data.status);
+					var noticeHtml = '';
+					if(typeof data.status != 'undefined') {
+						data.status.user = data;
+						var noticeHtml = buildQueetHtml(data.status);						
+						}
 
 					var profileCard = '<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + cover_photo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.name + '<span></span></h1><h2 class="username"><span class="screen-name"><a target="_blank" href="' + data.statusnet_profile_url + '">' + screenNameWithServer + '</a></span><span class="follow-status"></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"><span class="location">' + data.location + '</span><span class="url' + emptyWebpage + '"><span class="divider"> · </span><a target="_blank" href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a target="_blank" href="' + data.statusnet_profile_url + '">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li><li><a target="_blank" href="' + data.statusnet_profile_url + '/subscriptions">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li><li><a target="_blank" href="' + data.statusnet_profile_url + '/subscribers">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li></ul>' + followButton + '<div class="clearfix"></div></div></div><div class="clearfix"></div>';		
 					
