@@ -67,14 +67,48 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
 		
 		// get local profile
 		$local_profile = Profile::getKV('profileurl',$profileurl);
+
 		if($local_profile) {
 			$this->profile->local = $this->twitterUserArray($local_profile);
+
+			$username = $this->profile->local['screen_name'];	
+			
+			// if profile url is not ending with nickname, this is probably a single user instance
+			if(!substr($profileurl, -strlen($username))===$username) {
+				$instanceurl = $profileurl;
+						error_log('1');					
+				}
+
+			// multi user instance
+			else {
+						error_log('2');					
+				$instanceurl = substr($profileurl, 0, strrpos($profileurl, '/'));				
+				}			
+			
+			}
+		
+		// we don't know this user
+		else {
+			
+			// if profile url ends with '/' this is probably an unknown single user instance
+			if(substr($profileurl, -1)==='/') {
+				$instanceurl = $profileurl;
+				$username = 1;		
+						error_log('3');														
+				}
+
+			// multi user instance
+			else {
+				$username = substr($profileurl, strrpos($profileurl, '/')+1);			
+				$instanceurl = substr($profileurl, 0, strrpos($profileurl, '/'));				
+						error_log('4');									
+				}			
+			
 			}
 		
 		// get profile from external instance
-		$instanceurl = substr($profileurl, 0, strrpos($profileurl, '/'));
-		$username = substr($profileurl, strrpos($profileurl, '/')+1);
-		$apicall = $instanceurl.'/api/users/show.json?id='.$username; 		
+		$apicall = $instanceurl.'/api/users/show.json?id='.$username; 	
+						error_log('apicall:'.$apicall);	
 		stream_context_set_default(array('http' => array('method' => 'GET')));
         $this->profile->external = json_decode(file_get_contents($apicall));        
 

@@ -1139,6 +1139,10 @@ function popUpAction(popupId, heading, bodyHtml, footerHtml){
   
 function convertNewGNUSocialURItoURL(obj) {
 
+	if(typeof obj.uri == 'undefined') {
+		obj.uri = '';
+		}
+
 	if(obj.uri.substring(0,4) != 'http') {									
 		
 		// guess the url if we only have the non-url uri
@@ -1779,7 +1783,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 		
 	// in-groups html
 	var in_groups_html = '';							
-	if(obj.statusnet_in_groups !== false && typeof obj.statusnet_in_groups != 'undefined') {
+	if(typeof obj.statusnet_in_groups != 'undefined' && obj.statusnet_in_groups !== false && typeof obj.statusnet_in_groups === 'object') {
 		$.each(obj.statusnet_in_groups,function(){
 			in_groups_html = '<span class="in-groups"><a class="h-card group" href="' + obj.statusnet_in_groups.url + '">!' + obj.statusnet_in_groups.nickname + '</a></span>';			
 			});
@@ -1805,7 +1809,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 		var requeetedByHtml = '<a data-user-id="' + requeeted_by.user.id + '" href="' + requeeted_by.user.statusnet_profile_url + '"> <b>' + requeeted_by.user.name + '</b></a>';
 		requeetHtml = '<div class="context" id="requeet-' + requeeted_by.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetedByHtml) + '</span></span></div>';
 		}
-		
+	
 	obj = convertNewGNUSocialURItoURL(obj);		
 
 	// external
