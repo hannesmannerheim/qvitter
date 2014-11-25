@@ -438,7 +438,6 @@ class QvitterPlugin extends Plugin {
 		$notice_groups = $notice->getGroups();
 		$group_addressees = false;
 		foreach($notice_groups as $g) {
-			error_log(print_r($g,true));
 			$group_addressees = array('nickname'=>$g->nickname,'url'=>$g->mainpage);
 			}
 		$twitter_status['statusnet_in_groups'] = $group_addressees;    
@@ -474,14 +473,16 @@ class QvitterPlugin extends Plugin {
         }		
         
 		// reply-to profile url
+		$twitter_status['in_reply_to_profileurl'] = null;
         if ($notice->reply_to) {
             $reply = Notice::getKV(intval($notice->reply_to));
             if ($reply) {
                 $replier_profile = $reply->getProfile();
-            }
+				$twitter_status['in_reply_to_profileurl'] = $replier_profile->profileurl;
+			}
         }
-        $twitter_status['in_reply_to_profileurl'] =
-            ($replier_profile) ? $replier_profile->profileurl : null;
+
+
         		     	
         
         // some more metadata about notice

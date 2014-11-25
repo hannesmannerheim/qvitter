@@ -549,7 +549,7 @@ class QvitterAction extends ApiAction
 					<!-- 7 -->
 					<h2 id="faq-7">How to set email preferences</h2>
 					<p>On New {instance-name} go to</p>
-					<p class="indent">Your header avatar (upper right) → Settings → More Settings → Email</p>
+					<p class="indent">Your header avatar (upper right) → Settings → Email</p>
 					<p>check accordingly:<br>
 					<em>— Send me notifications of new subscriptions through email.  <br>
 					— Send me email when someone adds my notice as a favorite.  <br>
@@ -583,7 +583,7 @@ class QvitterAction extends ApiAction
 					<p class="indent">yes to "let anyone follow me" (1)</p>
 					<p class="indent">no to "Make updates visible only to my followers"</p>
 					<p>If you really want to change these settings in New {instance-name} go to: </p>
-					<p class="indent">Your header avatar (upper right) → Settings → More Settings → Profile</p>
+					<p class="indent">Your header avatar (upper right) → Settings → Profile</p>
 					<p><em>(1):  Change to "Ask me first" and you will receive e-mail notifications when  someone wants to follow you. It leaves the subscription request pending  until you either confirm or reject it. (But this does not work in New {instance-name} yet, so be careful with this setting)</em></p>
 
 
@@ -591,14 +591,14 @@ class QvitterAction extends ApiAction
 					<h2 id="faq-11">Can I delete my {instance-name} account?</h2>
 					<p>You  can delete your account, but your all notices will be deleted on {instance-name}  as well -- and this will break conversation threads. If you re-create  your account on another instance, it's better to rename your {instance-name}  account to something like MyNickhasmovedtoFragdev, instead of deleting it.</p>
 					<p>To delete your account go to:</p>
-					<p class="indent">Your header avatar (upper right) → Settings → More settings → Delete account (right column)</p>
+					<p class="indent">Your header avatar (upper right) → Settings → Delete account (right column)</p>
 		
  
 					<!-- 12 -->
 					<h2 id="faq-12">How to connect your {instance-name} account to your Twitter account</h2>
 					<p>You can forward your notices to Twitter</p>
 					<p>In New {instance-name}:</p>
-					<p class="indent">Your header avatar (upper right) → Settings → More Settings → Twitter</p>
+					<p class="indent">Your header avatar (upper right) → Settings → Twitter</p>
 					<p>You are forwarded to Twitter and have to authorise {instance-name} to use your Twitter account.</p>
 					<p><em>According  to user reports this doesn't always work on the first or second  attempt. If it doesn't, you may have to try again later. The cause of  the  problem may be on Twitter's side. Your browser must not block  Javascript or Cookies.</em></p>
  
