@@ -2008,7 +2008,7 @@ window.siteTitle = $('head title').html(); // remember this for later use
 
 // replace placeholders in translation
 $.each(window.sL,function(k,v){
-	window.sL[k] = v.replace('{site-title}',window.siteTitle);
+	window.sL[k] = v.replace(/{site-title}/g,window.siteTitle);
 	});
 
 // set some static string

@@ -103,15 +103,22 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
 						$notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));						
 						}
 					}
-			
-				$notifications_populated[] = array(
-											'id'=> $notification->id,
-											'from_profile'=> self::twitterUserArray(Profile::getKV($notification->from_profile_id)),
-											'ntype'=> $notification->ntype,        								        								        								
-											'notice'=> $notice,
-											'created_at'=>self::dateTwitter($notification->created),
-											'is_seen'=>$notification->is_seen        								
-											);
+					
+				$from_profile = Profile::getKV($notification->from_profile_id);
+				
+				// a user might have deleted their profile, don't show these notifications
+				if($from_profile instanceof Profile) {
+
+					$notifications_populated[] = array(
+												'id'=> $notification->id,
+												'from_profile'=> self::twitterUserArray($from_profile),
+												'ntype'=> $notification->ntype,        								        								        								
+												'notice'=> $notice,
+												'created_at'=>self::dateTwitter($notification->created),
+												'is_seen'=>$notification->is_seen        								
+												);
+
+					}
 				}
 
 			// mark as seen
