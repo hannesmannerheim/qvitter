@@ -1349,14 +1349,25 @@ function showConversation(qid) {
 			
 			// loop trough this stream items conversation and show the "strict" line of replies
 			findInReplyToStatusAndShow(qid,$('#stream-item-' + qid).attr('data-in-reply-to-status-id'),true,false);
-			backToMyScrollPos($('#q-' + qid),qid,false);						
+			backToMyScrollPos($('#q-' + qid),qid,false);
+			findAndMarkLastVisibleInConversation($('#stream-item-' + qid));
 			}
 		else {
 			remove_spinner();
 			}	
 		}});	
 	}
-	
+
+
+/* · 
+   · 
+   ·  Add last visible class, since that's not possible to select in pure css
+   ·
+   · · · · · · · · · · · · · */ 	
+function findAndMarkLastVisibleInConversation(streamItem) {
+	streamItem.children().removeClass('last-visible');
+	streamItem.children().not('.hidden-conversation').last().addClass('last-visible');	
+	}
 
 
 /* · 

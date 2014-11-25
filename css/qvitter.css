@@ -1277,6 +1277,10 @@ button#submit-login:hover {
 .stream-item.hidden {
 	display:none;
 	}
+.stream-item > div.last-visible,
+.stream-item > div.last-visible .queet {	
+    border-radius: 0 0 5px 5px;	
+    }	
 .stream-item.conversation {
 	background-color:#F6F6F6;
 	border:0 none;
@@ -1441,7 +1445,9 @@ background-repeat: no-repeat;
 .stream-item.expanded .stream-item:last-child .queet {
 	border-bottom:0 none;
 	}
-.stream-item.expanded > div:last-child {
+.stream-item.expanded > div:last-child,
+.stream-item.expanded > div:last-child .inline-reply-queetbox,
+.stream-item.expanded > div:last-child .queet {
 	border-radius:0 0 6px 6px;
 	}			
 
@@ -2090,7 +2096,6 @@ ul.queet-actions li .icon.sm-fav:before {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 6px 6px 6px 6px;
     margin:8px 0;	
-	overflow-y: hidden;    
 	}	
 .stream-item.expanded > .queet > .attachments{
 	display:none;
@@ -2341,7 +2346,7 @@ span.inline-reply-caret .caret-inner {
 
 .inline-reply-queetbox .mentions-suggestions {
     left: 71px;
-    width: 436px;	
+    width: 504px;	
 	}
 
 .modal-body .inline-reply-queetbox .mentions-suggestions {
@@ -2556,8 +2561,7 @@ span.inline-reply-caret .caret-inner {
 	padding-bottom: 10px;
 	padding-left: 12px;	
 	position:relative;
-	border-radius: 0 0 5px 5px;
-	overflow: hidden;	
+	border-radius: 0 0 5px 5px;	
 	}	
 #user-footer-inner img,
 .inline-reply-queetbox img {
@@ -2699,10 +2703,10 @@ div.syntax-middle {
 	
 .mentions-suggestions {	
     background-color:rgba(238, 238, 238, 0.97);
-    left: 12px;
+    left: 13px;
     position: absolute;
     top: 100px;
-    width: 276px;
+    width: 264px;
     z-index: 100;	
     display:none;
 	box-shadow:0 1px 4px rgba(0, 0, 0, 0.35);

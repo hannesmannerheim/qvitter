@@ -1906,13 +1906,16 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
    · · · · · · · · · · · · · */ 	
   	
 $('body').on('click','.view-more-container-bottom', function(){
+	var thisParentStreamItem = $(this).parent('.stream-item');
 	findReplyToStatusAndShow($(this).parent('.stream-item').attr('data-quitter-id'),$(this).attr('data-replies-after'));
 	$(this).remove();
+	findAndMarkLastVisibleInConversation(thisParentStreamItem);	
 	});
 $('body').on('click','.view-more-container-top', function(){
 
 	var this_qid = $(this).closest('.stream-item:not(.conversation)').attr('data-quitter-id');	
 	var queet = $(this).siblings('.queet');
+	var thisParentStreamItem = $(this).parent('.stream-item');	
 	rememberMyScrollPos(queet,'moretop' + this_qid);
 
 
@@ -1922,9 +1925,10 @@ $('body').on('click','.view-more-container-top', function(){
 	backToMyScrollPos(queet,'moretop' + this_qid,false);	
 
 	// remove the "show full conversation" link if nothing more to show
-	if($('#stream-item-' + $(this).parent('.stream-item').attr('data-quitter-id')).find('.hidden-conversation').length == 0) {
-		$('#stream-item-' + $(this).parent('.stream-item').attr('data-quitter-id')).children('.queet').find('.show-full-conversation').remove();
+	if($(this).parent('.stream-item').find('.hidden-conversation').length == 0) {
+		$(this).parent('.stream-item').children('.queet').find('.show-full-conversation').remove();
 		}		
+	findAndMarkLastVisibleInConversation(thisParentStreamItem);		
 	});	
 
 
@@ -1939,12 +1943,13 @@ $('body').on('click','.show-full-conversation',function(){
 
 	var this_q = $(this).closest('.queet');
 	var this_qid = $(this).closest('.stream-item:not(.conversation)').attr('data-quitter-id');	
+	var thisStreamItem = $('#stream-item-' + $(this).attr('data-stream-item-id'));
 
 	rememberMyScrollPos(this_q,this_qid);
 			
-	$('#stream-item-' + $(this).attr('data-stream-item-id')).find('.view-more-container-top').remove();		
-	$('#stream-item-' + $(this).attr('data-stream-item-id')).find('.view-more-container-bottom').remove();		
-	$.each($('#stream-item-' + $(this).attr('data-stream-item-id')).find('.hidden-conversation'),function(key,obj){
+	thisStreamItem.find('.view-more-container-top').remove();		
+	thisStreamItem.find('.view-more-container-bottom').remove();		
+	$.each(thisStreamItem.find('.hidden-conversation'),function(key,obj){
 		$(obj).removeClass('hidden-conversation');
 		$(obj).animate({opacity:'1'},400,function(){
 			$(obj).css('background-color','pink').animate({backgroundColor:'#F6F6F6'},1000);			
@@ -1953,6 +1958,7 @@ $('body').on('click','.show-full-conversation',function(){
 	$(this).remove();
 	
 	backToMyScrollPos(this_q,this_qid,false);
+	findAndMarkLastVisibleInConversation(thisStreamItem);	
 	});
 
 
@@ -2462,12 +2468,12 @@ function uploadImage(e, thisUploadButton) {
 									var queetBox = $('img.to-upload').parent().siblings('.queet-box-syntax');									
 									var caretPos = uploadButton.attr('data-caret-pos').split(',');
 									
+									// remove http and https (not needed, just design choice)
+									data.shorturl = data.shorturl.replace('http://','').replace('https://','');									
+									
 									$('img.to-upload').attr('data-shorturl', data.shorturl);
 									$('img.to-upload').addClass('uploaded');
 									$('img.to-upload').removeClass('to-upload');		
-									
-									// remove http and https (not needed, just design choice)
-									data.shorturl = data.shorturl.replace('http://','').replace('https://','');
 									
 									// insert shorturl in queet box	
 									deleteBetweenCharacterIndices(queetBox[0], caretPos[0], caretPos[1]);

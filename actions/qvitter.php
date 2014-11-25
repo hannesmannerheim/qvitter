@@ -102,7 +102,7 @@ class QvitterAction extends ApiAction
 				<title><?php print $sitetitle; ?></title>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">		
-				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?v=40" />
+				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?v=41" />
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
 				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>/img/favicon.ico?v=4">
 				<?php
@@ -715,11 +715,11 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.jWindowCrop.js"></script>	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=41"></script>		    	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=42"></script>		    	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=40"></script>		    		    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=40"></script>		    		    	    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=40"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=42"></script>		
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=41"></script>	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=43"></script>		
 			</body>
 		</html>
 
