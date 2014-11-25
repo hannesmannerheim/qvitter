@@ -176,7 +176,6 @@ class QvitterAction extends ApiAction
 					?>;
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
 					window.apiRoot = '<?php print common_path("api/", StatusNet::isHTTPS()); ?>';
-					window.avatarRoot = '<?php print common_path("avatar/", StatusNet::isHTTPS()); ?>';					
 					window.fullUrlToThisQvitterApp = '<?php print $qvitterpath; ?>';
 					window.siteRootDomain = '<?php print $siterootdomain; ?>';
 					window.siteInstanceURL = '<?php print $instanceurl; ?>';			

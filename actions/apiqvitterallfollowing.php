@@ -73,11 +73,11 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
         $this->profiles = $this->getProfiles();
 
 		
-		// only keep id, name, nickname and avatar filename
+		// only keep id, name, nickname and avatar URL
 		foreach($this->profiles as $p) {
 			try {
 				$avatar = Avatar::byProfile($p, AVATAR_STREAM_SIZE);
-				$avatar = $avatar->filename;
+				$avatar = $avatar->url;
 			} catch (Exception $e) {
 				$avatar = false;
 			}			
