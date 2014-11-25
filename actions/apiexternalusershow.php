@@ -76,12 +76,10 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
 			// if profile url is not ending with nickname, this is probably a single user instance
 			if(!substr($profileurl, -strlen($username))===$username) {
 				$instanceurl = $profileurl;
-						error_log('1');					
 				}
 
 			// multi user instance
-			else {
-						error_log('2');					
+			else {			
 				$instanceurl = substr($profileurl, 0, strrpos($profileurl, '/'));				
 				}			
 			
@@ -94,21 +92,18 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
 			if(substr($profileurl, -1)==='/') {
 				$instanceurl = $profileurl;
 				$username = 1;		
-						error_log('3');														
 				}
 
 			// multi user instance
 			else {
 				$username = substr($profileurl, strrpos($profileurl, '/')+1);			
-				$instanceurl = substr($profileurl, 0, strrpos($profileurl, '/'));				
-						error_log('4');									
+				$instanceurl = substr($profileurl, 0, strrpos($profileurl, '/'));											
 				}			
 			
 			}
 		
 		// get profile from external instance
 		$apicall = $instanceurl.'/api/users/show.json?id='.$username; 	
-						error_log('apicall:'.$apicall);	
 		stream_context_set_default(array('http' => array('method' => 'GET')));
         $this->profile->external = json_decode(file_get_contents($apicall));        
 
