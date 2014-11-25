@@ -859,20 +859,19 @@ $('body').on('click','a', function(e) {
 
 				if(data) {
 					
-					// local profile id
+					// local profile id and follow class
 					var followLocalIdHtml = '';
+					var followingClass = '';					
 					if(typeof data.local != 'undefined') {
 						followLocalIdHtml = ' data-follow-user-id="' + data.local.id + '"';
+
+						if(data.local.following) {
+							followingClass = 'following';
+							}
 						}
 										
 					// empty strings and zeros instead of null
 					data = cleanUpUserObject(data.external);
-					
-					// profile card
-					var followingClass = '';
-					if(data.following) {
-						followingClass = 'following';
-						}
 						
 					// old statusnet-versions might not have full avatar urls in their api response
 					if(typeof data.profile_image_url_original == 'undefined'
