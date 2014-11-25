@@ -68,6 +68,8 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
 		// get local profile
 		$local_profile = Profile::getKV('profileurl',$profileurl);
 
+		$this->profile = new stdClass();
+
 		if($local_profile) {
 			$this->profile->local = $this->twitterUserArray($local_profile);
 
