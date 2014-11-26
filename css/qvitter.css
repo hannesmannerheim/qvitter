@@ -505,7 +505,7 @@ body.rtl .front-welcome-text {
 #federated-tooltip #what-is-federation {
 	background-color: rgba(255, 255, 255, 0.95);
     border: 1px solid #333333;
-    border-radius: 5px 5px 5px 5px;
+    border-radius: 6px 6px 6px 6px;
     color: #333333;
     display: none;
     font-size: 17px;
@@ -973,7 +973,7 @@ button#submit-login:hover {
     border: 1px solid rgba(0, 0, 0, 0.1);
     text-shadow: 0 1px 0 #FFFFFF;
     background-clip: padding-box;
-    border-radius: 6px 6px 6px 6px;
+    border-radius: 6px;
     line-height: 16px;
     margin-bottom: 10px;
     overflow:hidden;
@@ -1170,8 +1170,8 @@ button#submit-login:hover {
 	border-bottom-width: 1px;
 	border-bottom-color: #E8E8E8;
 	border-bottom-style: solid;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
 	min-height: 20px;
@@ -1277,13 +1277,15 @@ button#submit-login:hover {
 .stream-item.hidden {
 	display:none;
 	}
-.stream-item > div.last-visible,
-.stream-item > div.last-visible .queet {	
-    border-radius: 0 0 5px 5px;	
+.stream-item.expanded > div.last-visible,
+.stream-item.expanded > div.last-visible .queet,
+.stream-item.expanded > div.last-visible .inline-reply-queetbox {	
+    border-radius: 0 0 6px 6px;	
     }	
 .stream-item.conversation {
 	background-color:#F6F6F6;
 	border:0 none;
+	border-top:1px solid #F6F6F6;
 	opacity:0.5;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
@@ -1312,7 +1314,7 @@ button#submit-login:hover {
 	margin-top:-5px;
 	width:10px;
 	height:10px;
-	border-radius:5px;
+	border-radius:6px;
 	z-index:10;
 	}
 	
@@ -1439,15 +1441,12 @@ background-repeat: no-repeat;
     transition: margin-top 5s linear;
 	}
 	
-.stream-item.expanded .queet:hover {
-	background-color:#fff;
-	}	
 .stream-item.expanded .stream-item:last-child .queet {
 	border-bottom:0 none;
 	}
-.stream-item.expanded > div:last-child,
-.stream-item.expanded > div:last-child .inline-reply-queetbox,
-.stream-item.expanded > div:last-child .queet {
+.stream-item.expanded:not(.conversation) > div:last-child,
+.stream-item.expanded:not(.conversation) > div:last-child .inline-reply-queetbox,
+.stream-item.expanded:not(.conversation) > div:last-child .queet {
 	border-radius:0 0 6px 6px;
 	}			
 
@@ -1672,7 +1671,7 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	margin-top: 3px;
 	left:12px;
 	border:0 none;
-	border-radius: 5px;
+	border-radius: 6px;
 	position:absolute;
 	cursor: pointer;
 	list-style-image: none;
@@ -1689,7 +1688,7 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	left:12px;
 	border:1px solid rgba(0, 0, 0, 0.1);
 	box-sizing:border-box;	
-	border-radius: 5px;	
+	border-radius: 6px;	
 	}	
 .modal-container .modal-body .stream-item-header .avatar {
 	left:10px;	
@@ -2092,9 +2091,9 @@ ul.queet-actions li .icon.sm-fav:before {
 	background-position: 5px -218px;
 	}    
 
-.stream-item.expanded {
+.stream-item.expanded:not(.conversation) {
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 6px 6px 6px 6px;
+    border-radius: 6px;
     margin:8px 0;	
 	}	
 .stream-item.expanded > .queet > .attachments{
@@ -2105,8 +2104,9 @@ ul.queet-actions li .icon.sm-fav:before {
 	}
 .stream-item.expanded .stream-item.expanded {
 	margin:0 0;
-	border:0 none;
-	border-radius: 0 0 0 0;
+	border-bottom:0 none;
+	border-left:0 none;
+	border-right:0 none;	
 	}	
 
 .stream-item .media {
@@ -2254,7 +2254,7 @@ ul.stats .avatar-row .avatar {
     background-color:transparent;   
     border-top:1px solid #DDDDDD;     
  	}
- .stream-item.expanded > .queet + .stream-item.conversation:not(.hidden-conversation) {
+ .stream-item.expanded .stream-item.first-visible-after-parent {
  	border-top:1px solid #DDDDDD;
  	}
 
@@ -2354,8 +2354,8 @@ span.inline-reply-caret .caret-inner {
 	}	
 
 #user-header {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
     line-height: 16px;
     padding: 12px;
     cursor: pointer;
@@ -2545,8 +2545,8 @@ span.inline-reply-caret .caret-inner {
 	background-color:#fff;
 	border-top-left-radius: 0px;
 	border-top-right-radius: 0px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
 	text-shadow: #FFFFFF 0px 1px 0px;
 	position:relative;
 	}
@@ -2561,7 +2561,7 @@ span.inline-reply-caret .caret-inner {
 	padding-bottom: 10px;
 	padding-left: 12px;	
 	position:relative;
-	border-radius: 0 0 5px 5px;	
+	border-radius: 0 0 6px 6px;	
 	}	
 #user-footer-inner img,
 .inline-reply-queetbox img {
@@ -2710,10 +2710,10 @@ div.syntax-middle {
     z-index: 100;	
     display:none;
 	box-shadow:0 1px 4px rgba(0, 0, 0, 0.35);
-    border-radius: 0 0 5px 5px;	
+    border-radius: 0 0 6px 6px;	
     }
 .mentions-suggestions div:last-child {
-	border-radius: 0 0 5px 5px;	
+	border-radius: 0 0 6px 6px;	
 	}
 	
 .mentions-suggestions div {
@@ -2871,7 +2871,7 @@ div.nav-session {
 
 .profile-card {
     background-clip: padding-box;
-    border-radius: 6px 6px 6px 6px;
+    border-radius: 6px;
     line-height: 16px;
     margin-bottom: 10px;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -2888,8 +2888,8 @@ div.nav-session {
 .profile-header-inner {
 	text-shadow: 0 1px 0 #FFFFFF;
     line-height: 16px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
     background-color: #444444;
     background-repeat: no-repeat;
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
@@ -2918,7 +2918,7 @@ div.nav-session {
     outline: 0 none;
 	background-color: #FFFFFF;
     border: 4px solid #FFFFFF;
-    border-radius: 5px 5px 5px 5px;
+    border-radius: 6px 6px 6px 6px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
     display: block;
     height: 73px;
@@ -3023,8 +3023,8 @@ div.nav-session {
     background-color: #FFFFFF;
     line-height: 16px;
 	text-shadow: 0 1px 0 #FFFFFF;        
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;	
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;	
 	}
 .profile-banner-footer ul.stats {	
     border-bottom: 0 none;
@@ -3439,7 +3439,7 @@ background:rgba(0,0,0,0.2);
 .modal-content {
 	background-clip: padding-box;
     background-color: #FFFFFF;
-    border-radius: 6px 6px 6px 6px;
+    border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
     position: relative;
     overflow:hidden;

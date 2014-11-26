@@ -234,7 +234,7 @@ class QvitterAction extends ApiAction
 					.queet-box-syntax[contenteditable="true"],
 					.inline-reply-queetbox,
 					span.inline-reply-caret,
-					.stream-item.expanded > .queet + .stream-item.conversation:not(.hidden-conversation),
+				    .stream-item.expanded .stream-item.first-visible-after-parent,
 					#popup-faq #faq-container p.indent {
 						border-color:rgb(155,206,224);/*LIGHTERBORDERCOLOREND*/
 						}

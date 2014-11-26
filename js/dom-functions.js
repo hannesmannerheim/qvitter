@@ -1366,7 +1366,9 @@ function showConversation(qid) {
    · · · · · · · · · · · · · */ 	
 function findAndMarkLastVisibleInConversation(streamItem) {
 	streamItem.children().removeClass('last-visible');
-	streamItem.children().not('.hidden-conversation').last().addClass('last-visible');	
+	streamItem.children().removeClass('first-visible-after-parent');	
+	streamItem.children().not('.hidden-conversation').last().addClass('last-visible');
+	streamItem.children('.queet').nextAll().not('.hidden-conversation').first().addClass('first-visible-after-parent');	
 	}
 
 
