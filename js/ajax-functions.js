@@ -93,11 +93,14 @@ function getFromAPI(stream, actionOnSuccess) {
 		type: "GET",		
 		dataType: 'json', 
 		statusCode: {
-			400:function() { 
+			401:function() { 
 				location.reload(); // we may have been logged out in another tab, reload page			
 				},
 			404:function() { 
-				window.location.replace(window.siteInstanceURL); // redirect to frontpage, probably when trying to access non-existing users
+				// redirect to frontpage when trying to access non-existing users					
+				if(stream.indexOf('statuses/user_timeline.json?screen_name=') > -1) {
+					window.location.replace(window.siteInstanceURL); 
+					}
 				}				
 			},
 		success: function(data) { 
