@@ -2470,8 +2470,11 @@ function uploadImage(e, thisUploadButton) {
 									var queetBox = $('img.to-upload').parent().siblings('.queet-box-syntax');									
 									var caretPos = uploadButton.attr('data-caret-pos').split(',');
 									
-									// remove http and https (not needed, just design choice)
-									data.shorturl = data.shorturl.replace('http://','').replace('https://','');									
+									// if this site is like quitter.se, we have to do this, otherwise
+									// gnusocial will not recognize the link to the image as a local attachment
+									if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
+										data.shorturl = data.shorturl.replace('https://','http://');																			
+										}
 									
 									$('img.to-upload').attr('data-shorturl', data.shorturl);
 									$('img.to-upload').addClass('uploaded');

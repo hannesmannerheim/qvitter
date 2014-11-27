@@ -113,7 +113,7 @@ class QvitterAction extends ApiAction
 					if(preg_match("/^[a-zA-Z0-9]+$/", $nickname) == 1) {
 						$user = User::getKV('nickname', $nickname); 
 						if(!isset($user->id)) {
-							error_log("QVITTER: Could not get user id for user with nickname: $nickname – REQUEST_URI: ".$_SERVER['REQUEST_URI']);
+							//error_log("QVITTER: Could not get user id for user with nickname: $nickname – REQUEST_URI: ".$_SERVER['REQUEST_URI']);
 							}        
 						else {
 							print '<link title="Notice feed for '.$nickname.' (Activity Streams JSON)" type="application/stream+json" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.as" rel="alternate">'."\n";
@@ -154,12 +154,24 @@ class QvitterAction extends ApiAction
 					window.defaultAvatarStreamSize = <?php print json_encode(Avatar::defaultImage(AVATAR_STREAM_SIZE)) ?>;
 					window.textLimit = <?php print json_encode((int)common_config('site','textlimit')) ?>;
 					window.registrationsClosed = <?php print json_encode($registrationsclosed) ?>;
+					window.thisSiteThinksItIsHttpButIsActuallyHttps = <?php
+					
+						if(isset($_SERVER['HTTPS'])
+						&& $_SERVER['HTTPS'] != 'off'
+						&& substr($instanceurl,0,7) == 'http://') {
+							print 'true';
+							}
+						else {
+							print 'false';
+							}
+					
+					?>;
 					window.siteTitle = <?php print json_encode($sitetitle) ?>;
 					window.loggedIn = <?php 
 					
-					$logged_in_user_json = json_encode($logged_in_user_obj);
-					$logged_in_user_json = str_replace('http:\/\/quitter.se\/','https:\/\/quitter.se\/',$logged_in_user_json);    	
-					print $logged_in_user_json; 
+						$logged_in_user_json = json_encode($logged_in_user_obj);
+						$logged_in_user_json = str_replace('http:\/\/quitter.se\/','https:\/\/quitter.se\/',$logged_in_user_json);    	
+						print $logged_in_user_json; 
 					
 					?>;
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
