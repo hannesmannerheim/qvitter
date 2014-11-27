@@ -246,7 +246,11 @@ class QvitterPlugin extends Plugin {
 					}
 				}
 
-            $action->inlineScript('var toggleQvitterAPIURL = \''.common_path('', true).'api/qvitter/toggle_qvitter.json\'; var toggleText = \'New '.str_replace("'","\'",common_config('site','name')).'\';var qvitterEnabled = '.$qvitter_enabled.';');        
+            $action->inlineScript(' var toggleQvitterAPIURL = \''.common_path('', true).'api/qvitter/toggle_qvitter.json\';
+            						var toggleText = \'New '.str_replace("'","\'",common_config('site','name')).'\';
+            						var qvitterEnabled = '.$qvitter_enabled.';
+            						var qvitterAllLink = \''.common_local_url('all', array('nickname' => $user->nickname)).'\';
+            						');        
             $action->script($this->path('js/toggleqvitter.js'));
         }
     }

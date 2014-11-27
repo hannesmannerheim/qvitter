@@ -42,7 +42,7 @@
 
 
 if(qvitterEnabled) {
-	$('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter"><a href="' + $('.home.bookmark').attr('href') + '">' + toggleText + '</a></li>');
+	$('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter"><a href="' + qvitterAllLink + '">' + toggleText + '</a></li>');
 	}
 else {
 	$('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter"><a href="' + location.href + '">' + toggleText + '</a></li>');
@@ -51,7 +51,7 @@ else {
 		e.preventDefault();		
 		$.get(toggleQvitterAPIURL,function(data){
 			if(data.success === true) {
-				location.reload(); // reload	
+				window.location.href = qvitterAllLink;				
 				}
 			});
 	

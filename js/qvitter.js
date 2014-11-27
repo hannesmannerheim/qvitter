@@ -384,7 +384,7 @@ $('#rememberme_label').disableSelection();
    · · · · · · · · · · · · · */ 
    
 $('#logout').click(function(){
-	window.location.href =window.siteInstanceURL + 'main/logout';		
+	window.location.href =window.siteInstanceURL + 'main/logout';
 	});		
 
 
@@ -406,14 +406,14 @@ $('#faq-link').click(function(){
 
 /* · 
    · 
-   ·   Classic Link, toggle setting in api and reload page when finished
+   ·   Classic Link, toggle setting in api and redirect to /all
    · 
    · · · · · · · · · · · · · */ 
 
 $('#classic-link').click(function(){
 	getFromAPI('qvitter/toggle_qvitter.json',function(data){
 		if(data.success === true) {
-			location.reload(); // reload	
+			window.location.href = window.siteInstanceURL + window.loggedIn.screen_name + '/all';
 			}
 		});
 	
