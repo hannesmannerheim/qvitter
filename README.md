@@ -44,7 +44,8 @@ Optional
 For easy updates, you can use /config.php to override the settings in /plugins/Qvitter/QvitterPlugin.php.
 For example, add this to your /config.php file:
 
-````// Qvitter-settings
+````
+// Qvitter-settings
 $config['site']['qvitter']['enabledbydefault'] = true;
 $config['site']['qvitter']['defaultbackgroundcolor'] = '#f4f4f4';
 $config['site']['qvitter']['defaultlinkcolor'] = '#0084B4';
