@@ -78,9 +78,14 @@ class QvitterPlugin extends Plugin {
 		$configphpsettings = common_config('site','qvitter') ?: array();
 		foreach($configphpsettings as $configphpsetting=>$value) {
 			$settings[$configphpsetting] = $value;
-			}
+		}
 
-		return $settings[$setting];
+		if(isset($settings[$setting])) {
+			return $settings[$setting];			
+		}
+		else {
+			return false;
+		}
 	}
 	
 	
