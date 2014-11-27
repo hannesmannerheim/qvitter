@@ -75,7 +75,7 @@ class QvitterPlugin extends Plugin {
 		  · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */	
 		
 		// config.php settings override the settings in this file		
-		$configphpsettings = common_config('site','qvitter');
+		$configphpsettings = common_config('site','qvitter') ?: array();
 		foreach($configphpsettings as $configphpsetting=>$value) {
 			$settings[$configphpsetting] = $value;
 			}
