@@ -44,14 +44,14 @@ Optional
 For easy updates, you can use /config.php to override the settings in /plugins/Qvitter/QvitterPlugin.php.
 For example, add this to your /config.php file:
 
-```// Qvitter-settings
+````// Qvitter-settings
 $config['site']['qvitter']['enabledbydefault'] = true;
 $config['site']['qvitter']['defaultbackgroundcolor'] = '#f4f4f4';
 $config['site']['qvitter']['defaultlinkcolor'] = '#0084B4';
 $config['site']['qvitter']['timebetweenpolling'] = 5000;
 $config['site']['qvitter']['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';	
 $config['site']['qvitter']['urlshortenersignature'] = 'b6afeec983';	
-```
+````
 
 Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).
 
