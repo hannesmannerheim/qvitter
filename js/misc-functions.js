@@ -170,10 +170,10 @@ function changeDesign(obj) {
 
 	  	// background image
 	  	if(obj.background_image.length > 0) {
-		  	$('body').css('background-image','url(\'' + obj.background_image + '\'');
+		  	$('body').css('background-image','url(\'' + obj.background_image + '\')');
 	  		}
 	  	else {
-	  		$('body').css('background-image','url(""');
+	  		$('body').css('background-image','url(\'\')');
 	  		}	  						   
 	   }
 	   
@@ -201,10 +201,10 @@ function changeDesign(obj) {
 
 	  	// background image
 	  	if(obj.userBackgroundImage.length > 0) {
-		  	$('body').css('background-image','url(\'' + obj.userBackgroundImage + '\'');
+		  	$('body').css('background-image','url(\'' + obj.userBackgroundImage + '\')');
 	  		}
 	  	else {
-	  		$('body').css('background-image','url(""');
+	  		$('body').css('background-image','url(\'\')');
 	  		}
 	  	}
 	  	
