@@ -102,7 +102,7 @@ class QvitterAction extends ApiAction
 				<title><?php print $sitetitle; ?></title>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">		
-				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?v=41" />
+				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?changed=<?php print date('YmdHis',filemtime(INSTALLDIR.'/plugins/Qvitter/css/qvitter.css')); ?>" />
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
 				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>/img/favicon.ico?v=4">
 				<?php
@@ -706,7 +706,7 @@ class QvitterAction extends ApiAction
 					<h2 id="faq-23">Why doesn't my repeat/requeet show up on other instances?</h2>
 					<p>In the latest versions of GNU Social, repeats/requeets do not get sent to your followers on other instances. This was possible in StatusNet, but this feature has been removed due to a security issue. GNU Social developers are working on a solution. In the meantime, if you really want your repeat/requeet to federate, you can always to a "manual repeat", i.e. write RQ @username, and then copy-paste the notice.</p>
 
-					<p class="faq-credits"><em>Thanks to <a href="https://quitter.se/simsa0">@simsa0</a> and <a href="https://quitter.se/mcscx">@mcscx</a> for their work on this FAQ.</em></p>
+					<p class="faq-credits"><em>Thanks to <a href="https://quitter.se/simsa0">@simsa0</a> and <a href="https://quitter.se/mcscx">@mcscx</a> for their work on this FAQ. Any errors are due to bad editing by <a href="https://quitter.se/hannes2peer">@hannes2peer</a>.</em></p>
 				</div>
 
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.1.1.min.js"></script>
@@ -715,11 +715,19 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.jWindowCrop.js"></script>	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?v=42"></script>		    	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?v=41"></script>		    		    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?v=41"></script>		    		    	    
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?v=41"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?v=43"></script>		
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?changed=<?php print date('YmdHis',filemtime(INSTALLDIR.'/plugins/Qvitter/js/dom-functions.js')); ?>"></script>		    	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?changed=<?php print date('YmdHis',filemtime(INSTALLDIR.'/plugins/Qvitter/js/misc-functions.js')); ?>"></script>		    		    
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?changed=<?php print date('YmdHis',filemtime(INSTALLDIR.'/plugins/Qvitter/js/ajax-functions.js')); ?>"></script>		    		    	    
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?changed=<?php print date('YmdHis',filemtime(INSTALLDIR.'/plugins/Qvitter/js/lan.js')); ?>"></script>	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?changed=<?php print date('YmdHis',filemtime(INSTALLDIR.'/plugins/Qvitter/js/qvitter.js')); ?>"></script>
+				<?php
+				
+					// we might have custom javascript in the config file that we want to add
+					if(QvitterPlugin::settings('js')) {
+						print '<script type="text/javascript">'.QvitterPlugin::settings('js').'</script>';
+					}				
+				
+				?>	
 			</body>
 		</html>
 

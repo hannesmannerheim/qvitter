@@ -95,6 +95,8 @@ $('#what-is-federation').on('mouseleave',function(){
 if(!window.registrationsClosed) {
 	$('.front-signup input, .front-signup button').removeAttr('disabled'); // clear this onload
 	$('#signup-btn-step1').click(function(){
+	
+		$(document).trigger('onClickStep1Register'); // hook
 		
 		display_spinner();
 		$('.front-signup input, .front-signup button').addClass('disabled');

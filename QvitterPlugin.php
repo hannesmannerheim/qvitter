@@ -45,6 +45,10 @@ class QvitterPlugin extends Plugin {
          ·         															 ·
          · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */		
 
+		// THESE SETTINGS CAN BE OVERRIDDEN IN CONFIG.PHP
+		// e.g. $config['site']['qvitter']['enabledbydefault'] = 'false';
+
+
 		// ENABLED BY DEFAULT (true/false)
 		$settings['enabledbydefault'] = true;
 
@@ -59,7 +63,7 @@ class QvitterPlugin extends Plugin {
 		
 		// URL SHORTENER
 		$settings['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';
-		$settings['urlshortenersignature'] = 'b6afeec983';		
+		$settings['urlshortenersignature'] = 'b6afeec983';
 
 
 		 /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
@@ -69,7 +73,12 @@ class QvitterPlugin extends Plugin {
 		  ·             \____)                                  (____/        · 
 		  ·                                                                   ·
 		  · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */	
-
+		
+		// config.php settings override the settings in this file		
+		$configphpsettings = common_config('site','qvitter');
+		foreach($configphpsettings as $configphpsetting=>$value) {
+			$settings[$configphpsetting] = $value;
+			}
 
 		return $settings[$setting];
 	}
@@ -251,7 +260,7 @@ class QvitterPlugin extends Plugin {
             						var qvitterEnabled = '.$qvitter_enabled.';
             						var qvitterAllLink = \''.common_local_url('all', array('nickname' => $user->nickname)).'\';
             						');        
-            $action->script($this->path('js/toggleqvitter.js'));
+            $action->script($this->path('js/toggleqvitter.js?changed='.date('YmdHis',filemtime(INSTALLDIR.'/plugins/Qvitter/js/toggleqvitter.js'))));
         }
     }
 
@@ -364,7 +373,8 @@ class QvitterPlugin extends Plugin {
 				#site_nav_global_primary a:hover,
 				.threaded-replies .notice-faves:before, 
 				.threaded-replies .notice-repeats:before, 
-				.notice-reply-comments > a:before {
+				.notice-reply-comments > a:before,
+				#content .notices > .notice > .entry-metadata .conversation {
 					color:#".$linkcolor.";
 					}
 				#site_nav_global_primary a:hover {

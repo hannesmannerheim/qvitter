@@ -38,6 +38,21 @@ be opt-in instead.
 
 6. Users can go to ://{instance}/settings/qvitter and enable or disable Qvitter.
 
+Optional
+-----
+
+For easy updates, you can use /config.php to override the settings in /plugins/Qvitter/QvitterPlugin.php.
+For example, add this to your /config.php file:
+
+```// Qvitter-settings
+$config['site']['qvitter']['enabledbydefault'] = true;
+$config['site']['qvitter']['defaultbackgroundcolor'] = '#f4f4f4';
+$config['site']['qvitter']['defaultlinkcolor'] = '#0084B4';
+$config['site']['qvitter']['timebetweenpolling'] = 5000;
+$config['site']['qvitter']['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';	
+$config['site']['qvitter']['urlshortenersignature'] = 'b6afeec983';	
+```
+
 Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).
 
 
@@ -58,18 +73,18 @@ TODO
 
 1. Join _new_ external groups and follow _new_ external users ("New" meaning users/groups that the server don't know yet) 
 
-2. Creating groups, make admin, block user
+1. Creating groups, make admin, block user
 
-10. Search users
+1. Search users
 
-11. Recommended users
+1. Recommended users
 
-12. Filters (hide queets containing strings, e.g. mute users)
+1. Filters (hide queets containing strings, e.g. mute users)
 
-14. More languages, maybe make proper po/mo-files
+1. More languages, maybe make proper po/mo-files
 
-16. Admin-interface
+1. Admin-interface
 
-17. New "expand queet" api for getting conversation, retweets, favs and attachment in the same request
+1. New "expand queet" api for getting conversation, retweets, favs and attachment in the same request
 
-19. Node.js long polling server and an new api that serve aggregate of all polling users requests in one go
+1. Node.js long polling server and an new api that serve aggregate of all polling users requests in one go
