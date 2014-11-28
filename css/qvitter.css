@@ -3893,6 +3893,14 @@ content:"-";
 	padding-top:20px;
 	line-height: 27px;	
 	}
+#popup-faq #faq-container h2 a {
+	font-size:0;
+	}
+#popup-faq #faq-container h2 a:before {
+	content:"\f0aa";
+	font-family:"FontAwesome";
+	font-size:20px;
+	}	
 #popup-faq #faq-container li {
 	padding-left:20px;
 	font-weight:bold;
