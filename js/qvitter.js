@@ -397,12 +397,17 @@ $('#logout').click(function(){
    · · · · · · · · · · · · · */ 
    
 $('#faq-link').click(function(){
-	var faqHtml = $('#faq-html').html();
-	faqHtml = faqHtml.replace(/{instance-name}/g,window.siteTitle);
-	faqHtml = faqHtml.replace(/{instance-url}/g,window.siteRootDomain);
-	faqHtml = faqHtml.replace(/{instance-url-with-protocol}/g,window.siteInstanceURL);
-	faqHtml = faqHtml.replace(/{nickname}/g,window.loggedIn.screen_name);		
-	popUpAction('popup-faq', window.siteTitle + ' ' + window.sL.FAQ,'<div id="faq-container">' + faqHtml + '</div>',false);	
+	popUpAction('popup-faq', window.siteTitle + ' ' + window.sL.FAQ,'<div id="faq-container"></div>',false);	
+	$.get(window.siteInstanceURL + 'plugins/Qvitter/doc/faq.html', function(data){
+		if(data) {
+			var faqHtml = data;
+			faqHtml = faqHtml.replace(/{instance-name}/g,window.siteTitle);
+			faqHtml = faqHtml.replace(/{instance-url}/g,window.siteRootDomain);
+			faqHtml = faqHtml.replace(/{instance-url-with-protocol}/g,window.siteInstanceURL);
+			faqHtml = faqHtml.replace(/{nickname}/g,window.loggedIn.screen_name);
+			$('#faq-container').html(faqHtml);			
+			}
+		});
 	});	
 
 

@@ -3884,6 +3884,7 @@ content:"-";
 #popup-faq #faq-container {
 	padding:10px 20px 20px;
 	color:#000;
+	min-height:100vh;
 	}
 #popup-faq #faq-container h1 {
 	padding-top:10px;

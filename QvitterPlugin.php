@@ -705,6 +705,54 @@ class QvitterPlugin extends Plugin {
 		
         return true;
     }             
+
+   /**
+     * Replace GNU Social's default FAQ with Qvitter's
+     *
+     * @return boolean hook flag
+     */
+    public function onEndLoadDoc($title, &$output)
+    {
+    	
+    	if($title == 'faq') {
+
+	    	$faq = file_get_contents(INSTALLDIR.'/plugins/Qvitter/doc/faq.html');  
+	    	$faq = str_replace('{instance-name}',common_config('site','name'),$faq); 
+	    	$faq = str_replace('{instance-url}',common_config('site','server'),$faq); 	    	
+	    	$faq = str_replace('{instance-url-with-protocol}',common_path('', true),$faq); 	    	
+	
+	        if (common_logged_in()) {		
+				$user = common_current_user();
+		    	$faq = str_replace('{nickname}',$user->nickname,$faq);
+		    	}
+	    	$output = $faq;
+    		}
+    			
+        return true;
+    }   
+    
+   /**
+     * Add menu items to top header in Classic
+     *
+     * @return boolean hook flag
+     */
+    public function onStartPrimaryNav($action)
+    {
+       	
+                $action->menuItem(common_local_url('doc', array('title' => 'faq')),
+                                // TRANS: Menu item in primary navigation panel.
+                                _m('MENU','FAQ'),
+                                // TRANS: Menu item title in primary navigation panel.
+                                _('Frequently asked questions'),
+                                false,
+                                'top_nav_doc_faq');
+    			
+        return true;
+    }               
+        
+        
+     
+        
         
     function onPluginVersion(&$versions)
     {
