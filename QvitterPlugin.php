@@ -718,7 +718,7 @@ class QvitterPlugin extends Plugin {
     	
     	if($title == 'faq') {
 
-	    	$faq = file_get_contents(INSTALLDIR.'/plugins/Qvitter/doc/faq.html');  
+	    	$faq = file_get_contents(QVITTERDIR.'/doc/faq.html');  
 	    	$faq = str_replace('{instance-name}',common_config('site','name'),$faq); 
 	    	$faq = str_replace('{instance-url}',common_config('site','server'),$faq); 	    	
 	    	$faq = str_replace('{instance-url-with-protocol}',common_path('', true),$faq); 	    	

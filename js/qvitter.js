@@ -398,7 +398,7 @@ $('#logout').click(function(){
    
 $('#faq-link').click(function(){
 	popUpAction('popup-faq', window.siteTitle + ' ' + window.sL.FAQ,'<div id="faq-container"></div>',false);	
-	$.get(window.siteInstanceURL + 'plugins/Qvitter/doc/faq.html', function(data){
+	$.get(window.fullUrlToThisQvitterApp + 'doc/faq.html', function(data){
 		if(data) {
 			var faqHtml = data;
 			faqHtml = faqHtml.replace(/{instance-name}/g,window.siteTitle);
