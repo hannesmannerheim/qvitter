@@ -34,6 +34,8 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+const QVITTERDIR = __DIR__;
+
 class QvitterPlugin extends Plugin {
 
 	public function settings($setting)
@@ -265,7 +267,7 @@ class QvitterPlugin extends Plugin {
             						var qvitterEnabled = '.$qvitter_enabled.';
             						var qvitterAllLink = \''.common_local_url('all', array('nickname' => $user->nickname)).'\';
             						');        
-            $action->script($this->path('js/toggleqvitter.js?changed='.date('YmdHis',filemtime(INSTALLDIR.'/plugins/Qvitter/js/toggleqvitter.js'))));
+            $action->script($this->path('js/toggleqvitter.js?changed='.date('YmdHis',filemtime(QVITTERDIR.'/js/toggleqvitter.js'))));
         }
     }
 
