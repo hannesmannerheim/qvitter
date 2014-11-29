@@ -1641,11 +1641,11 @@ $('body').on('click contextmenu','.queet-box-syntax',function () {
 		$(this)[0].addEventListener("paste", stripHtmlFromPaste);
 		if(typeof $(this).attr('data-replies-text') != 'undefined') {
 			$(this).html(decodeURIComponent($(this).attr('data-replies-text')));
-			var repliesLen = decodeURIComponent($(this).attr('data-replies-text')).length-11;			
+			var repliesLen = decodeURIComponent($(this).attr('data-replies-text')).length-5;			
 			setSelectionRange($(this)[0], repliesLen, repliesLen);	 			
 			}
 		else {
-			$(this).html('&nbsp;');			
+			$(this).html('');			
 			}
 		$(this).trigger('input');		
 		}

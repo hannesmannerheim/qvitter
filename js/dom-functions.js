@@ -1090,7 +1090,7 @@ function replyFormHtml(q,qid) {
 		});
 	
 	var startText = encodeURIComponent(window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br>');
-	var repliesText = encodeURIComponent(user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '&nbsp;&nbsp;');	
+	var repliesText = encodeURIComponent(user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '&nbsp;');	
 	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box queet-box-syntax" id="queet-box-' + qid + '" data-start-text="' + startText + '" data-replies-text="' + repliesText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button class="upload-image"></button><button class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';	
 	}
 	
