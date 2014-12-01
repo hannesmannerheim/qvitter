@@ -275,6 +275,9 @@ class QvitterAction extends ApiAction
 						<li class="fullwidth"><a id="edit-profile-header-link"></a></li>						
 						<li class="fullwidth"><a id="settings" href="<?php print $instanceurl; ?>settings/profile"></a></li>						
 						<li class="fullwidth"><a id="faq-link"></a></li>	
+					<?php if (common_config('site','inviteonly') == 1) { ?>
+						<li class="fullwidth"><a id="invite-link" href="<?php print $instanceurl; ?>main/invite"></a></li>
+					<?php } ?>
 						<li class="fullwidth"><a id="classic-link"></a></li>												
 						<li class="fullwidth language dropdown-divider"></li>										
 						<li class="language"><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>	
