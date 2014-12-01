@@ -78,8 +78,8 @@ class QvitterAction extends ApiAction
 		$sitetitle = common_config('site','name');
 		$siterootdomain = common_config('site','server');
 		$qvitterpath = Plugin::staticPath('Qvitter', '');
-		$apiroot = common_path('api/', true);
-		$instanceurl = common_path('', true);
+		$apiroot = common_path('api/', StatusNet::isHTTPS());
+		$instanceurl = common_path('', StatusNet::isHTTPS());
 
 		common_set_returnto(''); // forget this
 
@@ -175,8 +175,8 @@ class QvitterAction extends ApiAction
 					
 					?>;
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
-					window.apiRoot = '<?php print common_path("api/", true); ?>';
-					window.avatarRoot = '<?php print common_path("avatar/", true); ?>';					
+					window.apiRoot = '<?php print common_path("api/", StatusNet::isHTTPS()); ?>';
+					window.avatarRoot = '<?php print common_path("avatar/", StatusNet::isHTTPS()); ?>';					
 					window.fullUrlToThisQvitterApp = '<?php print $qvitterpath; ?>';
 					window.siteRootDomain = '<?php print $siterootdomain; ?>';
 					window.siteInstanceURL = '<?php print $instanceurl; ?>';			
