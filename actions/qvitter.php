@@ -372,7 +372,7 @@ class QvitterAction extends ApiAction
 									</td>
 								</tr></tbody></table>
 								<div id="remember-forgot">
-									<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3" checked="checked"> <span id="rememberme_label"></span> · <a href="<?php print $instanceurl ?>main/recoverpassword"></a>
+									<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3" checked="checked"> <span id="rememberme_label"></span> · <a id="recover-password" href="<?php print $instanceurl ?>main/recoverpassword"></a><div align=center><a id="other-login" href="<?php print $instanceurl ?>main/login"></a></div>
 									<input type="hidden" id="token" name="token" value="<?php print common_session_token(); ?>">								
 								</div>
 							</form>
