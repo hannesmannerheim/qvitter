@@ -61,6 +61,7 @@ a:active {
 body {
 	background-size:cover;
 	background-attachment:fixed;
+	background-repeat: no-repeat;
 	background-position: 0 46px;	
 	margin:0;
 	padding:0;
