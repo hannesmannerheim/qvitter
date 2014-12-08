@@ -61,6 +61,7 @@ a:active {
 body {
 	background-size:cover;
 	background-attachment:fixed;
+	background-repeat: no-repeat;
 	background-position: 0 46px;	
 	margin:0;
 	padding:0;
@@ -4175,7 +4176,7 @@ body.rtl #feed-header-inner h2  {
 @media (max-width: 910px) {	
 
 	body {
-		background:none !important;
+		background-size 910px auto !important;
 		}
 	
 	.upload-background-image {
