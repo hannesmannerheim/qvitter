@@ -375,7 +375,7 @@ class QvitterAction extends ApiAction
 									<?php 
 
 									if(!common_config('plugins','disable-OpenID')) {
-										print '<a href="'.$instanceurl.'main/openid" id="openid-login" donthijack>OpenID</a>';
+										print '<a href="'.$instanceurl.'main/openid" id="openid-login" title="OpenID" donthijack>OpenID</a>';
 										}
 										
 									?>
