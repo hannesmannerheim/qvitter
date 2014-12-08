@@ -275,6 +275,9 @@ class QvitterAction extends ApiAction
 						<li class="fullwidth"><a id="edit-profile-header-link"></a></li>						
 						<li class="fullwidth"><a id="settings" href="<?php print $instanceurl; ?>settings/profile"></a></li>						
 						<li class="fullwidth"><a id="faq-link"></a></li>	
+					<?php if (common_config('site','inviteonly') == 1) { ?>
+						<li class="fullwidth"><a id="invite-link" href="<?php print $instanceurl; ?>main/invite"></a></li>
+					<?php } ?>
 						<li class="fullwidth"><a id="classic-link"></a></li>												
 						<li class="fullwidth language dropdown-divider"></li>										
 						<li class="language"><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>	
@@ -369,7 +372,7 @@ class QvitterAction extends ApiAction
 									</td>
 								</tr></tbody></table>
 								<div id="remember-forgot">
-									<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3" checked="checked"> <span id="rememberme_label"></span> · <a href="<?php print $instanceurl ?>main/recoverpassword"></a>
+									<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3" checked="checked"> <span id="rememberme_label"></span> · <a id="recover-password" href="<?php print $instanceurl ?>main/recoverpassword"></a><div align=center><a id="other-login" href="<?php print $instanceurl ?>main/login"></a></div>
 									<input type="hidden" id="token" name="token" value="<?php print common_session_token(); ?>">								
 								</div>
 							</form>
