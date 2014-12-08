@@ -2018,7 +2018,7 @@ $('#nickname').attr('placeholder',window.sL.loginUsername);
 $('#password').attr('placeholder',window.sL.loginPassword);
 $('button#submit-login').html(window.sL.loginSignIn);
 $('#rememberme_label').html(window.sL.loginRememberMe);
-$('#remember-forgot a').html(window.sL.loginForgotPassword);
+$('#forgot-password').html(window.sL.loginForgotPassword);
 $('.front-signup h2').html('<strong>' + window.sL.newToQuitter + '</strong> ' + window.sL.signUp);
 $('#signup-user-name').attr('placeholder',window.sL.signUpFullName);
 $('#signup-user-email').attr('placeholder',window.sL.signUpEmail);

@@ -211,7 +211,8 @@ class QvitterAction extends ApiAction
 					#user-body #user-groups:hover .label, 
 					#user-body #user-following:hover .label,
 					ul.stats a strong,
-					.queet-box-extras button {
+					.queet-box-extras button,
+					#openid-login:hover:after {
 						color:#0084B4;/*COLOREND*/
 						}			
 					#unseen-notifications,
@@ -273,7 +274,7 @@ class QvitterAction extends ApiAction
 						<li class="fullwidth"><a id="logout"></a></li>
 						<li class="fullwidth dropdown-divider"></li>
 						<li class="fullwidth"><a id="edit-profile-header-link"></a></li>						
-						<li class="fullwidth"><a id="settings" href="<?php print $instanceurl; ?>settings/profile"></a></li>						
+						<li class="fullwidth"><a id="settings" href="<?php print $instanceurl; ?>settings/profile" donthijack></a></li>						
 						<li class="fullwidth"><a id="faq-link"></a></li>	
 						<li class="fullwidth"><a id="classic-link"></a></li>												
 						<li class="fullwidth language dropdown-divider"></li>										
@@ -369,8 +370,15 @@ class QvitterAction extends ApiAction
 									</td>
 								</tr></tbody></table>
 								<div id="remember-forgot">
-									<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3" checked="checked"> <span id="rememberme_label"></span> · <a href="<?php print $instanceurl ?>main/recoverpassword"></a>
-									<input type="hidden" id="token" name="token" value="<?php print common_session_token(); ?>">								
+									<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3" checked="checked"> <span id="rememberme_label"></span> · <a id="forgot-password" href="<?php print $instanceurl ?>main/recoverpassword" ></a>
+									<input type="hidden" id="token" name="token" value="<?php print common_session_token(); ?>">					
+									<?php 
+
+									if(!common_config('plugins','disable-OpenID')) {
+										print '<a href="'.$instanceurl.'main/openid" id="openid-login" donthijack>OpenID</a>';
+										}
+										
+									?>
 								</div>
 							</form>
 						</div>

@@ -754,14 +754,14 @@ $('body').on('click','a', function(e) {
 	if($(e.target).is('i.chev-right')) {
 		e.preventDefault();		
 		return;
-		}
+		}	
 
-	// don't hijack settingslink
-	if($(e.target).is('#settings')) {
-		return;
-		}		
-	
-	// all non-hijacked links opens in new tab
+	// don't hijack links with donthijack attribute
+	if(!!$(this).attr('donthijack') || $(this).attr('donthijack') == '') {
+		return;		
+		}
+		
+	// all links opens in new tab
 	$(this).attr('target','_blank'); 
 
 	if(typeof $(this).attr('href') != 'undefined') {
