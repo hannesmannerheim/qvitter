@@ -4176,7 +4176,7 @@ body.rtl #feed-header-inner h2  {
 @media (max-width: 910px) {	
 
 	body {
-		background-size 910px auto !important;
+		background:none !important;
 		}
 	
 	.upload-background-image {
