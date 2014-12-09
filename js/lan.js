@@ -152,6 +152,7 @@ window.l.es.xRepeatedYourQueet      = 'te ha requitteado ';
 window.l.es.xStartedFollowingYou    = 'te ha seguido';
 window.l.es.followsYou			    = 'te sigue';
 window.l.es.FAQ					    = 'FAQ';
+window.l.es.inviteAFriend           = 'Invitar a tus amigos!';
 window.l.es.goToExternalProfile		= 'Ir al perfil completo';
 window.l.es.cropAndSave			    = 'Crop and save';
 
@@ -272,6 +273,7 @@ window.l.pt_br.xRepeatedYourQueet = 'requeetou você';
 window.l.pt_br.xStartedFollowingYou = 'seguiu você';
 window.l.pt_br.followsYou = 'segue você';
 window.l.pt_br.FAQ	= 'FAQ';
+window.l.pt_br.inviteAFriend = 'Convide seus amigos!';
 window.l.pt_br.goToExternalProfile = 'Ir para o perfil completo';
 window.l.pt_br.cropAndSave = 'Crop and save';
 
@@ -392,6 +394,7 @@ window.l.gl.xRepeatedYourQueet = 'rechouchioute';
 window.l.gl.xStartedFollowingYou = 'está a seguirte';
 window.l.gl.followsYou			    = 'séguete';
 window.l.gl.FAQ	= 'FAQ';
+window.l.gl.inviteAFriend = 'Convida aos teus amigos!';
 window.l.gl.goToExternalProfile		= 'Ir ao perfil completo';
 window.l.gl.cropAndSave = 'Crop and save';
 
@@ -510,6 +513,7 @@ window.l.eu.xRepeatedYourQueet = 'erabiltzaileak bertxiotu zaitu';
 window.l.eu.xStartedFollowingYou = 'jarraitzen hasi zaizu';
 window.l.eu.followsYou = 'jarraitzen dizu';
 window.l.eu.FAQ	= 'FAQ';
+window.l.eu.inviteAFriend = 'Zure Lagunak Gonbidatu!';
 window.l.eu.goToExternalProfile	= 'Profil osora joan';
 window.l.eu.cropAndSave = 'Crop and save';
 
@@ -628,6 +632,7 @@ window.l.fr.xRepeatedYourQueet      = 'vous a requeeté ';
 window.l.fr.xStartedFollowingYou    = 'vous a suivi';
 window.l.fr.followsYou			    = 'vous suit';
 window.l.fr.FAQ						= 'FAQ';
+window.l.fr.inviteAFriend 			= 'Inviter des amis!';
 window.l.fr.goToExternalProfile		= 'Aller sur le profil complet';
 window.l.fr.cropAndSave 			= 'Crop and save';
 
@@ -758,6 +763,7 @@ window.l.de.xRepeatedYourQueet      = 'hat Dich requeetet';
 window.l.de.xStartedFollowingYou    = 'folgt Dir jetzt';
 window.l.de.followsYou			    = 'folgt Dir';
 window.l.de.FAQ						= 'FAQ';
+window.l.de.inviteAFriend 			= 'Lade deine Freunde ein!';
 window.l.de.goToExternalProfile		= 'Vollständiges Profil anzeigen';
 window.l.de.cropAndSave 			= 'Zuschneiden und Abspeichern';
 
@@ -884,6 +890,7 @@ window.l.en.xRepeatedYourQueet      = 'requeeted you';
 window.l.en.xStartedFollowingYou    = 'followed you';
 window.l.en.followsYou			    = 'follows you';
 window.l.en.FAQ						= 'FAQ';
+window.l.en.inviteAFriend           = 'Invite a friend!';
 window.l.en.goToExternalProfile		= 'Go to full profile';
 window.l.en.cropAndSave 			= 'Crop and save';
 
@@ -1002,9 +1009,10 @@ window.l.zh_cn.xFavedYourQueet         = '收藏了你的推文';
 window.l.zh_cn.xRepeatedYourQueet      = '转推了你的推文';
 window.l.zh_cn.xStartedFollowingYou    = '关注了你';
 window.l.zh_cn.followsYou			   = '关注了你';
-window.l.zh_cn.FAQ	= 'FAQ';
-window.l.zh_cn.goToExternalProfile		= '前往完整的个人档案';
-window.l.zh_cn.cropAndSave = 'Crop and save';
+window.l.zh_cn.FAQ					   = 'FAQ';
+window.l.zh_cn.inviteAFriend 		   = '邀请好友';
+window.l.zh_cn.goToExternalProfile	   = '前往完整的个人档案';
+window.l.zh_cn.cropAndSave 			   = 'Crop and save';
 
 
 // traditional chinese
@@ -1121,9 +1129,10 @@ window.l.zh_tw.xFavedYourQueet         = '已收藏你的推文';
 window.l.zh_tw.xRepeatedYourQueet      = '已轉推你';
 window.l.zh_tw.xStartedFollowingYou    = '已跟隨你';
 window.l.zh_tw.followsYou			   = '跟隨你';
-window.l.zh_tw.FAQ	= 'FAQ';
-window.l.zh_tw.goToExternalProfile		= '前往詳細個人檔案';
-window.l.zh_tw.cropAndSave = 'Crop and save';
+window.l.zh_tw.FAQ					   = 'FAQ';
+window.l.zh_tw.inviteAFriend 		   = '邀請你的朋友';
+window.l.zh_tw.goToExternalProfile	   = '前往詳細個人檔案';
+window.l.zh_tw.cropAndSave 			   = 'Crop and save';
 
 
 // svenska
@@ -1241,6 +1250,7 @@ window.l.sv.xRepeatedYourQueet      = 'requeetade dig';
 window.l.sv.xStartedFollowingYou    = 'följde dig';
 window.l.sv.followsYou			    = 'följer dig';
 window.l.sv.FAQ						= 'FAQ';
+window.l.sv.inviteAFriend 			= 'Bjud in dina vänner!';
 window.l.sv.goToExternalProfile		= 'Gå till hela profilen';
 window.l.sv.cropAndSave 			= 'Beskär och spara';
 
@@ -1359,6 +1369,7 @@ window.l.fi.xRepeatedYourQueet = 'toisti viestisi';
 window.l.fi.xStartedFollowingYou = 'seurasi sinua';
 window.l.fi.followsYou = 'seuraa sinua';
 window.l.fi.FAQ	= 'FAQ';
+window.l.fi.inviteAFriend = 'Kutsu kavereitasi!';
 window.l.fi.goToExternalProfile		= 'Siirry täyteen profiiliin';
 window.l.fi.cropAndSave = 'Crop and save';
 
@@ -1476,9 +1487,10 @@ window.l.fa.xFavedYourQueet         = 'موارد دلخواه خود را صد�
 window.l.fa.xRepeatedYourQueet      = 'توییت شما را باز توییت کرد.';
 window.l.fa.xStartedFollowingYou    = 'شما را دنبال کرد';
 window.l.fa.followsYou			    = 'شما را دنبال می‌کند';
-window.l.fa.FAQ	= 'FAQ';
+window.l.fa.FAQ						= 'FAQ';
+window.l.fa.inviteAFriend 			= 'دعوت از دوستانتان';
 window.l.fa.goToExternalProfile		= 'رفتن به نمایه کامل';
-window.l.fa.cropAndSave = 'Crop and save';
+window.l.fa.cropAndSave 			= 'Crop and save';
 
 // arabic
 window.l.ar = new Object();
@@ -1594,9 +1606,10 @@ window.l.ar.xFavedYourQueet         = 'بتفضيل تغريدتك';
 window.l.ar.xRepeatedYourQueet      = 'بإعادة تغريد';
 window.l.ar.xStartedFollowingYou    = 'بمتابعتك';
 window.l.ar.followsYou			    = 'يُتابعك';
-window.l.ar.FAQ	= 'FAQ';
+window.l.ar.FAQ						= 'FAQ';
+window.l.ar.inviteAFriend 			= 'دعوة أصدقائك!';
 window.l.ar.goToExternalProfile		= 'اذهب إلى الملف الشخصي الكامل';
-window.l.ar.cropAndSave = 'قُص و احفظ.';
+window.l.ar.cropAndSave 			= 'قُص و احفظ.';
 
 // esperanto
 window.l.eo = new Object();
@@ -1722,6 +1735,7 @@ window.l.eo.xRepeatedYourQueet      = 'ripetis vin';
 window.l.eo.xStartedFollowingYou    = 'sekvas vin';
 window.l.eo.followsYou			    = 'sekvas vin';
 window.l.eo.FAQ						= 'FAQ';
+window.l.eo.inviteAFriend           = 'Inviti viajn amikojn!';
 window.l.eo.goToExternalProfile		= 'iru al plena profilon';
 window.l.eo.cropAndSave 			= 'Crop and save';
 
@@ -1849,6 +1863,7 @@ window.l.it.xRepeatedYourQueet      = 'ti ha requittato';
 window.l.it.xStartedFollowingYou = 'ha iniziato a seguirti';
 window.l.it.followsYou = 'ti segue';
 window.l.it.FAQ	= 'FAQ';
+window.l.it.inviteAFriend = 'Invita i tuoi amici!';
 window.l.it.goToExternalProfile		= 'Vai al profilo completo';
 window.l.it.cropAndSave = 'ritaglia e salva';
 
@@ -1967,6 +1982,7 @@ window.l.no.xRepeatedYourQueet = 'requeetet deg';
 window.l.no.xStartedFollowingYou = 'følger deg';
 window.l.no.followsYou = 'følger deg';
 window.l.no.FAQ	= 'FAQ';
+window.l.no.inviteAFriend = 'Inviter venner';
 window.l.no.goToExternalProfile	= 'Gå til fullstendig profil';
 window.l.no.cropAndSave = 'Beskjær og lagre';
 
@@ -2051,5 +2067,6 @@ $('.stream-selection[data-stream-name="statuses/public_and_external_timeline.jso
 $('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json"]').attr('data-stream-header',window.sL.publicAndExtTimeline);
 $('#search-query').attr('placeholder',window.sL.searchVerb);
 $('#faq-link').html(window.sL.FAQ);
+$('#invite-link').html(window.sL.inviteAFriend);
 $('#classic-link').html('Classic ' + window.siteTitle);
 $('#edit-profile-header-link').html(window.sL.editMyProfile);

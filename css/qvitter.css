@@ -408,6 +408,11 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     color: #FFFFFF;
     text-decoration: none;	
 	}
+
+#invite-link {
+	font-weight:bold;
+	}
+	
 .dropdown-menu li.dropdown-divider {
     border-bottom: 1px solid #DDDDDD;
     margin: 5px 1px 6px;
