@@ -276,7 +276,7 @@ class QvitterAction extends ApiAction
 						<li class="fullwidth"><a id="edit-profile-header-link"></a></li>						
 						<li class="fullwidth"><a id="settings" href="<?php print $instanceurl; ?>settings/profile" donthijack></a></li>						
 						<li class="fullwidth"><a id="faq-link"></a></li>	
-						<?php if (common_config('site','inviteonly') == 1) { ?>
+						<?php if (common_config('invite', 'enabled') && !common_config('site', 'closed')) { ?>
 							<li class="fullwidth"><a id="invite-link" href="<?php print $instanceurl; ?>main/invite"></a></li>
 						<?php } ?>	
 						<li class="fullwidth"><a id="classic-link"></a></li>												
