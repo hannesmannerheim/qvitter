@@ -137,7 +137,7 @@ window.l.es.signUpFullName          = 'Nombre completo';
 window.l.es.signUpEmail             = 'Correo electrónico';
 window.l.es.signUpButtonText        = 'Regístrate en {site-title}';
 window.l.es.welcomeHeading          = 'Bienvenido a {site-title}.';
-window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que no debes tener una cuenta de {site-title} para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puedes registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debes registrarse en cualquier servicio para participar - simplemente instala el software GNU Social en tu propio servidor. (:</div>federación</span> de microblogueros que, como tú, estan motivados por ética y solidaridad y quieren abandonar los servicios centralizados capitalistas.';
+window.l.es.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que no debes tener una cuenta de {site-title} para seguir su usuarios, estar seguido por o communicar con ellos. ¡Puedes registrar con cualquier servidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier servicio utilizando el protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! También no debes registrarse en cualquier servicio para participar - simplemente instala el software GNU Social en tu propio servidor. (:</div>federación</span> de microblogueros que, como tú, estan motivados por ética y solidaridad y quieren abandonar los servicios centralizados de terceros.';
 window.l.es.registerNickname        = 'Nombre de usuario';
 window.l.es.registerHomepage        = 'Sitio web';
 window.l.es.registerBio             = 'Biografía';
@@ -258,7 +258,7 @@ window.l.pt_br.signUpFullName = 'Nome completo';
 window.l.pt_br.signUpEmail = 'E-mail';
 window.l.pt_br.signUpButtonText = 'Registre-se no {site-title}';
 window.l.pt_br.welcomeHeading = 'Bem-vindo ao {site-title}.';
-window.l.pt_br.welcomeText = 'Somos uma <span id="federated-tooltip"><div id="what-is-federation">« Federação » significa que você não deve ter uma conta do {site-title} para seguir seus usuários, ser seguido por eles ou se comunicar com eles. Você pode se registrar em qualquer servidor StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou em qualquer serviço utilizando o protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Também não deve se registrar em qualquer serviço para participar - simplesmente instale o software GNU Social em seu próprio servidor. (:</div>federação</span> de microblogueiros que, como você, estão motivados pela ética e solidaridade, e querem abandonar os serviços centralizados capitalistas. Estamos aqui desde 2010 e sempre vamos ser non-profit.';
+window.l.pt_br.welcomeText = 'Somos uma <span id="federated-tooltip"><div id="what-is-federation">« Federação » significa que você não deve ter uma conta do {site-title} para seguir seus usuários, ser seguido por eles ou se comunicar com eles. Você pode se registrar em qualquer servidor StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou em qualquer serviço utilizando o protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Também não deve se registrar em qualquer serviço para participar - simplesmente instale o software GNU Social em seu próprio servidor. (:</div>federação</span> de microblogueiros que, como você, estão motivados pela ética e solidaridade, e querem abandonar os serviços centralizados de terceiros. Estamos aqui desde 2010 e sempre vamos ser non-profit.';
 window.l.pt_br.registerNickname = 'Nome de usuário';
 window.l.pt_br.registerHomepage = 'Site web';
 window.l.pt_br.registerBio = 'Biografia';
@@ -379,7 +379,7 @@ window.l.gl.signUpFullName = 'Nome completo';
 window.l.gl.signUpEmail = 'Correo electrónico';
 window.l.gl.signUpButtonText = 'Rexístrate en {site-title}';
 window.l.gl.welcomeHeading = 'Benvido a {site-title}.';
-window.l.gl.welcomeText = 'Somos unha <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que non debes ter unha conta de {site-title} para seguir os seus usuarios, estar seguido por ou communicar con eles. Podes rexistrar con calquera servidor StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou calquera servizo utilizando o protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Tamén non debes rexistrarse en calquera servizo para participar - simplemente instala o software GNU Social no teu propio servidor. (:</div>federación</span> de microblogueros que, como ti, estan motivados por ética e solidariedade e queren abandonar os servizos centralizados capitalistas. Estamos aquí desde 2010 e sempre imos ser non-profit. ';
+window.l.gl.welcomeText = 'Somos unha <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que non debes ter unha conta de {site-title} para seguir os seus usuarios, estar seguido por ou communicar con eles. Podes rexistrar con calquera servidor StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou calquera servizo utilizando o protocolo <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Tamén non debes rexistrarse en calquera servizo para participar - simplemente instala o software GNU Social no teu propio servidor. (:</div>federación</span> de microblogueros que, como ti, estan motivados por ética e solidariedade e queren abandonar os servizos centralizados de terceiros. Estamos aquí desde 2010 e sempre imos ser non-profit. ';
 window.l.gl.registerNickname = 'Nome de usuario';
 window.l.gl.registerHomepage = 'Sitio web';
 window.l.gl.registerBio = 'Biografía';
@@ -617,7 +617,7 @@ window.l.fr.signUpFullName          = 'Nom complet';
 window.l.fr.signUpEmail             = 'Email';
 window.l.fr.signUpButtonText        = 'S\'inscrire sur {site-title}';
 window.l.fr.welcomeHeading          = 'Bienvenue sur {site-title}.';
-window.l.fr.welcomeText             = 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte {site-title} pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés capitalistes.';
+window.l.fr.welcomeText             = 'Nous sommes une <span id="federated-tooltip"><div id="what-is-federation">La « fédération » signifie que vous n\'êtes pas obligé d\'avoir un compte {site-title} pour pouvoir suivre ses utilisateurs, être suivis par eux ou interagir avec eux. Vous pouvez vous enregistrer sur n\'importe quel serveur StatusNet ou <a href="http://www.gnu.org/software/social/">GNU Social</a>, ou n\'importe quel service utilisant le protocole <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a> ! Vous n\'êtes pas même obligés de vous inscrire où que ce soit, puisque vous pouvez aussi installer le programme GNU Social sur votre propre serveur ! :)</div>fédération</span> de microbloggers qui, comme vous, a le souci de l\'éthique, de la solidarité, et de s\'extraire des services centralisés de tiers.';
 window.l.fr.registerNickname        = 'Nom d\'utilisateur';
 window.l.fr.registerHomepage        = 'Site Web';
 window.l.fr.registerBio             = 'Biographie';
@@ -875,7 +875,7 @@ window.l.en.welcomeText             = 'We are a <span id="federated-tooltip"><di
                                        You don\'t even have to join a service – try installing the lovely \
                                        <a href="http://www.gnu.org/software/social/">GNU Social</a> software on your own server! :)\
                                        </div>federation</span> of microbloggers who care about ethics and \
-                                       solidarity and want to quit the centralised capitalist services.';
+                                       solidarity and want to quit the centralised third-party services.';
 window.l.en.registerNickname        = 'Nickname';
 window.l.en.registerHomepage        = 'Homepage';
 window.l.en.registerBio             = 'Bio';
@@ -1720,7 +1720,7 @@ window.l.eo.welcomeText             = 'Ni estas <span id="federated-tooltip"><di
                                        Vi eĉ ne bezonas membriĝi al servaĵo – peni instali la belan\
                                        programon GNU Social ĉe via propra servaĵo! :)</div>federaĵon</span> de mikroblogantoj,\
                                        kiu ĉagrenas pri etiko kaj solidareco, kaj kiu volas forlasi la centralizantajn\
-                                       kapitalismajn servaĵojn.';
+                                       servaĵojn de triaj.';
 window.l.eo.registerNickname        = 'Nomo de uzanto';
 window.l.eo.registerHomepage        = 'Afiŝinto';
 window.l.eo.registerBio             = 'Biografio';
@@ -1848,7 +1848,7 @@ o qualsiasi altro servizio basato sul protocollo \
 nemmeno bisogno di far parte di un servizio - provate a installare il meraviglioso \
 software GNU Social sul vostro server! :-)</div>federazione</span> di microbloggers \
 che hanno a cuore l\'etica, la solidarietà, e che vogliono uscire dai servizi \
-centralizzati capitalisti.';
+centralizzati di terzi.';
 window.l.it.registerNickname = 'Nickname';
 window.l.it.registerHomepage = 'Sito web';
 window.l.it.registerBio = 'Biografia';
