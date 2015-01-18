@@ -110,10 +110,8 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
                                             'is_seen'=>$notification->is_seen
                                             );
             }
-        }
 
-        // mark as seen
-        foreach($this->notifications as $notification) {
+            // mark as seen
             if($notification->is_seen == 0) {
                 $notification->is_seen = 1;
                 $notification->update();
