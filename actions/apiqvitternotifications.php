@@ -39,7 +39,7 @@ if (!defined('STATUSNET')) {
 
 class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
 {
-    var $notifications = null;
+    var $notifications = array();
     var $notices = null;
     var $profiles = null;
 
@@ -87,8 +87,6 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
         
         $notifications_populated = array();
         
-        if(!empty($this->notifications)) {
-
 			foreach($this->notifications as $notification) {
 			
 				
@@ -128,8 +126,6 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
 					$notification->update();
 					}             
 				}
-        	
-        	}            
 
         $this->initDocument('json');
         $this->showJsonObjects($notifications_populated);
