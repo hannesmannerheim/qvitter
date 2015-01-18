@@ -113,8 +113,9 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
 
             // mark as seen
             if($notification->is_seen == 0) {
+                $orig = clone($notification);
                 $notification->is_seen = 1;
-                $notification->update();
+                $notification->update($orig);
             }
         }
 
