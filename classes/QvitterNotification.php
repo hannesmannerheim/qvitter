@@ -26,7 +26,17 @@ class QvitterNotification extends Managed_DataObject
                 'is_seen' => array('type' => 'int', 'size' => 'tiny', 'default' => 0, 'description' => 'if the notification has been seen'),                
                 'created' => array('type' => 'datetime', 'not null' => true, 'description' => 'date this record was created')
             ),
-            'primary key' => array('id')
+            'primary key' => array('id'),
+            'foreign keys' => array(
+                'qvitternotification_to_profile_id_fkey' => array('profile', array('to_profile_id' => 'id')),
+                'qvitternotification_from_profile_id_fkey' => array('profile', array('from_profile_id' => 'id')),
+                'qvitternotification_notice_id_fkey' => array('notice', array('notice_id' => 'id')),
+            ),
+            'indexes' => array(
+                'qvitternotification_created_idx' => array('created'),
+                'qvitternotification_to_profile_id_idx' => array('to_profile_id'),
+                'qvitternotification_from_profile_id_idx' => array('from_profile_id'),
+            ),
         );
     }    
 	
