@@ -290,13 +290,13 @@ class QvitterAction extends ApiAction
 						<li class="language"><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>													
 						<li class="language"><a class="language-link" title="Basque" data-lang-code="eu">Euskara</a></li>																			
 						<li class="language"><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
-						<li class="language"><a class="language-link" title="French" data-lang-code="fr">français</a></li>									
+						<li class="language"><a class="language-link" title="French" data-lang-code="fr">Français</a></li>									
 						<li class="language"><a class="language-link" title="Galego" data-lang-code="gl">Galego</a></li>															
 						<li class="language"><a class="language-link" title="Italian" data-lang-code="it">Italiano</a></li>													
 						<li class="language"><a class="language-link" title="Norwegian" data-lang-code="no">Norsk</a></li>						
 						<li class="language"><a class="language-link" title="Português-Brasil" data-lang-code="pt_br">Português-Brasil</a></li>													
 						<li class="language"><a class="language-link" title="Suomi [beta]" data-lang-code="fi">Suomi [beta]</a></li>
-						<li class="language"><a class="language-link" title="Swedish" data-lang-code="sv">svenska</a></li>					
+						<li class="language"><a class="language-link" title="Swedish" data-lang-code="sv">Svenska</a></li>					
 					</ul>	
 					<div class="global-nav">
 						<div class="global-nav-inner">
@@ -330,13 +330,13 @@ class QvitterAction extends ApiAction
 											<li><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>																		
 											<li><a class="language-link" title="Basque" data-lang-code="eu">Euskara</a></li>																														
 											<li><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
-											<li><a class="language-link" title="French" data-lang-code="fr">français</a></li>	
+											<li><a class="language-link" title="French" data-lang-code="fr">Français</a></li>	
 											<li><a class="language-link" title="Galego" data-lang-code="gl">Galego</a></li>	
 											<li><a class="language-link" title="Italian" data-lang-code="it">Italiano</a></li>
 											<li><a class="language-link" title="Norwegian" data-lang-code="no">Norsk</a></li>														
 											<li><a class="language-link" title="Português-Brasil" data-lang-code="pt_br">Português-Brasil</a></li>																														
 											<li><a class="language-link" title="Suomi [beta]" data-lang-code="fi">Suomi [beta]</a></li>											
-											<li><a class="language-link" title="Swedish" data-lang-code="sv">svenska</a></li>								
+											<li><a class="language-link" title="Swedish" data-lang-code="sv">Svenska</a></li>								
 										</ul>
 									</li>
 								</ul>					
