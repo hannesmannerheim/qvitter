@@ -51,7 +51,7 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
      * @return boolean success flag
      *
      */
-    function prepare($args)
+    protected function prepare(array $args=array())
     {
         parent::prepare($args);
 
@@ -69,9 +69,9 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
      *
      * @return void
      */
-    function handle($args)
+    protected function handle()
     {
-        parent::handle($args);
+        parent::handle();
         $this->showTimeline();
     }
 
