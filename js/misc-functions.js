@@ -32,7 +32,42 @@
   ·   Contact h@nnesmannerhe.im if you have any questions.                      ·
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
-  
+
+/* · 
+   · 
+   ·   Removes HTML special chars recursively from strings in objects
+   ·   with one exception: statusnet_html found in notices
+   ·
+   ·   @param obj: the object to search and replace in
+   ·   
+   · · · · · · · · · · · · · */ 
+
+
+function iterateRecursiveReplaceHtmlSpecialChars(obj) {
+	for (var property in obj) {
+		if (obj.hasOwnProperty(property)) {
+			if (typeof obj[property] == "object") {
+				iterateRecursiveReplaceHtmlSpecialChars(obj[property]);
+				}
+			else {
+				if(typeof obj[property] == 'string' && property != 'statusnet_html') {
+					obj[property] = replaceHtmlSpecialChars(obj[property]);
+					}
+				}
+			}
+		}
+	return obj;   
+	}
+function replaceHtmlSpecialChars(text) {
+	var map = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#039;'
+		};
+	return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+	}
 
 /* ·  
    · 
@@ -262,6 +297,7 @@ function detectRTL(s) {
 	var $queetText = $('<div>').append($streamItem.find('.queet-text').html()); // create an jquery object
 	var $a = $queetText.find('a'); $a.remove(); // remove links
 	var $vcard = $queetText.find('.vcard'); $vcard.remove(); // remove users, groups
+	var $hcard = $queetText.find('.h-card'); $hcard.remove(); // remove users, groups	
 	var $tag = $queetText.find('.tag'); $tag.remove(); // remove tags
 	if($queetText.find('.rtl').length>0) { $queetText.html($queetText.find('.rtl').html()); } // remove rtl container if there is one
 	// remove chars we're not interested in
@@ -283,7 +319,7 @@ function detectRTL(s) {
     else if ($queetText.html().length==0 && $('body').hasClass('rtl')) {
     	$streamItem.children('.stream-item').children('.queet').addClass('rtl');
     	}	    	    	    	
-	return $streamItem.html().replace(/@<a href="/gi,'<a href="').replace(/!<a href="/gi,'<a href="').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">'); // hacky way to get @#! into mention tags to stop bidirection (css sets an @ with before content method)
+	return $streamItem.html().replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">'); // hacky way to get @#! into mention tags to stop bidirection (css sets an @ with before content method)
 	}
 	
 	

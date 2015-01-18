@@ -107,6 +107,8 @@ function getFromAPI(stream, actionOnSuccess) {
 
 			data = convertEmptyObjectToEmptyArray(data);		
 
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+
 			actionOnSuccess(data);				
 			},
 		error: function(data) {
@@ -116,6 +118,7 @@ function getFromAPI(stream, actionOnSuccess) {
 			}
 		});			
 	}	
+
 
 
 /* · 

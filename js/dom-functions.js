@@ -930,7 +930,7 @@ function expand_queet(q,doScrolling) {
 					getFromAPI("attachment/" + attachmentId + ".json",function(data){
 						if(data) {
 							console.log(data);
-							q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<a href="/gi,'<a href="').replace(/!<a href="/gi,'<a href="').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">').replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
+							q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">').replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
 							}
 						});					
 					}
@@ -1286,6 +1286,7 @@ function showConversation(qid) {
 						else { // proceed if we got a conversation_id
 							$.ajax({ url: external_base_url + '/api/statusnet/conversation/' + data.statusnet_conversation_id + ".json?count=100", type: "GET", dataType: "jsonp", success: function(data) { 				
 								var before_or_after = 'after';
+								data = iterateRecursiveReplaceHtmlSpecialChars(data);
 								$.each(data, function (key,obj) {
 									
 									// switch to append after original queet
