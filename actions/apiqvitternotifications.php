@@ -39,7 +39,7 @@ if (!defined('STATUSNET')) {
 
 class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
 {
-    var $notifications = null;
+    var $notifications = array();
     var $notices = null;
     var $profiles = null;
 
@@ -51,7 +51,7 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
      * @return boolean success flag
      *
      */
-    function prepare($args)
+    protected function prepare(array $args=array())
     {
         parent::prepare($args);
 
@@ -69,9 +69,9 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
      *
      * @return void
      */
-    function handle($args)
+    protected function handle()
     {
-        parent::handle($args);
+        parent::handle();
         $this->showTimeline();
     }
 
@@ -82,54 +82,42 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
      */
     function showTimeline()
     {
-        
         $notice = null;        
-        
+
         $notifications_populated = array();
-        
-        if(!empty($this->notifications)) {
 
-			foreach($this->notifications as $notification) {
-			
-				
-				// all but follow has an notice
-				if($notification->ntype != 'follow') {
-					
-					// we need a notice id here, skip this notification if notice id is null
-					if($notification->notice_id === null) {
-						continue;
-						}
-					else {
-						$notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));						
-						}
-					}
-					
-				$from_profile = Profile::getKV($notification->from_profile_id);
-				
-				// a user might have deleted their profile, don't show these notifications
-				if($from_profile instanceof Profile) {
+        foreach ($this->notifications as $notification) {
+            // all but follow has an notice
+            if ($notification->ntype != 'follow') {
+                // we need a notice id here, skip this notification if notice id is null
+                if($notification->notice_id === null) {
+                    continue;
+                } else {
+                    $notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));
+                }
+            }
 
-					$notifications_populated[] = array(
-												'id'=> $notification->id,
-												'from_profile'=> self::twitterUserArray($from_profile),
-												'ntype'=> $notification->ntype,        								        								        								
-												'notice'=> $notice,
-												'created_at'=>self::dateTwitter($notification->created),
-												'is_seen'=>$notification->is_seen        								
-												);
+            $from_profile = Profile::getKV($notification->from_profile_id);
 
-					}
-				}
+            // a user might have deleted their profile, don't show these notifications
+            if ($from_profile instanceof Profile) {
+                $notifications_populated[] = array(
+                                            'id'=> $notification->id,
+                                            'from_profile'=> self::twitterUserArray($from_profile),
+                                            'ntype'=> $notification->ntype,
+                                            'notice'=> $notice,
+                                            'created_at'=>self::dateTwitter($notification->created),
+                                            'is_seen'=>$notification->is_seen
+                                            );
+            }
 
-			// mark as seen
-			foreach($this->notifications as $notification) {
-				if($notification->is_seen == 0) {
-					$notification->is_seen = 1;
-					$notification->update();
-					}             
-				}
-        	
-        	}            
+            // mark as seen
+            if($notification->is_seen == 0) {
+                $orig = clone($notification);
+                $notification->is_seen = 1;
+                $notification->update($orig);
+            }
+        }
 
         $this->initDocument('json');
         $this->showJsonObjects($notifications_populated);
