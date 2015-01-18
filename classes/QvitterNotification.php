@@ -1,24 +1,18 @@
 <?php
 /**
- * Table Definition for reply
+ * Table Definition for qvitternotification
  */
-require_once INSTALLDIR.'/classes/Memcached_DataObject.php';
 
 class QvitterNotification extends Managed_DataObject
 {
-    ###START_AUTOCODE
-    /* the code below is auto generated do not remove the above tag */
-
     public $__table = 'qvitternotification';  // table name
     public $id;                              // int(4)  primary_key not_null
-    public $to_profile_id;                   // int(4)  primary_key not_null
-    public $from_profile_id;                 // int(4)  primary_key not_null    
-    public $type;                            // varchar(7)
-    public $notice_id;                       // int(4)  primary_key not_null    
-    public $date;                            // datetime  multiple_key not_null default_0000-00-00%2000%3A00%3A00 
-
-    /* the code above is auto generated do not remove the tag below */
-    ###END_AUTOCODE
+    public $to_profile_id;                   // int(4)
+    public $from_profile_id;                 // int(4)
+    public $ntype;                           // varchar(7)
+    public $notice_id;                       // int(4)
+    public $is_seen;                         // int(tiny)
+    public $created;                         // datetime  multiple_key not_null
 
     public static function schemaDef()
     {
