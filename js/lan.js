@@ -275,7 +275,10 @@ window.l.es.inviteAFriend           = 'Invitar a tus amigos!';
 window.l.es.goToExternalProfile		= 'Ir al perfil completo';
 window.l.es.cropAndSave			    = 'Recortar y guardar';
 
-
+// spanish (ahorita)
+window.l.es_ahorita = window.l.es;
+window.l.es_ahorita.languageName = 'Español (ahorita)';
+window.l.es_ahorita.now = 'ahorita';
 
 // Português-Brasil
 window.l.pt_br = new Object();

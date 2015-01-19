@@ -287,7 +287,8 @@ class QvitterAction extends ApiAction
 						<li class="language"><a class="language-link" title="繁體中文" data-lang-code="zh_tw">繁體中文</a></li>													
 						<li class="language"><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
 						<li class="language"><a class="language-link" title="English" data-lang-code="en">English</a></li>
-						<li class="language"><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>	
+						<li class="language"><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>
+						<li class="language"><a class="language-link" title="Spanish (ahorita)" data-lang-code="es_ahorita">Español (ahorita)</a></li>							
 						<li class="language"><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>													
 						<li class="language"><a class="language-link" title="Basque" data-lang-code="eu">Euskara</a></li>																			
 						<li class="language"><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
@@ -328,7 +329,8 @@ class QvitterAction extends ApiAction
 											<li><a class="language-link" title="繁體中文" data-lang-code="zh_tw">繁體中文</a></li>																						
 											<li><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
 											<li><a class="language-link" title="English" data-lang-code="en">English</a></li>
-											<li><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>									
+											<li><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>	
+											<li><a class="language-link" title="Spanish (ahorita)" data-lang-code="es_ahorita">Español (ahorita)</a></li>
 											<li><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>																		
 											<li><a class="language-link" title="Basque" data-lang-code="eu">Euskara</a></li>																														
 											<li><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
