@@ -3055,6 +3055,7 @@ div.nav-session {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
     min-height: 52px;	
+    position: relative;
 	}
 .profile-banner-footer ul.stats {	
     border-bottom: 0 none;
@@ -3076,6 +3077,7 @@ div.nav-session {
     margin: 10px;
     position: absolute;
     right: 0;
+    top: 0;
     z-index: 1;
 	}
 div.clearfix {
