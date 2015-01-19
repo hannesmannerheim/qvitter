@@ -130,11 +130,11 @@ window.l.ca.settings = 'Configuracions';
 window.l.ca.saveChanges = 'Desa els canvis';
 window.l.ca.linkColor = 'Color de l\'enllaç';
 window.l.ca.backgroundColor = 'Color de fons';
-window.l.ca.newToQuitter = 'Ets nou a Ajuda\'ns a traduir {site-title} :)?';
+window.l.ca.newToQuitter = 'Ets nou a {site-title}?';
 window.l.ca.signUp = 'Registra\'t';
 window.l.ca.signUpFullName = 'Nom ';
 window.l.ca.signUpEmail = 'Correu electrònic';
-window.l.ca.signUpButtonText = 'Registra\'t en Ajuda\'ns a traduir {site-title} :).';
+window.l.ca.signUpButtonText = 'Registra\'t en {site-title}.';
 window.l.ca.welcomeHeading = 'Benvingut a {site-title}?';
 window.l.ca.welcomeText = 'Som una <span id="federated-tooltip"><div id="what-is-federation">"Federació". És a dir, no necessites un compte {site-title} de per poder seguir, ser seguit o interactuar amb els usuaris {site-title}. Et pots inscriure en qualsevol servidor o qualsevol servei basat en el protocol <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">Ostatus</a> OStatus! Fins i tot no has de unir-te a un servei - intenta instal·lar el encantador programa GNU Social en el teu propi servidor! :) </div>federació</span> de microbloggers que es preocupen per l\'ètica i la solidaritat i volen deixar els serveis centralitzats capitalistes.';
 window.l.ca.registerNickname = 'Nom d\'usuari';
@@ -275,7 +275,8 @@ window.l.es.goToExternalProfile		= 'Ir al perfil completo';
 window.l.es.cropAndSave			    = 'Recortar y guardar';
 
 // spanish (ahorita)
-window.l.es_ahorita = window.l.es;
+window.l.es_ahorita = new Object();
+jQuery.extend(window.l.es_ahorita,window.l.es);
 window.l.es_ahorita.languageName = 'Español (ahorita)';
 window.l.es_ahorita.now = 'ahorita';
 
