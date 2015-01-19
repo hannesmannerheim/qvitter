@@ -36,7 +36,9 @@
 /* · 
    · 
    ·   Removes HTML special chars recursively from strings in objects
-   ·   with one exception: statusnet_html found in notices
+   ·   with exceptions: "statusnet_html" found in notices, which we assume
+   ·   gnusocial already stripped from xss, and the "source" which should be
+   ·   html rendered by gnusocial itself and not open for attacks
    ·
    ·   @param obj: the object to search and replace in
    ·   
@@ -50,7 +52,7 @@ function iterateRecursiveReplaceHtmlSpecialChars(obj) {
 				iterateRecursiveReplaceHtmlSpecialChars(obj[property]);
 				}
 			else {
-				if(typeof obj[property] == 'string' && property != 'statusnet_html') {
+				if(typeof obj[property] == 'string' && property != 'statusnet_html' && property != 'source') {
 					obj[property] = replaceHtmlSpecialChars(obj[property]);
 					}
 				}
