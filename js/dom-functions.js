@@ -1480,7 +1480,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				}			
 			
 			// only if this notification isn't already in stream
-			if($('#stream-item-' + obj.id).length == 0) {		
+			if($('#feed-body > .stream-item[data-quitter-id-in-stream="' + obj.id + '"]').length == 0) {		
 				
 				obj.from_profile.description = obj.from_profile.description || '';
 				var notificationTime = parseTwitterDate(obj.created_at);						
