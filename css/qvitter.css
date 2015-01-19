@@ -3053,7 +3053,8 @@ div.nav-session {
     line-height: 16px;
 	text-shadow: 0 1px 0 #FFFFFF;        
     border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;	
+    border-bottom-right-radius: 6px;
+    min-height: 52px;	
 	}
 .profile-banner-footer ul.stats {	
     border-bottom: 0 none;
@@ -3071,9 +3072,10 @@ div.nav-session {
 	}	
 	
 .profile-card .user-actions {
-	position:relative;
-    float: right;
-    margin: 10px;	
+    height: 32px;
+    margin: 10px;
+    position: absolute;
+    right: 0;
 	}
 div.clearfix {
 	clear:both;
@@ -4645,14 +4647,12 @@ body.rtl #feed-header-inner h2  {
 		border-bottom:1px solid #E8E8E8;
 		border-radius:0 0 0 0;
 		}
+	.modal-body .profile-card {
+		margin-right:0;
+		}
 	.edit-profile-container {
 		width:100%;
 		margin-top:108px;
-		}
-	.profile-card ul.stats {
-		width:100%;
-		border-bottom:1px solid #E8E8E8;
-		height: 50px;
 		}
 	.profile-card ul.stats li {
 		width:25%;
