@@ -281,7 +281,8 @@ class QvitterAction extends ApiAction
 						<?php } ?>	
 						<li class="fullwidth"><a id="classic-link"></a></li>												
 						<li class="fullwidth language dropdown-divider"></li>										
-						<li class="language"><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>	
+						<li class="language"><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>
+						<li class="language"><a class="language-link" title="Catalan" data-lang-code="ca">Català</a></li>
 						<li class="language"><a class="language-link" title="简体中文" data-lang-code="zh_cn">简体中文</a></li>
 						<li class="language"><a class="language-link" title="繁體中文" data-lang-code="zh_tw">繁體中文</a></li>													
 						<li class="language"><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
@@ -321,7 +322,8 @@ class QvitterAction extends ApiAction
 												<span class="caret-outer"></span>
 												<span class="caret-inner"></span>
 											</li>
-											<li><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>	
+											<li><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>
+											<li><a class="language-link" title="Catalan" data-lang-code="ca">Català</a></li>
 											<li><a class="language-link" title="简体中文" data-lang-code="zh_cn">简体中文</a></li>	
 											<li><a class="language-link" title="繁體中文" data-lang-code="zh_tw">繁體中文</a></li>																						
 											<li><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
