@@ -1051,7 +1051,7 @@ $(window).scroll(function() {
 				}
 			// normal streams
 			else {
-				var getVars = qOrAmp(window.currentStream) + 'max_id=' + $('#feed-body').children('.stream-item').last().attr('data-quitter-id-in-stream');				
+				var getVars = qOrAmp(window.currentStream) + 'max_id=' + ($('#feed-body').children('.stream-item').last().attr('data-quitter-id-in-stream')-1);
 				}
 			
 			display_spinner('#footer-spinner-container');		
