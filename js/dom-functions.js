@@ -357,7 +357,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	// if this is a search stream
 	else if(stream.substring(0,11) == 'search.json')	{
 		var defaultStreamName = stream;
-		var streamHeader = window.sL.searchVerb + ': ' + decodeURIComponent(stream.substring(stream.indexOf('?q=')+3));
+		var streamHeader = window.sL.searchVerb + ': ' + replaceHtmlSpecialChars(decodeURIComponent(stream.substring(stream.indexOf('?q=')+3)));
 		}
 	
 	// set the h2 header in the feed
