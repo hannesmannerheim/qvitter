@@ -615,6 +615,10 @@ class QvitterPlugin extends Plugin {
      */
     function onStartNoticeDistribute($notice) {
 
+		// don't add notifications for activity type notices
+		if($notice->object_type == 'activity') {
+			return true;			
+			}
 
 		// repeats
         if ($notice->isRepeat()) {
