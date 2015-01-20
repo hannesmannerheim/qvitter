@@ -802,7 +802,7 @@ function getStreamFromUrl() {
 						
 	// {domain}/search/notice?q={urlencoded searh terms}
 	else if (loc.indexOf('/search/notice?q=')>-1) {
-		var searchToStream = loc.replace('/search/notice?q=','');
+		var searchToStream = replaceHtmlSpecialChars(loc.replace('/search/notice?q=',''));
 		if(searchToStream.length>0) {
 			streamToSet = 'search.json?q=' + searchToStream;
 			}
