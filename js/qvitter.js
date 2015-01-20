@@ -719,7 +719,7 @@ $('body').on('click','.profile-banner-footer .stats li a, .queet-stream',functio
 $('#search-query').on('keyup',function(e) { if(e.keyCode==13) { showSearchStream(); }}); // on enter in input field
 $('button.icon.nav-search').on('click',function(e) { showSearchStream();});	// on click on magnifying glass
 function showSearchStream() {
-	streamName = 'search.json?q=' + encodeURIComponent($('#search-query').val());
+	streamName = 'search.json?q=' + encodeURIComponent(replaceHtmlSpecialChars($('#search-query').val()));
 	setNewCurrentStream(streamName,function(){},true);			
 	}
 
