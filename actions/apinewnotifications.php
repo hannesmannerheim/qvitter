@@ -67,6 +67,7 @@ class ApiNewNotificationsAction extends ApiAction
 			$notification->whereAdd("(to_profile_id = '".$user_id."')");
 			$notification->groupBy('ntype');        
 			$notification->whereAdd("(is_seen = '0')");
+			$notification->whereAdd("(notice_id != 'NULL')");	// sometimes notice_id is NULL, those notifications are corrupt and should be discarded	
 			$notification->find();
 		
 			while ($notification->fetch()) {

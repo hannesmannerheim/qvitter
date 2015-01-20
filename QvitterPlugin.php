@@ -631,7 +631,7 @@ class QvitterPlugin extends Plugin {
 			if($notice->reply_to) {
 				$replyparent = $notice->getParent();
 				$replyauthor = $replyparent->getProfile();
-				if ($replyauthor instanceof Profile) {
+				if ($replyauthor instanceof Profile && !empty($notice->id)) {
 					$reply_notification_to = $replyauthor->id;
 					$this->insertNotification($replyauthor->id, $notice->profile_id, 'reply', $notice->id);
 					}
@@ -650,7 +650,7 @@ class QvitterPlugin extends Plugin {
 						}
 				
 					// only notify if mentioned user is not already notified for reply
-					if($reply_notification_to != $mentioned->id) {
+					if($reply_notification_to != $mentioned->id && !empty($notice->id)) {
 						$this->insertNotification($mentioned->id, $notice->profile_id, 'mention', $notice->id);                	
 						}
 					}
