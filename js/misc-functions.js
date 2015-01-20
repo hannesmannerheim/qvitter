@@ -556,7 +556,7 @@ function loadHistoryFromLocalStorage() {
 			$('#history-container').html('');																										
 			var historyContainer = $.parseJSON(localStorage[localStorageName]);
 			$.each(historyContainer, function(key,obj) {
-				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right"></i></a>');
+				$('#history-container').append('<a class="stream-selection" data-stream-header="' + replaceHtmlSpecialChars(obj.dataStreamHeader) + '" href="' + obj.dataStreamHref + '">' + replaceHtmlSpecialChars(obj.dataStreamHeader) + '</i><i class="chev-right"></i></a>');
 				});
 			}
 		updateHistoryLocalStorage();
