@@ -2111,7 +2111,7 @@ window.l.no.cropAndSave = 'Beskjær og lagre';
 // asturian
 window.l.ast = new Object();
 window.l.ast.languageName            = 'Asturianu';
-window.l.ast.loginUsername           = 'Nome d'usuario o corréu-e';
+window.l.ast.loginUsername           = 'Nome d\'usuario o corréu-e';
 window.l.ast.loginPassword           = 'Contraseña';
 window.l.ast.loginSignIn             = 'Aniciar sesión';
 window.l.ast.loginRememberMe         = 'Recordar los mios datos';
@@ -2208,24 +2208,24 @@ window.l.ast.signUpFullName          = 'Nome completu';
 window.l.ast.signUpEmail             = 'Corréu electrónicu';
 window.l.ast.signUpButtonText        = 'Rexístrate en {site-title}';
 window.l.ast.welcomeHeading          = 'Bienllegáu a {site-title}';
-window.l.ast.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que nun has tener una cuenta de {site-title} pa siguir usuarios, que te sigan o comunicar con ellos. ¡Pues rexistrate con cualquier sirvidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier serviciu usando'l protocolu <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Tampoco nun tienes que xunite en nengún serviciu pa participar - namái instala'l software GNU Social nel to sirvidor. (:</div>federación</span> de microblogueros que, como tú, tán motivaos por ética y solidaridá y quieren abandonar los servicios capitalistes centralizaos.';
-window.l.ast.registerNickname        = 'Nome d'usuariu';
+window.l.ast.welcomeText             = 'Somos una <span id="federated-tooltip"><div id="what-is-federation">« Federación » significa que nun has tener una cuenta de {site-title} pa siguir usuarios, que te sigan o comunicar con ellos. ¡Pues rexistrate con cualquier sirvidor StatusNet o <a href="http://www.gnu.org/software/social/">GNU Social</a>, o cualquier serviciu usando\'l protocolu <a href="http://www.w3.org/community/ostatus/wiki/Main_Page">OStatus</a>! Tampoco nun tienes que xunite en nengún serviciu pa participar - namái instala\'l software GNU Social nel to sirvidor. (:</div>federación</span> de microblogueros que, como tú, tán motivaos por ética y solidaridá y quieren abandonar los servicios capitalistes centralizaos.';
+window.l.ast.registerNickname        = 'Nome d\'usuariu';
 window.l.ast.registerHomepage        = 'Sitiu web';
 window.l.ast.registerBio             = 'Biografía';
 window.l.ast.registerLocation        = 'Llocalización';
 window.l.ast.registerRepeatPassword  = 'Verificar contraseña';
 window.l.ast.moreSettings            = 'Más opciones';
-window.l.ast.otherServers            = 'De mou alternativu, pues facer una cuenta n'otru sirvidor de la rede GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativa</a>';
+window.l.ast.otherServers            = 'De mou alternativu, pues facer una cuenta n\'otru sirvidor de la rede GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativa</a>';
 window.l.ast.editMyProfile           = 'Editar perfil';
 window.l.ast.notifications           = 'Notificaciones';
-window.l.ast.xFavedYourQueet         = 'marcó'l to Queet como favoritu';
+window.l.ast.xFavedYourQueet         = 'marcó\'l to Queet como favoritu';
 window.l.ast.xRepeatedYourQueet      = 'requittióte ';
 window.l.ast.xStartedFollowingYou    = 'siguióte';
-window.l.ast.followsYou			    = 'síguite';
-window.l.ast.FAQ					    = 'Entrugues Frecuentes';
+window.l.ast.followsYou			     = 'síguite';
+window.l.ast.FAQ					 = 'Entrugues Frecuentes';
 window.l.ast.inviteAFriend           = '¡Convida a los collacios!';
-window.l.ast.goToExternalProfile		= 'Dir al perfil completu';
-window.l.ast.cropAndSave			    = 'Recortar y guardar';
+window.l.ast.goToExternalProfile	 = 'Dir al perfil completu';
+window.l.ast.cropAndSave		     = 'Recortar y guardar';
 
 
 
