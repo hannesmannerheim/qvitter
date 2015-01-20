@@ -225,9 +225,8 @@ class QvitterPlugin extends Plugin {
 		}					
 		
 		// if qvitter is opt-out, disable the default register page (if we don't have a valid invitation code)
-        $code = $_POST['code'];
-        if(!empty($code)) {
-			$valid_code = Invitation::getKV('code', $code);			
+        if(isset($_POST['code'])) {
+			$valid_code = Invitation::getKV('code', $_POST['code']);			
 			}
 		if(self::settings('enabledbydefault') && empty($valid_code)) {
 			$m->connect('main/register',
