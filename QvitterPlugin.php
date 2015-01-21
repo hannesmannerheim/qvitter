@@ -588,7 +588,7 @@ class QvitterPlugin extends Plugin {
 	
 		// don't notify people favoriting their own notices 
  		if($notice->profile_id != $profile->id) {
-            $this->insertNotification($notice->profile_id, $profile->id, 'like', $notice->id, $notice->id);
+            $this->insertNotification($notice->profile_id, $profile->id, 'like', $notice->id);
  			}   
     }   
     
@@ -697,7 +697,7 @@ class QvitterPlugin extends Plugin {
     public function onEndSubscribe($subscriber, $other)
     {
 		if(Subscription::exists($subscriber, $other)) {
-			$this->insertNotification($other->id, $subscriber->id, 'follow');            					
+			$this->insertNotification($other->id, $subscriber->id, 'follow', 1);            					
 			}
 		
         return true;
