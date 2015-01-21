@@ -446,7 +446,7 @@ $('#classic-link').click(function(){
 function logoutWithoutReload(doShake) {
 
 	if(window.currentStream == 'statuses/public_timeline.json') {
-		$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + 'img/vagnsmossen.jpg)');
+		$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + window.siteBackground)');
 		}
 											
 	$('input#nickname').focus();	

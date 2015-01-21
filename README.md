@@ -52,6 +52,7 @@ $config['site']['qvitter']['defaultlinkcolor'] = '#0084B4';
 $config['site']['qvitter']['timebetweenpolling'] = 5000;
 $config['site']['qvitter']['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';	
 $config['site']['qvitter']['urlshortenersignature'] = 'b6afeec983';	
+$config['site']['qvitter']['sitebackground'] = 'img/vagnsmossen.jpg';	
 ````
 
 Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).
