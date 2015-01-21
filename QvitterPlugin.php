@@ -57,6 +57,10 @@ class QvitterPlugin extends Plugin {
 		// DEFAULT BACKGROUND COLOR
 		$settings['defaultbackgroundcolor'] = '#f4f4f4';
 
+        // DEFAULT BACKGROUND IMAGE
+        $settings['sitebackground'] = 'img/vagnsmossen.jpg';
+
+
 		// DEFAULT LINK COLOR
 		$settings['defaultlinkcolor'] = '#0084B4';
 

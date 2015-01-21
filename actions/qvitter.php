@@ -181,6 +181,7 @@ class QvitterAction extends ApiAction
 					window.siteInstanceURL = '<?php print $instanceurl; ?>';			
 					window.defaultLinkColor = '<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>';
 					window.defaultBackgroundColor = '<?php print QvitterPlugin::settings("defaultbackgroundcolor"); ?>';
+					window.siteBackground = '<?php print QvitterPlugin::settings("sitebackground"); ?>';
 					window.urlShortenerAPIURL = '<?php print QvitterPlugin::settings("urlshortenerapiurl"); ?>';					
 					window.urlShortenerSignature = '<?php print QvitterPlugin::settings("urlshortenersignature"); ?>';
 					window.commonSessionToken = '<?php print common_session_token(); ?>';										
