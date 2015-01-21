@@ -863,7 +863,9 @@ function createRangeFromCharacterIndices(containerEl, start, end) {
 
 function deleteBetweenCharacterIndices(el, from, to) {
     var range = createRangeFromCharacterIndices(el, from, to);
-    range.deleteContents();
+    if(typeof range != 'undefined') {
+	    range.deleteContents();    	
+    	}
 }
 
 

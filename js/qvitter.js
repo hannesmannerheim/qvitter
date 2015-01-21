@@ -399,18 +399,26 @@ $('#logout').click(function(){
 $('#faq-link').click(function(){
 	popUpAction('popup-faq', window.siteTitle + ' ' + window.sL.FAQ,'<div id="faq-container"></div>',false);	
 	var timeNow = new Date().getTime();
-	$.get(window.fullUrlToThisQvitterApp + 'doc/faq.html?t=' + timeNow, function(data){
+	$.get(window.fullUrlToThisQvitterApp + 'doc/' + window.selectedLanguage + '/faq.html?t=' + timeNow, function(data){
 		if(data) {
-			var faqHtml = data;
-			faqHtml = faqHtml.replace(/{instance-name}/g,window.siteTitle);
-			faqHtml = faqHtml.replace(/{instance-url}/g,window.siteRootDomain);
-			faqHtml = faqHtml.replace(/{instance-url-with-protocol}/g,window.siteInstanceURL);
-			faqHtml = faqHtml.replace(/{nickname}/g,window.loggedIn.screen_name);
-			$('#faq-container').html(faqHtml);			
+			renderFAQ(data);
 			}
-		});
+		}).fail(function() { // default to english if we can't find the faq in selected language
+			$.get(window.fullUrlToThisQvitterApp + 'doc/en/faq.html?t=' + timeNow, function(data){
+				if(data) {
+					renderFAQ(data);
+					}
+				});			
+			});
 	});	
 
+function renderFAQ(faqHtml) {
+	faqHtml = faqHtml.replace(/{instance-name}/g,window.siteTitle);
+	faqHtml = faqHtml.replace(/{instance-url}/g,window.siteRootDomain);
+	faqHtml = faqHtml.replace(/{instance-url-with-protocol}/g,window.siteInstanceURL);
+	faqHtml = faqHtml.replace(/{nickname}/g,window.loggedIn.screen_name);
+	$('#faq-container').html(faqHtml);	
+	}
 
 /* · 
    · 
@@ -1191,7 +1199,9 @@ $('body').on('click','.queet',function (event) {
 		&& !$(event.target).is('.action-del-container a span')
 		&& !$(event.target).is('.action-del-container a b')			
 		&& !$(event.target).is('.action-fav-container a span')
-		&& !$(event.target).is('.action-fav-container a b')						
+		&& !$(event.target).is('.action-fav-container a b')
+		&& !$(event.target).is('.action-ellipsis-container a span')
+		&& !$(event.target).is('.action-ellipsis-container a b')							
 		&& !$(event.target).is('span.group')		
 		&& !$(event.target).is('.longdate')			
 		&& !$(event.target).is('.screen-name')
@@ -2489,6 +2499,12 @@ function uploadImage(e, thisUploadButton) {
 									// insert shorturl in queet box	
 									deleteBetweenCharacterIndices(queetBox[0], caretPos[0], caretPos[1]);
 									var range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);
+									if(typeof range == 'undefined') { 
+										// if queetbox is empty no range is returned, and inserting will fail,
+										// so we insert a space and try to get range again...
+										queetBox.html(' ');
+									    range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);										 
+										}
 									range.insertNode(document.createTextNode(' ' + data.shorturl + ' '));	
 	
 									// put caret after

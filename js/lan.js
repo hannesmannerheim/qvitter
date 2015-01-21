@@ -2245,13 +2245,13 @@ else {
 var selectedLanguage = 'en';        	
 if(localStorageIsEnabled()) {
     if(typeof localStorage.selectedLanguage != 'undefined' && localStorage.selectedLanguage != null) {
-        selectedLanguage = localStorage.selectedLanguage;
+        window.selectedLanguage = localStorage.selectedLanguage;
         }
     else if(typeof window.l[browserLang] != 'undefined') {
-        selectedLanguage =  browserLang;        	
+        window.selectedLanguage =  browserLang;        	
         }
     }
-window.sL = window.l[selectedLanguage];
+window.sL = window.l[window.selectedLanguage];
 
 // if this is a RTL-language, add rt classes and change some things
 if(selectedLanguage == 'ar') {
