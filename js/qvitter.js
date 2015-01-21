@@ -1505,7 +1505,7 @@ $('body').on('click', '.queet-toolbar button',function () {
 		var queetBoxID = queetBox.attr('id');
 
 		var queetText =  $.trim(queetBox.text().replace(/^\s+|\s+$/g, ''));
-		var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetText.replace(/\n/g,'<br>') + '</div><div class="stream-item-footer"><ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li><li class="action-del-container"><a class="with-icn"><span class="icon sm-trash" title="' + window.sL.deleteVerb + '"></span></a></li></i></li><li class="action-fav-container"><a class="with-icn"><span class="icon sm-fav" title="' + window.sL.favoriteVerb + '"></span></a></li></ul></div></div></div></div>';
+		var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + replaceHtmlSpecialChars(queetText.replace(/\n/g,'<br>')) + '</div><div class="stream-item-footer"><ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li><li class="action-del-container"><a class="with-icn"><span class="icon sm-trash" title="' + window.sL.deleteVerb + '"></span></a></li></i></li><li class="action-fav-container"><a class="with-icn"><span class="icon sm-fav" title="' + window.sL.favoriteVerb + '"></span></a></li></ul></div></div></div></div>';
 		queetHtml = detectRTL(queetHtml);		
 
 		// popup reply
@@ -1739,7 +1739,7 @@ $('body').on('mouseup', 'div.syntax-two', function(e){
 // strip html from paste
 function stripHtmlFromPaste(e) {
 	e.preventDefault();
-	var text = e.clipboardData.getData("text/plain");
+	var text = replaceHtmlSpecialChars(e.clipboardData.getData("text/plain"));
 	text = text.replace("\n",'<br>'); // keep line-breaks
 	document.execCommand("insertHTML", false, text);	
 	}
