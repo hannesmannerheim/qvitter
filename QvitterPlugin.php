@@ -126,8 +126,6 @@ class QvitterPlugin extends Plugin {
 					array('action' => 'ApiUpdateBackgroundImage'));						
 		$m->connect('api/qvitter/update_avatar.json',
 					array('action' => 'ApiUpdateAvatar'));		
-		$m->connect('api/qvitter/upload_image.json',
-					array('action' => 'ApiUploadImage'));																		
 		$m->connect('api/qvitter/external_user_show.json',
 					array('action' => 'ApiExternalUserShow'));
 		$m->connect('api/qvitter/toggle_qvitter.json',
