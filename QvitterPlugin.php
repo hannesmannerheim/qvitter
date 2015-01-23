@@ -476,14 +476,14 @@ class QvitterPlugin extends Plugin {
 		
         // find all thumbs
         $attachments = $notice->attachments();
-        $attachment_url_to_thumb = array();
+        $attachment_url_to_id = array();
         if (!empty($attachments)) {
             foreach ($attachments as $attachment) {
                 try {
                     $enclosure_o = $attachment->getEnclosure();
 	                $thumb = File_thumbnail::getKV('file_id', $attachment->id);    	                
                     if(isset($thumb->url)) {
-	                    $attachment_url_to_thumb[$enclosure_o->url] = $thumb->url;
+	                    $attachment_url_to_id[$enclosure_o->url] = $attachment->id;
 	                    }                    
                 } catch (ServerException $e) {
                     // There was not enough metadata available
@@ -494,8 +494,8 @@ class QvitterPlugin extends Plugin {
 		// add thumbs to $twitter_status
         if (!empty($twitter_status['attachments'])) {
             foreach ($twitter_status['attachments'] as &$attachment) {
-                if (!empty($attachment_url_to_thumb[$attachment['url']])) {
-                    $attachment['thumb_url'] = $attachment_url_to_thumb[$attachment['url']];
+                if (!empty($attachment_url_to_id[$attachment['url']])) {
+                    $attachment['id'] = $attachment_url_to_id[$attachment['url']];
                 }
             }
         }		

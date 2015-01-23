@@ -948,9 +948,8 @@ function expand_queet(q,doScrolling) {
 			
 			// maybe show images or videos
 			$.each($('#' + q.children('.queet').attr('id') + ' .queet-text, #' + q.children('.queet').attr('id') + ' > .attachments').find('a'), function() {
+
 				var attachment_title = $(this).attr('title');
-				
-				console.log('attachment: ' + attachment_title);
 				
 				// attachments in the .attachments container don't have a title, their full url is in the href
 				if(typeof attachment_title == 'undefined') {
@@ -965,13 +964,27 @@ function expand_queet(q,doScrolling) {
 					   attachment_title.substr(attachment_title.length - 4) == '.gif' ||
 					   attachment_title.substr(attachment_title.length - 4) == '.jpg') {
 						if(q.children('.queet').find('.expanded-content').children('.media').children('a[href="' + attachment_title + '"]').length < 1) { // not if already showed
+							
+							// local attachment with a thumbnail
+							if(typeof $(this).find('img').attr('data-big-thumbnail') != 'undefined') {
+								var attachment_src = $(this).find('img').attr('data-big-thumbnail');
+								}
+							
+							// external "deep linked" images 
+							else {
+								var attachment_src = attachment_title;
+								}
+							
+							// don't show thumbnails for gifs
+							if(attachment_title.substr(attachment_title.length - 4) == '.gif') {
+								var attachment_src = attachment_title;
+								}
+
 							if(q.children('.queet').find('.expanded-content').children('.media').length > 0) {
-								q.children('.queet').find('.media').last().after('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_title + '" /></a></div>');								
-								console.log('2' + attachment_title);
+								q.children('.queet').find('.media').last().after('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_src + '" /></a></div>');								
 								}
 							else {
-								q.children('.queet').find('.expanded-content').prepend('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_title + '" /></a></div>');								
-								console.log('1' + attachment_title);
+								q.children('.queet').find('.expanded-content').prepend('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_src + '" /></a></div>');								
 								}
 							}
 						}
@@ -1808,8 +1821,16 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 	if(typeof obj.attachments != "undefined") {
 		obj.attachments.reverse(); // last on top
 		$.each(obj.attachments, function(){
-			if(this.thumb_url != null) {
-				attachment_html = attachment_html + '<a href="' + this.url + '"><img src="' + this.thumb_url + '"/></a>';
+			if(this.id != null) {
+				var bigThumbW = 1000;
+				var bigThumbH = 3000;
+				if(bigThumbW > window.siteMaxThumbnailSize) {
+					bigThumbW = window.siteMaxThumbnailSize;
+					}
+				if(bigThumbH > window.siteMaxThumbnailSize) {
+					bigThumbH = window.siteMaxThumbnailSize;
+					}					
+				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-big-thumbnail="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH + '" src="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=200&h=200"/></a>';
 				}
 			});
 		}	

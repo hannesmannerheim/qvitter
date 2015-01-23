@@ -32,11 +32,13 @@ are running the latest GNU Social nightly!)
 
 4. Add `addPlugin('Qvitter');` to your /config.php file.
 
-5. There are a few settings in /plugins/Qvitter/QvitterPlugin.php. By default Qvitter is 
+5. It's recommended to set this setting in your /config.php file: `$config['thumbnail']['maxsize'] = 3000;`
+
+6. There are a few settings in /plugins/Qvitter/QvitterPlugin.php. By default Qvitter is 
 opt-out for users. If you set `$settings['enabledbydefault'] = false;` Qvitter will
 be opt-in instead.
 
-6. Users can go to ://{instance}/settings/qvitter and enable or disable Qvitter.
+7. Users can go to ://{instance}/settings/qvitter and enable or disable Qvitter.
 
 Optional
 -----
@@ -52,7 +54,8 @@ $config['site']['qvitter']['defaultlinkcolor'] = '#0084B4';
 $config['site']['qvitter']['timebetweenpolling'] = 5000;
 $config['site']['qvitter']['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';	
 $config['site']['qvitter']['urlshortenersignature'] = 'b6afeec983';	
-$config['site']['qvitter']['sitebackground'] = 'img/vagnsmossen.jpg';	
+$config['site']['qvitter']['sitebackground'] = 'img/vagnsmossen.jpg';
+$config['thumbnail']['maxsize'] = 3000;
 ````
 
 Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).

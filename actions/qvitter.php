@@ -79,6 +79,7 @@ class QvitterAction extends ApiAction
 		$siterootdomain = common_config('site','server');
 		$qvitterpath = Plugin::staticPath('Qvitter', '');
 		$apiroot = common_path('api/', StatusNet::isHTTPS());
+		$attachmentroot = common_path('attachment/', StatusNet::isHTTPS());
 		$instanceurl = common_path('', StatusNet::isHTTPS());
 
 		common_set_returnto(''); // forget this
@@ -184,7 +185,10 @@ class QvitterAction extends ApiAction
 					window.siteBackground = '<?php print QvitterPlugin::settings("sitebackground"); ?>';
 					window.urlShortenerAPIURL = '<?php print QvitterPlugin::settings("urlshortenerapiurl"); ?>';					
 					window.urlShortenerSignature = '<?php print QvitterPlugin::settings("urlshortenersignature"); ?>';
-					window.commonSessionToken = '<?php print common_session_token(); ?>';										
+					window.commonSessionToken = '<?php print common_session_token(); ?>';
+					window.siteMaxThumbnailSize = <?php print common_config('thumbnail', 'maxsize'); ?>;
+					window.siteAttachmentURLBase = '<?php print $attachmentroot; ?>';					
+					
 				</script>
 				<style>
 					a, a:visited, a:active,

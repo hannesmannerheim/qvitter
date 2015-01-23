@@ -2446,7 +2446,6 @@ $('body').on('click','.upload-image',function () {
 	});	
 	
 function uploadImage(e, thisUploadButton) {
-	
 	// get orientation
 	loadImage.parseMetaData(e.target.files[0], function (data) {
 		if (data.exif) {
@@ -2464,24 +2463,33 @@ function uploadImage(e, thisUploadButton) {
 
 		// clean up 
 		cleanUpAfterCropping();
-		
+
 		// create image
 		loadImage(e.target.files[0],
 				function (img) {    
 					if(typeof img.target == 'undefined') {
+						// The preview image below queet box.
 						var appendedImg = thisUploadButton.closest('.queet-toolbar').before('<span class="upload-image-container"><img class="to-upload" src="' + img.toDataURL('image/jpeg') +  '" /></span>');								
+						var imgFormData = new FormData();
+						imgFormData.append('media', $('#upload-image-input')[0].files[0]);
+
 						// upload
-						$.ajax({ url: window.apiRoot + 'qvitter/upload_image.json', 
+						$.ajax({ url: window.apiRoot + 'statusnet/media/upload',
 							type: "POST", 
-							data: { 
-								img: appendedImg.siblings('.upload-image-container').children('img.to-upload').attr('src')
-								},
-							dataType:"json",
+							data: imgFormData,
+							contentType: false,
+							processData: false,
+							dataType: "xml",
 							error: function(data){ console.log('error'); console.log(data); $('.queet-box-loading-cover').remove(); },
 							success: function(data) {						
-								if(typeof data.error == 'undefined') {
+								var rsp = $(data).find('rsp');
+								if (rsp.attr('stat') == 'ok') {
 									cleanUpAfterCropping();
-									
+
+									// If doing 'multiple' input element, maybe reply with many mediaurl elements
+									// and then rsp.find('mediaurl').each(...)?
+									var mediaurl = rsp.find('mediaurl').text();
+
 									var uploadButton = $('img.to-upload').parent().siblings('.queet-toolbar').find('.upload-image');
 									var queetBox = $('img.to-upload').parent().siblings('.queet-box-syntax');									
 									var caretPos = uploadButton.attr('data-caret-pos').split(',');
@@ -2489,10 +2497,10 @@ function uploadImage(e, thisUploadButton) {
 									// if this site is like quitter.se, we have to do this, otherwise
 									// gnusocial will not recognize the link to the image as a local attachment
 									if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
-										data.shorturl = data.shorturl.replace('https://','http://');																			
+										mediaurl = mediaurl.replace('https://','http://');
 										}
 									
-									$('img.to-upload').attr('data-shorturl', data.shorturl);
+									$('img.to-upload').attr('data-shorturl', mediaurl);
 									$('img.to-upload').addClass('uploaded');
 									$('img.to-upload').removeClass('to-upload');		
 									
@@ -2502,21 +2510,21 @@ function uploadImage(e, thisUploadButton) {
 									if(typeof range == 'undefined') { 
 										// if queetbox is empty no range is returned, and inserting will fail,
 										// so we insert a space and try to get range again...
-										queetBox.html(' ');
+										queetBox.html('&nbsp;');
 									    range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);										 
 										}
-									range.insertNode(document.createTextNode(' ' + data.shorturl + ' '));	
+									range.insertNode(document.createTextNode(' ' + mediaurl + ' '));	
 	
 									// put caret after
 									queetBox.focus();									
-									var putCaretAt = parseInt(caretPos[0],10)+data.shorturl.length+2;
+									var putCaretAt = parseInt(caretPos[0],10)+mediaurl.length+2;
 									setSelectionRange(queetBox[0], putCaretAt, putCaretAt);					
 									queetBox.trigger('input'); // avoid some flickering
 									setTimeout(function(){ queetBox.trigger('input');},1); // make sure chars are counted and shorten-button activated
 									$('.queet-box-loading-cover').remove();
 									}
 								 else {
-									alert('Try again! ' + data.error);
+									alert('Try again! ' + rsp.find('err').attr('msg'));
 									$('.save-profile-button').removeAttr('disabled');		
 									$('.save-profile-button').removeClass('disabled');
 									$('img.to-upload').parent().remove();
