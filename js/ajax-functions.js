@@ -46,6 +46,41 @@ function timeNow() {
 	}
 
 
+
+/* · 
+   · 
+   ·   Get a document and replace strings 
+   ·
+   ·   @param doc: the name of the document  
+   ·   @param actionOnSuccess: callback function to run on success    
+   · 
+   · · · · · · · · · · · · · */ 
+   
+function getDoc(doc, actionOnSuccess) {
+	var timeNow = new Date().getTime();
+	$.get(window.fullUrlToThisQvitterApp + 'doc/' + window.selectedLanguage + '/' + doc + '.html?t=' + timeNow, function(data){
+		if(data) {
+			actionOnSuccess(renderDoc(data));
+			}
+		}).fail(function() { // default to english if we can't find the doc in selected language
+			$.get(window.fullUrlToThisQvitterApp + 'doc/en/' + doc + '.html?t=' + timeNow, function(data){
+				if(data) {
+					actionOnSuccess(renderDoc(data));
+					}
+				});			
+			});
+	}	
+function renderDoc(docHtml) {
+	docHtml = docHtml.replace(/{instance-name}/g,window.siteTitle);
+	docHtml = docHtml.replace(/{instance-url}/g,window.siteRootDomain);
+	docHtml = docHtml.replace(/{instance-url-with-protocol}/g,window.siteInstanceURL);
+	docHtml = docHtml.replace(/{nickname}/g,window.loggedIn.screen_name);
+	docHtml = docHtml.replace(/{instance-email}/g,window.siteEmail);
+	docHtml = docHtml.replace(/{instance-license-title}/g,window.siteLicenseTitle);
+	docHtml = docHtml.replace(/{instance-license-url}/g,window.siteLicenseURL);			
+	return docHtml;	
+	}
+
 /* ·  
    · 
    ·   Check login credentials with http basic auth

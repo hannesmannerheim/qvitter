@@ -113,6 +113,7 @@ if(!window.registrationsClosed) {
 															  '<div class="signup-input-container"><input placeholder="' + window.sL.registerLocation + '" type="text" autocomplete="off" class="text-input" id="signup-user-location-step2"></div>' +													      													      
 															  '<div class="signup-input-container"><input placeholder="' + window.sL.loginPassword + '" type="password" class="text-input" id="signup-user-password1-step2" value="' + $('#signup-user-password').val() + '"><div class="fieldhelp">>5</div></div>' + 
 															  '<div class="signup-input-container"><input placeholder="' + window.sL.registerRepeatPassword + '" type="password" class="text-input" id="signup-user-password2-step2"></div>' + 													      
+															  '<div id="signup-terms-header">' + window.sL.showTerms + '</div><div id="signup-terms-container"></div>' + 													      
 															  '<button id="signup-btn-step2" class="signup-btn disabled" type="submit">' + window.sL.signUpButtonText + '</button>' +
 														   '</div>',false);		
 		
@@ -222,6 +223,29 @@ if(!window.registrationsClosed) {
 		});
 	}	
 	
+
+/* · 
+   · 
+   ·   Show/hide Terms of Use
+   · 
+   · · · · · · · · · · · · · */ 
+   
+$('body').on('click','#signup-terms-header',function(){
+	if($('#signup-terms-container').text().length > 0) {
+		$('#signup-terms-container').html('');
+		}
+	else {
+		if(window.customTermsOfUse) {
+			$('#signup-terms-container').html(window.customTermsOfUse);
+			}
+		else {
+			getDoc('terms',function(termsHtml){
+				$('#signup-terms-container').html(termsHtml);
+				});					
+			}
+		}
+	});	
+
 	
 	
 	
@@ -398,27 +422,12 @@ $('#logout').click(function(){
    
 $('#faq-link').click(function(){
 	popUpAction('popup-faq', window.siteTitle + ' ' + window.sL.FAQ,'<div id="faq-container"></div>',false);	
-	var timeNow = new Date().getTime();
-	$.get(window.fullUrlToThisQvitterApp + 'doc/' + window.selectedLanguage + '/faq.html?t=' + timeNow, function(data){
-		if(data) {
-			renderFAQ(data);
-			}
-		}).fail(function() { // default to english if we can't find the faq in selected language
-			$.get(window.fullUrlToThisQvitterApp + 'doc/en/faq.html?t=' + timeNow, function(data){
-				if(data) {
-					renderFAQ(data);
-					}
-				});			
-			});
+	getDoc('faq',function(faqHtml){
+		$('#faq-container').html(faqHtml);
+		});
 	});	
 
-function renderFAQ(faqHtml) {
-	faqHtml = faqHtml.replace(/{instance-name}/g,window.siteTitle);
-	faqHtml = faqHtml.replace(/{instance-url}/g,window.siteRootDomain);
-	faqHtml = faqHtml.replace(/{instance-url-with-protocol}/g,window.siteInstanceURL);
-	faqHtml = faqHtml.replace(/{nickname}/g,window.loggedIn.screen_name);
-	$('#faq-container').html(faqHtml);	
-	}
+
 
 /* · 
    · 

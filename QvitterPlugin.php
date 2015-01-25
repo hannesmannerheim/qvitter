@@ -70,6 +70,9 @@ class QvitterPlugin extends Plugin {
 		// URL SHORTENER
 		$settings['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';
 		$settings['urlshortenersignature'] = 'b6afeec983';
+		
+		// CUSTOM TERMS OF USE
+		$settings['customtermsofuse'] = false;
 
 
 		 /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
@@ -483,7 +486,8 @@ class QvitterPlugin extends Plugin {
                     $enclosure_o = $attachment->getEnclosure();
 	                $thumb = File_thumbnail::getKV('file_id', $attachment->id);    	                
                     if(isset($thumb->url)) {
-	                    $attachment_url_to_id[$enclosure_o->url] = $attachment->id;
+	                    $attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
+	                    $attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->url;
 	                    }                    
                 } catch (ServerException $e) {
                     // There was not enough metadata available
@@ -495,7 +499,13 @@ class QvitterPlugin extends Plugin {
         if (!empty($twitter_status['attachments'])) {
             foreach ($twitter_status['attachments'] as &$attachment) {
                 if (!empty($attachment_url_to_id[$attachment['url']])) {
-                    $attachment['id'] = $attachment_url_to_id[$attachment['url']];
+                    $attachment['id'] = $attachment_url_to_id[$attachment['url']]['id'];
+                    
+                    // if the attachment is other than image, and we have a thumb (e.g. videos),
+                    // we include the default thumbnail url
+                    if(substr($attachment['mimetype'],0,5) != 'image') {
+                    	$attachment['thumb_url'] = $attachment_url_to_id[$attachment['url']]['thumb_url'];
+                   	}
                 }
             }
         }		
@@ -729,7 +739,7 @@ class QvitterPlugin extends Plugin {
     	
     	if($title == 'faq') {
 
-	    	$faq = file_get_contents(QVITTERDIR.'/doc/faq.html');  
+	    	$faq = file_get_contents(QVITTERDIR.'/doc/en/faq.html');  
 	    	$faq = str_replace('{instance-name}',common_config('site','name'),$faq); 
 	    	$faq = str_replace('{instance-url}',common_config('site','server'),$faq); 	    	
 	    	$faq = str_replace('{instance-url-with-protocol}',common_path('', true),$faq); 	    	

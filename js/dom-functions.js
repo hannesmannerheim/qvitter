@@ -1829,8 +1829,17 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 					}
 				if(bigThumbH > window.siteMaxThumbnailSize) {
 					bigThumbH = window.siteMaxThumbnailSize;
-					}					
-				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-big-thumbnail="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH + '" src="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=200&h=200"/></a>';
+					}
+				
+				// if thumb_url is set, we use that
+				if(typeof this.thumb_url != 'undefined') {
+					var thumb_url = this.thumb_url;
+					}
+				else {
+					var thumb_url = window.siteAttachmentURLBase + this.id + '/thumbnail?w=200&h=200';					
+					}
+				
+				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-big-thumbnail="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH + '" src="' + thumb_url + '"/></a>';
 				}
 			});
 		}	

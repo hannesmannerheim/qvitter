@@ -188,6 +188,10 @@ class QvitterAction extends ApiAction
 					window.commonSessionToken = '<?php print common_session_token(); ?>';
 					window.siteMaxThumbnailSize = <?php print common_config('thumbnail', 'maxsize'); ?>;
 					window.siteAttachmentURLBase = '<?php print $attachmentroot; ?>';					
+					window.siteEmail = '<?php print common_config('site', 'email'); ?>';										
+					window.siteLicenseTitle = '<?php print common_config('license', 'title'); ?>';
+					window.siteLicenseURL = '<?php print common_config('license', 'url'); ?>';
+					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;					
 					
 				</script>
 				<style>

@@ -154,6 +154,8 @@ window.l.ca.FAQ = 'PMF';
 window.l.ca.inviteAFriend = 'Convida els amics!';
 window.l.ca.goToExternalProfile = 'Mostra el perfil complet';
 window.l.ca.cropAndSave = 'Retalla i desa';
+window.l.ca.showTerms = 'Read our Terms of Use';
+
 
 // spanish
 window.l.es = new Object();
@@ -273,6 +275,7 @@ window.l.es.FAQ					    = 'Preguntas Frecuentes';
 window.l.es.inviteAFriend           = '¡Invita a tus amigos!';
 window.l.es.goToExternalProfile		= 'Ir al perfil completo';
 window.l.es.cropAndSave			    = 'Recortar y guardar';
+window.l.es.showTerms 				= 'Read our Terms of Use';
 
 // spanish (ahorita)
 window.l.es_ahorita = new Object();
@@ -398,7 +401,7 @@ window.l.pt_br.FAQ	= 'FAQ';
 window.l.pt_br.inviteAFriend = 'Convide seus amigos!';
 window.l.pt_br.goToExternalProfile = 'Ir para o perfil completo';
 window.l.pt_br.cropAndSave = 'Crop and save';
-
+window.l.pt_br.showTerms = 'Read our Terms of Use';
 
 
 // galician
@@ -519,6 +522,7 @@ window.l.gl.FAQ	= 'FAQ';
 window.l.gl.inviteAFriend = 'Convida aos teus amigos!';
 window.l.gl.goToExternalProfile		= 'Ir ao perfil completo';
 window.l.gl.cropAndSave = 'Crop and save';
+window.l.gl.showTerms = 'Read our Terms of Use';
 
 // basque
 window.l.eu = new Object();
@@ -638,6 +642,7 @@ window.l.eu.FAQ	= 'FAQ';
 window.l.eu.inviteAFriend = 'Zure Lagunak Gonbidatu!';
 window.l.eu.goToExternalProfile	= 'Profil osora joan';
 window.l.eu.cropAndSave = 'Crop and save';
+window.l.eu.showTerms = 'Read our Terms of Use';
 
 // french
 window.l.fr = new Object();
@@ -757,6 +762,7 @@ window.l.fr.FAQ = 'FAQ';
 window.l.fr.inviteAFriend = 'Invite des ami·e·s !';
 window.l.fr.goToExternalProfile = 'Aller sur le profil complet';
 window.l.fr.cropAndSave = 'Recadrer et enregistrer';
+window.l.fr.showTerms = 'Read our Terms of Use';
 
 // deutsch
 window.l.de = new Object();
@@ -888,6 +894,7 @@ window.l.de.FAQ						= 'FAQ';
 window.l.de.inviteAFriend 			= 'Lade deine Freunde ein!';
 window.l.de.goToExternalProfile		= 'Vollständiges Profil anzeigen';
 window.l.de.cropAndSave 			= 'Zuschneiden und Abspeichern';
+window.l.de.showTerms 				= 'Read our Terms of Use';
 
 // english
 window.l.en = new Object();
@@ -1015,6 +1022,7 @@ window.l.en.FAQ						= 'FAQ';
 window.l.en.inviteAFriend           = 'Invite a friend!';
 window.l.en.goToExternalProfile		= 'Go to full profile';
 window.l.en.cropAndSave 			= 'Crop and save';
+window.l.en.showTerms 				= 'Read our Terms of Use';
 
 
 // simplified chinese
@@ -1135,6 +1143,7 @@ window.l.zh_cn.FAQ					   = 'FAQ';
 window.l.zh_cn.inviteAFriend 		   = '邀请好友';
 window.l.zh_cn.goToExternalProfile	   = '前往完整的个人档案';
 window.l.zh_cn.cropAndSave 			   = 'Crop and save';
+window.l.zh_cn.showTerms 			   = 'Read our Terms of Use';
 
 
 // traditional chinese
@@ -1255,6 +1264,7 @@ window.l.zh_tw.FAQ					   = 'FAQ';
 window.l.zh_tw.inviteAFriend 		   = '邀請你的朋友';
 window.l.zh_tw.goToExternalProfile	   = '前往詳細個人檔案';
 window.l.zh_tw.cropAndSave 			   = 'Crop and save';
+window.l.zh_tw.showTerms 			   = 'Read our Terms of Use';
 
 
 // svenska
@@ -1375,6 +1385,7 @@ window.l.sv.FAQ						= 'FAQ';
 window.l.sv.inviteAFriend 			= 'Bjud in dina vänner!';
 window.l.sv.goToExternalProfile		= 'Gå till hela profilen';
 window.l.sv.cropAndSave 			= 'Beskär och spara';
+window.l.sv.showTerms 	 			= 'Läs våra användarvillkor';
 
 // suomi
 window.l.fi = new Object();
@@ -1494,6 +1505,7 @@ window.l.fi.FAQ	= 'FAQ';
 window.l.fi.inviteAFriend = 'Kutsu kavereitasi!';
 window.l.fi.goToExternalProfile		= 'Siirry täyteen profiiliin';
 window.l.fi.cropAndSave = 'Crop and save';
+window.l.fi.showTerms = 'Read our Terms of Use';
 
 // farsi/persian
 window.l.fa = new Object();
@@ -1613,6 +1625,7 @@ window.l.fa.FAQ						= 'FAQ';
 window.l.fa.inviteAFriend 			= 'دعوت از دوستانتان';
 window.l.fa.goToExternalProfile		= 'رفتن به نمایه کامل';
 window.l.fa.cropAndSave 			= 'Crop and save';
+window.l.fa.showTerms 			    = 'Read our Terms of Use';
 
 // arabic
 window.l.ar = new Object();
@@ -1732,6 +1745,7 @@ window.l.ar.FAQ						= 'FAQ';
 window.l.ar.inviteAFriend 			= 'دعوة أصدقائك!';
 window.l.ar.goToExternalProfile		= 'اذهب إلى الملف الشخصي الكامل';
 window.l.ar.cropAndSave 			= 'قُص و احفظ.';
+window.l.ar.showTerms 			    = 'Read our Terms of Use';
 
 // esperanto
 window.l.eo = new Object();
@@ -1860,6 +1874,7 @@ window.l.eo.FAQ						= 'FAQ';
 window.l.eo.inviteAFriend           = 'Inviti viajn amikojn!';
 window.l.eo.goToExternalProfile		= 'iru al plena profilon';
 window.l.eo.cropAndSave 			= 'Tondu kaj savu';
+window.l.eo.showTerms 			    = 'Read our Terms of Use';
 
 // italian
 window.l.it = new Object();
@@ -1988,6 +2003,7 @@ window.l.it.FAQ	= 'FAQ';
 window.l.it.inviteAFriend = 'Invita i tuoi amici!';
 window.l.it.goToExternalProfile		= 'Vai al profilo completo';
 window.l.it.cropAndSave = 'ritaglia e salva';
+window.l.it.showTerms = 'Read our Terms of Use';
 
 // Norwegian
 window.l.no = new Object();
@@ -2107,6 +2123,7 @@ window.l.no.FAQ	= 'FAQ';
 window.l.no.inviteAFriend = 'Inviter venner';
 window.l.no.goToExternalProfile	= 'Gå til fullstendig profil';
 window.l.no.cropAndSave = 'Beskjær og lagre';
+window.l.no.showTerms = 'Read our Terms of Use';
 
 // asturian
 window.l.ast = new Object();
@@ -2226,6 +2243,7 @@ window.l.ast.FAQ					 = 'Entrugues Frecuentes';
 window.l.ast.inviteAFriend           = '¡Convida a los collacios!';
 window.l.ast.goToExternalProfile	 = 'Dir al perfil completu';
 window.l.ast.cropAndSave		     = 'Recortar y guardar';
+window.l.ast.showTerms 				 = 'Read our Terms of Use';
 
 
 

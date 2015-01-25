@@ -565,13 +565,10 @@ body.rtl .front-welcome-text {
 	}
 .front-signup {
 	margin-top:123px;
-    height: 206px;    	
-	}	
-.front-signup:not(#popup-signup) {
     height: auto;
     padding-bottom: 53px;    		
 	}
-	
+
 .front-signup input,
 #login-content input#nickname,
 #login-content input#password {
@@ -910,8 +907,26 @@ button#submit-login:hover {
 	opacity: 1;
     position: relative;
     margin-top:10px;
-    height:346px;
+    border:0 none;
+    background:none;
 	}
+
+.modal-body .front-signup #signup-terms-header {
+	text-align:center;
+	margin:20px 0 0 0;
+	cursor:pointer;
+	}
+.modal-body .front-signup #signup-terms-header:before {	
+	content: "\f05a";
+	display:inline-block;
+	padding:0 6px 0 2px;
+	font-family:FontAwesome;
+	}				
+.modal-body .front-signup #signup-terms-container {
+	padding: 0 20px 20px;
+	font-size:12px;
+	}	
+	
 .modal-body .front-signup .signup-input-container {
 	margin:6px auto 0 auto;
 	width:276px;
@@ -1984,7 +1999,12 @@ ul.queet-actions li .icon.sm-trash:before {
 	}	    
 ul.queet-actions li .icon.sm-fav:before {
 	content: "\f005";
-    }	        
+    }
+ul.queet-actions li .icon.sm-ellipsis:before {
+	content: "\f141";
+	font-size: 22px;
+    line-height: 28px;	
+    }	            
 
 .queet.rtl .queet-content {
 	margin-left:0;
@@ -3073,12 +3093,9 @@ div.nav-session {
 	}	
 	
 .profile-card .user-actions {
-    height: 32px;
-    margin: 10px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 1;
+	position:relative;
+	float: right;
+	margin: 10px; 
 	}
 div.clearfix {
 	clear:both;
