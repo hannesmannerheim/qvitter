@@ -510,7 +510,7 @@ window.l.gl.registerHomepage = 'Sitio web';
 window.l.gl.registerBio = 'Biografía';
 window.l.gl.registerLocation = 'Ubicación';
 window.l.gl.registerRepeatPassword = 'Verificar contrasinal';
-window.l.gl.moreSettings = 'máis opcións';
+window.l.gl.moreSettings = 'Máis opcións';
 window.l.gl.otherServers = 'De maneira alternativa, podes crear unha conta noutro servidor da rede GNUsocial. <a href="http://federation.skilledtests.com/select_your_server.html">Comparativa</a>';
 window.l.gl.editMyProfile = 'Editar o perfil';
 window.l.gl.notifications = 'Notificacións';
@@ -521,7 +521,7 @@ window.l.gl.followsYou			    = 'séguete';
 window.l.gl.FAQ	= 'FAQ';
 window.l.gl.inviteAFriend = 'Convida aos teus amigos!';
 window.l.gl.goToExternalProfile		= 'Ir ao perfil completo';
-window.l.gl.cropAndSave = 'Crop and save';
+window.l.gl.cropAndSave = 'Recortar e gardar';
 window.l.gl.showTerms = 'Read our Terms of Use';
 
 // basque
