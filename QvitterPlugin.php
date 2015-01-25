@@ -484,11 +484,9 @@ class QvitterPlugin extends Plugin {
             foreach ($attachments as $attachment) {
                 try {
                     $enclosure_o = $attachment->getEnclosure();
-	                $thumb = File_thumbnail::getKV('file_id', $attachment->id);    	                
-                    if(isset($thumb->url)) {
-	                    $attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
-	                    $attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->url;
-	                    }                    
+	                $thumb = $attachment->getThumbnail();
+	                $attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
+	                $attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
                 } catch (ServerException $e) {
                     // There was not enough metadata available
                 }
