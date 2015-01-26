@@ -546,7 +546,7 @@ $('body').on('click','.external-member-button',function(event){
    · 
    · · · · · · · · · · · · · */ 
 
-$('body').on('click','.follow-button',function(event){
+$('body').on('click','.qvitter-follow-button',function(event){
 	if(!$(this).hasClass('disabled')) {
 		$(this).addClass('disabled');
 			
@@ -923,7 +923,7 @@ $('body').on('click','a', function(e) {
 					var serverUrl = data.statusnet_profile_url.replace('/' + data.screen_name,'');
 					var userApiUrl = serverUrl + '/api/statuses/user_timeline.json?screen_name=' + data.screen_name;
 					var screenNameWithServer = '@' + data.screen_name + '@' + serverUrl.replace('http://','').replace('https://','');						
-					var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';						
+					var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';						
 					
 					// preview latest notice
 					var noticeHtml = '';

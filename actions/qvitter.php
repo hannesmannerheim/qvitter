@@ -235,7 +235,7 @@ class QvitterAction extends ApiAction
 					.menu-container,
 					.member-button.member,
 					.external-follow-button.following,
-					.follow-button.following,
+					.qvitter-follow-button.following,
 					.save-profile-button,
 					.crop-and-save-button,
 					.topbar .global-nav.show-logo:before,

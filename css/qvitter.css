@@ -88,7 +88,7 @@ button.icon.nav-search,
 .member-button .join-text i,
 .external-member-button .join-text i,
 .external-follow-button .follow-text i,
-.follow-button .follow-text i,
+.qvitter-follow-button .follow-text i,
 #logo,
 .upload-cover-photo,
 .upload-avatar,
@@ -3105,7 +3105,7 @@ div.clearfix {
 .member-button,
 .external-member-button,
 .external-follow-button,
-.follow-button,
+.qvitter-follow-button,
 .edit-profile-button,
 .save-profile-button,
 .abort-edit-profile-button,
@@ -3137,7 +3137,7 @@ div.clearfix {
 	cursor: pointer;
 	text-shadow: rgba(0, 0, 0, 0.15) 0px -1px 1px;
 	}
-.follow-button,
+.qvitter-follow-button,
 .edit-profile-button,
 .abort-edit-profile-button,
 .member-button {
@@ -3148,7 +3148,7 @@ div.clearfix {
 .external-member-button.disabled,
 .member-button.disabled,
 .external-follow-button.disabled,
-.follow-button.disabled,
+.qvitter-follow-button.disabled,
 .edit-profile-button.disabled,
 .save-profile-button.disabled,
 .crop-and-save-button.disabled {
@@ -3158,13 +3158,13 @@ div.clearfix {
 .external-member-button.disabled i,
 .member-button.disabled i,
 .external-follow-button.disabled i,
-.follow-button.disabled i {
+.qvitter-follow-button.disabled i {
 	opacity:0.2;
 	}
 .external-member-button:not(.disabled):not(.member):hover,
 .member-button:not(.disabled):not(.member):hover,
 .external-follow-button:not(.disabled):not(.following):hover,
-.follow-button:not(.disabled):not(.following):hover,
+.qvitter-follow-button:not(.disabled):not(.following):hover,
 .edit-profile-button:hover,
 .abort-edit-profile-button:hover,
 button.shorten:not(.disabled):hover,
@@ -3175,7 +3175,7 @@ button.shorten:not(.disabled):hover,
 .external-member-button:not(.disabled):not(.member):active,
 .member-button:not(.disabled):not(.member):active,
 .external-follow-button:not(.disabled):not(.following):active,
-.follow-button:not(.disabled):not(.following):active,
+.qvitter-follow-button:not(.disabled):not(.following):active,
 button.shorten:not(.disabled):active {	
     background: none;
     background-color: #D8D8D8;
@@ -3185,7 +3185,7 @@ button.shorten:not(.disabled):active {
 .external-member-button .button-text,
 .member-button .button-text,
 .external-follow-button .button-text,
-.follow-button .button-text,
+.qvitter-follow-button .button-text,
 .edit-profile-button .button-text,
 .save-profile-button .button-text,
 .abort-edit-profile-button .button-text,
@@ -3198,7 +3198,7 @@ button.shorten:not(.disabled):active {
 .external-member-button .join-text,
 .member-button .join-text,
 .external-follow-button .follow-text,
-.follow-button .follow-text {
+.qvitter-follow-button .follow-text {
 	padding: 0 10px 0 40px;
 	text-align:right;
     min-width: 0;
@@ -3206,7 +3206,7 @@ button.shorten:not(.disabled):active {
 .external-member-button .join-text i,
 .member-button .join-text i,
 .external-follow-button .follow-text i,
-.follow-button .follow-text i {
+.qvitter-follow-button .follow-text i {
 	background-position: -90px -92px;
     display: block;
     height: 28px;
@@ -3217,7 +3217,7 @@ button.shorten:not(.disabled):active {
 	}	
 .member-button.member,
 .external-follow-button.following,
-.follow-button.following,
+.qvitter-follow-button.following,
 .save-profile-button,
 .crop-and-save-button {
 	color:#fff;
@@ -3228,7 +3228,7 @@ button.shorten:not(.disabled):active {
 	}	
 .member-button.member:hover,
 .external-follow-button.following:hover,
-.follow-button.following:hover {
+.qvitter-follow-button.following:hover {
     background-color: #c43c35;
 	background: -moz-linear-gradient(top, rgba(238,95,91,1) 0%, rgba(196,60,53,1) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,95,91,1)), color-stop(100%,rgba(196,60,53,1)));
@@ -3242,7 +3242,7 @@ button.shorten:not(.disabled):active {
 .external-member-button .join-text,
 .member-button .join-text,
 .external-follow-button .follow-text,
-.follow-button .follow-text,
+.qvitter-follow-button .follow-text,
 .edit-profile-button .edit-profile-text,
 .save-profile-button .edit-profile-text,
 .abort-edit-profile-button .edit-profile-text,
@@ -3253,28 +3253,28 @@ button.shorten:not(.disabled):active {
 	}	
 .member-button.member .join-text,
 .external-follow-button.following .follow-text,
-.follow-button.following .follow-text {
+.qvitter-follow-button.following .follow-text {
 	display:none;
 	height: 28px;
     line-height: 28px;		
 	}
 .member-button.member .ismember-text,
 .external-follow-button.following .following-text,
-.follow-button.following .following-text {
+.qvitter-follow-button.following .following-text {
 	display:block;
 	height: 28px;
     line-height: 28px;	
 	}
 .member-button.member:hover .ismember-text,
 .external-follow-button.following:hover .following-text,
-.follow-button.following:hover .following-text {
+.qvitter-follow-button.following:hover .following-text {
 	display:none;
 	height: 28px;
     line-height: 28px;		
 	}
 .member-button.member:hover .leave-text,
 .external-follow-button.following:hover .unfollow-text,
-.follow-button.following:hover .unfollow-text {
+.qvitter-follow-button.following:hover .unfollow-text {
 	display:block;
 	height: 28px;
     line-height: 28px;		
