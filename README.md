@@ -27,8 +27,7 @@ Setup
 2. Put all files in /plugins/Qvitter
 
 3. Replace your lib/apiauthaction.php file with the one supplied in 
-edited-gnu-social-files/lib/apiauthaction.php. (not needed if you
-are running the latest GNU Social nightly!)
+edited-gnu-social-files/lib/apiauthaction.php.
 
 4. Add `addPlugin('Qvitter');` to your /config.php file.
 
