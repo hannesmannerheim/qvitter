@@ -1618,7 +1618,21 @@ $('body').on('keyup input paste','.queet-box-syntax',function () {
 		});
 	});	
 	
-
+	
+/* · 
+   · 
+   ·   Middle button expands queet box
+   ·   
+   · · · · · · · · · · · · · */ 
+$('body').on('mousedown','.queet-box-syntax',function (e) {	
+	console.log(e.which);
+	if( e.which == 2 ) {
+		e.preventDefault();
+		$(this).trigger('click');
+		}
+	});
+	
+	
 /* · 
    · 
    ·   Shorten URL's
