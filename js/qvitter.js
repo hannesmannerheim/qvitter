@@ -113,7 +113,7 @@ if(!window.registrationsClosed) {
 															  '<div class="signup-input-container"><input placeholder="' + window.sL.registerLocation + '" type="text" autocomplete="off" class="text-input" id="signup-user-location-step2"></div>' +													      													      
 															  '<div class="signup-input-container"><input placeholder="' + window.sL.loginPassword + '" type="password" class="text-input" id="signup-user-password1-step2" value="' + $('#signup-user-password').val() + '"><div class="fieldhelp">>5</div></div>' + 
 															  '<div class="signup-input-container"><input placeholder="' + window.sL.registerRepeatPassword + '" type="password" class="text-input" id="signup-user-password2-step2"></div>' + 													      
-															  '<div id="signup-terms-header">' + window.sL.showTerms + '</div><div id="signup-terms-container"></div>' + 													      
+															  '<div id="signup-terms-header">' + window.sL.showTerms.replace(/{site-title}/g,window.siteTitle) + '</div><div id="signup-terms-container"></div>' + 													      
 															  '<button id="signup-btn-step2" class="signup-btn disabled" type="submit">' + window.sL.signUpButtonText + '</button>' +
 														   '</div>',false);		
 		

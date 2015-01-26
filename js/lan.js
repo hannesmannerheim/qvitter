@@ -894,7 +894,7 @@ window.l.de.FAQ						= 'FAQ';
 window.l.de.inviteAFriend 			= 'Lade deine Freunde ein!';
 window.l.de.goToExternalProfile		= 'Vollständiges Profil anzeigen';
 window.l.de.cropAndSave 			= 'Zuschneiden und Abspeichern';
-window.l.de.showTerms 				= 'Read our Terms of Use';
+window.l.de.showTerms 				= '{site-title} Nutzungsbedingungen';
 
 // english
 window.l.en = new Object();
