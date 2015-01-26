@@ -87,13 +87,16 @@ class ApiAuthAction extends ApiAction
 
 
 		// qvitterfix, accepts regular login session
-        if (common_logged_in()) {
-        	$this->scoped = Profile::current();
-        	$this->auth_user = $this->scoped->getUser();
-        	$this->access = self::READ_WRITE;
-        }
-        
-        else {
+		if (common_logged_in()) {
+			$this->scoped = Profile::current();
+			$this->auth_user = $this->scoped->getUser();
+			if (!$this->auth_user->hasRight(Right::API)) {
+				// TRANS: Authorization exception thrown when a user without API access tries to access the API.
+				throw new AuthorizationException(_('Not allowed to use API.'));
+			}
+			$this->access = self::READ_WRITE;
+			Event::handle('EndSetApiUser', array($this->auth_user));
+		} else {
 			$oauthReq = $this->getOAuthRequest();
 
 			if (!$oauthReq) {
