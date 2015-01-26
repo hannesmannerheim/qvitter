@@ -293,9 +293,6 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 
 	// halt interval that checks for new queets
 	window.clearInterval(checkForNewQueetsInterval);
-	if(typeof checkForNewNotificationsInterval != 'undefined') {
-		window.clearInterval(checkForNewNotificationsInterval);
-		}
 		
 	display_spinner();
 	
@@ -458,14 +455,8 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 
 							// start checking for new queets again
 							window.clearInterval(checkForNewQueetsInterval);
-							if(typeof checkForNewNotificationsInterval != 'undefined') {
-								window.clearInterval(checkForNewNotificationsInterval);
-								}
 							checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
-							if(typeof checkForNewNotificationsInterval != 'undefined') {
-								checkForNewNotificationsInterval=window.setInterval(function(){checkForNewNotifications()},window.timeBetweenPolling);
-								checkForNewNotifications();
-								}														
+
 							remove_spinner();				
 							$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
 							$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
@@ -506,18 +497,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	
 					// start checking for new queets again
 					window.clearInterval(checkForNewQueetsInterval);
-					if(typeof checkForNewNotificationsInterval != 'undefined') {
-						window.clearInterval(checkForNewNotificationsInterval);
-						}
 					checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
-					if(window.currentStream != 'qvitter/statuses/notifications.json' && typeof checkForNewNotificationsInterval != 'undefined') { // don't check for notifications if this is the notifications page
-						checkForNewNotifications();
-						checkForNewNotificationsInterval=window.setInterval(function(){checkForNewNotifications()},window.timeBetweenPolling);
-						}
-					else {
-						$('#unseen-notifications').hide();	
-						document.title = window.siteTitle;											
-						}
 
 					remove_spinner();				
 					$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off

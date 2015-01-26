@@ -358,11 +358,7 @@ function doLogin(streamToSet) {
 		
 		// load history
 		loadHistoryFromLocalStorage();			
-		
-		// start checking for notifications		
-		var checkForNewNotificationsInterval=window.setInterval(function(){checkForNewNotifications()},window.timeBetweenPolling);
-		checkForNewNotifications();		
-		
+				
 		// set stream
 		window.currentStream = ''; // always reload stream on login
 		setNewCurrentStream(streamToSet,function(){		

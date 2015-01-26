@@ -33,6 +33,56 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+/* ·  
+   · 
+   ·  Display unread notifications
+   · 
+   · · · · · · · · · */
+    
+function displayOrHideUnreadNotifications(notifications) { 
+	
+		var data = $.parseJSON(notifications);
+		
+		// if this is notifications page, we use the info from the hidden items in the feed
+		if(window.currentStream == 'qvitter/statuses/notifications.json') { 
+			var new_queets_num = $('#feed-body').find('.stream-item.hidden').length;
+			
+			if(new_queets_num == 0) {
+				document.title = window.siteTitle;
+				$('#unseen-notifications').hide();
+				}
+			else {
+				document.title = window.siteTitle + ' (' + new_queets_num + ')';
+				$('#unseen-notifications').html(new_queets_num);	
+				$('#unseen-notifications').show();												
+				}
+			}		
+		// all other pages use the header info			
+		else if(data === null || typeof data == 'undefined' || data.length == 0) {
+			$('#unseen-notifications').hide();
+			document.title = window.siteTitle;				
+			}
+		else {
+
+			var totNotif = 0;
+			$.each(data,function(k,v){
+				totNotif = totNotif + parseInt(v,10);
+				});
+
+			if(totNotif>0) {
+				$('#unseen-notifications').html(totNotif);
+				document.title = window.siteTitle + ' (' + totNotif + ')'; // update html page title
+				$('#unseen-notifications').show();	
+				}
+			else {
+				$('#unseen-notifications').hide();	
+				document.title = window.siteTitle;
+				}
+			}
+
+	}
+
+
 /* · 
    · 
    ·   Removes HTML special chars recursively from strings in objects

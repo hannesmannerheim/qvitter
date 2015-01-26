@@ -140,8 +140,6 @@ class QvitterPlugin extends Plugin {
 		$m->connect(':nickname/notifications',
 					array('action' => 'qvitter',
 						  'nickname' => Nickname::INPUT_FMT));					
-		$m->connect('api/qvitter/newnotifications.json',
-					array('action' => 'ApiNewNotifications'));						  
         $m->connect('settings/qvitter',
                     array('action' => 'qvittersettings'));
         $m->connect('panel/qvitter',
@@ -775,8 +773,34 @@ class QvitterPlugin extends Plugin {
         return true;
     }               
         
-        
-     
+
+   /**
+     * Add unread notification count to all API responses
+     *
+     * @return boolean hook flag
+     */        
+    public function onEndSetApiUser($user) {
+
+		$user_id = $user->id;
+		$notification = new QvitterNotification();
+
+		$notification->selectAdd();
+		$notification->selectAdd('ntype');
+		$notification->selectAdd('count(id) as count');        
+		$notification->whereAdd("(to_profile_id = '".$user_id."')");
+		$notification->groupBy('ntype');        
+		$notification->whereAdd("(is_seen = '0')");
+		$notification->whereAdd("(notice_id != 'NULL')");	// sometimes notice_id is NULL, those notifications are corrupt and should be discarded	
+		$notification->find();
+	
+		while ($notification->fetch()) {
+			$new_notifications[$notification->ntype] = $notification->count;
+			}
+		
+		header('Qvitter-Notifications: '.json_encode($new_notifications));				
+
+    	return true;
+    	}
         
         
     function onPluginVersion(&$versions)
