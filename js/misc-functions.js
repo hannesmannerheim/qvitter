@@ -643,7 +643,9 @@ function qOrAmp(stream) {
 
 function countCharsInQueetBox(src,trgt,btn) {
 
-	var $src_txt = $('<div/>').append($.trim(src.text().replace(/^\s+|\s+$/g, '')));
+	// count linebreaks by converting them to spaces
+	var $src_txt = $('<div/>').append(src.html().replace(/<br>/g,' '));
+	$src_txt = $('<div/>').append($.trim($src_txt.text().replace(/\n/g,'').replace(/^\s+|\s+$/g, '')));
 	var numchars = ($src_txt.text()).length;
 
 	// check for long urls and disable/enable url shorten button if present
