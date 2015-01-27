@@ -105,7 +105,7 @@ class QvitterAction extends ApiAction
 				<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">		
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/css/qvitter.css')); ?>" />
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
-				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?>/img/favicon.ico?v=4">
+				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?><?php print QvitterPlugin::settings("favicon"); ?>">
 				<?php
 
 				// if qvitter is a webapp and this is a users url we add feeds
