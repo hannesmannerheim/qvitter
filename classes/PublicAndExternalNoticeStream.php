@@ -69,6 +69,7 @@ class RawPublicAndExternalNoticeStream extends NoticeStream
 
 		$notice->whereAdd('is_local !='. Notice::LOCAL_NONPUBLIC);
 		$notice->whereAdd('is_local !='. Notice::GATEWAY);
+		$notice->whereAdd('repeat_of IS NULL');		
 
         Notice::addWhereSinceId($notice, $since_id);
         Notice::addWhereMaxId($notice, $max_id);
