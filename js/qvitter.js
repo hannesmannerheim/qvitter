@@ -1670,7 +1670,6 @@ $('body').on('keyup input paste','.queet-box-syntax',function () {
    ·   
    · · · · · · · · · · · · · */ 
 $('body').on('mousedown','.queet-box-syntax',function (e) {	
-	console.log(e.which);
 	if( e.which == 2 ) {
 		e.preventDefault();
 		$(this).trigger('click');
@@ -1794,17 +1793,28 @@ function collapseQueetBox(qB) {
 	
 // transfer focus and position/selection to background div
 $('body').on('mouseup', 'div.syntax-two', function(e){
-		$(this).removeClass('clicked');
-		var caretPos = getSelectionInElement($(this)[0]);			
-		var thisQueetBox = $(this).siblings('div.queet-box-syntax');
-		thisQueetBox.focus();
-		setSelectionRange(thisQueetBox[0], caretPos[0], caretPos[1]);	        
-		// fixes problem with caret not showing after delete, unfocus and refocus
-		if(thisQueetBox.html() == '<br>') {
-			thisQueetBox.html(' ');
+
+		// don't transfer rightclicks, instead wait for oninput and transfer after
+		// this makes spell checker work
+		if( e.which == 3 ) {
+			$(this)[0].oninput = function() {
+				$(this).siblings('div.queet-box-syntax').html($(this).html());
+				$(this).trigger('mouseup'); // transfer focus
+				}			
+			}
+
+		else {
+			$(this).removeClass('clicked');
+			var caretPos = getSelectionInElement($(this)[0]);			
+			var thisQueetBox = $(this).siblings('div.queet-box-syntax');
+			thisQueetBox.focus();
+			setSelectionRange(thisQueetBox[0], caretPos[0], caretPos[1]);	        
+			// fixes problem with caret not showing after delete, unfocus and refocus
+			if(thisQueetBox.html() == '<br>') {
+				thisQueetBox.html(' ');
+				}
 			}
 	});
-
 
 // strip html from paste
 function stripHtmlFromPaste(e) {
