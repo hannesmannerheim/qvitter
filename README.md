@@ -54,6 +54,7 @@ $config['site']['qvitter']['timebetweenpolling'] = 5000;
 $config['site']['qvitter']['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';	
 $config['site']['qvitter']['urlshortenersignature'] = 'b6afeec983';	
 $config['site']['qvitter']['sitebackground'] = 'img/vagnsmossen.jpg';
+$config['site']['qvitter']['favicon'] = 'img/favicon.ico?v=4';
 $config['thumbnail']['maxsize'] = 3000;
 ````
 

@@ -41,15 +41,14 @@ class QvitterPlugin extends Plugin {
 	public function settings($setting)
 	{
 	
- 		/* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
-         ·        															 ·
-         ·							S E T T I N G S							 ·
-         ·         															 ·
+ 	/* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
+         ·        							     ·
+         ·                          S E T T I N G S                          ·
+         ·         							     ·
          · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */		
 
 		// THESE SETTINGS CAN BE OVERRIDDEN IN CONFIG.PHP
 		// e.g. $config['site']['qvitter']['enabledbydefault'] = 'false';
-
 
 		// ENABLED BY DEFAULT (true/false)
 		$settings['enabledbydefault'] = true;
@@ -57,16 +56,18 @@ class QvitterPlugin extends Plugin {
 		// DEFAULT BACKGROUND COLOR
 		$settings['defaultbackgroundcolor'] = '#f4f4f4';
 
-        // DEFAULT BACKGROUND IMAGE
-        $settings['sitebackground'] = 'img/vagnsmossen.jpg';
+		// DEFAULT BACKGROUND IMAGE
+		$settings['sitebackground'] = 'img/vagnsmossen.jpg';
 
+		// DEFAULT FAVICON
+		$settings['favicon'] = 'img/favicon.ico?v=4';
 
 		// DEFAULT LINK COLOR
 		$settings['defaultlinkcolor'] = '#0084B4';
 
 		// TIME BETWEEN POLLING
 		$settings['timebetweenpolling'] = 5000; // ms
-		
+
 		// URL SHORTENER
 		$settings['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';
 		$settings['urlshortenersignature'] = 'b6afeec983';
