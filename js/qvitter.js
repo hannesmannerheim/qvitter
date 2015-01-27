@@ -832,7 +832,7 @@ $('body').on('click','a', function(e) {
 			setNewCurrentStream('statusnet/tags/timeline/' + $(this).text().toLowerCase().replace('#','') + '.json',function(){},true);				
 			}	
 		// notices
-		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/notice/')>-1) {
+		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/notice/')>-1 && $(this).attr('href').indexOf(window.siteRootDomain + '/notice/delete/')==-1) {
 			e.preventDefault();
 			setNewCurrentStream('statuses/show/' + $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/notice/','') + '.json',function(){},true);				
 			}	
@@ -997,6 +997,48 @@ $('body').on('click','a', function(e) {
 			}							
 		}						
 	});		
+	
+
+/* · 
+   · 
+   ·   Open a queet menu when clicking ellipsis button
+   ·   
+   · · · · · · · · · · · · · */ 
+   
+$('body').on('click','.sm-ellipsis',function(){
+	// hide
+	if($(this).closest('.action-ellipsis-container').children('.dropdown-menu').length > 0) {
+		$(this).closest('.action-ellipsis-container').children('.dropdown-menu').remove();
+		}
+	// show
+	else {
+		$('.action-ellipsis-container').children('.dropdown-menu').remove(); // remove menu from other queets
+		var streamItemUsername = $(this).closest('.stream-item').find('.stream-item-header').find('.screen-name').text();
+		var streamItemUserID = $(this).closest('.stream-item').find('.stream-item-header').find('.name').attr('data-user-id');		
+		var streamItemID = $(this).closest('.stream-item').attr('data-quitter-id');				
+		
+		var blockHtml = '';
+		var deleteHtml = '';		
+		if(streamItemUserID != window.loggedIn.id) {
+			blockHtml = '<li><a class="block-user" href="' + window.siteInstanceURL + 'main/block?profileid=' + streamItemUserID + '">' + window.sL.blockUser.replace('{username}',streamItemUsername) + '</a></li>';
+			}
+		else {
+			deleteHtml = '<li><a class="delete-queet" href="' + window.siteInstanceURL + 'notice/delete/' + streamItemID + '">' + window.sL.deleteVerb + '</a></li>';
+			}
+		
+		
+		$(this).closest('.action-ellipsis-container').append('\
+			<ul class="dropdown-menu">\
+				<li class="dropdown-caret left"><span class="caret-outer"></span><span class="caret-inner"></span></li>\
+				' + blockHtml + '\
+				' + deleteHtml + '\
+			</ul>\
+			');		
+		}
+	});
+
+
+
 
 
 /* · 
@@ -1217,12 +1259,13 @@ $('body').on('click','.queet',function (event) {
 	
 /* · 
    · 
-   ·   Collapse all open conversations on esc or when clicking the margin  
+   ·   Collapse all open conversations and ellipsis menus on esc or when clicking the margin  
    ·   
    · · · · · · · · · · · · · */ 
 
 $('body').click(function(event){	
 	if($(event.target).is('body')) {
+		$('.action-ellipsis-container').children('.dropdown-menu').remove();
 		$.each($('.stream-item.expanded'),function(){
 			expand_queet($(this), false);
 			});
@@ -1231,6 +1274,7 @@ $('body').click(function(event){
 
 $(document).keyup(function(e){
 	if(e.keyCode==27) { // esc
+		$('.action-ellipsis-container').children('.dropdown-menu').remove();
 		$.each($('.stream-item.expanded'),function(){
 			expand_queet($(this), false);
 			});
@@ -1244,8 +1288,9 @@ $(document).keyup(function(e){
    ·   
    · · · · · · · · · · · · · */ 
 
-$('body').on('click','.action-del-container',function(){
-	var this_stream_item = $(this).parent().parent().parent().parent().parent();	
+$('body').on('click','.action-ellipsis-container .delete-queet',function(e){
+	e.preventDefault();	
+	var this_stream_item = $(this).closest('.stream-item');	
 
 	// don't do anything if this is a queet being posted 
 	if(this_stream_item.hasClass('temp-post')) {
@@ -1287,9 +1332,9 @@ $('body').on('click','.action-del-container',function(){
    ·   
    · · · · · · · · · · · · · */ 
 
-$('body').on('click','.action-rt-container',function(){
-	var this_stream_item = $(this).parent().parent().parent().parent().parent();
-	var this_action = $(this); 
+$('body').on('click','.action-rt-container .icon:not(.is-mine)',function(){
+	var this_stream_item = $(this).closest('.stream-item');
+	var this_action = $(this).closest('li'); 
 	
 	// requeet
 	if(!this_action.children('.with-icn').hasClass('done')) {	

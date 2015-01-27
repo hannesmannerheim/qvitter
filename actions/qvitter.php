@@ -214,7 +214,7 @@ class QvitterAction extends ApiAction
 					div.syntax-middle span,
 					#user-body strong,
 					ul.stats,
-					.stream-item:not(.temp-post) ul.queet-actions li .icon:hover:before,
+					.stream-item:not(.temp-post) ul.queet-actions li .icon:not(.is-mine):hover:before,
 					.show-full-conversation,
 					#user-body #user-queets:hover .label,
 					#user-body #user-groups:hover .label, 

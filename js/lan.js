@@ -155,6 +155,8 @@ window.l.ca.inviteAFriend = 'Convida els amics!';
 window.l.ca.goToExternalProfile = 'Mostra el perfil complet';
 window.l.ca.cropAndSave = 'Retalla i desa';
 window.l.ca.showTerms = 'Read our Terms of Use';
+window.l.ca.ellipsisMore = 'More';
+window.l.ca.blockUser = 'Block {username}';
 
 
 // spanish
@@ -276,6 +278,8 @@ window.l.es.inviteAFriend           = '¡Invita a tus amigos!';
 window.l.es.goToExternalProfile		= 'Ir al perfil completo';
 window.l.es.cropAndSave			    = 'Recortar y guardar';
 window.l.es.showTerms 				= 'Read our Terms of Use';
+window.l.es.ellipsisMore = 'More';
+window.l.es.blockUser = 'Block {username}';
 
 // spanish (ahorita)
 window.l.es_ahorita = new Object();
@@ -402,6 +406,8 @@ window.l.pt_br.inviteAFriend = 'Convide seus amigos!';
 window.l.pt_br.goToExternalProfile = 'Ir para o perfil completo';
 window.l.pt_br.cropAndSave = 'Crop and save';
 window.l.pt_br.showTerms = 'Read our Terms of Use';
+window.l.pt_br.ellipsisMore = 'More';
+window.l.pt_br.blockUser = 'Block {username}';
 
 
 // galician
@@ -523,6 +529,8 @@ window.l.gl.inviteAFriend = 'Convida aos teus amigos!';
 window.l.gl.goToExternalProfile = 'Ir ao perfil completo';
 window.l.gl.cropAndSave = 'Recortar e gardar';
 window.l.gl.showTerms = 'Read our Terms of Use';
+window.l.gl.ellipsisMore = 'More';
+window.l.gl.blockUser = 'Block {username}';
 
 // basque
 window.l.eu = new Object();
@@ -643,6 +651,8 @@ window.l.eu.inviteAFriend = 'Zure Lagunak Gonbidatu!';
 window.l.eu.goToExternalProfile	= 'Profil osora joan';
 window.l.eu.cropAndSave = 'Crop and save';
 window.l.eu.showTerms = 'Read our Terms of Use';
+window.l.eu.ellipsisMore = 'More';
+window.l.eu.blockUser = 'Block {username}';
 
 // french
 window.l.fr = new Object();
@@ -763,6 +773,8 @@ window.l.fr.inviteAFriend = 'Invite des ami·e·s !';
 window.l.fr.goToExternalProfile = 'Aller sur le profil complet';
 window.l.fr.cropAndSave = 'Recadrer et enregistrer';
 window.l.fr.showTerms = 'Read our Terms of Use';
+window.l.fr.ellipsisMore = 'More';
+window.l.fr.blockUser = 'Block {username}';
 
 // deutsch
 window.l.de = new Object();
@@ -895,6 +907,8 @@ window.l.de.inviteAFriend 			= 'Lade deine Freunde ein!';
 window.l.de.goToExternalProfile		= 'Vollständiges Profil anzeigen';
 window.l.de.cropAndSave 			= 'Zuschneiden und Abspeichern';
 window.l.de.showTerms 				= '{site-title} Nutzungsbedingungen';
+window.l.de.ellipsisMore = 'More';
+window.l.de.blockUser = 'Block {username}';
 
 // english
 window.l.en = new Object();
@@ -1023,6 +1037,8 @@ window.l.en.inviteAFriend           = 'Invite a friend!';
 window.l.en.goToExternalProfile		= 'Go to full profile';
 window.l.en.cropAndSave 			= 'Crop and save';
 window.l.en.showTerms 				= 'Read our Terms of Use';
+window.l.en.ellipsisMore = 'More';
+window.l.en.blockUser = 'Block {username}';
 
 
 // simplified chinese
@@ -1144,6 +1160,8 @@ window.l.zh_cn.inviteAFriend 		   = '邀请好友';
 window.l.zh_cn.goToExternalProfile	   = '前往完整的个人档案';
 window.l.zh_cn.cropAndSave 			   = 'Crop and save';
 window.l.zh_cn.showTerms 			   = 'Read our Terms of Use';
+window.l.zh_cn.ellipsisMore = 'More';
+window.l.zh_cn.blockUser = 'Block {username}';
 
 
 // traditional chinese
@@ -1265,6 +1283,8 @@ window.l.zh_tw.inviteAFriend 		   = '邀請你的朋友';
 window.l.zh_tw.goToExternalProfile	   = '前往詳細個人檔案';
 window.l.zh_tw.cropAndSave 			   = 'Crop and save';
 window.l.zh_tw.showTerms 			   = 'Read our Terms of Use';
+window.l.zh_tw.ellipsisMore = 'More';
+window.l.zh_tw.blockUser = 'Block {username}';
 
 
 // svenska
@@ -1386,6 +1406,8 @@ window.l.sv.inviteAFriend 			= 'Bjud in dina vänner!';
 window.l.sv.goToExternalProfile		= 'Gå till hela profilen';
 window.l.sv.cropAndSave 			= 'Beskär och spara';
 window.l.sv.showTerms 	 			= 'Läs våra användarvillkor';
+window.l.sv.ellipsisMore = 'Mer';
+window.l.sv.blockUser = 'Blockera {username}';
 
 // suomi
 window.l.fi = new Object();
@@ -1506,6 +1528,8 @@ window.l.fi.inviteAFriend = 'Kutsu kavereitasi!';
 window.l.fi.goToExternalProfile		= 'Siirry täyteen profiiliin';
 window.l.fi.cropAndSave = 'Crop and save';
 window.l.fi.showTerms = 'Read our Terms of Use';
+window.l.fi.ellipsisMore = 'More';
+window.l.fi.blockUser = 'Block {username}';
 
 // farsi/persian
 window.l.fa = new Object();
@@ -1626,6 +1650,8 @@ window.l.fa.inviteAFriend 			= 'دعوت از دوستانتان';
 window.l.fa.goToExternalProfile		= 'رفتن به نمایه کامل';
 window.l.fa.cropAndSave 			= 'Crop and save';
 window.l.fa.showTerms 			    = 'Read our Terms of Use';
+window.l.fa.ellipsisMore = 'More';
+window.l.fa.blockUser = 'Block {username}';
 
 // arabic
 window.l.ar = new Object();
@@ -1746,6 +1772,8 @@ window.l.ar.inviteAFriend 			= 'دعوة أصدقائك!';
 window.l.ar.goToExternalProfile		= 'اذهب إلى الملف الشخصي الكامل';
 window.l.ar.cropAndSave 			= 'قُص و احفظ.';
 window.l.ar.showTerms 			    = 'Read our Terms of Use';
+window.l.ar.ellipsisMore = 'More';
+window.l.ar.blockUser = 'Block {username}';
 
 // esperanto
 window.l.eo = new Object();
@@ -1875,6 +1903,8 @@ window.l.eo.inviteAFriend           = 'Inviti viajn amikojn!';
 window.l.eo.goToExternalProfile		= 'iru al plena profilon';
 window.l.eo.cropAndSave 			= 'Tondu kaj savu';
 window.l.eo.showTerms 			    = 'Read our Terms of Use';
+window.l.eo.ellipsisMore = 'More';
+window.l.eo.blockUser = 'Block {username}';
 
 // italian
 window.l.it = new Object();
@@ -2004,6 +2034,8 @@ window.l.it.inviteAFriend = 'Invita i tuoi amici!';
 window.l.it.goToExternalProfile		= 'Vai al profilo completo';
 window.l.it.cropAndSave = 'ritaglia e salva';
 window.l.it.showTerms = 'Read our Terms of Use';
+window.l.it.ellipsisMore = 'More';
+window.l.it.blockUser = 'Block {username}';
 
 // Norwegian
 window.l.no = new Object();
@@ -2124,6 +2156,8 @@ window.l.no.inviteAFriend = 'Inviter venner';
 window.l.no.goToExternalProfile	= 'Gå til fullstendig profil';
 window.l.no.cropAndSave = 'Beskjær og lagre';
 window.l.no.showTerms = 'Read our Terms of Use';
+window.l.no.ellipsisMore = 'More';
+window.l.no.blockUser = 'Block {username}';
 
 // asturian
 window.l.ast = new Object();
@@ -2244,6 +2278,8 @@ window.l.ast.inviteAFriend           = '¡Convida a los collacios!';
 window.l.ast.goToExternalProfile	 = 'Dir al perfil completu';
 window.l.ast.cropAndSave		     = 'Recortar y guardar';
 window.l.ast.showTerms 				 = 'Read our Terms of Use';
+window.l.ast.ellipsisMore = 'More';
+window.l.ast.blockUser = 'Block {username}';
 
 
 

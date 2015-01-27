@@ -1188,18 +1188,21 @@ function showConversation(qid) {
 						if(obj.in_reply_to_screen_name != null) {
 							in_reply_to_screen_name = obj.in_reply_to_screen_name;
 							}
+
+						// is this mine?
+						var isThisMine = 'not-mine';	
+						if(obj.user.id == window.myUserID) {
+							var isThisMine = 'is-mine';
+							}
 						
 						// requeet or delete html
 						var requeetedClass = '';
-						if(obj.user.id == window.myUserID) {
-							var requeetHtml = '<li class="action-del-container"><a class="with-icn"><span class="icon sm-trash" title="' + window.sL.deleteVerb + '"></span></a></li>';
-							}
-						else if(obj.repeated) {
+						if(obj.repeated) {
 							var requeetHtml = '<li class="action-rt-container"><a class="with-icn done"><span class="icon sm-rt" title="' + window.sL.requeetedVerb + '"></span></a></li>';
 							requeetedClass = 'requeeted';
 							}
 						else {
-							var requeetHtml = '<li class="action-rt-container"><a class="with-icn"><span class="icon sm-rt" title="' + window.sL.requeetVerb + '"></span></a></li>';
+							var requeetHtml = '<li class="action-rt-container"><a class="with-icn"><span class="icon sm-rt ' + isThisMine + '" title="' + window.sL.requeetVerb + '"></span></a></li>';
 							}
 						// favorite html
 						var favoritedClass = '';
@@ -1214,7 +1217,7 @@ function showConversation(qid) {
 						// actions only for logged in users
 						var queetActions = '';
 						if(typeof window.loggedIn.screen_name != 'undefined') {			
-							queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li>' +  requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul>';
+							queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li>' +  requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li><li class="action-ellipsis-container"><a class="with-icn"><span class="icon sm-ellipsis" title="' + window.sL.ellipsisMore + '"></span></a></li></ul>';
 							}
 
 
@@ -1753,17 +1756,20 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 		in_reply_to_screen_name = obj.in_reply_to_screen_name;
 		}										
 
+	// is this mine?
+	var isThisMine = 'not-mine';	
+	if(obj.user.id == window.myUserID) {
+		var isThisMine = 'is-mine';
+		}
+	
 	// requeet html
 	var requeetedClass = '';
-	if(obj.user.id == window.myUserID) {
-		var requeetHtml = '<li class="action-del-container"><a class="with-icn"><span class="icon sm-trash" title="' + window.sL.deleteVerb + '"></span></a></li></i></li>';
-		}
-	else if(obj.repeated) {
+	if(obj.repeated) {
 		var requeetHtml = '<li class="action-rt-container"><a class="with-icn done"><span class="icon sm-rt" title="' + window.sL.requeetedVerb + '"></span></a></li>';
 		var requeetedClass = 'requeeted';
 		}
 	else {
-		var requeetHtml = '<li class="action-rt-container"><a class="with-icn"><span class="icon sm-rt" title="' + window.sL.requeetVerb + '"></span></a></li>';
+		var requeetHtml = '<li class="action-rt-container"><a class="with-icn"><span class="icon sm-rt ' + isThisMine + '" title="' + window.sL.requeetVerb + '"></span></a></li>';
 		}
 	// favorite html
 	var favoritedClass = '';
@@ -1779,7 +1785,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 	// actions only for logged in users
 	var queetActions = '';
 	if(typeof window.loggedIn.screen_name != 'undefined') {			
-		queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li>' + requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li></ul>';
+		queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li>' + requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li><li class="action-ellipsis-container"><a class="with-icn"><span class="icon sm-ellipsis" title="' + window.sL.ellipsisMore + '"></span></a></li></ul>';
 		}
 		
 	// reply-to html					

@@ -315,7 +315,7 @@ button.icon.nav-search span {
     }
 .quitter-settings.dropdown-menu.dropped {
 	display:block;
-	}	
+	}
 .dropdown-caret {
     float: left;
     height: 7px;
@@ -408,6 +408,24 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     color: #FFFFFF;
     text-decoration: none;	
 	}
+	
+/* dropdown menu from ellipsis button */
+.action-ellipsis-container {
+	position:relative;
+	}
+.action-ellipsis-container .dropdown-menu {
+    display: block;
+    float: right;
+    left: -6px;
+    top: 24px;
+    right:auto;	
+	}
+.action-ellipsis-container .dropdown-menu,
+.action-ellipsis-container .dropdown-menu li:not(.dropdown-caret),
+.action-ellipsis-container .dropdown-menu a {
+	width:auto;
+	}		
+	
 
 #invite-link {
 	font-weight:bold;
@@ -1902,7 +1920,7 @@ ul.queet-actions a {
 	color:#ddd;
 	}
 
-.queet:hover ul.queet-actions a {
+.queet:hover ul.queet-actions > li > a {
 	color:#999;
 	}
 .stream-item.expanded > .queet ul.queet-actions {
@@ -1928,7 +1946,7 @@ ul.queet-actions li .icon {
 ul.queet-actions li.action-rt-container .with-icn.done .icon:before {
 	color: #609928;
 	}
-ul.queet-actions li.action-rt-container .with-icn .icon:hover:before {
+ul.queet-actions li.action-rt-container .with-icn .icon:not(.is-mine):hover:before {
 	color: #609928;
 	}	
 ul.queet-actions li.action-fav-container .with-icn.done .icon:before {
@@ -1937,7 +1955,7 @@ ul.queet-actions li.action-fav-container .with-icn.done .icon:before {
 .stream-item:not(.temp-post) ul.queet-actions li.action-fav-container .with-icn .icon:hover:before {
 	color: #ffac33;		
 	}			
-.stream-item:not(.temp-post) ul.queet-actions li.action-rt-container .with-icn .icon:hover:before {
+.stream-item:not(.temp-post) ul.queet-actions li.action-rt-container .with-icn .icon:not(.is-mine):hover:before {
 	color: #609928;		
 	}			
 
@@ -2005,6 +2023,11 @@ ul.queet-actions li .icon.sm-ellipsis:before {
 	font-size: 22px;
     line-height: 28px;	
     }	            
+ul.queet-actions li .icon.is-mine:before {
+	opacity:0.4;
+	cursor:default;
+	}
+    
 
 .queet.rtl .queet-content {
 	margin-left:0;
