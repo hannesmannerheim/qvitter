@@ -764,17 +764,17 @@ window.l.fr.moreSettings = 'Plus de paramètres';
 window.l.fr.otherServers = 'Sinon, vous pouvez créer un compte sur un autre serveur du réseau GNU social. <a href="http://federation.skilledtests.com/select_your_server.html">Comparaison</a>';
 window.l.fr.editMyProfile = 'Éditer le profil';
 window.l.fr.notifications = 'Notifications';
-window.l.fr.xFavedYourQueet = 'a ajouté votre avis à ses favoris ';
-window.l.fr.xRepeatedYourQueet = 'vous a répété ';
+window.l.fr.xFavedYourQueet = 'a ajouté votre avis à ses favoris';
+window.l.fr.xRepeatedYourQueet = 'vous a répété';
 window.l.fr.xStartedFollowingYou = 'a commencé à vous suivre';
 window.l.fr.followsYou = 'vous suit';
 window.l.fr.FAQ = 'FAQ';
 window.l.fr.inviteAFriend = 'Invite des ami·e·s !';
 window.l.fr.goToExternalProfile = 'Aller sur le profil complet';
 window.l.fr.cropAndSave = 'Recadrer et enregistrer';
-window.l.fr.showTerms = 'Read our Terms of Use';
-window.l.fr.ellipsisMore = 'More';
-window.l.fr.blockUser = 'Block {username}';
+window.l.fr.showTerms = 'Consulter les conditions d\'utilisation';
+window.l.fr.ellipsisMore = 'Plus';
+window.l.fr.blockUser = 'Bloquer {username}';
 
 // deutsch
 window.l.de = new Object();
