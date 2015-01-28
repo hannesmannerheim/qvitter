@@ -794,6 +794,7 @@ class QvitterPlugin extends Plugin {
 		$notification->whereAdd("(notice_id != 'NULL')");	// sometimes notice_id is NULL, those notifications are corrupt and should be discarded	
 		$notification->find();
 	
+		$new_notifications = array();
 		while ($notification->fetch()) {
 			$new_notifications[$notification->ntype] = $notification->count;
 			}
