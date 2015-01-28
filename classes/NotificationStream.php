@@ -41,8 +41,13 @@ class NotificationStream
         $notification->limit($offset, $limit);
         $notification->orderBy('qvitternotification.created DESC');
 
-        QvitterNotification::addWhereSinceId($notification, $since_id);
-        QvitterNotification::addWhereMaxId($notification, $max_id);        
+		if($since_id) {
+	        $notification->whereAdd(sprintf('qvitternotification.id > %d', $notification->escape($since_id)));        			
+			}
+        
+		if($max_id) {
+	        $notification->whereAdd(sprintf('qvitternotification.id <= %d', $notification->escape($max_id)));        			
+			}
 
         if (!$notification->find()) {
             return array();
