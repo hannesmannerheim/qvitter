@@ -222,7 +222,7 @@ class QvitterAction extends ApiAction
 					ul.stats a strong,
 					.queet-box-extras button,
 					#openid-login:hover:after {
-						color:#0084B4;/*COLOREND*/
+						color:<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>;/*COLOREND*/
 						}			
 					#unseen-notifications,
 					.stream-item.notification .not-seen,
@@ -240,7 +240,7 @@ class QvitterAction extends ApiAction
 					.crop-and-save-button,
 					.topbar .global-nav.show-logo:before,
 					.topbar .global-nav.pulse-logo:before {
-						background-color:#0084B4;/*BACKGROUNDCOLOREND*/
+						background-color:<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*BACKGROUNDCOLOREND*/
 						}	
 					.queet-box-syntax[contenteditable="true"]:focus {
 						border-color:#999999;/*BORDERCOLOREND*/						
