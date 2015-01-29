@@ -240,7 +240,7 @@ class QvitterAction extends ApiAction
 					.crop-and-save-button,
 					.topbar .global-nav.show-logo:before,
 					.topbar .global-nav.pulse-logo:before {
-						background-color:<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*BACKGROUNDCOLOREND*/
+						background-color:<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>;/*BACKGROUNDCOLOREND*/
 						}	
 					.queet-box-syntax[contenteditable="true"]:focus {
 						border-color:#999999;/*BORDERCOLOREND*/						
