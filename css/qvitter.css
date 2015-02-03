@@ -1858,7 +1858,10 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	}
 .stream-item.user .queet-text {
 	cursor: auto;
-	}		
+	}
+.stream-item.expanded .queet-text {
+	max-height:none;
+	}			
 	
 .queet-text img {
 	max-width:100%;
