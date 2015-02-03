@@ -176,7 +176,7 @@ window.l.es.queetVerb               = 'Quittear';
 window.l.es.queetsNounPlural        = 'Queets';
 window.l.es.logout                  = 'Cerrar sesión';
 window.l.es.languageSelected        = 'Idioma:';
-window.l.es.viewMyProfilePage       = 'Ver mi página de perfil';
+window.l.es.viewMyProfilePage       = 'Ver mi perfil';
 window.l.es.expand                  = 'Abrir';
 window.l.es.collapse                = 'Reducir';
 window.l.es.details                 = 'Detalles';
@@ -277,9 +277,9 @@ window.l.es.FAQ					    = 'Preguntas Frecuentes';
 window.l.es.inviteAFriend           = '¡Invita a tus amigos!';
 window.l.es.goToExternalProfile		= 'Ir al perfil completo';
 window.l.es.cropAndSave			    = 'Recortar y guardar';
-window.l.es.showTerms 				= 'Read our Terms of Use';
-window.l.es.ellipsisMore = 'More';
-window.l.es.blockUser = 'Block {username}';
+window.l.es.showTerms 				= 'Leer los términos de uso';
+window.l.es.ellipsisMore 			= 'Más';
+window.l.es.blockUser 				= 'Bloquear {username}';
 
 // spanish (ahorita)
 window.l.es_ahorita = new Object();
