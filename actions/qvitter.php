@@ -74,6 +74,11 @@ class QvitterAction extends ApiAction
 		if(common_config('site','closed') == 1 || common_config('site','inviteonly') == 1) {
 			$registrationsclosed = true;
 			}
+
+		// check if the client's ip address is blocked for registration
+		if(is_array(QvitterPlugin::settings("blocked_ips"))) {
+			$client_ip_is_blocked = in_array($_SERVER['REMOTE_ADDR'], QvitterPlugin::settings("blocked_ips"));			
+			}	
 			
 		$sitetitle = common_config('site','name');
 		$siterootdomain = common_config('site','server');
@@ -81,6 +86,8 @@ class QvitterAction extends ApiAction
 		$apiroot = common_path('api/', StatusNet::isHTTPS());
 		$attachmentroot = common_path('attachment/', StatusNet::isHTTPS());
 		$instanceurl = common_path('', StatusNet::isHTTPS());
+		
+		
 
 		common_set_returnto(''); // forget this
 
@@ -191,7 +198,7 @@ class QvitterAction extends ApiAction
 					window.siteEmail = '<?php print common_config('site', 'email'); ?>';										
 					window.siteLicenseTitle = '<?php print common_config('license', 'title'); ?>';
 					window.siteLicenseURL = '<?php print common_config('license', 'url'); ?>';
-					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;					
+					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;	
 					
 				</script>
 				<style>
@@ -401,7 +408,7 @@ class QvitterAction extends ApiAction
 							</form>
 						</div>
 						<?php
-						if($registrationsclosed === false) {
+						if($registrationsclosed === false && $client_ip_is_blocked === false) {
 						?><div class="front-signup">
 							<h2></h2>
 							<div class="signup-input-container"><input placeholder="" type="text" name="user[name]" autocomplete="off" class="text-input" id="signup-user-name"></div>
