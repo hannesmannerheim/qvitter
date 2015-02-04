@@ -142,8 +142,8 @@ class QvitterAction extends ApiAction
 						$group_id = $group_id_or_name;				
 						}
 					else {
-						$group = User_group::getKV('nickname', $group_id_or_name);		
-						$group_id = $group->id;				
+						$group = Local_group::getKV('nickname', $group_id_or_name);
+						$group_id = $group->group_id;
 						$group_name = $group_id_or_name;								
 						}
 					if(preg_match("/^[a-zA-Z0-9]+$/", $group_id_or_name) == 1) {
