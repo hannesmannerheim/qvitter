@@ -65,6 +65,9 @@ class QvitterPlugin extends Plugin {
 		// DEFAULT LINK COLOR
 		$settings['defaultlinkcolor'] = '#0084B4';
 
+		// ENABLE WELCOME TEXT
+		$settings['enablewelcometext'] = true;
+
 		// TIME BETWEEN POLLING
 		$settings['timebetweenpolling'] = 5000; // ms
 

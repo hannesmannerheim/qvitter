@@ -55,6 +55,7 @@ $config['site']['qvitter']['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.ph
 $config['site']['qvitter']['urlshortenersignature'] = 'b6afeec983';	
 $config['site']['qvitter']['sitebackground'] = 'img/vagnsmossen.jpg';
 $config['site']['qvitter']['favicon'] = 'img/favicon.ico?v=4';
+$config['site']['qvitter']['enablewelcometext'] = true;
 $config['thumbnail']['maxsize'] = 3000;
 ````
 

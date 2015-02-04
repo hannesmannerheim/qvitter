@@ -2326,7 +2326,9 @@ $.each(window.sL,function(k,v){
 
 // set some static string
 $('.front-welcome-text h1').html(window.sL.welcomeHeading);
-$('.front-welcome-text p').html(window.sL.welcomeText);
+if (window.enableWelcomeText) {
+    $('.front-welcome-text p').html(window.sL.welcomeText);
+}
 $('#nickname').attr('placeholder',window.sL.loginUsername);
 $('#password').attr('placeholder',window.sL.loginPassword);
 $('button#submit-login').html(window.sL.loginSignIn);
