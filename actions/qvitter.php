@@ -74,6 +74,11 @@ class QvitterAction extends ApiAction
 		if(common_config('site','closed') == 1 || common_config('site','inviteonly') == 1) {
 			$registrationsclosed = true;
 			}
+
+		// check if the client's ip address is blocked for registration
+		if(is_array(QvitterPlugin::settings("blocked_ips"))) {
+			$client_ip_is_blocked = in_array($_SERVER['REMOTE_ADDR'], QvitterPlugin::settings("blocked_ips"));			
+			}	
 			
 		$sitetitle = common_config('site','name');
 		$siterootdomain = common_config('site','server');
@@ -81,6 +86,8 @@ class QvitterAction extends ApiAction
 		$apiroot = common_path('api/', StatusNet::isHTTPS());
 		$attachmentroot = common_path('attachment/', StatusNet::isHTTPS());
 		$instanceurl = common_path('', StatusNet::isHTTPS());
+		
+		
 
 		common_set_returnto(''); // forget this
 
@@ -135,16 +142,19 @@ class QvitterAction extends ApiAction
 						$group_id = $group_id_or_name;				
 						}
 					else {
-						$group = User_group::getKV('nickname', $group_id_or_name);		
-						$group_id = $group->id;				
+						$group = Local_group::getKV('nickname', $group_id_or_name);
+						$group_id = $group->group_id;
 						$group_name = $group_id_or_name;								
 						}
 					if(preg_match("/^[a-zA-Z0-9]+$/", $group_id_or_name) == 1) {
-						print '<link rel="alternate" href="'.$apiroot.'statusnet/groups/timeline/'.$group_id.'.as" type="application/stream+json" title="Notice feed for '.$group_id_or_name.' group (Activity Streams JSON)"/>'."\n";
-						print '		<link rel="alternate" href="'.$instanceurl.'group/'.$group_name.'/rss" type="application/rdf+xml" title="Notice feed for '.$group_id_or_name.' group (RSS 1.0)"/>'."\n";
-						print '		<link rel="alternate" href="'.$instanceurl.'api/statusnet/groups/timeline/'.$group_id.'.rss" type="application/rss+xml" title="Notice feed for '.$group_id_or_name.' group (RSS 2.0)"/>'."\n";
-						print '		<link rel="alternate" href="'.$instanceurl.'api/statusnet/groups/timeline/'.$group_id.'.atom" type="application/atom+xml" title="Notice feed for '.$group_id_or_name.' group (Atom)"/>'."\n";
-						print '		<link rel="meta" href="'.$instanceurl.'group/'.$group_name.'/foaf" type="application/rdf+xml" title="FOAF for '.$group_id_or_name.' group"/>'."\n";						
+                ?>
+
+				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('ApiTimelineGroup', array('id'=>$group_id, 'format'=>'as'))); ?>" type="application/stream+json" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (Activity Streams JSON)" />
+				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('grouprss', array('nickname'=>$group_name))); ?>" type="application/rdf+xml" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (RSS 1.0)" />
+				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('ApiTimelineGroup', array('id'=>$group_id, 'format'=>'rss'))); ?>" type="application/rss+xml" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (RSS 2.0)" />
+				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('ApiTimelineGroup', array('id'=>$group_id, 'format'=>'atom'))); ?>" type="application/atom+xml" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (Atom)" />
+				<link rel="meta" href="<?php echo htmlspecialchars(common_local_url('foafgroup', array('nickname'=>$group_name))); ?>" type="application/rdf+xml" title="FOAF for '<?php echo htmlspecialchars($group_name); ?>' group" />
+                <?php
 						}
 					}			
 				
@@ -192,7 +202,7 @@ class QvitterAction extends ApiAction
 					window.siteEmail = '<?php print common_config('site', 'email'); ?>';										
 					window.siteLicenseTitle = '<?php print common_config('license', 'title'); ?>';
 					window.siteLicenseURL = '<?php print common_config('license', 'url'); ?>';
-					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;					
+					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;	
 					
 				</script>
 				<style>
@@ -402,7 +412,7 @@ class QvitterAction extends ApiAction
 							</form>
 						</div>
 						<?php
-						if($registrationsclosed === false) {
+						if($registrationsclosed === false && $client_ip_is_blocked === false) {
 						?><div class="front-signup">
 							<h2></h2>
 							<div class="signup-input-container"><input placeholder="" type="text" name="user[name]" autocomplete="off" class="text-input" id="signup-user-name"></div>

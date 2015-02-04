@@ -77,6 +77,9 @@ class QvitterPlugin extends Plugin {
 		
 		// CUSTOM TERMS OF USE
 		$settings['customtermsofuse'] = false;
+		
+		// IP ADDRESSES BLOCKED FROM REGISTRATION
+		$settings['blocked_ips'] = array();
 
 
 		 /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
@@ -775,7 +778,26 @@ class QvitterPlugin extends Plugin {
                                 'top_nav_doc_faq');
     			
         return true;
-    }               
+    }      
+
+
+   /**
+     * No registration for blocked ips
+     *
+     * @return boolean hook flag
+     */
+    public function onStartUserRegister($profile)
+    {
+       	
+		if(is_array(self::settings("blocked_ips"))) {
+			if(in_array($_SERVER['REMOTE_ADDR'], self::settings("blocked_ips"))) {
+				return false;
+				}
+			}	
+			
+        return true;
+    }        
+             
         
 
    /**

@@ -1853,10 +1853,15 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	list-style-position: outside;
 	list-style-type: none;
 	word-wrap: break-word; 
+	max-height:400px;
+	overflow-y:auto;
 	}
 .stream-item.user .queet-text {
 	cursor: auto;
-	}		
+	}
+.stream-item.expanded .queet-text {
+	max-height:none;
+	}			
 	
 .queet-text img {
 	max-width:100%;

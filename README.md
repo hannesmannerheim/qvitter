@@ -27,7 +27,8 @@ Setup
 2. Put all files in /plugins/Qvitter
 
 3. Replace your lib/apiauthaction.php file with the one supplied in 
-edited-gnu-social-files/lib/apiauthaction.php.
+edited-gnu-social-files/lib/apiauthaction.php. (this might not be needed if you are
+running the latest GNU social nightly)
 
 4. Add `addPlugin('Qvitter');` to your /config.php file.
 
@@ -56,6 +57,7 @@ $config['site']['qvitter']['urlshortenersignature'] = 'b6afeec983';
 $config['site']['qvitter']['sitebackground'] = 'img/vagnsmossen.jpg';
 $config['site']['qvitter']['favicon'] = 'img/favicon.ico?v=4';
 $config['site']['qvitter']['enablewelcometext'] = true;
+$config['site']['qvitter']['blocked_ips'] = array();
 $config['thumbnail']['maxsize'] = 3000;
 ````
 
