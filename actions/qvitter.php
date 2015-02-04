@@ -142,16 +142,19 @@ class QvitterAction extends ApiAction
 						$group_id = $group_id_or_name;				
 						}
 					else {
-						$group = User_group::getKV('nickname', $group_id_or_name);		
-						$group_id = $group->id;				
+						$group = Local_group::getKV('nickname', $group_id_or_name);
+						$group_id = $group->group_id;
 						$group_name = $group_id_or_name;								
 						}
 					if(preg_match("/^[a-zA-Z0-9]+$/", $group_id_or_name) == 1) {
-						print '<link rel="alternate" href="'.$apiroot.'statusnet/groups/timeline/'.$group_id.'.as" type="application/stream+json" title="Notice feed for '.$group_id_or_name.' group (Activity Streams JSON)"/>'."\n";
-						print '		<link rel="alternate" href="'.$instanceurl.'group/'.$group_name.'/rss" type="application/rdf+xml" title="Notice feed for '.$group_id_or_name.' group (RSS 1.0)"/>'."\n";
-						print '		<link rel="alternate" href="'.$instanceurl.'api/statusnet/groups/timeline/'.$group_id.'.rss" type="application/rss+xml" title="Notice feed for '.$group_id_or_name.' group (RSS 2.0)"/>'."\n";
-						print '		<link rel="alternate" href="'.$instanceurl.'api/statusnet/groups/timeline/'.$group_id.'.atom" type="application/atom+xml" title="Notice feed for '.$group_id_or_name.' group (Atom)"/>'."\n";
-						print '		<link rel="meta" href="'.$instanceurl.'group/'.$group_name.'/foaf" type="application/rdf+xml" title="FOAF for '.$group_id_or_name.' group"/>'."\n";						
+                ?>
+
+				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('ApiTimelineGroup', array('id'=>$group_id, 'format'=>'as'))); ?>" type="application/stream+json" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (Activity Streams JSON)" />
+				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('grouprss', array('nickname'=>$group_name))); ?>" type="application/rdf+xml" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (RSS 1.0)" />
+				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('ApiTimelineGroup', array('id'=>$group_id, 'format'=>'rss'))); ?>" type="application/rss+xml" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (RSS 2.0)" />
+				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('ApiTimelineGroup', array('id'=>$group_id, 'format'=>'atom'))); ?>" type="application/atom+xml" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (Atom)" />
+				<link rel="meta" href="<?php echo htmlspecialchars(common_local_url('foafgroup', array('nickname'=>$group_name))); ?>" type="application/rdf+xml" title="FOAF for '<?php echo htmlspecialchars($group_name); ?>' group" />
+                <?php
 						}
 					}			
 				
