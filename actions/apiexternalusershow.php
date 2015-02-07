@@ -52,14 +52,7 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
 		if(strstr($profileurl, '/user/')) {
 
 			$redrected_profileurl = $this->getRedirectUrl($profileurl);
-
-			// if there's multiple redirects the _first_ redirect is most likely to be the real profileurl
-			if(is_array($redrected_profileurl)) {
-				$profileurl = $redrected_profileurl[0];
-			}
-
-			// if only one redirect
-			elseif($redrected_profileurl !== false) {
+            if (!empty($redrected_profileurl)) {
 				$profileurl = $redrected_profileurl;
 			}
 			
@@ -106,8 +99,10 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
 		
 		// get profile from external instance
 		$apicall = $instanceurl.'/api/users/show.json?id='.$username; 	
-		stream_context_set_default(array('http' => array('method' => 'GET')));
-        $this->profile->external = json_decode(file_get_contents($apicall));        
+        $client = new HTTPClient();
+        $response = $client->get($apicall);
+        // json_decode returns null if it fails to decode
+        $this->profile->external = $response->isOk() ? json_decode($response->getBody()) : null;
 
         return true;
     }
@@ -148,18 +143,12 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
     /**
      * Get redirect(s) for an url
      *
+     * @return mixed  Location URL if redirect, null if no Location header (through HTTP_Request2_Response getHeader())
      */
 	function getRedirectUrl ($url) {
-		stream_context_set_default(array(
-			'http' => array(
-				'method' => 'HEAD'
-			)
-		));
-		$headers = get_headers($url, 1);
-		if ($headers !== false && isset($headers['Location'])) {
-			return $headers['Location'];
-		}
-		return false;
+        $client = new HTTPClient();
+        $response = $client->head($url);
+        return $response->getHeader('Location');    // null if it isn't set
 	}
 
 
