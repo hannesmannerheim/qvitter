@@ -132,7 +132,7 @@ class QvitterAction extends ApiAction
 							print '				<link href="'.$instanceurl.$nickname.'/microsummary" rel="microsummary">'."\n";		    
 							
 							// maybe openid
-							if(!common_config('plugins','disable-OpenID')) {							
+							if (array_key_exists('OpenID', StatusNet::getActivePlugins())) {
 								print '				<link rel="openid2.provider" href="'.common_local_url('openidserver').'"/>'."\n";
 								print '				<link rel="openid2.local_id" href="'.$user->getProfile()->profileurl.'"/>'."\n";
 								print '				<link rel="openid2.server" href="'.common_local_url('openidserver').'"/>'."\n";
