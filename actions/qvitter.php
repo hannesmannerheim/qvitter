@@ -125,11 +125,19 @@ class QvitterAction extends ApiAction
 							}        
 						else {
 							print '<link title="Notice feed for '.$nickname.' (Activity Streams JSON)" type="application/stream+json" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.as" rel="alternate">'."\n";
-							print '		<link title="Notice feed for '.$nickname.' (RSS 1.0)" type="application/rdf+xml" href="'.$instanceurl.$nickname.'/rss" rel="alternate">'."\n";
-							print '		<link title="Notice feed for '.$nickname.' (RSS 2.0)" type="application/rss+xml" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.rss" rel="alternate">'."\n";
-							print '		<link title="Notice feed for '.$nickname.' (Atom)" type="application/atom+xml" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.atom" rel="alternate">'."\n";
-							print '		<link title="FOAF for '.$nickname.'" type="application/rdf+xml" href="'.$instanceurl.$nickname.'/foaf" rel="meta">'."\n";
-							print '		<link href="'.$instanceurl.$nickname.'/microsummary" rel="microsummary">'."\n";		    
+							print '				<link title="Notice feed for '.$nickname.' (RSS 1.0)" type="application/rdf+xml" href="'.$instanceurl.$nickname.'/rss" rel="alternate">'."\n";
+							print '				<link title="Notice feed for '.$nickname.' (RSS 2.0)" type="application/rss+xml" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.rss" rel="alternate">'."\n";
+							print '				<link title="Notice feed for '.$nickname.' (Atom)" type="application/atom+xml" href="'.$instanceurl.'api/statuses/user_timeline/'.$user->id.'.atom" rel="alternate">'."\n";
+							print '				<link title="FOAF for '.$nickname.'" type="application/rdf+xml" href="'.$instanceurl.$nickname.'/foaf" rel="meta">'."\n";
+							print '				<link href="'.$instanceurl.$nickname.'/microsummary" rel="microsummary">'."\n";		    
+							
+							// maybe openid
+							if(!common_config('plugins','disable-OpenID')) {							
+								print '				<link rel="openid2.provider" href="'.common_local_url('openidserver').'"/>'."\n";
+								print '				<link rel="openid2.local_id" href="'.$user->getProfile()->profileurl.'"/>'."\n";
+								print '				<link rel="openid2.server" href="'.common_local_url('openidserver').'"/>'."\n";
+								print '				<link rel="openid2.delegate" href="'.$user->getProfile()->profileurl.'"/>'."\n";																											
+								}														
 							}		
 						}
 					}
