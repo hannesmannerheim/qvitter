@@ -1,8 +1,8 @@
-<p id="top">Denne guiden til {instance-name} er først og fremst til nye brukere. Den er laget med hensikt i å komme igang, uten å gå i for mange detaljer. For spesifikke tekniske spørsmål (eks. hvordan installere en GNU Social-instns), benytt gruppen <a href="https://status.vinilox.eu/group/gnusocial">!gnusocial</a> and <a href="http://sn.postblue.info/group/sn">!sn</a>, eller på {instance-name} offentlige tidslinje. Du kan også finne teknisk informasjon på <a href="http://federation.skilledtests.com/">http://federation.skilledtests.com/</a></p>
-<p>Innholdsfortegnelsen følger frekvensen av spørsmål som har blitt spurt av nye brukere.</p>
+<p id="top">Denne guiden til {instance-name} er først og fremst til nye brukere. Den er laget med hensikt i å komme igang, uten å gå i for mange detaljer. For spesifikke tekniske spørsmål (eks. hvordan installere en GNU Social-instans), benytt gruppen <a href="https://status.vinilox.eu/group/gnusocial">!gnusocial</a> and <a href="http://sn.postblue.info/group/sn">!sn</a>, eller på {instance-name} offentlige tidslinje. Du kan også finne teknisk informasjon på <a href="http://federation.skilledtests.com/">http://federation.skilledtests.com/</a></p>
+<p>Innholdsfortegnelsen følger frekvensen av spørsmål som er ofte spurt av nye brukere.</p>
 <p>Lenker til andre GNU Social-/StatusNet-FAQs & -wikier:<br>
 <a href="https://wiki.loadaverage.org/gnusocial/begin_to_be_social">https://wiki.loadaverage.org/gnusocial/begin_to_be_social</a><br>
-<a href="http://wiki.gnusocial.de">http://wiki.gnusocial.de</a> (skrevet på Tysk)</p>
+<a href="http://wiki.gnusocial.de">http://wiki.gnusocial.de</a> (Tysk)</p>
 
 <h2 id="faq-table-of-contents">Innhold</h2>
 <ul>
@@ -20,7 +20,7 @@
 	<li><a href="#faq-12">Hvordan koble din {instance-name} konto til din Twitter konto</a></li>
 	<li><a href="#faq-13">Hvordan skrive en direkte/privat melding</a></li>		
 	<li><a href="#faq-14">Favoritter og repetere meldinger</a></li>
-	<li><a href="#faq-15">Hvordan fungerer "Mine colleagues på {instance-name}" ?</a></li>
+	<li><a href="#faq-15">Hvordan fungerer "Mine kollegaer på {instance-name}" ?</a></li>
 	<li><a href="#faq-16">Grupper</a></li>
 	<li><a href="#faq-17">Lister</a></li>		
 	<li><a href="#faq-18">Hvordan blokkere</a></li>
@@ -32,255 +32,255 @@
 </ul>		
 
 <!-- 1 -->
-<h2 id="faq-1">What is {instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
+<h2 id="faq-1">Hva er {instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
 <p>{instance-name} er en av mange GNU Social-/StatusNet-instanser. </p>
-<p>{instance-name} is a project using the GNU Social-/StatusNet-system, combined with a familiar user interface (UI).</p>
-<p>The original GNU Social-/StatusNet-web UI is available as "Classic {instance-name}", selectable from your header avatar (upper right).</p>
+<p>{instance-name} er et prosjekt som benytter GNU Social-/StatusNet software, i kombinasjon med et velkjent grensesnitt (UI).</p>
+<p>Det opprinnelige GNU Social-/StatusNet-web grensesnittet er tilgjengelig som "Classic {instance-name}", valgbart fra din avatar (øverst til høyre).</p>
 
 <!-- 2 -->
-<h2 id="faq-2">What is GNU Social/StatusNet and the Federation? <a href="#faq-table-of-contents">Top</a></h2>
-<p>GNU Social/StatusNet is a decentralised microblogging platform.</p>
-<p>Users of one instance (or: service) can follow, be followed by, and communicate with users of any other instance.</p>
-<p>Other instances are, e.g., <a href="https://loadaverage.org/">loadaverage.org</a>, <a href="http://status.vinilox.eu/">status.vinilox.eu</a>, <a href="http://micro.fragdev.com/">micro.fragdev.com</a>, <a href="https://gnusocial.de/">gnusocial.de</a>, <a href="https://indy.im/">indy.im</a>, <a href="https://quitter.no/">quitter.no, <a href="http://rainbowdash.net/">rainbowdash.net</a>, etc. The current number of microblogging instances using the GNU Social/StatusNet software is probably about 50, {instance-name} is one of them. As they all use the same software (GNU Social/StatusNet)  and transmission protocol (OStatus), they can talk to each other just like e-mail servers can talk to each other, even though they are independent and run  by different companies.</p>
-<p>Connections between instances are established by users following each other. Via such followings all these instances can (at least in principle) be joined into one compound structure or network of self-contained instances. This is called the Federation. GNU Social/StatusNet is structured in such a way that there needs to be only one following of a user <strong>a</strong> from instance <strong>A</strong> to a user <strong>b</strong> from instance to <strong>B</strong> to make <strong>b</strong> visible to everybody in instance <strong>A</strong> via <em>The Whole Known Network</em>. (See below on the <a href="#faq-9">Three Timelines</a>.) The Whole Known Network is the wider network of instances as seen by {instance-name}. It looks different on, say, loadaverage, because on loadaverage there are different followings to remote instances than on {instance-name}. </p>
-<p>There  is no central "unit" the breakdown of which could bring down the whole network.  If one instance goes down  or the admins start doing things you don't  like, you can create your  account on another instance. You will still be on the GNU Social-network and still be able to communicate with your GNU Social-friends. You just need to tell your contacts your new address.</p>
-<p>Addresses on GNU Social look like this:</p>
+<h2 id="faq-2">Hva er GNU Social/StatusNet og federasjonen? <a href="#faq-table-of-contents">Top</a></h2>
+<p>GNU Social/StatusNet er software som muliggjør en desentralisert mikroblogging plattform.</p>
+<p>Brukere av en instans (eller: tjeneste) kan følge, bli fulgt av og kommunisere med brukere fra andre instanser.</p>
+<p>Eksempler på andre instanser er , <a href="https://loadaverage.org/">loadaverage.org</a>, <a href="http://status.vinilox.eu/">status.vinilox.eu</a>, <a href="http://micro.fragdev.com/">micro.fragdev.com</a>, <a href="https://gnusocial.de/">gnusocial.de</a>, <a href="https://indy.im/">indy.im</a>, <a href="https://quitter.no/">quitter.no, <a href="http://rainbowdash.net/">rainbowdash.net</a>, osv. Nåværende antall av slike instanser som benytter GNU Social/StatusNet software er trolig ca. 50, {instance-name} er en av disse. Disse instansene kan kommunisere med hverandre, selv om de kjører på ulike maskiner. Det er programvaren som benyttes (GNU Social/StatusNet) og protokollen (OStatus) som muliggjør dette. På samme måte som forskjellige e-post tjenere kan kommunisere med hverandre, kan også de ulike instanser av GNU Social/StatusNet kommunisere med hverandre.</p>
+<p>Kobling mellom instansene blir etablert idet ulike brukere starter å følge hverandre. Ved å starte å følge andre brukere, blir nettverket knyttet sammen til en kombinert struktur. Dette oppleves som ett nettverk, selv om det i realiteten er en struktur av uavhengige instanser. Dette benevnes som "the Federation" - eller føderasjonen. Det betyr at instansene federerer/utveksler informasjon mellom hverandre. GNU Social/StatusNet er strukturert på en slik måte at idet en bruker følger bruker <strong>a</strong> fra instans <strong>A</strong> til en bruker <strong>b</strong> fra instans til <strong>B</strong> for å gjøre <strong>b</strong> synlig for alle i instans <strong>A</strong> via <em>Hele Nettverket</em>. (See nedenfor <a href="#faq-9">De tre tidslinjene</a>.) Hele nettverket er bredden av nettverk til instansen -sett fra instans {instance-name}. Denne tidslinjen ser forskjellig ut på de ulike instanser, dette fordi instansene har ulike følgere til distanserte instanser enn på denne instansen - {instance-name}. </p>
+<p>Det eksisterer ingen sentral "instans/server/tjeneste" som ved f.eks utlgjengelighet av tjenesten kunne ha ført til at nettverket ikke var tilgjengelig. Hvis en instans ikke er tilgjengelig eller at administrator begynner å utvikle instansen i en retning du ikke liker, så kan du som bruker opprette en konto på en av de andre instansene. Du vil alikevel være på GNU Social-network og fortsatt ha muligheten til å kommunisere med dine GNU Social-venner. Du trenger kun å fortelle dine kontakter adressen til din nye instans.</p>
+<p>Adresser på GNU Social ser slik ut:</p>
 <p class="indent">@user@instance.org</p>
-<p>Your address is:</p>
+<p>Din adresse er:</p>
 <p class="indent">@{nickname}@{instance-url}</p>
-<p>If you follow another user, or if the user is on the same instance, you  may omit the ...@instance.org part and just use the short address</p>
+<p>Hvis du følger en annen bruker, eller hvis brukeren er på samme instans, så trenger du ikke å oppgi ..@instance.org delen og kun benytte den korte adressen.</p>
 <p class="indent">@user</p>
 
 <!-- 3 -->
-<h2 id="faq-3">How to create an avatar image <a href="#faq-table-of-contents">Top</a></h2>
-<p>In New {instance-name}, go to</p>
-<p class="indent"> Your header avatar (upper right) → Edit profile → Camera icon on top of your avatar</p>
-<p>Use the + and - buttons to zoom in and out. Crop the image by dragging it with the mouse.</p>
+<h2 id="faq-3">Hvordan lage/laste opp en avatar <a href="#faq-table-of-contents">Top</a></h2>
+<p>På instansen {instance-name}, gå til</p>
+<p class="indent"> Din avatar (øverst til høyre) → Rediger profil → Kamera ikonet som vises på toppen av avataren</p>
+<p>Bruk + og - knappene for å forstørre eller forminske bildet. Beskjær bildet ved å dra selve bildet med musepekeren.</p>
 
 <!-- 4 -->
-<h2 id="faq-4">Why can't I find any "{instance-name} app" in Google Play Store or Apple's AppStore? <a href="#faq-table-of-contents">Top</a></h2>
-<p>The network's name is "GNU Social" or "StatusNet", so what you want is a GNU Social/StatusNet app.</p>
-<p>(Remember, {instance-name} is just one instance of the GNU Social- or StatusNet-federation.)</p>
+<h2 id="faq-4">Hvorfor kan jeg ikke finne en "{instance-name} app" i Google Play Store eller i Apple AppStore? <a href="#faq-table-of-contents">Top</a></h2>
+<p>Nettverkets navn er "GNU Social" eller "StatusNet", så det du trenger er en GNU Social/StatusNet app.</p>
+<p>(Husk, {instance-name} er kun en instans av mange instanser i GNU Social- or StatusNet-federasjonen.)</p>
 
 <!-- 5 -->
-<h2 id="faq-5">What clients are there for GNU Social/StatusNet/{instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
-<p>You can find information on clients and links to downloads here:<br>
+<h2 id="faq-5">Hvilke klienter finnes for GNU Social/StatusNet/{instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
+<p>Du kan finne informasjon om de ulike klientene og lenker til nedlastninger her:<br>
 <a href="http://federation.skilledtests.com/Statusnet_clients.html">http://federation.skilledtests.com/Statusnet_clients.html</a><br>
-<a href="http://wiki.gnusocial.de/gnusocial:clients">http://wiki.gnusocial.de/gnusocial:clients</a> (in German)</p>
-<h3>Android clients</h3>
-<p>— <em>Andstatus</em> (currently in active development by <a href="https://loadaverage.org/andstatus">@andstatus@loadaverage.org</a>)<br>
-<em>has great conversation view as hierarchical tree<br>
-Image upload and display of image attachments<br>
-oversized notices can be opened via web browser</em></p>
-<p>— <em>Mustard 0.3.5c</em> (Android 2.x - current) (many prefer this one, worth trying: GreyBubble theme)<br>
-— <em>Mustard 0.4.1</em> (Android 3.x - current) (a rather experimental new approach with newer look)<br>
-— <em>Mustard{MOD}</em> (Android 3.x - current)<br>
-<em>All Mustards support geolocation, upload and display of image attachments, display of  oversized notices from instances with larger character limit (open as  attachment)</em></p>
+<a href="http://wiki.gnusocial.de/gnusocial:clients">http://wiki.gnusocial.de/gnusocial:clients</a> (Tysk)</p>
+<h3>Android klienter</h3>
+<p>— <em>Andstatus</em> (utvikles av <a href="https://loadaverage.org/andstatus">@andstatus@loadaverage.org</a>)<br>
+<em>har en velutviklet samtale oversikt som vises hierarkis<br>
+Bilde opplasting og visning av bilde vedlegg<br>
+større notiser eller meldinger kan åpnes via nettleseren</em></p>
+<p>— <em>Mustard 0.3.5c</em> (Android 2.x - nåværende) (kan foretrekke denne, verd å prøve er: GreyBubble theme)<br>
+— <em>Mustard 0.4.1</em> (Android 3.x - nåværende) (en eksperimentell tilnærming med et noe nyere grensesnitt)<br>
+— <em>Mustard{MOD}</em> (Android 3.x - nåværende)<br>
+<em>Alle versjoner av Mustard støtter geolokasjon, opplasting og visning av bilde vedlegg, viser større notiser eller meldinger som vedlegg</em></p>
 <p>— <em>Twidere</em><br>
-— <em>Seesmic 1.7.6</em> (use only this version!) (closed source)<br>
+— <em>Seesmic 1.7.6</em> (benytt kun denne versjonen!) (lukket kildekode)<br>
 — <em>Zwitscher</em><br>
-— <em>Twydroid</em> (closed source)<br>
-A few suitable Android Twitter clients (features like sending Direct Messages or image upload may not work).</p>
-<h3>iPhone clients</h3>
+— <em>Twydroid</em> (lukket kildekode)<br>
+Noen få Android Twitter klienter (funksjonalitet som direkte meldinger og opplasting av bilder fungerer ikke).</p>
+<h3>iPhone klienter</h3>
 <p>— <em>Neustatus</em><br>
 — <em>Mayo</em> aka Mayonnaise <br>
 — <em>Meteoric</em> (payware)</p>
-<h3>Windows clients</h3>
-<p>— <em>Tweetdeck 0.38.2</em> (closed source) (last version before Twitter took over TweetDeck) is suitable for basic functions.<br>
-Download: <a href="http://www.oldversion.com/windows/download/tweetdeck-0-38-2">http://www.oldversion.com/windows/download/tweetdeck-0-38-2</a><br>
-Instructions: <a href="http://qttr.at/dmm">http://qttr.at/dmm</a> <a href="http://qttr.at/dmn">http://qttr.at/dmn</a><br>
-— <em>Qwit</em> (Download: <a href="https://code.google.com/p/qwit/">https://code.google.com/p/qwit/</a>)<br>
-Twitter clients (features like sending Direct Messages or image upload don't work)</p>
-<h3>Mac OSX clients</h3>
-<p>— <em>Tweetdeck 0.38.2</em> (closed source) Download: <a href="http://www.oldversion.com/mac/tweetdeck/">http://www.oldversion.com/mac/tweetdeck/</a> Instructions: see above.<br>
-— Adium (Download: <a href="https://adium.im/">https://adium.im/</a>)</p>
-<h3>GNU/Linux clients</h3>
+<h3>Windows klienter</h3>
+<p>— <em>Tweetdeck 0.38.2</em> (lukket kildekode) (siste versjon før Twitter overtok TweetDeck) kan benyttes for de grunnleggende funksjonene.<br>
+Lenker til nedlastning: <a href="http://www.oldversion.com/windows/download/tweetdeck-0-38-2">http://www.oldversion.com/windows/download/tweetdeck-0-38-2</a><br>
+Instruksjoner: <a href="http://qttr.at/dmm">http://qttr.at/dmm</a> <a href="http://qttr.at/dmn">http://qttr.at/dmn</a><br>
+— <em>Qwit</em> (Nedlasting: <a href="https://code.google.com/p/qwit/">https://code.google.com/p/qwit/</a>)<br>
+Twitter klienter (funksjonalitet som å sende direkte meldinger eller å laste opp bilder kan være begrenset / ikke virke)</p>
+<h3>Mac OSX klienter</h3>
+<p>— <em>Tweetdeck 0.38.2</em> (lukket kildekode) Nedlasting: <a href="http://www.oldversion.com/mac/tweetdeck/">http://www.oldversion.com/mac/tweetdeck/</a> Instruksjoner: se ovenfor.<br>
+— Adium (Nedlasting: <a href="https://adium.im/">https://adium.im/</a>)</p>
+<h3>GNU/Linux klienter</h3>
 <p>— <em>Choqok</em><br>
-— <em>Hotot</em> (use 0.9.7.32, that's the version that comes with Debian Wheezy)<br>
+— <em>Hotot</em> (benytt 0.9.7.32, det er den versjonen som følger med Debian Wheezy)<br>
 — <em>Heybuddy</em> <br>
-— more: <a href="http://federation.skilledtests.com/Statusnet_clients.html">http://federation.skilledtests.com/Statusnet_clients.html</a></p>
+— mer: <a href="http://federation.skilledtests.com/Statusnet_clients.html">http://federation.skilledtests.com/Statusnet_clients.html</a></p>
 
 <!-- 6 -->
-<h2 id="faq-6">Where is the URL-shortener? <a href="#faq-table-of-contents">Top</a></h2>
-<p>In New {instance-name}: 
-<p class="indent">Links needs to be shortened manually before posting the notice. The "URL ><"-button will shorten any URLs pasted or written into the notice field.
-<p>In Classic {instance-name}: 
-<p class="indent">Links are shortened automatically after the notice is posted. The settings depend on user choices.<br>
+<h2 id="faq-6">Hvor er URL-forkorteren? <a href="#faq-table-of-contents">Top</a></h2>
+<p>Ved {instance-name}: 
+<p class="indent">Lenker som trenger å bli forkortet manuelt før en posting. "URL ><"-knappen vil forkorte URL'en som er limt inn eller skrevet inn i meldingsfeltet.
+<p>Ved klassisk {instance-name}: 
+<p class="indent">Lenker er forkortet automatisk etter du har postet meldingen. Innstillingene er avhengig av brukerens valg/instillinger.<br>
 <br>
-Settings → URL<br>
+Innstillinger → URL<br>
 <br>
-Best use the following settings:<br>
+Anbefalt bruk av følgende innstillinger:<br>
 - qttr.at<br>
-- URL longer than 30<br>
-- Text longer than 139<br>
-Screenshot: <a href="http://quitter.se/attachment/710078">http://quitter.se/attachment/710078</a></p>
+- URL lengre enn 30<br>
+- Tekst lengre enn 139<br>
+Skjermdump: <a href="http://quitter.se/attachment/710078">http://quitter.se/attachment/710078</a></p>
 
 
 <!-- 7 -->
-<h2 id="faq-7">How to set email preferences <a href="#faq-table-of-contents">Top</a></h2>
-<p>In New {instance-name} go to</p>
-<p class="indent">Your header avatar (upper right) → Settings → Email</p>
-<p>check accordingly:<br>
-<em>— Send me notifications of new subscriptions through email.  <br>
-— Send me email when someone adds my notice as a favorite.  <br>
-— Send me email when someone sends me a private message.  <br>
-— Send me email when someone sends me an "@-reply".  <br>
-— Allow friends to nudge me and send me an email.  </em></p>
+<h2 id="faq-7">Hvordan endrer jeg e-post preferanser <a href="#faq-table-of-contents">Top</a></h2>
+<p>Ved {instance-name} gå til</p>
+<p class="indent">Din avatar (øverst til høyre) → Innstillinger → e-Post</p>
+<p>sjekk følgende:<br>
+<em>— Send meg notifikasjoner av nye følgere på e-Post.  <br>
+— Send meg e-Post når noen favoriserer min notis.  <br>
+— Send meg e-Post når noen sender meg en privat melding.  <br>
+— Send meg e-Post når noen sender meg en "@-reply". (Ofte benevnt 'mentions').  <br>
+— Tillat venner å 'dytte/nudge' meg og sende meg e-Post.  </em></p>
 
 
 <!-- 8 -->
-<h2 id="faq-8">New {instance-name} and Classic {instance-name} <a href="#faq-table-of-contents">Top</a></h2>
-<p>New {instance-name} uses the default user interface. It is visually very similiar to other well known commercial microblogging services. Its technical name is "Qvitter". In discussions "Qvitter" and "New {instance-name}" can mean the same thing, but "Qvitter" mostly refers to the software and "New {instance-name}" refers to the installation of the Qvitter-software on {instance-name}.</p>
-<p>Classic {instance-name} is the canonical GNU Social-/StatusNet-interface. At the moment some settings and features (e.g., creating a group) have to  be done in Classic {instance-name} as they are not yet fully implemented in New {instance-name}.</p>
-<p>To switch to Classic {instance-name} go to</p>
-<p class="indent">Your header avatar (upper right) → Classic {instance-name}</p>
+<h2 id="faq-8">Ny {instance-name} og klassisk {instance-name} <a href="#faq-table-of-contents">Top</a></h2>
+<p>Instansen {instance-name} benytter som et forvalg for alle brukere qvitter grensesnittet. Visuelt er det likhetstrekk med andre kjente kommersielle mikrobloggings tjenester. Grensesnittet har navnet "Qvitter". I diskusjoner "Qvitter" og "Nye {instance-name}" kan bety en og samme ting, men "Qvitter" refererer for det meste til programvare og "Nye {instance-name}" refererer til installsjonen av Qvitter-programvaren på {instance-name}.</p>
+<p>Klassisk {instance-name} er en avart av det klassiske GNU Social-/StatusNet-grensesnittet. På nåverende tidspunkt er noe av funksjonaliteten og innstillingene (f.eks. det å lage en gruppe) avhengig av at man benytter det klassiske {instance-name} grensesnittet, da de ikke er fullt ut implementert i det Nye {instance-name} grensesnittet.</p>
+<p>For å benytte det klassiske {instance-name} grensesnittet gå til </p>
+<p class="indent">Din avatar (øverst til høyre) → Classic {instance-name}</p>
 
 
 <!-- 9 -->
-<h2 id="faq-9">What are those three Timelines on New {instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
-<p>There are three timelines that show differerent notices (depending on the sources):</p>
-<p><strong>Timeline ("Home"):</strong><br>
-all notices from the people you follow (not just the ones they send to people you happen to follow as well).</p>
-<p><strong>Public Timeline:</strong><br>
-all notices posted by {instance-name} accounts.</p>
-<p><strong>The Whole Known Network:</strong><br>
-not  only all notices of the Public Timeline but also those of all people on  other ("remote") instances of the GNU Social-/StatusNet-federation followed  by at least one {instance-name} user (i.e., accounts known to {instance-name}, see above <a href="#faq-2">What is the Federation?</a>).</p>
+<h2 id="faq-9">Hva er de tre tidslinjene på {instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
+<p>Det finnes tre tidslinjer som viser ulike meldinger/notiser (avhengig av kildene de kommer fra):</p>
+<p><strong>Tidslinje ("Hjem / Tidslinje på Norsk"):</strong><br>
+alle meldinger eller notiser fra brukere du følger.</p>
+<p><strong>Offentlig tidslinje:</strong><br>
+alle meldinger eller notiser sendt av brukere på {instance-name} .</p>
+<p><strong>Hele nettverket:</strong><br>
+ikke bare meldinger / notiser fra den offentlige tidslinjen men også fra alle andre brukere på andre GNU Social-/StatusNet instanser som følges av minimum en {instance-name} bruker (f.eks, brukere kjent av  {instance-name}, se ovenfor <a href="#faq-2">Hva er GNU Social/StatusNet og federasjonen?</a>).</p>
 
 
 <!-- 10 -->
-<h2 id="faq-10">How to manage follower requests <a href="#faq-table-of-contents">Top</a></h2>
-<p>In general, you will want to stick with the default settings:</p>
-<p class="indent">yes to "let anyone follow me" (1)</p>
-<p class="indent">no to "Make updates visible only to my followers"</p>
-<p>If you really want to change these settings in New {instance-name} go to: </p>
-<p class="indent">Your header avatar (upper right) → Settings → Profile</p>
-<p><em>(1):  Change to "Ask me first" and you will receive e-mail notifications when  someone wants to follow you. It leaves the subscription request pending  until you either confirm or reject it. (But this does not work in New {instance-name} yet, so be careful with this setting.)</em></p>
+<h2 id="faq-10">Hvordan håndtere følger forespørsler <a href="#faq-table-of-contents">Top</a></h2>
+<p>Generelt er det å anbefale å holde seg til standard innstillingene:</p>
+<p class="indent">ja til "tillat hvem som helst å følge meg" (1)</p>
+<p class="indent">nei til "Vis oppdateringer kun til mine følgere"</p>
+<p>Hvis du ønsker å endre disse innstillingene på {instance-name} gå til: </p>
+<p class="indent">Din avatar (øverst til høyre) → Innstillinger → Profil</p>
+<p><em>(1):  Endre "Spør meg først" så vil du motta en e-Post notifikasjon når noen ønsker å følge deg. Forespørselsen om å følge deg vil ligge ventende til du bekrefter eller avviser forespørselen. (Dette fungerer ikke med det nye {instance-name} grensesnittet, så vær forsiktig med denne innstillingen.)</em></p>
 
 
 <!-- 11 -->
-<h2 id="faq-11">Can I delete my {instance-name} account? <a href="#faq-table-of-contents">Top</a></h2>
-<p>You  can delete your account, but all your notices will be deleted on {instance-name}  as well – and this will break conversation threads. If you restore  your account on another instance, it's better to rename your {instance-name}  account to something like MyNickhasmovedtoFragdev instead of deleting it.</p>
-<p>To delete your account go to:</p>
-<p class="indent">Your header avatar (upper right) → Settings → Profile → Delete account (right column)</p>
+<h2 id="faq-11">Kan jeg slette min konto på {instance-name} ? <a href="#faq-table-of-contents">Top</a></h2>
+<p>Du kan slette din konto, men vær oppmerksom på at alle dine meldinger/notiser vil bli slettet på {instance-name} . Dette vil også bryte alle samtale tråder. Hvis du oppretter din konto ved en annen instans, så er det bedre å endre kontonavnet ditt på {instance-name} til noe slikt som f.eks MinKortnavnHarFlyttetSegTilInstansNavn istedet for å slette kontoen.</p>
+<p>For å slette din konto gå til :</p>
+<p class="indent">Din avatar (øverst til høyre) → Innstillinger → Profil → Slett konto (høyre kolonne)</p>
 
 
 <!-- 12 -->
-<h2 id="faq-12">How to connect your {instance-name} account to your Twitter account <a href="#faq-table-of-contents">Top</a></h2>
-<p>You can forward your notices to Twitter.</p>
-<p>In New {instance-name}:</p>
-<p class="indent">Your header avatar (upper right) → Settings → Twitter</p>
-<p>You are forwarded to Twitter and have to authorise {instance-name} to use your Twitter account.</p>
-<p><em>According  to user reports this doesn't always work on the first or second  attempt. If it doesn't, try again later. The cause of  the  problem may be on Twitter's side. Your browser must not block  Javascript or Cookies.</em></p>
+<h2 id="faq-12">Hvordan koble din {instance-name} konto til din Twitter konto <a href="#faq-table-of-contents">Top</a></h2>
+<p>Du kan videresende meldinger/notiser til din Twitter konto.</p>
+<p>Ved {instance-name}:</p>
+<p class="indent">Velg din avatar (øverst til høyre) → Innstillinger → Twitter</p>
+<p>Du blir videresendt til Twitter og må nå autorisere {instance-name} for å kunne benytte din Twitter konto.</p>
+<p><em>Ifølge brukere som benytter funksjonaliteten er det ikke slik at dette alltid fungerer ved første eller andre forsøk. Hvis det ikke fungerer, forsøk igjen senere. Årsaken til problemet kan ligge på Twitters side. Din nettleser må ikke blokkere Javascript eller Cookies (nettleserkjeks).</em></p>
 
 
 
 <!-- 13 -->
-<h2 id="faq-13"> How to write Direct Messages <a href="#faq-table-of-contents">Top</a></h2>
-<p>Direct Messages are only supported in Classic {instance-name} at the time of writing (Messages in the left menu).</p>
-<p class="indent">Your header avatar (upper right) → Classic {instance-name} → Messages (left column)</p>
-<p>You can use apps like Mustard and Mayo to send DMs.</p>
-<p><em>Note:</em><br>
--  Direct Messaging only works within the same instance ({instance-name} in this case)<br>
-- to send DMs you need to mutually follow each other</p>
+<h2 id="faq-13"> Hvordan skrive en direkte/privat melding <a href="#faq-table-of-contents">Top</a></h2>
+<p>Direkte meldinger er kun supportert i det klassiske grensesnittet på {instance-name} (Meldinger vist menyen til venstre).</p>
+<p class="indent">Velg din avatar (øverst til høyre) → Classic {instance-name} → Meldinger (venstre kolonne)</p>
+<p>Du kan benytte apps som Mustard og Mayo for å sende direkte meldinger.</p>
+<p><em>NB:</em><br>
+- Direkte meldinger virker kun til brukere på samme instans som deg selv ({instance-name} i dette tilfellet)<br>
+- For å sende direkte meldinger så trenger dere å følge hverandre</p>
 
 
 <!-- 14 -->
-<h2 id="faq-14">Favorites and Repeats/Requeets <a href="#faq-table-of-contents">Top</a></h2>
+<h2 id="faq-14">Favoritter og repetere meldinger <a href="#faq-table-of-contents">Top</a></h2>
 
-<p>In all the three timelines you can click on a notice to expand it and see who has favored or repeated it.</p>
-<p>(You can setup <a href="#faq-7"><em>Email Notifications</em></a> to notify you when your notices have been fav'ed.)</p>
-<p>Favs and Repeats/Requeets look like this in New {instance-name}: <a href="http://qttr.at/du6">http://qttr.at/du6</a> and like this in Classic {instance-name}: <a href="http://qttr.at/du5">http://qttr.at/du5</a></p>
+<p>Ved alle de tre tidslinjene kan du klikke på en melding/notis og ekspandere den for å se hvem som har favorisert den eller sendt den videre (repetert den).</p>
+<p>(Du kan endre innstillingene <a href="#faq-7"><em>Hvordan endrer jeg e-post preferanser</em></a> til å gi deg notifikasjoner når dine meldinger er favorisert av andre brukere.)</p>
+<p>Favoriseringer og videresendinger ser ut som dette på {instance-name}: <a href="http://qttr.at/du6">http://qttr.at/du6</a> og slik ut i det klassiske grensesnittet på {instance-name}: <a href="http://qttr.at/du5">http://qttr.at/du5</a></p>
 
 
 <!-- 15 -->
-<h2 id="faq-15">What does the "My colleagues at {instance-name}" option do? <a href="#faq-table-of-contents">Top</a></h2>
-<p>In Classic {instance-name}, there is an option to post to  "My colleagues at {instance-name}". This will stop the notice from "federating".  It will only be visible to your followers on {instance-name}.</p>
+<h2 id="faq-15">Hvordan fungerer "Mine kollegaer på {instance-name}" ? <a href="#faq-table-of-contents">Top</a></h2>
+<p>Ved bruk av det klassiske grensesnittet på {instance-name}, er det en opsjon å poste meldingen kun til "Mine kollegaer ved {instance-name}". Dette vil forhindre meldingen i å bli federert til andre fjerne instanser. Meldingen vil mao. kun være synlig til dine følgere på {instance-name}.</p>
 
 <!-- 16 -->
-<h2 id="faq-16">Groups <a href="#faq-table-of-contents">Top</a></h2>
-<h3>Public Groups</h3>
-<p>On {instance-name} you can create a group for nearly any topic, like Feminism, Football, FreeBSD. ("Nearly" because the laws in the country hosting the website may prohibit such things as slander and hate speech.)</p>
-<p>You can be a member of as many groups as you like. As group-member you can post to the whole group by attaching ! to the group name, e.g., <em>!feminism</em>, in the notice. All group members, whether or not they follow you, will get the notice in their Home Timelines. You follow and unfollow a group like you follow and unfollow a person. </p>
-<p>A list of groups <em>hosted on {instance-name}</em> can be found here:<br>
+<h2 id="faq-16">Grupper <a href="#faq-table-of-contents">Top</a></h2>
+<h3>Offentlige Grupper</h3>
+<p>Ved {instance-name} kan du lage grupper for nesten hvilket emne du måtte ønske, f.eks feminisme, fortball, FreeBSD, HeavyMetal osv. ("Nesten" fordi lovmessige reguleringer i de ulike landene som instansen befinner seg kan forhindre emner som f.eks hatefulle ytringer.)</p>
+<p>Du kan være medlem av så mange grupper du måtte ønske. Som et gruppe-medlem kan du poste til hele gruppen ved å benytte ! (utropstegnet) foran gruppe navnet, f.eks, <em>!feminisme</em>. Alle gruppe medlemmer, uavhengig om de følger deg, vil få en notis i deres tidslinje. Du følger eller avfølger grupper på samme måter som vanlige brukere. </p>
+<p>En liste av grupper <em>på instansen {instance-name}</em> finner du her:<br>
 <a href="{instance-url-with-protocol}groups">{instance-url-with-protocol}groups</a></p>
-<p>A list of groups <em>hosted also on remote instances</em> can be found here:<br>
+<p>En liste av gruppe <em>på andre/fjerne/remote instanser </em> finner du her:<br>
 <a href="http://www.skilledtests.com/wiki/List_of_federated_Statusnet_groups">http://www.skilledtests.com/wiki/List_of_federated_Statusnet_groups</a></p>
-<p>To create a group go to:</p>
-<p class="indent"><a href="{instance-url-with-protocol}groups">{instance-url-with-protocol}groups</a> → Create new group</p>
-<h3>Private Groups</h3>
-<p>An admin of a group has the option to declare it private. This means:</p> 
-<p>1) new members must be approved by the admin(s), and</p>
-<p>2) all notices are forced to be private.<br>
-That is, notices in the group are only visible to group members (they don't appear in the Public Timeline), and it is not possible for users of other instances to be members of a private group on {instance-name}.</p>
+<p>For å skape en gruppe gå til:</p>
+<p class="indent"><a href="{instance-url-with-protocol}groups">{instance-url-with-protocol}groups</a> → Lag ny gruppe</p>
+<h3>Private Grupper</h3>
+<p>En administrator av en gruppe har muligheten til å gjøre den privat. Dette betyr:</p> 
+<p>1) nye medlemmer må godkjennes av administrator(er), og</p>
+<p>2) alle meldinger er tvunget til å bli private.<br>
+Det betyr at meldinger i gruppen er kun synlige til gruppens medlemmer (de er ikke synlig i den offentlige tidslinjen), og det er ikke mulig for brukere av andre instanser til å bli medlemmer av private grupper på {instance-name}.</p>
 
 
 <!-- 17 -->
-<h2 id="faq-17">Lists <a href="#faq-table-of-contents">Top</a></h2>
-<p>Lists are available only in Classic {instance-name}. Due to features merges in GNU Social they do work but are a bit messy to manage.</p>
-<h3>Adding users to a list</h3>
-<p>The main hurdle with lists on {instance-name} is to create a new one. After its creation, you can manage it and add people from {instance-name} as well as from remote instances on its newly created page (see below).</p>
-<p>To start a list in Classic {instance-name} you best proceed by browsing through the subscription lists of someone who has an account on {instance-name}, not on a remote instance. In the latter case you will not be able to add people from their subscription lists to your list, i.e, create a list at all.</p>
-<p>In both subscription lists you'll find beneath each person listed a tiny box with an edit-symbol. As they show up in these lists, it's no longer problematic whether they have their account on {instance-name} or on a remote instance. Click on that symbol and type in the name of your list. You'll receive an error message, but don't mind, just click "ok" and refresh the page. The list has been successfully created and is now shown in the left hand side column.</p>
-<h3>Managing your lists</h3>
-<p>To manage your list, go to your page in Classic {instance-name} and open the list by clicking on its name in the left column. On its page, click "Edit" and a menu opens.</p>
-<p>In the section  "Add or remove people" below you can now search every person known to {instance-name} from the whole known network (see above <a href="#faq-2">What is the Federation?</a>) by name and add her to your list. (Which isn't possible prior to the creation of the list when the person appears only in subscription lists of people on remote instances. See above.) Likewise you can remove the person from the list here.</p>
-<p>Right now you can remove people from a list, even empty a list, but you cannot delete the list in the upper section. Trying to delete it only returns an error message that is effective this time. So be careful not to create too many lists that later on clutter your left hand side column.</p>
-<p>In the upper section you can reword the list's name and give it a description that is displayed on the list's page. With the option "private" you can make the list invisible to other people on {instance-name}.</p>
+<h2 id="faq-17">Lister <a href="#faq-table-of-contents">Top</a></h2>
+<p>Lister er kun tilgjengelige ved bruk av det klassiske grensesnittet på {instance-name}. Fordi funksjonalitetene blandes mellom Qvitter og GNU Social så virker disse, men de kan oppleves som ikke optimale å håndtere.</p>
+<h3>Legge til brukere i lister</h3>
+<p>Hoved utfordringen med lister på {instance-name} er å opprette en ny. Etter opprettelsen, kan du administrere den og legge til brukere som tilhører {instance-name} men også brukere fra fjerne/andre/remote instanser i den nye listen (se nedenfor).</p>
+<p>For å starte en liste i det klassiske grensesnittet på {instance-name} , navigerer du til en liste som noen andre brukere har på {instance-name}, ikke til en fjern instans. I det siste nevnte tilfellet vil du ikke kunne ha mulighet til å legge til brukere fra deres lister til din egen.</p>
+<p>I begge lister vil du under brukeren finne en liten boks med ett redigerings-symbol. Siden de er synlige i disse listene, er det ikke et problem om deres konto er på {instance-name} eller på en annen fjern instans. Klikk på symbolet og skriv inn navnet på din egen liste. Du vil få en feilmelding, men se bort fra denne meldingen og klikk "ok", deretter last inn nettsiden på ny. Listen er nå opprettet og vises nå i venstre kolonne.</p>
+<h3>Administrer dine lister</h3>
+<p>For å administrere listene, gå til din side i det klassiske grensesnittet på {instance-name} og åpne listen ved å klikke på listens navn (vises i venstre kolonne). På siden klikk på "Endre" så vil en meny bli tilgjengelig.</p>
+<p>Under seksjonen "Legg til eller fjern brukere" kan du nå søke brukere som befinner seg på {instance-name} og fra hele det kjente nettverket (see above <a href="#faq-2">Hva er GNU Social/StatusNet og federasjonen?</a>) ved navn og legge brukeren til din egen liste. (Dette er ikke mulig før selve opprettelsen av listen når personen kun vises i abonnerings listen av brukere på fjerne instanser. Se ovenfor). På samme måte kan du fjerne brukere fra listen.</p>
+<p>På nåværende tidspunkt kan du fjerne brukere fra listen, tømme listen, men du kan ikke slette listen. Ved forsøk på å slette listen vil du kun motta en feil melding. Vær derfor varsom med å ikke opprette for mange lister, som kan forkludre innholdet i din venstre kolonne.</p>
+<p>I den øverste seksjonen så kan du endre navnet på listen og gi den en beskrivelse som vises på siden over lister du innehar. Ved bruk av opsjonen "privat" kan du gjøre listen usynlig for andre brukere ved  {instance-name}.</p>
 
 
 <!-- 18 -->
-<h2 id="faq-18">How to block <a href="#faq-table-of-contents">Top</a></h2>
-<p>To block a {instance-name} user, go to their profile in Classic {instance-name}</p>
+<h2 id="faq-18">Hvordan blokkere <a href="#faq-table-of-contents">Top</a></h2>
+<p>For å blokkere en bruker ved {instance-name} , gå til brukerens profil i det klassiske grensesnittet på {instance-name}</p>
 <p class="indent">{instance-url-with-protocol}&lt;username&gt;</p>
-<p>and click "block" below their profile desription</p>
-<p>We don't recommend blocking people from remote instances as there are still issues with this feature.</p>
+<p>and velg "blokk" nedenfor deres profil beskrivelse</p>
+<p>Vi anbefaler ikke å blokke brukere fra fjerne/remote instanser da det fremdeles er en funksjonalitet som ikke er optimal.</p>
 
 
 <!-- 19 -->
-<h2 id="faq-19">How to follow someone on a remote instance <a href="#faq-table-of-contents">Top</a></h2>
-<p>In New {instance-name}:</p>
-<p>When you click a remote nickname in New {instance-name} you are brought to a  small profile window showing the full remote address, e.g.,  @blabla@status.vinilox.eu. Click the button "Follow". That should be all. </p>
-<p>In Classic {instance-name}:</p>
-<p>In Classic {instance-name} you're forwarded to the remote  instance's user  profile  (which may differ in layout and theme from  Classic {instance-name}).  Look for  the Subscribe-button (usually in the upper  right). A  subscription box opens and you are prompted to enter your own  "webfinger  address", i.e., {nickname}@{instance-url} Subscribe and you are  redirected to  your Classic {instance-name} page where you have to confirm the  subscription.</p>
+<h2 id="faq-19">Hvordan følge andre brukere på andre instanser <a href="#faq-table-of-contents">Top</a></h2>
+<p>Ved {instance-name}:</p>
+<p>Når du velger/klikker et nickname fra en annen instans idet du er på {instance-name} ,kommer det opp et profil vindu som viser den fulle adressen, e.g.,  @blabla@status.vinilox.eu. Klikk på knappen "Følg". Det skal være alt du trenger å gjøre for å følge en bruker fra en annen instans. </p>
+<p>Ved bruk av det klassiske grensesnittet på {instance-name}:</p>
+<p>Ved bruk av Classic {instance-name} så blir du sendt videre til denne instansen brukeren har sin konto (som igjen kan inneha et annet tema/layout enn grensesnittet fra Classic {instance-name}).  Se etter knappen som benevnes som Subscribe-button (ofte vist øverst til høyre). Et abonnerings vindu åpner seg og du blir spurt om å legge inn din "webfinger adresse", f.eks., {nickname}@{instance-url} velg Subscribe/Abonner og du blir videresendt til din Classic {instance-name} side hvor du må bekrefte abonneringen.</p>
 
 
 <!-- 20 -->
-<h2 id="faq-20">How to manage the visibility of your notices <a href="#faq-table-of-contents">Top</a></h2> 
-<p>There are several ways to make notices visible only to selected people, not to the public. <strong>None of them work in New {instance-name} yet.</strong></p>
-<p>All four methods only work within the same instance. Users outside {instance-name} won't be able to see the notice.</p>
-<p>a. Direct Messages → The notice will be visible only to its recipient in his DM inbox (there are no Direct Messages to more than one person).</p>
-<p>b. Set your account to "Make updates visible only to my followers" and "Ask me first if someone wants to follow me" in</p>
-<p class="indent">Settings → Profile  → Subscription policy (below)</p>
-<p>c. Post to a private group of which you are a member → The post will only be visible to the group members (see above under <a href="#faq-16">Groups</a>). </p>
-<p>(Note to c: You can use any client to post to a private group by using the !group-tag.)</p>
-<p>d. Post to a public group and close the lock on the right of the drop-down menu beneath the message field. The post will then only be visible to the group members. (Although at the time of writing, this does not work. The post will be visible to everyone.)</p>
-<p><em>(Note to d:  Make sure you don't leave "Everyone" or "My Colleagues at {instance-name}"  selected, otherwise your post will go to the timelines of every {instance-name}  user, which is not what you want if you close the lock)</em></p>
-<p><em>(Note  to d:  The lock method is only available in Classic {instance-name}. There is no  lock  feature in New {instance-name} or any other known client at the time of  writing.)</em></p>
+<h2 id="faq-20">Hvordan håndtere synligheten av dine notiser <a href="#faq-table-of-contents">Top</a></h2> 
+<p>Det er flere måter å gjøre notiser/meldinger synlige til kun et utvalg av brukere og ikke offentlig. <strong>Ingen av disse virker i det nye grensesnittet på {instance-name} .</strong></p>
+<p>Alle fire metoder virker kun innenfor samme instanse. Brukere utenfor {instance-name} vil ikke ha muligheten til å se notisen/meldingen.</p>
+<p>a. Direkte Meldinger → Notisen vil kun bli synlig til brukeren du velger skal motta meldingen. (Du kan sende kun direkte meldinger til flere brukere samtidig).</p>
+<p>b. Endre din konto til "Gjør mine oppdateringer synlige bare til mine følgere" og "Spør meg først hvis noen ønsker å følge meg" - gjøres ved :</p>
+<p class="indent">Innstillinger → Profil  → Abonnerings policy (nedenfor)</p>
+<p>c. Post til en privat gruppe som du er medlem av → Posten vil kun bli synlig for gruppens medlemmer (se ovenfor i seksjonen <a href="#faq-16">Groupper</a>). </p>
+<p>(Nb ang. punkt c: Du kan benytte hvilken som helst klient for å sende en melding til en privat gruppe ved å benytte ! utropstegnet foran gruppen - !group-tag.)</p>
+<p>d. Post til en offentlig gruppe og lukk hengelåsen på høyre side ved nedtrekksmenyen. Meldingen vil dermed kun bli synlig til gruppens medlemmer. (Pr.nå virker ikke denne funksjonen. Meldingen vil bli synlig for alle.)</p>
+<p><em>(Nb ang. punkt d: Vær sikker på at du ikke har valgt "Everyone" eller "My Colleagues ved {instance-name}" , hvis så er tilfelle vil din melding gå ut på tidslinjen til alle brukere ved {instance-name} , som sannsynligvis ikke var intensjonen ved å bruke hengelåsen)</em></p>
+<p><em>(Nb 2 ang. punkt d: Låse metoden er kun tilgjengelig i det klassiske grensesnittet ved {instance-name}. Det er ingen slik funksjon i det nye grensesnittet til {instance-name} ,ei heller i andre kjente klient.)</em></p>
 
 
 <!-- 21 -->
-<h2 id="faq-21">How to cite conversations or parts of them <a href="#faq-table-of-contents">Top</a></h2>
-<p>Sometimes in a blog-post or email, you don't want to cite just one notice but a whole conversation. Each notice, each reply, and each conversation has its own URL, and the ways to find them differ slightly in Classic {instance-name} and in New {instance-name}.</p> 
-<p>New {instance-name}:</p>
-<p>In New {instance-name} click on the time stamp of a notice (or "details" if you have expanded it). This will show the notice page with the conversation expanded.</p> 
-<p>Classic {instance-name}:</p>
-<p>Click  on the the time stamp of any notice. The notice will reappear on a separate page. Click "in context". The whole conversation that this notice is involved in will be displayed on a new page, with the selected notice either on the top or further down.</p>
+<h2 id="faq-21">Hvordan sitere samtaler eller deler av samtalen <a href="#faq-table-of-contents">Top</a></h2>
+<p>Noen ganger i en blog-post eller i en e-Post, så ønsker du å ikke bare å sitere en notis, men en hel samtale. Hver notis, hver besveralse og hver enkelt samtale har sin egen URL adresse. Måten å finne disse på varierer fra det klassiske grensesnittet til {instance-name} det nye {instance-name}.</p> 
+<p>Nytt grensesnitt på {instance-name}:</p>
+<p>Ved bruk av det nye grensesnittet på {instance-name} klikker du på dato stemplingen til en notis (eller på "detaljer" hvis du har ekspandert meldingen). Dette vil vise notisens side, med selve samtalen ekspandert.</p> 
+<p>Klassisk grensesnitt ved {instance-name}:</p>
+<p>Klikk på dato stemplingen på hvilken som helst notis. Notisen vil komme opp i en ny side. Klikk på "in context". Hele samtalen som denne notisen er med i vil nå vises på en ny side, med den valgte notisen enten på toppen eller lengre ned.</p>
 
 
 <!-- 22 -->
-<h2 id="faq-22">How to follow keywords and hashtags <a href="#faq-table-of-contents">Top</a></h2>
-<p>Similar  to following persons or groups you can subscribe to (or follow)  hashtags and search words. Notices containing them will then appear in your Home timeline. </p>
-<p>Following search words and hashtags is not limited to notices from accounts on {instance-name} but covers notices from remote instances as well.</p>
-<p>To follow hashtags (# + ...) put the word with the hashtag-symbol # prefixed into the  search box of <em>Classic {instance-name}</em> and press Enter. You'll arrive at the  search result page. Similiar, to subscribe to search words,   put them without hashtag-symbol into the search box. You'll get a much   larger list because the search not only covers individual words but  also  looks for occurrences of the phrase inside larger phrases. To follow (or: subscribe to) both hashtags and search words, click on the tiny "Subscribe"-button in the upper  right corner of the lists. You'll then receive the notices containing them in your Home Timeline.</p>
-<p>Following one word often yields too many results, so it is expedient to combine words and follow them as complete phrases.</p>
-<p>You can unfollow those notices by unfollowing the hashtags and search phrases.</p>
-<p>For an overview which phrases you follow, enter the URLs for<br>
-hashtags: <a href="{instance-url-with-protocol}{nickname}/tag-subscriptions">{instance-url-with-protocol}{nickname}/tag-subscriptions</a><br>
-search words and phrases: <a href="{instance-url-with-protocol}{nickname}/search-subscriptions">{instance-url-with-protocol}{nickname}/search-subscriptions</a></p>
-<p>On those pages you can manage your subscriptions, that is, add more phrases and hashtags or unfollow them.</p>
+<h2 id="faq-22">Hvordan følge nøkkelord og emneknagger <a href="#faq-table-of-contents">Top</a></h2>
+<p>På samme måte som du kan følge personer eller grupper, kan du også følge emneknagger og søke ord. Notiser som inneholder disse vil da vises i din tidslinje. </p>
+<p>Muligheten for å følge søke ord og emneknagger er ikke begrenset til din konto på {instance-name} men dekker også notiser på andre instanser (remote).</p>
+<p>For å følge en emneknagg (# + ...) skriv ordet med emneknagg-symbolet # foran, i søkefeltet til <em>Classic {instance-name}</em> og trykk linjeskift. Du vil nå få en side med søkeresultatet. På samme måte , for å følge et søke ord, skriv inn søkeordet uten emneknagg-symbolet i søke feltet. Nå vil du se en større liste som resultat, da søket ikke bare inneholder resultat fra et enkelt ord, men også resultat hvor ordet gjentar seg i f.eks en setning. For å følge (eller: abonner på) både emneknagg og søke ord, klikk på det den lille "Abonner"-knappen øverst i høyre hjørne på listen. Du vil så motta notisene som inneholder søkebegrepene i din tidslinje.</p>
+<p>Følger man kun ett ord ender man ofte opp med mange resultater, så vi anbefaler å kombinere ord og følge de som komplette setninger.</p>
+<p>Du kan avfølge disse notisene ved å avfølge emneknaggene eller søkeordene.</p>
+<p>For en oversikt over hvilke setninger du følger, benytt følgende URL for<br>
+emneknagger: <a href="{instance-url-with-protocol}{nickname}/tag-subscriptions">{instance-url-with-protocol}{nickname}/tag-subscriptions</a><br>
+søkeord og setninger: <a href="{instance-url-with-protocol}{nickname}/search-subscriptions">{instance-url-with-protocol}{nickname}/search-subscriptions</a></p>
+<p>På disse sidene kan du vedlikeholde dine abonneringer, det betyr, legge til eller avfølg emneknagger, eller setninger.</p>
 
 <!-- 23 -->
-<h2 id="faq-23">Why doesn't my Repeat/Requeet show up on other instances? <a href="#faq-table-of-contents">Top</a></h2>
-<p>In the latest versions of GNU Social, repeats/requeets do not get sent to your followers on other instances. This was possible some time ago in StatusNet, but this feature has been removed due to a security issue. GNU Social developers are working on a solution. In the meantime, if you really want your Repeat/Requeet to federate, you can always do a "manual repeat", i.e., write RQ @username, and then copy-paste the notice.</p>
+<h2 id="faq-23">Hvorfor blir ikke mine gjentagelser av notiser synlig på andre instanser? <a href="#faq-table-of-contents">Top</a></h2>
+<p>I nåvernde versjon av GNU Social, så blir ikke gjentakelser/requeets sendt til dine følgere på andre instanser. Dette var mulig i den gamle programvaren ved navn StatusNet, men denne muligheten er nå fjernet fra programvaren pga. en sikkerhets brist. GNU Social utviklere jobber med en løsning på problemet. I mellomtiden, hvis du virkelig vil gjenta en notis fra en annen bruker, for å spre ut på de andre instansene, må du "manuelt" repetere meldingen ved f.eks å skrive RQ @username, og så legge til meldingen ved kopier-lim-inn funksjon.</p>
 
-<p class="faq-credits"><em>Takk til <a href="https://quitter.se/simsa0">@simsa0</a> and <a href="https://quitter.se/mcscx">@mcscx</a> for deres arbeid med denne FAQ. Alle feil denne oversettelsen, kommer av elendig editering av <a href="https://quitter.no/knuthollund">@knuthollund</a>.</em></p>
+<p class="faq-credits"><em>Takk til <a href="https://quitter.se/simsa0">@simsa0</a> and <a href="https://quitter.se/mcscx">@mcscx</a> for deres arbeid med denne FAQ. Alle feil i denne oversettelsen, kommer av elendig editering av <a href="https://quitter.no/knuthollund">@knuthollund</a>.</em></p>
