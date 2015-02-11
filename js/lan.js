@@ -780,7 +780,7 @@ window.l.fr.cropAndSave = 'Recadrer et enregistrer';
 window.l.fr.showTerms = 'Consulter les conditions d\'utilisation';
 window.l.fr.ellipsisMore = 'Plus';
 window.l.fr.blockUser = 'Bloquer {username}';
-window.l.fr.goToOriginalNotice = 'Go to original notice';
+window.l.fr.goToOriginalNotice = 'Aller vers la notification originale';
 
 // deutsch
 window.l.de = new Object();
