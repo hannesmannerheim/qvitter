@@ -2155,9 +2155,9 @@ window.l.no.FAQ	= 'FAQ';
 window.l.no.inviteAFriend = 'Inviter venner';
 window.l.no.goToExternalProfile	= 'Gå til fullstendig profil';
 window.l.no.cropAndSave = 'Beskjær og lagre';
-window.l.no.showTerms = 'Read our Terms of Use';
-window.l.no.ellipsisMore = 'More';
-window.l.no.blockUser = 'Block {username}';
+window.l.no.showTerms = 'Vilkår for bruk';
+window.l.no.ellipsisMore = 'Mer';
+window.l.no.blockUser = 'Blokker {username}';
 
 // asturian
 window.l.ast = new Object();
