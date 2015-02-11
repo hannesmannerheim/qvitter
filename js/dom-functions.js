@@ -1239,7 +1239,7 @@ function showConversation(qid) {
 						// external
 						var ostatusHtml = '';
 						if(obj.is_local === false) {
-							ostatusHtml = '<a target="_blank" title="Ostatus" class="ostatus-link" href="' + obj.external_url + '"></a>';
+							ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
 							}
 							
 

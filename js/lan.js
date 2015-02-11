@@ -157,6 +157,7 @@ window.l.ca.cropAndSave = 'Retalla i desa';
 window.l.ca.showTerms = 'Read our Terms of Use';
 window.l.ca.ellipsisMore = 'More';
 window.l.ca.blockUser = 'Block {username}';
+window.l.ca.goToOriginalNotice = 'Go to original notice';
 
 
 // spanish
@@ -280,6 +281,7 @@ window.l.es.cropAndSave			    = 'Recortar y guardar';
 window.l.es.showTerms 				= 'Leer los términos de uso';
 window.l.es.ellipsisMore 			= 'Más';
 window.l.es.blockUser 				= 'Bloquear {username}';
+window.l.es.goToOriginalNotice      = 'Go to original notice';
 
 // spanish (ahorita)
 window.l.es_ahorita = new Object();
@@ -408,6 +410,7 @@ window.l.pt_br.cropAndSave = 'Crop and save';
 window.l.pt_br.showTerms = 'Read our Terms of Use';
 window.l.pt_br.ellipsisMore = 'More';
 window.l.pt_br.blockUser = 'Block {username}';
+window.l.pt_br.goToOriginalNotice = 'Go to original notice';
 
 
 // galician
@@ -531,6 +534,7 @@ window.l.gl.cropAndSave = 'Recortar e gardar';
 window.l.gl.showTerms = 'Ler os nosos términos de uso';
 window.l.gl.ellipsisMore = 'Máis';
 window.l.gl.blockUser = 'Bloquear a {username}';
+window.l.gl.goToOriginalNotice = 'Go to original notice';
 
 // basque
 window.l.eu = new Object();
@@ -653,6 +657,7 @@ window.l.eu.cropAndSave = 'Crop and save';
 window.l.eu.showTerms = 'Read our Terms of Use';
 window.l.eu.ellipsisMore = 'More';
 window.l.eu.blockUser = 'Block {username}';
+window.l.eu.goToOriginalNotice = 'Go to original notice';
 
 // french
 window.l.fr = new Object();
@@ -775,6 +780,7 @@ window.l.fr.cropAndSave = 'Recadrer et enregistrer';
 window.l.fr.showTerms = 'Consulter les conditions d\'utilisation';
 window.l.fr.ellipsisMore = 'Plus';
 window.l.fr.blockUser = 'Bloquer {username}';
+window.l.fr.goToOriginalNotice = 'Go to original notice';
 
 // deutsch
 window.l.de = new Object();
@@ -909,6 +915,7 @@ window.l.de.cropAndSave 			= 'Zuschneiden und Abspeichern';
 window.l.de.showTerms 				= '{site-title} Nutzungsbedingungen';
 window.l.de.ellipsisMore = 'More';
 window.l.de.blockUser = 'Block {username}';
+window.l.de.goToOriginalNotice = 'Go to original notice';
 
 // english
 window.l.en = new Object();
@@ -1039,6 +1046,7 @@ window.l.en.cropAndSave 			= 'Crop and save';
 window.l.en.showTerms 				= 'Read our Terms of Use';
 window.l.en.ellipsisMore = 'More';
 window.l.en.blockUser = 'Block {username}';
+window.l.en.goToOriginalNotice = 'Go to original notice';
 
 
 // simplified chinese
@@ -1162,6 +1170,7 @@ window.l.zh_cn.cropAndSave 			   = 'Crop and save';
 window.l.zh_cn.showTerms 			   = 'Read our Terms of Use';
 window.l.zh_cn.ellipsisMore = 'More';
 window.l.zh_cn.blockUser = 'Block {username}';
+window.l.zh_cn.goToOriginalNotice = 'Go to original notice';
 
 
 // traditional chinese
@@ -1285,6 +1294,7 @@ window.l.zh_tw.cropAndSave 			   = 'Crop and save';
 window.l.zh_tw.showTerms 			   = 'Read our Terms of Use';
 window.l.zh_tw.ellipsisMore = 'More';
 window.l.zh_tw.blockUser = 'Block {username}';
+window.l.zh_tw.goToOriginalNotice = 'Go to original notice';
 
 
 // svenska
@@ -1408,6 +1418,7 @@ window.l.sv.cropAndSave 			= 'Beskär och spara';
 window.l.sv.showTerms 	 			= 'Läs våra användarvillkor';
 window.l.sv.ellipsisMore = 'Mer';
 window.l.sv.blockUser = 'Blockera {username}';
+window.l.sv.goToOriginalNotice = 'Go to original notice';
 
 // suomi
 window.l.fi = new Object();
@@ -1530,6 +1541,7 @@ window.l.fi.cropAndSave = 'Crop and save';
 window.l.fi.showTerms = 'Read our Terms of Use';
 window.l.fi.ellipsisMore = 'More';
 window.l.fi.blockUser = 'Block {username}';
+window.l.fi.goToOriginalNotice = 'Go to original notice';
 
 // farsi/persian
 window.l.fa = new Object();
@@ -1652,6 +1664,7 @@ window.l.fa.cropAndSave 			= 'Crop and save';
 window.l.fa.showTerms 			    = 'Read our Terms of Use';
 window.l.fa.ellipsisMore = 'More';
 window.l.fa.blockUser = 'Block {username}';
+window.l.fa.goToOriginalNotice = 'Go to original notice';
 
 // arabic
 window.l.ar = new Object();
@@ -1774,6 +1787,7 @@ window.l.ar.cropAndSave 			= 'قُص و احفظ.';
 window.l.ar.showTerms 			    = 'Read our Terms of Use';
 window.l.ar.ellipsisMore = 'More';
 window.l.ar.blockUser = 'Block {username}';
+window.l.ar.goToOriginalNotice = 'Go to original notice';
 
 // esperanto
 window.l.eo = new Object();
@@ -1905,6 +1919,7 @@ window.l.eo.cropAndSave 			= 'Tondu kaj savu';
 window.l.eo.showTerms 			    = 'Read our Terms of Use';
 window.l.eo.ellipsisMore = 'More';
 window.l.eo.blockUser = 'Block {username}';
+window.l.eo.goToOriginalNotice = 'Go to original notice';
 
 // italian
 window.l.it = new Object();
@@ -2036,6 +2051,7 @@ window.l.it.cropAndSave = 'ritaglia e salva';
 window.l.it.showTerms = 'Read our Terms of Use';
 window.l.it.ellipsisMore = 'More';
 window.l.it.blockUser = 'Block {username}';
+window.l.it.goToOriginalNotice = 'Go to original notice';
 
 // Norwegian
 window.l.no = new Object();
@@ -2158,6 +2174,7 @@ window.l.no.cropAndSave = 'Beskjær og lagre';
 window.l.no.showTerms = 'Read our Terms of Use';
 window.l.no.ellipsisMore = 'More';
 window.l.no.blockUser = 'Block {username}';
+window.l.no.goToOriginalNotice = 'Go to original notice';
 
 // asturian
 window.l.ast = new Object();
@@ -2280,6 +2297,7 @@ window.l.ast.cropAndSave		     = 'Recortar y guardar';
 window.l.ast.showTerms 				 = 'Read our Terms of Use';
 window.l.ast.ellipsisMore = 'More';
 window.l.ast.blockUser = 'Block {username}';
+window.l.ast.goToOriginalNotice = 'Go to original notice';
 
 
 
