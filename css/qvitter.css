@@ -4296,11 +4296,6 @@ body.rtl #feed-header-inner h2  {
 	.language-dropdown .dropdown-toggle .caret {
 		border-top-color:#fff;		}
 
-	.front-welcome-text {
-		opacity:0;
-		height:320px;
-		overflow:hidden;
-		}
 	#page-container {
 		margin-top:69px;
 		background-color:transparent;

@@ -282,6 +282,17 @@ class QvitterAction extends ApiAction
 						border-bottom-color:rgb(205,230,239);/*LIGHTERBORDERBOTTOMCOLOREND*/
 						}
 						
+					@media (max-width: 910px) {
+						.front-welcome-text {
+							opacity:0;
+						<?php if ($registrationsclosed === false) { ?>
+							height:320px;
+						<?php } else { ?>
+							height:35px;
+						<?php } ?>
+							overflow:hidden;
+							}
+						}
 				</style>
 			</head>
 			<body style="background-color:<?php print QvitterPlugin::settings("defaultbackgroundcolor"); ?>">
