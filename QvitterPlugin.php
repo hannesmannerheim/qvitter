@@ -806,6 +806,9 @@ class QvitterPlugin extends Plugin {
      * @return boolean hook flag
      */        
     public function onEndSetApiUser($user) {
+        if (!$user instanceof User) {
+            return true;
+        }
 
 		$user_id = $user->id;
 		$notification = new QvitterNotification();
