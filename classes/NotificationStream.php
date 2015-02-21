@@ -37,7 +37,7 @@ class NotificationStream
         $notification->selectAdd();
         $notification->selectAdd('id');
         $notification->whereAdd(sprintf('qvitternotification.to_profile_id = "%s"', $notification->escape($this->target->id)));
-        $notification->whereAdd(sprintf('qvitternotification.created > "%s"', $notification->escape($this->target->created)));
+        $notification->whereAdd(sprintf('qvitternotification.created >= "%s"', $notification->escape($this->target->created)));
         $notification->limit($offset, $limit);
         $notification->orderBy('qvitternotification.created DESC');
 
