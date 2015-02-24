@@ -1242,7 +1242,7 @@ function showConversation(qid) {
 						// external
 						var ostatusHtml = '';
 						if(obj.is_local === false) {
-							ostatusHtml = '<a target="_blank" title="Ostatus" class="ostatus-link" href="' + obj.external_url + '"></a>';
+							ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
 							}
 							
 
@@ -1491,7 +1491,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				// external
 				var ostatusHtml = '';
 				if(obj.from_profile.is_local === false) {
-					ostatusHtml = '<a target="_blank" title="Ostatus" class="ostatus-link" href="' + obj.from_profile.statusnet_profile_url + '"></a>';
+					ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.from_profile.statusnet_profile_url + '"></a>';
 					}
 					
 								
@@ -1547,7 +1547,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				// external
 				var ostatusHtml = '';
 				if(obj.is_local === false) {
-					ostatusHtml = '<a target="_blank" title="Ostatus" class="ostatus-link" href="' + obj.statusnet_profile_url + '"></a>';
+					ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.statusnet_profile_url + '"></a>';
 					}				
 				
 				// show user actions
@@ -1848,7 +1848,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 	// external
 	var ostatusHtml = '';
 	if(obj.is_local === false) {
-		ostatusHtml = '<a target="_blank" title="Ostatus" class="ostatus-link" href="' + obj.external_url + '"></a>';
+		ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
 		}
 		
 	var queetTime = parseTwitterDate(obj.created_at);															

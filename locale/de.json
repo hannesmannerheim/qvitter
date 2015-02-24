@@ -117,5 +117,6 @@
 	"cropAndSave": "Zuschneiden und Abspeichern",
 	"showTerms": "{site-title} Nutzungsbedingungen",
 	"ellipsisMore": "More",
-	"blockUser": "Block {username}"
+	"blockUser": "Block {username}",
+	"goToOriginalNotice": "Go to original notice"
 }

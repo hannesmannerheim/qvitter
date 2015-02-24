@@ -117,5 +117,6 @@
 	"cropAndSave": "Beskär och spara",
 	"showTerms": "Läs våra användarvillkor",
 	"ellipsisMore": "Mer",
-	"blockUser": "Blockera {username}"
+	"blockUser": "Blockera {username}",
+	"goToOriginalNotice": "Gå till den ursprungliga queeten"
 }

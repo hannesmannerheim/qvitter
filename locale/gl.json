@@ -117,5 +117,6 @@
 	"cropAndSave": "Recortar e gardar",
 	"showTerms": "Ler os nosos términos de uso",
 	"ellipsisMore": "Máis",
-	"blockUser": "Bloquear a {username}"
+	"blockUser": "Bloquear a {username}",
+	"goToOriginalNotice": "Go to original notice"
 }

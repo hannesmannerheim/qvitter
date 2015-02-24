@@ -117,5 +117,6 @@
 	"cropAndSave": "Beskjær og lagre",
 	"showTerms": "Vilkår for bruk",
 	"ellipsisMore": "Mer",
-	"blockUser": "Blokker {username}"
+	"blockUser": "Blokker {username}",
+	"goToOriginalNotice": "Go to original notice"
 }

@@ -117,5 +117,6 @@
 	"cropAndSave": "Recadrer et enregistrer",
 	"showTerms": "Consulter les conditions d'utilisation",
 	"ellipsisMore": "Plus",
-	"blockUser": "Bloquer {username}"
+	"blockUser": "Bloquer {username}",
+	"goToOriginalNotice": "Aller vers l\'avis d\'origine"
 }

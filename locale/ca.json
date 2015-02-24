@@ -117,5 +117,6 @@
 	"cropAndSave": "Retalla i desa",
 	"showTerms": "Llegeix les Condicions d\'Ús",
 	"ellipsisMore": "Més",
-	"blockUser": "Bloca {username}"
+	"blockUser": "Bloca {username}",
+	"goToOriginalNotice": "Go to original notice"
 }
