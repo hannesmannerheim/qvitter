@@ -4301,6 +4301,9 @@ body.rtl #feed-header-inner h2  {
 		height:320px;
 		overflow:hidden;
 		}
+	.front-welcome-text.registrations-closed {
+		height:35px;
+		}		
 	#page-container {
 		margin-top:69px;
 		background-color:transparent;

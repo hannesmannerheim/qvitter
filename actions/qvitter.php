@@ -386,7 +386,7 @@ class QvitterAction extends ApiAction
 						print '<div id="site-notice">'.common_config('site', 'notice').'</div>';
 						}														
 					
-					?><div class="front-welcome-text">
+					?><div class="front-welcome-text <?php if ($registrationsclosed) { print 'registrations-closed'; } ?>">
 						<h1></h1>
 						<p></p>
 					</div>		
