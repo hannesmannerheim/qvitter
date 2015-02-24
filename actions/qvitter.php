@@ -168,8 +168,7 @@ class QvitterAction extends ApiAction
 				
 				
 				
-				?>
-				<script>
+				?><script>
 					window.defaultAvatarStreamSize = <?php print json_encode(Avatar::defaultImage(AVATAR_STREAM_SIZE)) ?>;
 					window.textLimit = <?php print json_encode((int)common_config('site','textlimit')) ?>;
 					window.registrationsClosed = <?php print json_encode($registrationsclosed) ?>;
@@ -211,6 +210,27 @@ class QvitterAction extends ApiAction
 					window.siteLicenseTitle = '<?php print common_config('license', 'title'); ?>';
 					window.siteLicenseURL = '<?php print common_config('license', 'url'); ?>';
 					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;	
+					
+					// available language files and their last update time
+					window.availableLanguages = {<?php
+					
+					// scan all files in the locale directory and create a json object with their change date added
+					$available_languages = array_diff(scandir(QVITTERDIR.'/locale'), array('..', '.'));
+					foreach($available_languages as $lan) {
+						$lancode = substr($lan,0,strpos($lan,'.'));
+						print "\n".'						"'.$lancode.'": "'.$lan.'?changed='.date('YmdHis',filemtime(QVITTERDIR.'/locale/'.$lan)).'",';
+						
+						// also make an array with all language names, to use for generating menu
+						$languagecodesandnames[$lancode]['english_name'] = Locale::getDisplayLanguage($lancode, 'en');
+						$languagecodesandnames[$lancode]['name'] = Locale::getDisplayLanguage($lancode, $lancode);
+						if(Locale::getDisplayRegion($lancode, $lancode)) {
+							$languagecodesandnames[$lancode]['name'] .= ' ('.Locale::getDisplayRegion($lancode, $lancode).')';							
+							}
+						if($lancode == 'es_ahorita') { $languagecodesandnames[$lancode]['name'] = 'español (ahorita)'; } // joke
+						}				
+						?>
+					
+						};
 					
 				</script>
 				<style>
@@ -308,26 +328,15 @@ class QvitterAction extends ApiAction
 							<li class="fullwidth"><a id="invite-link" href="<?php print $instanceurl; ?>main/invite"></a></li>
 						<?php } ?>	
 						<li class="fullwidth"><a id="classic-link"></a></li>												
-						<li class="fullwidth language dropdown-divider"></li>										
-						<li class="language"><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>
-						<li class="language"><a class="language-link" title="Asturian" data-lang-code="ast">Asturianu</a></li>						
-						<li class="language"><a class="language-link" title="Catalan" data-lang-code="ca">Català</a></li>
-						<li class="language"><a class="language-link" title="简体中文" data-lang-code="zh_cn">简体中文</a></li>
-						<li class="language"><a class="language-link" title="繁體中文" data-lang-code="zh_tw">繁體中文</a></li>													
-						<li class="language"><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
-						<li class="language"><a class="language-link" title="English" data-lang-code="en">English</a></li>
-						<li class="language"><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>
-						<li class="language"><a class="language-link" title="Spanish (ahorita)" data-lang-code="es_ahorita">Español (ahorita)</a></li>							
-						<li class="language"><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>													
-						<li class="language"><a class="language-link" title="Basque" data-lang-code="eu">Euskara</a></li>																			
-						<li class="language"><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
-						<li class="language"><a class="language-link" title="French" data-lang-code="fr">Français</a></li>									
-						<li class="language"><a class="language-link" title="Galego" data-lang-code="gl">Galego</a></li>															
-						<li class="language"><a class="language-link" title="Italian" data-lang-code="it">Italiano</a></li>													
-						<li class="language"><a class="language-link" title="Norwegian" data-lang-code="no">Norsk</a></li>						
-						<li class="language"><a class="language-link" title="Português-Brasil" data-lang-code="pt_br">Português-Brasil</a></li>													
-						<li class="language"><a class="language-link" title="Suomi [beta]" data-lang-code="fi">Suomi [beta]</a></li>
-						<li class="language"><a class="language-link" title="Swedish" data-lang-code="sv">Svenska</a></li>					
+						<li class="fullwidth language dropdown-divider"></li>
+						<?php
+						
+						// languages
+						foreach($languagecodesandnames as $lancode=>$lan) {
+							print '<li class="language"><a class="language-link" title="'.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
+							}
+						
+						?>													
 					</ul>	
 					<div class="global-nav">
 						<div class="global-nav-inner">
@@ -352,25 +361,14 @@ class QvitterAction extends ApiAction
 												<span class="caret-outer"></span>
 												<span class="caret-inner"></span>
 											</li>
-											<li><a class="language-link" title="Arabic" data-lang-code="ar">العربيّة</a></li>
-											<li><a class="language-link" title="Asturian" data-lang-code="ast">Asturianu</a></li>																	
-											<li><a class="language-link" title="Catalan" data-lang-code="ca">Català</a></li>
-											<li><a class="language-link" title="简体中文" data-lang-code="zh_cn">简体中文</a></li>	
-											<li><a class="language-link" title="繁體中文" data-lang-code="zh_tw">繁體中文</a></li>																						
-											<li><a class="language-link" title="German" data-lang-code="de">Deutsch</a></li>
-											<li><a class="language-link" title="English" data-lang-code="en">English</a></li>
-											<li><a class="language-link" title="Spanish" data-lang-code="es">Español</a></li>	
-											<li><a class="language-link" title="Spanish (ahorita)" data-lang-code="es_ahorita">Español (ahorita)</a></li>
-											<li><a class="language-link" title="Esperanto" data-lang-code="eo">Esperanto</a></li>																		
-											<li><a class="language-link" title="Basque" data-lang-code="eu">Euskara</a></li>																														
-											<li><a class="language-link" title="Farsi" data-lang-code="fa">فارسی</a></li>									
-											<li><a class="language-link" title="French" data-lang-code="fr">Français</a></li>	
-											<li><a class="language-link" title="Galego" data-lang-code="gl">Galego</a></li>	
-											<li><a class="language-link" title="Italian" data-lang-code="it">Italiano</a></li>
-											<li><a class="language-link" title="Norwegian" data-lang-code="no">Norsk</a></li>														
-											<li><a class="language-link" title="Português-Brasil" data-lang-code="pt_br">Português-Brasil</a></li>																														
-											<li><a class="language-link" title="Suomi [beta]" data-lang-code="fi">Suomi [beta]</a></li>											
-											<li><a class="language-link" title="Swedish" data-lang-code="sv">Svenska</a></li>								
+											<?php
+						
+											// languages
+											foreach($languagecodesandnames as $lancode=>$lan) {
+												print '<li><a class="language-link" title="'.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
+												}
+						
+											?>							
 										</ul>
 									</li>
 								</ul>					
@@ -486,14 +484,12 @@ class QvitterAction extends ApiAction
 				</div>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.1.1.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-ui-1.10.3.min.js"></script>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.easing.1.3.js"></script>	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.jWindowCrop.js"></script>	
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js"></script>	
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/dom-functions.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/misc-functions.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/ajax-functions.js')); ?>"></script>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lan.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lan.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/qvitter.js')); ?>"></script>
 				<?php
 				
