@@ -929,6 +929,12 @@ function expand_queet(q,doScrolling) {
 			// maybe show images or videos
 			$.each($('#' + q.children('.queet').attr('id') + ' .queet-text, #' + q.children('.queet').attr('id') + ' > .attachments').find('a'), function() {
 
+				var attachment_mimetype = $(this).find('img').attr('data-mime-type');
+
+				if(typeof attachment_mimetype == 'undefined') {
+					attachment_mimetype = '';
+				}
+
 				var attachment_title = $(this).attr('title');
 				
 				// attachments in the .attachments container don't have a title, their full url is in the href
@@ -939,10 +945,7 @@ function expand_queet(q,doScrolling) {
 				// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
 				if(typeof attachment_title != 'undefined') {
 					// images
-					if(attachment_title.substr(attachment_title.length - 5) == '.jpeg' ||
-					   attachment_title.substr(attachment_title.length - 4) == '.png' ||
-					   attachment_title.substr(attachment_title.length - 4) == '.gif' ||
-					   attachment_title.substr(attachment_title.length - 4) == '.jpg') {
+					if($.inArray(attachment_mimetype, ['image/gif', 'image/jpeg', 'image/png'])) {
 						if(q.children('.queet').find('.expanded-content').children('.media').children('a[href="' + attachment_title + '"]').length < 1) { // not if already showed
 							
 							// local attachment with a thumbnail
@@ -956,7 +959,7 @@ function expand_queet(q,doScrolling) {
 								}
 							
 							// don't show thumbnails for gifs
-							if(attachment_title.substr(attachment_title.length - 4) == '.gif') {
+							if(attachment_mimetype == 'image/gif') {
 								var attachment_src = attachment_title;
 								}
 
@@ -1825,7 +1828,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 					var thumb_url = window.siteAttachmentURLBase + this.id + '/thumbnail?w=200&h=200';					
 					}
 				
-				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-big-thumbnail="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH + '" src="' + thumb_url + '"/></a>';
+				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-mime-type="' + this.mimetype + '" data-big-thumbnail="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH + '" src="' + thumb_url + '"/></a>';
 				}
 			});
 		}	
