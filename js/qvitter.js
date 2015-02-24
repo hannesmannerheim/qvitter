@@ -275,7 +275,7 @@ $(window).load(function() {
 		if(typeof localStorage.selectedLanguage != 'undefined' && localStorage.selectedLanguage != null) {
 			window.selectedLanguage = localStorage.selectedLanguage;
 			}
-		else if(typeof window.l[browserLang] != 'undefined') {
+		else if(typeof window.availableLanguages[browserLang] != 'undefined') {
 			window.selectedLanguage =  browserLang;        	
 			}
 		}
