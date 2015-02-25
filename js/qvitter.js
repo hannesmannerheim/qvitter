@@ -1343,6 +1343,7 @@ $('body').on('click','#new-queets-bar',function(){
 
 $('body').on('click','.queet',function (event) {
 	if(!$(event.target).is('a')
+		&& !$(event.target).is('video')
 		&& !$(event.target).is('.cm-mention')
 		&& !$(event.target).is('.cm-tag')
 		&& !$(event.target).is('.cm-group')
