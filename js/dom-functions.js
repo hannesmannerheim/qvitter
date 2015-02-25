@@ -963,11 +963,15 @@ function expand_queet(q,doScrolling) {
 				if(typeof attachment_title == 'undefined') {
 					attachment_title = $(this).attr('href');					
 					}
+				
+				// filename extension
+				var attachment_title_extension = attachment_title.substr((~-attachment_title.lastIndexOf(".") >>> 0) + 2);
 
 				// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
 				if(typeof attachment_title != 'undefined') {
 					// images
-					if($.inArray(attachment_mimetype, ['image/gif', 'image/jpeg', 'image/png']) >= 0) {
+					if($.inArray(attachment_mimetype, ['image/gif', 'image/jpeg', 'image/png']) >= 0
+					|| $.inArray(attachment_title_extension, ['jpeg', 'gif', 'jpg','png']) >= 0) {
 						if(q.children('.queet').find('.expanded-content').children('.media').children('a[href="' + attachment_title + '"]').length < 1) { // not if already showed
 							
 							// local attachment with a thumbnail
@@ -991,8 +995,8 @@ function expand_queet(q,doScrolling) {
 							else {
 								q.children('.queet').find('.expanded-content').prepend('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_src + '" /></a></div>');								
 								}
+							}
 						}
-					}
 					// videos
 					else if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >= 0) {
 						if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
