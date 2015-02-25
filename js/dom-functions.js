@@ -116,7 +116,9 @@ function showFavsAndRequeetsInQueet(q,data) {
 	var avatarnum = 1;
 	$.each(timeSorted,function(){
 		q.children('.queet').find('.avatar-row').append('<a title="' + favsAndRepeatsByTime[this].fullname + '" data-user-id="' + favsAndRepeatsByTime[this].user_id + '" href="' + favsAndRepeatsByTime[this].profileurl + '"><img alt="' + favsAndRepeatsByTime[this].fullname + '" src="' + favsAndRepeatsByTime[this].avatarurl + '" class="avatar size24" id="av-' + favsAndRepeatsByTime[this].user_id + '"></a>');
-		return (avatarnum < 8);		
+		if(avatarnum > 15) {	
+			return false;
+			}
 		avatarnum++;
 		});
 

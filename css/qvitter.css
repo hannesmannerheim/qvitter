@@ -2216,6 +2216,7 @@ ul.stats {
 	list-style-position: outside;
 	list-style-type: none;
 	overflow: hidden;
+	width: 1000px;
 	}
 .queet.rtl ul.stats {
 	text-align:right;
