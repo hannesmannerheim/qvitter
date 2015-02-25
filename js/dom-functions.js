@@ -973,7 +973,7 @@ function expand_queet(q,doScrolling) {
 					}
 					// videos
 					else if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >= 0) {
-						if(q.children('.queet').find('.expanded-content').children('.media').children('a[href="' + attachment_title + '"]').length < 1) { // not if already showed
+						if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
 
 							// local attachment with a thumbnail
 							if(typeof $(this).find('img').attr('data-big-thumbnail') != 'undefined') {
