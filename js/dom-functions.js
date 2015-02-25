@@ -969,9 +969,25 @@ function expand_queet(q,doScrolling) {
 							else {
 								q.children('.queet').find('.expanded-content').prepend('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_src + '" /></a></div>');								
 								}
-							}
 						}
+					}
 					// videos
+					else if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >= 0) {
+						if(q.children('.queet').find('.expanded-content').children('.media').children('a[href="' + attachment_title + '"]').length < 1) { // not if already showed
+
+							// local attachment with a thumbnail
+							if(typeof $(this).find('img').attr('data-big-thumbnail') != 'undefined') {
+								var attachment_poster = $(this).find('img').attr('data-big-thumbnail');
+								}
+
+							if(q.children('.queet').find('.expanded-content').children('.media').length > 0) {
+								q.children('.queet').find('.media').last().after('<div class="media"><video class="u-video" controls="controls" poster="' + attachment_poster + '"><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');
+								}
+							else {
+								q.children('.queet').find('.expanded-content').prepend('<div class="media"><video class="u-video" controls="controls" poster="' + attachment_poster + '"><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');								
+								}
+						}
+					}
 					else if(attachment_title.indexOf('youtube.com/watch?v=') > -1 || attachment_title.indexOf('://youtu.be/') > -1) {
 						var youtubeId = attachment_title.replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
 						if(q.children('.queet').find('.expanded-content').children('.media').children('iframe').attr('src') != '//www.youtube.com/embed/' + youtubeId) { // not if already showed
