@@ -340,6 +340,7 @@ function unRequeet(this_stream_item, this_action, my_rq_id) {
 			if(this_stream_item.children('.queet').children('.context').find('.requeet-text').children('a').length<1) {
 				this_stream_item.children('.queet').children('.context').remove();
 				}
+			getFavsAndRequeetsForQueet(this_stream_item, this_stream_item.attr('data-quitter-id'));				
 			}
 		else {
 			remove_spinner();
@@ -356,23 +357,39 @@ function unRequeet(this_stream_item, this_action, my_rq_id) {
    · 
    ·   Gets favs or requeets for a queet from api
    · 
-   ·   @param apiaction: i.e. 'favs' or 'requeets' 
+   ·   @param q: stream item object
    ·   @param qid: the queet id
-   ·   @param actionOnSuccess: callback function
    · 
    · · · · · · · · · */
     
-function getFavsOrRequeetsForQueet(apiaction,qid,actionOnSuccess) { 
-	if(apiaction=="requeets") { apiaction="retweets"; } // we might mix this up...
-	$.ajax({ url: window.apiRoot + "statuses/" + apiaction + "/" + qid + ".json?t=" + timeNow(),
+function getFavsAndRequeetsForQueet(q,qid) { 
+
+	// get immediately from localstorage cache
+	if(localStorageIsEnabled()) {
+		if(typeof localStorage['favsAndRequeets-' + qid] != 'undefined' && localStorage['favsAndRequeets-' + qid] !== null) {
+			showFavsAndRequeetsInQueet(q, JSON.parse(localStorage['favsAndRequeets-' + qid]));
+			}				
+		}
+
+	$.ajax({ url: window.apiRoot + "qvitter/favs_and_repeats/" + qid + ".json?t=" + timeNow(),
 		type: "GET", 
 		dataType: 'json', 
-		success: function(data) { 			
-			if(data.length > 0) {
-				actionOnSuccess(data);			
+		success: function(data) { 
+			if(data.favs.length > 0 || data.repeats.length > 0) {
+				if(localStorageIsEnabled()) { localStorage['favsAndRequeets-' + qid] = JSON.stringify(data);} // cache response
+
+				if(q.hasClass('expanded') && !q.hasClass('collapsing')) {
+					showFavsAndRequeetsInQueet(q,data);
+					}						
 				}
 			else {
-				actionOnSuccess(false);
+				// remove from cache and DOM if all favs and repeats are deleted
+				if(localStorageIsEnabled()) {
+					if(typeof localStorage['favsAndRequeets-' + qid] != 'undefined' && localStorage['favsAndRequeets-' + qid] !== null) {					
+						delete localStorage['favsAndRequeets-' + qid];
+						}
+					}
+				q.children('.queet').find('.stats').remove();
 				}
 			}, 
 		error: function(data) { 

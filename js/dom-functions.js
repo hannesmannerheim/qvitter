@@ -36,66 +36,90 @@
 
 /* ·  
    · 
-   ·   Show favs or requeets in queet element
+   ·   Show favs and requeets in queet element
    · 
    ·   @param q: queet jQuery object
-   ·   @param users: object with users that has faved or requeeted 
-   ·   @param type: fav or requeet
+   ·   @param data: object with users that has faved and requeeted 
    · 
    · · · · · · · · · */
    	
-function showFavsOrRequeetsInQueet(q,users,type) {
+function showFavsAndRequeetsInQueet(q,data) {
 
-	// label maybe plural				
-	if(users.length == 1) {
-		if(type=='favs') { var label = window.sL.favoriteNoun;	}
-		else if(type=='requeets') { var label = window.sL.requeetNoun;	}
+	// remove any existing stats container and add a new empty one
+	if(q.children('.queet').find('ul.stats').length > 0) {
+		q.children('.queet').find('ul.stats').remove();
 		}
-	else if(users.length > 1) {
-		if(type=='favs') { var label = window.sL.favoritesNoun;	}
-		else if(type=='requeets') { var label = window.sL.requeetsNoun;	}
-		}
+		
+	q.children('.queet').find('.queet-stats-container').prepend('<ul class="stats"><li class="avatar-row"></li></ul>');					
 	
-	var html = '<li class="x-count"><a>' + label + ' </a><strong>' + users.length + '</strong></li>';
+	// add favs
+	if(data.favs.length > 0) {
+		
+		if(data.favs.length == 1) {
+			var favLabel = window.sL.favoriteNoun;
+			}
+		else if(data.favs.length > 1) {
+			var favLabel = window.sL.favoritesNoun;
+			}
+			
+		if(q.children('.queet').find('.fav-count').length>0) {
+			q.children('.queet').find('.fav-count').children('strong').html(data.favs.length);
+			}			
+		else {
+			q.children('.queet').find('li.avatar-row').before('<li class="fav-count"><a>' + favLabel + ' </a><strong>' + data.favs.length + '</strong></li>');						
+			}
+		}
+		
+	// add repeats
+	if(data.repeats.length > 0) {
+		
+		if(data.repeats.length == 1) {
+			var repeatsLabel = window.sL.requeetNoun;
+			}
+		else if(data.repeats.length > 1) {
+			var repeatsLabel = window.sL.requeetsNoun;
+			}
+			
+		if(q.children('.queet').find('.rq-count').length>0) {
+			q.children('.queet').find('.rq-count').children('strong').html(data.repeats.length);
+			}			
+		else {
+			q.children('.queet').find('li.avatar-row').before('<li class="rq-count"><a>' + repeatsLabel + ' </a><strong>' + data.repeats.length + '</strong></li>');						
+			}	
+					
+		}
+		
+	
+	// merge favs and repeats objects by user_id (removes duplicate users)
+	var favsAndRepeats = {};
+	$.each(data.repeats,function(){
+		favsAndRepeats[this.user_id] = this;
+		});
+	$.each(data.favs,function(){
+		favsAndRepeats[this.user_id] = this;
+		});
+	
+	// make an object with time the key
+	var favsAndRepeatsByTime = {};
+	$.each(favsAndRepeats,function(){
+		favsAndRepeatsByTime[this.time] = this;
+		});	
 
-	// add fav and rq-container if it doesn't exist
-	if(!q.find('ul.stats').length > 0) {
-		q.find('.queet-stats-container').prepend('<ul class="stats"><li class="avatar-row"></li></ul>');					
-		}
-	
-	// requeets always first				
-	if(type=='favs') {
-		q.find('li.avatar-row').before(html.replace('x-count','fav-count'));						
-		}
-	else if(type=='requeets') {
-		q.find('ul.stats').prepend(html.replace('x-count','rq-count'));						
-		}
-	
-	// show max seven avatars
-	var avatarnum = q.find('.avatar').length;
-	if(avatarnum < 7) {
-		$.each(users,function(){
-			
-			// api return little different objects for fav and rq
-			var userObj = new Object();
-			if(type=='favs') {
-				userObj = this;
-				}
-			else if(type=='requeets') {
-				userObj.fullname = this.user.name;
-				userObj.user_id = this.user.id;				
-				userObj.profileurl = this.user.statusnet_profile_url;								
-				userObj.avatarurl = this.user.profile_image_url;
-				}
-			
-			// no dupes
-			if(q.children('.queet').find('#av-' + userObj.user_id).length==0) {
-				q.find('.avatar-row').append('<a title="' + userObj.fullname + '" data-user-id="' + userObj.user_id + '" href="' + userObj.profileurl + '"><img alt="' + userObj.fullname + '" src="' + userObj.avatarurl + '" class="avatar size24" id="av-' + userObj.user_id + '"></a>');
-				avatarnum++;							
-				}
-			return (avatarnum < 8);					
-			});
-		}	
+	// create an array with times and sort it
+	var timeSorted = [];
+	$.each(favsAndRepeats,function(){
+		timeSorted.push(this.time);
+		});
+	timeSorted.sort();
+
+	// display avatars in chronological order, max 7
+	var avatarnum = 1;
+	$.each(timeSorted,function(){
+		q.children('.queet').find('.avatar-row').append('<a title="' + favsAndRepeatsByTime[this].fullname + '" data-user-id="' + favsAndRepeatsByTime[this].user_id + '" href="' + favsAndRepeatsByTime[this].profileurl + '"><img alt="' + favsAndRepeatsByTime[this].fullname + '" src="' + favsAndRepeatsByTime[this].avatarurl + '" class="avatar size24" id="av-' + favsAndRepeatsByTime[this].user_id + '"></a>');
+		return (avatarnum < 8);		
+		avatarnum++;
+		});
+
 	}
 	
 	
@@ -895,25 +919,21 @@ function expand_queet(q,doScrolling) {
 		}
 	else if(!q.hasClass('collapsing')) {
 		
-		rememberMyScrollPos(q,qid,-8);
-		
 		// not for acitivity or notifications
 		if(!q.hasClass('activity') && !q.hasClass('repeat') && !q.hasClass('like') && !q.hasClass('follow')) {
 		
 			q.addClass('expanded');
 			q.prev().addClass('next-expanded');
 				
-			// if shortened queet, get full text (not if external)
-			if(!q.hasClass('external-conversation')) {
-				if(q.children('.queet').find('span.attachment.more').length>0) {
-					var attachmentId = q.children('.queet').find('span.attachment.more').attr('data-attachment-id');
-					getFromAPI("attachment/" + attachmentId + ".json",function(data){
-						if(data) {
-							console.log(data);
-							q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">').replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
-							}
-						});					
-					}
+			// if shortened queet, get full text
+			if(q.children('.queet').find('span.attachment.more').length>0) {
+				var attachmentId = q.children('.queet').find('span.attachment.more').attr('data-attachment-id');
+				getFromAPI("attachment/" + attachmentId + ".json",function(data){
+					if(data) {
+						console.log(data);
+						q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">').replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
+						}
+					});					
 				}
 
 			// add expanded container
@@ -997,33 +1017,18 @@ function expand_queet(q,doScrolling) {
 					}
 				});
 			
-			// get favs and rq:s (not if external) (and only if logged in because API demands that)
-			if(!q.hasClass('external-conversation') && window.loggedIn) {
-				
-				// get and show favs
-				getFavsOrRequeetsForQueet('favs',qid,function(favs){
-					if(favs) {
-						if(q.hasClass('expanded') && !q.hasClass('collapsing')) {
-							showFavsOrRequeetsInQueet(q,favs,'favs');
-							}
-						}
-					});	
 
-				// get and show requeets
-				getFavsOrRequeetsForQueet('retweets',qid,function(requeets){
-					if(requeets) {
-						if(q.hasClass('expanded') && !q.hasClass('collapsing')) {
-							showFavsOrRequeetsInQueet(q,requeets,'requeets');
-							}
-						}
-					});								
-				}		
+			// get and show favs and repeats
+			getFavsAndRequeetsForQueet(q, qid);	
+						
 								
 			// show conversation and reply form (but not if already in conversation)
 			if(!q.hasClass('conversation')) {
 				
-				// show conversation
-				showConversation(qid);	
+				// show conversation (wait for css to animate the margin 50ms)
+				setTimeout(function(){
+					getConversation(q, qid);
+					},50);
 				
 				// show inline reply form if logged in
 				if(typeof window.loggedIn.screen_name != 'undefined') {			
@@ -1175,203 +1180,111 @@ function convertNewGNUSocialURItoURL(obj) {
 	
 /* · 
    · 
-   ·  Show conversation
+   ·  Get and show conversation
    ·   
    ·  This function has grown into a monster, needs fixing  
    ·
    · · · · · · · · · · · · · */ 	
-  
-function showConversation(qid) {
-			
-	// get conversation	
+
+function getConversation(q, qid) {
+
+	// check if we have a conversation for this notice cached in localstorage
+	if(localStorageIsEnabled()) {
+
+		if(typeof localStorage['conversation-' + qid] != 'undefined' && localStorage['conversation-' + qid] !== null) {
+			showConversation(q, qid, JSON.parse(localStorage['conversation-' + qid]));
+			}	
+		// if we have a conversation for the notice that this notice is a reply to, 
+		// we assume it's the same conversation, and use that
+		else if(q.attr('data-in-reply-to-status-id') !== null
+		&& q.attr('data-in-reply-to-status-id') != 'null'
+		&& typeof localStorage['conversation-' + q.attr('data-in-reply-to-status-id')] != 'undefined'
+		&& localStorage['conversation-' + q.attr('data-in-reply-to-status-id')] !== null) {
+			showConversation(q, qid, JSON.parse(localStorage['conversation-' + q.attr('data-in-reply-to-status-id')]));
+			}				
+		
+		}
+	
+	// always get most recent conversation from server
 	getFromAPI('statusnet/conversation/' + $('#stream-item-' + qid).attr('data-conversation-id') + '.json?count=100', function(data){ if(data) { 
 
-		if(data && !$('#stream-item-' + qid).hasClass('collapsing')){		
-			// we have local conversation
-			if(data.length>1) {
-				var before_or_after = 'after';
-				$.each(data, function (key,obj) {
-					
-					// switch to append after original queet
-					if(obj.id == qid) {	
-						before_or_after = 'before';
+		// cache in localstorage
+		if(localStorageIsEnabled()) {
+			localStorage['conversation-' + qid] = JSON.stringify(data);
+			}
+
+		showConversation(q, qid,data);	
+		}});
+	}
+			
+	 
+function showConversation(q, qid, data) {
+
+	rememberMyScrollPos(q.children('.queet'),qid,0);
+			
+	if(data && !q.hasClass('collapsing')){		
+
+		if(data.length>1) {
+			var before_or_after = 'before';
+			$.each(data.reverse(), function (key,obj) {
+				
+				// switch to append after original queet
+				if(obj.id == qid) {	
+					before_or_after = 'after';
+					}
+				
+				// don't add clicked queet to DOM, but all else
+				// note: first we add the full conversation, but hidden
+				if(obj.id != qid) {
+					var queetTime = parseTwitterDate(obj.created_at);																					
+											
+					if(obj.source == 'activity') {
+						var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a>' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
 						}
+					else {
+						var queetHtml = buildQueetHtml(obj, obj.id, 'conversation hidden-conversation', false, true);
+						}						
 					
-					// don't add clicked queet to DOM, but all else
-					// note: first we add the full conversation, but hidden
-					if(obj.id != qid) {
-						var queetTime = parseTwitterDate(obj.created_at);															
-	
-						// we don't want to print 'null', someone might have that username!
-						var in_reply_to_screen_name = '';
-						if(obj.in_reply_to_screen_name != null) {
-							in_reply_to_screen_name = obj.in_reply_to_screen_name;
+					// detect rtl
+					queetHtml = detectRTL(queetHtml);						
+					
+					if(q.hasClass('expanded')) { // add queet to conversation only if still expanded
+					
+						// replace already existing queets' html
+						if(q.children('#conversation-stream-item-' + obj.id).length > 0) {
+							var streamItemInnerHtml = $('<div/>').append(queetHtml).find('.stream-item').html();
+							q.children('#conversation-stream-item-' + obj.id).html(streamItemInnerHtml);
+							
 							}
-
-						// is this mine?
-						var isThisMine = 'not-mine';	
-						if(obj.user.id == window.myUserID) {
-							var isThisMine = 'is-mine';
-							}
-						
-						// requeet or delete html
-						var requeetedClass = '';
-						if(obj.repeated) {
-							var requeetHtml = '<li class="action-rt-container"><a class="with-icn done"><span class="icon sm-rt" title="' + window.sL.requeetedVerb + '"></span></a></li>';
-							requeetedClass = 'requeeted';
+						else if(before_or_after == 'before') {
+							q.children('.queet').before(queetHtml);
 							}
 						else {
-							var requeetHtml = '<li class="action-rt-container"><a class="with-icn"><span class="icon sm-rt ' + isThisMine + '" title="' + window.sL.requeetVerb + '"></span></a></li>';
-							}
-						// favorite html
-						var favoritedClass = '';
-						if(obj.favorited) {
-							var favoriteHtml = '<a class="with-icn done"><span class="icon sm-fav" title="' + window.sL.favoritedVerb + '"></span></a>';
-							favoritedClass = 'favorited'; 
-							}
-						else {
-							var favoriteHtml = '<a class="with-icn"><span class="icon sm-fav" title="' + window.sL.favoriteVerb + '"></span></a>';
-							}							
-							
-						// actions only for logged in users
-						var queetActions = '';
-						if(typeof window.loggedIn.screen_name != 'undefined') {			
-							queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li>' +  requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li><li class="action-ellipsis-container"><a class="with-icn"><span class="icon sm-ellipsis" title="' + window.sL.ellipsisMore + '"></span></a></li></ul>';
-							}
-
-
-						// reply-to html					
-						var reply_to_html = '';							
-						if(obj.in_reply_to_screen_name !== null && obj.in_reply_to_profileurl !== null && obj.in_reply_to_screen_name != obj.user.screen_name) {
-							reply_to_html = '<span class="reply-to"><a class="h-card mention" href="' + obj.in_reply_to_profileurl + '">@' + obj.in_reply_to_screen_name + '</a></span> ';
-							}
-
-						// in-groups html
-						var in_groups_html = '';							
-						if(obj.statusnet_in_groups !== false && typeof obj.statusnet_in_groups != 'undefined') {
-							$.each(obj.statusnet_in_groups,function(){
-								in_groups_html = '<span class="in-groups"><a class="h-card group" href="' + obj.statusnet_in_groups.url + '">!' + obj.statusnet_in_groups.nickname + '</a></span>';			
-								});
-							}								
-
-							
-						// external
-						var ostatusHtml = '';
-						if(obj.is_local === false) {
-							ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
-							}
-							
-
-						obj = convertNewGNUSocialURItoURL(obj);
-												
-						if(obj.source == 'activity') {
-							var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a>' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
-							}
-						else {
-							var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation hidden-conversation ' + requeetedClass + ' ' + favoritedClass + '" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="conversation-q-' + obj.id + '">' + ostatusHtml + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a> <i class="addressees">' + reply_to_html + in_groups_html + '</i><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer">' + queetActions + '</div></div></div></div>';				
-							}						
-						
-						// detect rtl
-						queetHtml = detectRTL(queetHtml);						
-						
-						if($('#stream-item-' + qid).hasClass('expanded')) { // add queet to conversation only if still expanded
-							if(before_or_after == 'before') {
-								$('#stream-item-' + qid).prepend(queetHtml);
+							if(q.children('.queet').nextAll('.conversation').length < 1) {
+								q.children('.queet').after(queetHtml);																
 								}
 							else {
-								$('#q-' + qid).after(queetHtml);
+								q.children('.queet').nextAll('.conversation').last().after(queetHtml);								
 								}
-								
 							}
+							
 						}
-					convertAttachmentMoreHref();						
-					});
-				}
-	
-			// try to get conversation from external instance
-			else if(typeof data[0] != 'undefined') {
-				if(data[0].source == 'ostatus') {
-					var external_status_url = data[0].uri.replace('notice','api/statuses/show') + '.json';					
-					var external_base_url = data[0].uri.substring(0,data[0].uri.indexOf('/notice/'));
-					$.ajax({ url: external_status_url, type: "GET", dataType: "jsonp", success: function(data) { // try to get conversation id fro notice
-						var external_id = data.id;
-						if(typeof data.statusnet_conversation_id == 'undefined') {
-							console.log(data);remove_spinner();
-							}
-						else { // proceed if we got a conversation_id
-							$.ajax({ url: external_base_url + '/api/statusnet/conversation/' + data.statusnet_conversation_id + ".json?count=100", type: "GET", dataType: "jsonp", success: function(data) { 				
-								var before_or_after = 'after';
-								data = iterateRecursiveReplaceHtmlSpecialChars(data);
-								$.each(data, function (key,obj) {
-									
-									// switch to append after original queet
-									if(obj.id == external_id) {	
-										before_or_after = 'before';
-										$('#stream-item-' + qid).attr('data-in-reply-to-status-id',obj.in_reply_to_status_id);
-										}
-									else {
-										var queetTime = parseTwitterDate(obj.created_at);															
-					
-										// we don't want to print 'null', someone might have that username!
-										var in_reply_to_screen_name = '';
-										if(obj.in_reply_to_screen_name != null) {
-											in_reply_to_screen_name = obj.in_reply_to_screen_name;
-											}
-
-										// reply-to html
-										var reply_to_html = '';							
-										if(obj.in_reply_to_screen_name != null && obj.in_reply_to_screen_name != obj.user.screen_name) {
-											reply_to_html = '<span class="reply-to">@' + obj.in_reply_to_screen_name + '</span> ';
-											}
-										
-										obj = convertNewGNUSocialURItoURL(obj);
-										
-										if(obj.source == 'activity') {
-											var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation external-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + external_base_url + '/notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
-											}
-										else {
-											var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation hidden-conversation external-conversation" data-external-base-url="' + escape(external_base_url) + '" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '" data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"><div class="queet" id="conversation-q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.user.statusnet_profile_url + '"><img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> <span class="screen-name">@' + obj.user.screen_name + '</span></a>' + reply_to_html + '<small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + external_base_url + '/notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div><div class="stream-item-footer"><ul class="queet-actions"><li class="action-reply-container">&nbsp;</li></ul></div></div></div></div>';				
-											}
-										
-										// detect rtl
-										queetHtml = detectRTL(queetHtml);						
-										
-										if($('#stream-item-' + qid).hasClass('expanded')) { // add queet to conversation only if still expanded
-											if(before_or_after == 'before') {
-												$('#stream-item-' + qid).prepend(queetHtml);
-												}
-											else {
-												$('#q-' + qid).after(queetHtml);
-												}		
-											}
-										}	
-									remove_spinner();	
-									convertAttachmentMoreHref();
-									});							
-								findInReplyToStatusAndShow(qid,$('#stream-item-' + qid).attr('data-in-reply-to-status-id'),true,false);
-								backToMyScrollPos($('#q-' + qid),qid,false);
-								}, error: function(data) { console.log(data);remove_spinner(); }});							
-							}
-						}, error: function(data) { console.log(data);remove_spinner(); }});							
 					}
-				// no conversation
-				else {
-					remove_spinner();
-					}
-				}
-			else {
-				remove_spinner();
-				}
-			
-			// loop trough this stream items conversation and show the "strict" line of replies
-			findInReplyToStatusAndShow(qid,$('#stream-item-' + qid).attr('data-in-reply-to-status-id'),true,false);
-			backToMyScrollPos($('#q-' + qid),qid,false);
-			findAndMarkLastVisibleInConversation($('#stream-item-' + qid));
+				convertAttachmentMoreHref();						
+				});
 			}
 		else {
 			remove_spinner();
-			}	
-		}});	
+			}
+		
+		// loop trough this stream items conversation and show the "strict" line of replies
+		findInReplyToStatusAndShow(q,qid,q.attr('data-in-reply-to-status-id'),true,false);
+		backToMyScrollPos(q.children('.queet'),qid,false);
+		findAndMarkLastVisibleInConversation(q);
+		}
+	else {
+		remove_spinner();
+		}	
 	}
 
 
@@ -1394,66 +1307,70 @@ function findAndMarkLastVisibleInConversation(streamItem) {
    ·
    · · · · · · · · · · · · · */ 	
   	
-function findInReplyToStatusAndShow(qid,reply,only_first,onlyINreplyto) {
+function findInReplyToStatusAndShow(q, qid,reply,only_first,onlyINreplyto) {
 	var reply_found = $('#stream-item-' + qid).find('.stream-item[data-quitter-id="' + reply + '"]');
 	var reply_found_reply_to = $('#stream-item-' + qid).find('.stream-item[data-quitter-id="' + reply_found.attr('data-in-reply-to-status-id') + '"]');	
 	if(reply_found.length>0) {
 		reply_found.removeClass('hidden-conversation');
-		//reply_found.animate({opacity:'1'},500);
 		reply_found.css('opacity','1');
 		if(only_first && reply_found_reply_to.length>0) {
-			reply_found.before('<div class="view-more-container-top" data-trace-from="' + reply + '"><a>' + window.sL.viewMoreInConvBefore + '</a></div>');			
-			findReplyToStatusAndShow(qid,qid,true);
+			if(q.children('.view-more-container-top').length < 1) {
+				reply_found.before('<div class="view-more-container-top" data-trace-from="' + reply + '"><a>' + window.sL.viewMoreInConvBefore + '</a></div>');							
+				}
+			findReplyToStatusAndShow(q, qid,qid,true);
 			}
 		else {
-			findInReplyToStatusAndShow(qid,reply_found.attr('data-in-reply-to-status-id'),false,onlyINreplyto);							
+			findInReplyToStatusAndShow(q, qid,reply_found.attr('data-in-reply-to-status-id'),false,onlyINreplyto);							
 			}
 		}
 	else if(!onlyINreplyto) {
-		findReplyToStatusAndShow(qid,qid,true);
+		findReplyToStatusAndShow(q, qid,qid,true);
 		}
 	else {
-		checkForHiddenConversationQueets(qid);		
+		checkForHiddenConversationQueets(q, qid);		
 		}		
 	}
 // recursive function to find the replies to a status
-function findReplyToStatusAndShow(qid,this_id,only_first) {
-	var reply_found = $('#stream-item-' + qid).find('.stream-item[data-in-reply-to-status-id="' + this_id + '"]');
-	var reply_founds_reply = $('#stream-item-' + qid).find('.stream-item[data-in-reply-to-status-id="' + reply_found.attr('data-quitter-id') + '"]');
-	if(reply_found.length>0) {
-		reply_found.removeClass('hidden-conversation');
-// 		reply_found.animate({opacity:'1'},0,function(){
-// 			if(!only_first) {
-// 				findReplyToStatusAndShow(qid,$(this).attr('data-quitter-id'),false);
-// 				}			
-// 			});
-		reply_found.css('opacity','1');
+function findReplyToStatusAndShow(q, qid,this_id,only_first) {
+	
+	var replies_found = q.find('.stream-item[data-in-reply-to-status-id="' + this_id + '"]');
+
+	$.each(replies_found, function(k,reply_found){
+
+		var reply_founds_reply = q.find('.stream-item[data-in-reply-to-status-id="' + $(reply_found).attr('data-quitter-id') + '"]');
+
+		$(reply_found).removeClass('hidden-conversation');
+		$(reply_found).css('opacity','1');
+		
 		if(!only_first) {
-			findReplyToStatusAndShow(qid,$(this).attr('data-quitter-id'),false);
+			findReplyToStatusAndShow(q, qid,$(this).attr('data-quitter-id'),false);
 			}					
 		if(only_first && reply_founds_reply.length>0) {
-			reply_found.last().after('<div class="view-more-container-bottom" data-replies-after="' + qid + '"><a>' + window.sL.viewMoreInConvAfter + '</a></div>');			
+			if(q.children('.view-more-container-bottom').length < 1) {
+				q.append('<div class="view-more-container-bottom" data-replies-after="' + qid + '"><a>' + window.sL.viewMoreInConvAfter + '</a></div>');			
+				}		
 			}
-		}
-	checkForHiddenConversationQueets(qid);	
+		
+		});
+	checkForHiddenConversationQueets(q, qid);	
 	}
 
 // helper function for the above recursive functions
-function checkForHiddenConversationQueets(qid) {
+function checkForHiddenConversationQueets(q, qid) {
 	// here we check if there are any remaining hidden queets in conversation, if there are, we put a "show full conversation"-link
-	if($('#stream-item-' + qid).find('.hidden-conversation').length>0) {
-		if($('#stream-item-' + qid).children('.queet').find('.show-full-conversation').length == 0) {
-			$('#stream-item-' + qid).children('.queet').find('.stream-item-footer').append('<span class="show-full-conversation" data-stream-item-id="' + qid + '">' + window.sL.expandFullConversation + '</span>');							
+	if(q.find('.hidden-conversation').length>0) {
+		if(q.children('.queet').find('.show-full-conversation').length == 0) {
+			q.children('.queet').find('.stream-item-footer').append('<span class="show-full-conversation" data-stream-item-id="' + qid + '">' + window.sL.expandFullConversation + '</span>');							
 			
 			// if this is a single notice, we show conversation
 			if(window.currentStream.substring(0,14) == 'statuses/show/') {
-				$('#stream-item-' + qid).children('.queet').find('.show-full-conversation').trigger('click');
+				q.children('.queet').find('.show-full-conversation').trigger('click');
 				}			
 			
 			}
 		}
 	else {
-		$('#stream-item-' + qid).children('.queet').find('.show-full-conversation').remove();
+		q.children('.queet').find('.show-full-conversation').remove();
 		}		
 	}
 	
@@ -1767,18 +1684,30 @@ function addToFeed(feed, after, extraClasses, isReply) {
    ·   
    · · · · · · · · · · · · · */ 
 
-function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
+function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isConversation) {
 	
 	// we don't want to print 'null' in in_reply_to_screen_name-attribute, someone might have that username!
 	var in_reply_to_screen_name = '';
 	if(obj.in_reply_to_screen_name != null) {
 		in_reply_to_screen_name = obj.in_reply_to_screen_name;
-		}										
+		}
+	
+	// conversations has some slightly different id's
+	var idPrepend = '';
+	if(typeof isConversation != 'undefined' && isConversation === true) {
+		var idPrepend = 'conversation-';
+		}
 
 	// is this mine?
 	var isThisMine = 'not-mine';	
 	if(obj.user.id == window.myUserID) {
 		var isThisMine = 'is-mine';
+		}
+		
+	// requeeted by me?
+	var requeetedByMe = '';		
+	if(obj.repeated_id) {
+		requeetedByMe = ' data-requeeted-by-me-id="' + obj.repeated_id + '" ';
 		}
 	
 	// requeet html
@@ -1854,7 +1783,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 		
 	// requeets
 	var requeetHtml = '';
-	if(typeof requeeted_by != 'undefined') {
+	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
 		var requeetedByHtml = '<a data-user-id="' + requeeted_by.user.id + '" href="' + requeeted_by.user.statusnet_profile_url + '"> <b>' + requeeted_by.user.name + '</b></a>';
 		requeetHtml = '<div class="context" id="requeet-' + requeeted_by.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetedByHtml) + '</span></span></div>';
 		}
@@ -1869,15 +1798,16 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by) {
 		
 	var queetTime = parseTwitterDate(obj.created_at);															
 	var queetHtml = '<div \
-						id="stream-item-' + obj.id + '" \
+						id="' + idPrepend + 'stream-item-' + obj.id + '" \
 						class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" \
 						data-source="' + escape(obj.source) + '" \
 						data-quitter-id="' + obj.id + '" \
 						data-conversation-id="' + obj.statusnet_conversation_id + '" \
 						data-quitter-id-in-stream="' + idInStream + '" \
 						data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" \
-						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '">\
-							<div class="queet" id="q-' + obj.id + '">\
+						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"\
+						' + requeetedByMe + '>\
+							<div class="queet" id="' + idPrepend + 'q-' + obj.id + '">\
 								' + requeetHtml + '\
 								' + attachment_html + '\
 								' + ostatusHtml + '\

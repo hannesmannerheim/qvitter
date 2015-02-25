@@ -117,7 +117,9 @@ class QvitterPlugin extends Plugin {
     public function onRouterInitialized($m)
     {
 		
-        $m->connect('api/qvitter.json', array('action' => 'qvitterapi'));              
+		$m->connect('api/qvitter/favs_and_repeats/:notice_id.json',
+					array('action' => 'ApiFavsAndRepeats'),
+					array('notice_id' => '[0-9]+'));
 		$m->connect('api/statuses/public_and_external_timeline.:format',
 					array('action' => 'ApiTimelinePublicAndExternal',
 						  'format' => '(xml|json|rss|atom|as)'));
@@ -467,7 +469,7 @@ class QvitterPlugin extends Plugin {
      * @return boolean hook return
      */
 
-    function onNoticeSimpleStatusArray($notice, &$twitter_status)
+    function onNoticeSimpleStatusArray($notice, &$twitter_status, $scoped)
     {
     
     	// groups
@@ -478,7 +480,12 @@ class QvitterPlugin extends Plugin {
 			}
 		$twitter_status['statusnet_in_groups'] = $group_addressees;    
 
-
+		// include the repeat-id, which we need when unrepeating later
+		if($twitter_status['repeated'] === true) {
+			$repeated = Notice::pkeyGet(array('profile_id' => $scoped->id,
+                                        	'repeat_of' => $notice->id));
+			$twitter_status['repeated_id'] = $repeated->id;
+			}
 
 		// thumb urls
 		
