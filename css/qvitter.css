@@ -1855,6 +1855,7 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	word-wrap: break-word; 
 	max-height:400px;
 	overflow-y:auto;
+	padding: 1px 0;	
 	}
 .stream-item.user .queet-text {
 	cursor: auto;
