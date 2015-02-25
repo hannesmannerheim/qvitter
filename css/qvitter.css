@@ -2191,7 +2191,7 @@ ul.queet-actions li .icon.is-mine:before {
 	}
 .stream-item .media img,
 .stream-item .media video {
-    max-width: 500px;
+    max-width: 100%;
 	}
 
 ul.stats {
