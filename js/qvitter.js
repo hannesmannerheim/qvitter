@@ -572,16 +572,15 @@ function logoutWithoutReload(doShake) {
 											
 	$('input#nickname').focus();	
 	$('.front-signup').animate({opacity:'1'},200);
-	if(doShake || localStorage.doShake) {
+	if(doShake) {
 		$('input#nickname').css('background-color','pink');
 		$('input#password').css('background-color','pink');		
 		}
 	$('#login-content').animate({opacity:'1'},200, function(){
-		if(doShake || localStorage.doShake) {
+		if(doShake) {
 			$('#login-content').effect('shake',{distance:5,times:2},function(){
 				$('input#nickname').animate({backgroundColor:'#fff'},1000);
 				$('input#password').animate({backgroundColor:'#fff'},1000);					
-				delete localStorage.doShake;
 				});
 			}
 		$('.front-welcome-text').fadeIn(3000);						
