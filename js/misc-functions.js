@@ -33,6 +33,57 @@
   ·                                                                             · 
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+
+/* ·  
+   · 
+   ·   Store in localStorage object cache
+   · 
+   ·   @param name: the name of this type of object
+   ·   @param unique_id: some unique_id – the key in localStorage will be name-unique_id
+   ·   @param object: the object to store
+   · 
+   · · · · · · · · · */
+   
+function localStorageObjectCache_STORE(name, unique_id, object) {
+
+	if(localStorageIsEnabled()) {
+
+		if(object.length < 1) {
+			// an empty object means we remove this entry
+			if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {			
+				delete localStorage[name + '-' + unique_id];
+				}
+			}
+		else {
+			localStorage[name + '-' + unique_id] = JSON.stringify(object);
+			}			
+		}	
+	}
+
+/* ·  
+   · 
+   ·   Get from localStorage object cache
+   · 
+   ·   @param name: the name of this type of object
+   ·   @param unique_id: some unique_id – the key in localStorage will be name-unique_id
+   ·   @param callback: callback function, returns false if not found
+   · 
+   · · · · · · · · · */
+   
+function localStorageObjectCache_GET(name, unique_id, callback) {
+
+	if(localStorageIsEnabled()) {
+		if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
+			callback(JSON.parse(localStorage[name + '-' + unique_id]));
+			}
+		else {
+			callback(false);
+			}
+		}	
+	}
+
+
+
 /* ·  
    · 
    ·  Display unread notifications
@@ -555,7 +606,11 @@ function remove_spinner() {
 function convertAttachmentMoreHref() {
 	$('a.attachment.more').each(function() {
 		if(typeof $(this).attr('href') != 'undefined') {
-			$(this).replaceWith($('<span class="attachment more" data-attachment-id="' + $(this).attr('href').substring(29) + '">…</span>'));			
+			var attachment_href = $(this).attr('href');
+			var attachment_id = attachment_href.substr((~-attachment_href.lastIndexOf("/") >>> 0) + 2);
+			if(attachment_id.length>0) {
+				$(this).replaceWith($('<span class="attachment more" data-attachment-id="' + attachment_id + '">…</span>'));							
+				}
 			}
 		});
 	}

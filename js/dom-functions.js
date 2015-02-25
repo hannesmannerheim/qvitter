@@ -930,12 +930,21 @@ function expand_queet(q,doScrolling) {
 			// if shortened queet, get full text
 			if(q.children('.queet').find('span.attachment.more').length>0) {
 				var attachmentId = q.children('.queet').find('span.attachment.more').attr('data-attachment-id');
-				getFromAPI("attachment/" + attachmentId + ".json",function(data){
+				
+				// get full html for queet, first try localstorage cache
+				localStorageObjectCache_GET('fullQueetHtml',qid,function(data){
 					if(data) {
-						console.log(data);
 						q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">').replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
 						}
-					});					
+					else {
+						getFromAPI("attachment/" + attachmentId + ".json",function(data){
+							if(data) {
+								localStorageObjectCache_STORE('fullQueetHtml',qid,data);
+								q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">').replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
+								}
+							});							
+						}
+					});				
 				}
 
 			// add expanded container
@@ -1691,6 +1700,13 @@ function addToFeed(feed, after, extraClasses, isReply) {
    · · · · · · · · · · · · · */ 
 
 function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isConversation) {
+	
+	// if we have the full html for a truncated notice cached in localstorage, we use that
+	localStorageObjectCache_GET('fullQueetHtml',obj.id,function(data){
+		if(data) {
+			obj.statusnet_html = data;
+			}
+		});		
 	
 	// we don't want to print 'null' in in_reply_to_screen_name-attribute, someone might have that username!
 	var in_reply_to_screen_name = '';
