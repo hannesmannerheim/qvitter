@@ -993,7 +993,7 @@ $('body').on('click','a', function(e) {
 			$(this).addClass('external-profile-clicked');
 			getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent($(this).attr('href')),function(data){
 
-				if(data) {
+				if(data && data.external !== null) {
 					
 					// local profile id and follow class
 					var followLocalIdHtml = '';
@@ -1056,8 +1056,10 @@ $('body').on('click','a', function(e) {
 					}
 				// if external lookup failed, trigger click again. 
 				// it will not be hijacked since we don't remove the external-profile-clicked class here 
-				else {	
-					$('.external-profile-clicked').trigger('click');
+				else {
+					remove_spinner();	
+					$('.external-profile-clicked')[0].click();
+					$('.external-profile-clicked').removeClass('external-profile-clicked');
 					}
 				
 				});				
@@ -1221,7 +1223,7 @@ $(window).scroll(function() {
 				}
 			// normal streams
 			else {
-				var getVars = qOrAmp(window.currentStream) + 'max_id=' + ($('#feed-body').children('.stream-item').last().attr('data-quitter-id-in-stream')-1);
+				var getVars = qOrAmp(window.currentStream) + 'max_id=' + ($('#feed-body').children('.stream-item').last().attr('data-quitter-id-in-stream'));
 				}
 			
 			display_spinner('#footer-spinner-container');		
@@ -1598,7 +1600,7 @@ $('body').on('click','.action-reply-container',function(){
 	var $queetHtmlExpandedContent = $queetHtml.find('.expanded-content');
 	$queetHtmlExpandedContent.remove();		
 	var queetHtmlWithoutFooter = $queetHtml.html();
-	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
+	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.children('.queet').find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
 
 	// fix the width of the queet box, otherwise the syntax highlighting break
 	var queetBoxWidth = $('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox').width()-20;
