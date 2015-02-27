@@ -1,16 +1,16 @@
-<p id="top">Denne guiden til {instance-name} er først og fremst til nye brukere. Den er laget med hensikt i å komme igang, uten å gå i for mange detaljer. For spesifikke tekniske spørsmål (eks. hvordan installere en GNU Social-instans), benytt gruppen <a href="https://status.vinilox.eu/group/gnusocial">!gnusocial</a> and <a href="http://sn.postblue.info/group/sn">!sn</a>, eller på {instance-name} offentlige tidslinje. Du kan også finne teknisk informasjon på <a href="http://federation.skilledtests.com/">http://federation.skilledtests.com/</a></p>
+<p id="top">Denne guiden til {instance-name} er først og fremst til nye brukere. Den er laget med hensikt i å komme igang, uten å gå i for mange detaljer. For spesifikke tekniske spørsmål (eks. hvordan installere en GNU social-instans), benytt gruppen <a href="https://status.vinilox.eu/group/gnusocial">!gnusocial</a> and <a href="http://sn.postblue.info/group/sn">!sn</a>, eller på {instance-name} offentlige tidslinje. Du kan også finne teknisk informasjon på <a href="http://federation.skilledtests.com/">http://federation.skilledtests.com/</a></p>
 <p>Innholdsfortegnelsen følger frekvensen av spørsmål som er ofte spurt av nye brukere.</p>
-<p>Lenker til andre GNU Social-/StatusNet-FAQs & -wikier:<br>
+<p>Lenker til andre GNU social-/StatusNet-FAQs & -wikier:<br>
 <a href="https://wiki.loadaverage.org/gnusocial/begin_to_be_social">https://wiki.loadaverage.org/gnusocial/begin_to_be_social</a><br>
 <a href="http://wiki.gnusocial.de">http://wiki.gnusocial.de</a> (Tysk)</p>
 
 <h2 id="faq-table-of-contents">Innhold</h2>
 <ul>
 	<li><a href="#faq-1">Hva er {instance-name}?</a></li>
-	<li><a href="#faq-2">Hva er GNU Social/StatusNet og federasjonen?</a></li>
+	<li><a href="#faq-2">Hva er GNU social/StatusNet og federasjonen?</a></li>
 	<li><a href="#faq-3">Hvordan lage/laste opp en avatar</a></li>
 	<li><a href="#faq-4">Hvorfor kan jeg ikke finne en "{instance-name} app" i Google Play Store eller i Apple AppStore?</a></li>
-	<li><a href="#faq-5">Hvilke klienter finnes for GNU Social/StatusNet/{instance-name}?</a></li>		
+	<li><a href="#faq-5">Hvilke klienter finnes for GNU social/StatusNet/{instance-name}?</a></li>		
 	<li><a href="#faq-6">Hvor er URL-forkorteren?</a></li>
 	<li><a href="#faq-7">Hvordan endrer jeg e-post preferanser</a></li>
 	<li><a href="#faq-8">Ny {instance-name} og klassisk {instance-name}</a></li>
@@ -33,18 +33,18 @@
 
 <!-- 1 -->
 <h2 id="faq-1">Hva er {instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
-<p>{instance-name} er en av mange GNU Social-/StatusNet-instanser. </p>
-<p>{instance-name} er et prosjekt som benytter GNU Social-/StatusNet software, i kombinasjon med et velkjent grensesnitt (UI).</p>
-<p>Det opprinnelige GNU Social-/StatusNet-web grensesnittet er tilgjengelig som "Classic {instance-name}", valgbart fra din avatar (øverst til høyre).</p>
+<p>{instance-name} er en av mange GNU social-/StatusNet-instanser. </p>
+<p>{instance-name} er et prosjekt som benytter GNU social-/StatusNet software, i kombinasjon med et velkjent grensesnitt (UI).</p>
+<p>Det opprinnelige GNU social-/StatusNet-web grensesnittet er tilgjengelig som "Classic {instance-name}", valgbart fra din avatar (øverst til høyre).</p>
 
 <!-- 2 -->
-<h2 id="faq-2">Hva er GNU Social/StatusNet og federasjonen? <a href="#faq-table-of-contents">Top</a></h2>
-<p>GNU Social/StatusNet er software som muliggjør en desentralisert mikroblogging plattform.</p>
+<h2 id="faq-2">Hva er GNU social/StatusNet og federasjonen? <a href="#faq-table-of-contents">Top</a></h2>
+<p>GNU social/StatusNet er software som muliggjør en desentralisert mikroblogging plattform.</p>
 <p>Brukere av en instans (eller: tjeneste) kan følge, bli fulgt av og kommunisere med brukere fra andre instanser.</p>
-<p>Eksempler på andre instanser er , <a href="https://loadaverage.org/">loadaverage.org</a>, <a href="http://status.vinilox.eu/">status.vinilox.eu</a>, <a href="http://micro.fragdev.com/">micro.fragdev.com</a>, <a href="https://gnusocial.de/">gnusocial.de</a>, <a href="https://indy.im/">indy.im</a>, <a href="https://quitter.no/">quitter.no, <a href="http://rainbowdash.net/">rainbowdash.net</a>, osv. Nåværende antall av slike instanser som benytter GNU Social/StatusNet software er trolig ca. 50, {instance-name} er en av disse. Disse instansene kan kommunisere med hverandre, selv om de kjører på ulike maskiner. Det er programvaren som benyttes (GNU Social/StatusNet) og protokollen (OStatus) som muliggjør dette. På samme måte som forskjellige e-post tjenere kan kommunisere med hverandre, kan også de ulike instanser av GNU Social/StatusNet kommunisere med hverandre.</p>
-<p>Kobling mellom instansene blir etablert idet ulike brukere starter å følge hverandre. Ved å starte å følge andre brukere, blir nettverket knyttet sammen til en kombinert struktur. Dette oppleves som ett nettverk, selv om det i realiteten er en struktur av uavhengige instanser. Dette benevnes som "the Federation" - eller føderasjonen. Det betyr at instansene federerer/utveksler informasjon mellom hverandre. GNU Social/StatusNet er strukturert på en slik måte at idet en bruker følger bruker <strong>a</strong> fra instans <strong>A</strong> til en bruker <strong>b</strong> fra instans til <strong>B</strong> for å gjøre <strong>b</strong> synlig for alle i instans <strong>A</strong> via <em>Hele Nettverket</em>. (See nedenfor <a href="#faq-9">De tre tidslinjene</a>.) Hele nettverket er bredden av nettverk til instansen -sett fra instans {instance-name}. Denne tidslinjen ser forskjellig ut på de ulike instanser, dette fordi instansene har ulike følgere til distanserte instanser enn på denne instansen - {instance-name}. </p>
-<p>Det eksisterer ingen sentral "instans/server/tjeneste" som ved f.eks utlgjengelighet av tjenesten kunne ha ført til at nettverket ikke var tilgjengelig. Hvis en instans ikke er tilgjengelig eller at administrator begynner å utvikle instansen i en retning du ikke liker, så kan du som bruker opprette en konto på en av de andre instansene. Du vil alikevel være på GNU Social-network og fortsatt ha muligheten til å kommunisere med dine GNU Social-venner. Du trenger kun å fortelle dine kontakter adressen til din nye instans.</p>
-<p>Adresser på GNU Social ser slik ut:</p>
+<p>Eksempler på andre instanser er , <a href="https://loadaverage.org/">loadaverage.org</a>, <a href="http://status.vinilox.eu/">status.vinilox.eu</a>, <a href="http://micro.fragdev.com/">micro.fragdev.com</a>, <a href="https://gnusocial.de/">gnusocial.de</a>, <a href="https://indy.im/">indy.im</a>, <a href="https://quitter.no/">quitter.no, <a href="http://rainbowdash.net/">rainbowdash.net</a>, osv. Nåværende antall av slike instanser som benytter GNU social/StatusNet software er trolig ca. 50, {instance-name} er en av disse. Disse instansene kan kommunisere med hverandre, selv om de kjører på ulike maskiner. Det er programvaren som benyttes (GNU social/StatusNet) og protokollen (OStatus) som muliggjør dette. På samme måte som forskjellige e-post tjenere kan kommunisere med hverandre, kan også de ulike instanser av GNU social/StatusNet kommunisere med hverandre.</p>
+<p>Kobling mellom instansene blir etablert idet ulike brukere starter å følge hverandre. Ved å starte å følge andre brukere, blir nettverket knyttet sammen til en kombinert struktur. Dette oppleves som ett nettverk, selv om det i realiteten er en struktur av uavhengige instanser. Dette benevnes som "the Federation" - eller føderasjonen. Det betyr at instansene federerer/utveksler informasjon mellom hverandre. GNU social/StatusNet er strukturert på en slik måte at idet en bruker følger bruker <strong>a</strong> fra instans <strong>A</strong> til en bruker <strong>b</strong> fra instans til <strong>B</strong> for å gjøre <strong>b</strong> synlig for alle i instans <strong>A</strong> via <em>Hele Nettverket</em>. (See nedenfor <a href="#faq-9">De tre tidslinjene</a>.) Hele nettverket er bredden av nettverk til instansen -sett fra instans {instance-name}. Denne tidslinjen ser forskjellig ut på de ulike instanser, dette fordi instansene har ulike følgere til distanserte instanser enn på denne instansen - {instance-name}. </p>
+<p>Det eksisterer ingen sentral "instans/server/tjeneste" som ved f.eks utlgjengelighet av tjenesten kunne ha ført til at nettverket ikke var tilgjengelig. Hvis en instans ikke er tilgjengelig eller at administrator begynner å utvikle instansen i en retning du ikke liker, så kan du som bruker opprette en konto på en av de andre instansene. Du vil alikevel være på GNU social-network og fortsatt ha muligheten til å kommunisere med dine GNU social-venner. Du trenger kun å fortelle dine kontakter adressen til din nye instans.</p>
+<p>Adresser på GNU social ser slik ut:</p>
 <p class="indent">@user@instance.org</p>
 <p>Din adresse er:</p>
 <p class="indent">@{nickname}@{instance-url}</p>
@@ -59,11 +59,11 @@
 
 <!-- 4 -->
 <h2 id="faq-4">Hvorfor kan jeg ikke finne en "{instance-name} app" i Google Play Store eller i Apple AppStore? <a href="#faq-table-of-contents">Top</a></h2>
-<p>Nettverkets navn er "GNU Social" eller "StatusNet", så det du trenger er en GNU Social/StatusNet app.</p>
-<p>(Husk, {instance-name} er kun en instans av mange instanser i GNU Social- or StatusNet-federasjonen.)</p>
+<p>Nettverkets navn er "GNU social" eller "StatusNet", så det du trenger er en GNU social/StatusNet app.</p>
+<p>(Husk, {instance-name} er kun en instans av mange instanser i GNU social- or StatusNet-federasjonen.)</p>
 
 <!-- 5 -->
-<h2 id="faq-5">Hvilke klienter finnes for GNU Social/StatusNet/{instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
+<h2 id="faq-5">Hvilke klienter finnes for GNU social/StatusNet/{instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
 <p>Du kan finne informasjon om de ulike klientene og lenker til nedlastninger her:<br>
 <a href="http://federation.skilledtests.com/Statusnet_clients.html">http://federation.skilledtests.com/Statusnet_clients.html</a><br>
 <a href="http://wiki.gnusocial.de/gnusocial:clients">http://wiki.gnusocial.de/gnusocial:clients</a> (Tysk)</p>
@@ -131,7 +131,7 @@ Skjermdump: <a href="http://quitter.se/attachment/710078">http://quitter.se/atta
 <!-- 8 -->
 <h2 id="faq-8">Ny {instance-name} og klassisk {instance-name} <a href="#faq-table-of-contents">Top</a></h2>
 <p>Instansen {instance-name} benytter som et forvalg for alle brukere qvitter grensesnittet. Visuelt er det likhetstrekk med andre kjente kommersielle mikrobloggings tjenester. Grensesnittet har navnet "Qvitter". I diskusjoner "Qvitter" og "Nye {instance-name}" kan bety en og samme ting, men "Qvitter" refererer for det meste til programvare og "Nye {instance-name}" refererer til installsjonen av Qvitter-programvaren på {instance-name}.</p>
-<p>Klassisk {instance-name} er en avart av det klassiske GNU Social-/StatusNet-grensesnittet. På nåverende tidspunkt er noe av funksjonaliteten og innstillingene (f.eks. det å lage en gruppe) avhengig av at man benytter det klassiske {instance-name} grensesnittet, da de ikke er fullt ut implementert i det Nye {instance-name} grensesnittet.</p>
+<p>Klassisk {instance-name} er en avart av det klassiske GNU social-/StatusNet-grensesnittet. På nåverende tidspunkt er noe av funksjonaliteten og innstillingene (f.eks. det å lage en gruppe) avhengig av at man benytter det klassiske {instance-name} grensesnittet, da de ikke er fullt ut implementert i det Nye {instance-name} grensesnittet.</p>
 <p>For å benytte det klassiske {instance-name} grensesnittet gå til </p>
 <p class="indent">Din avatar (øverst til høyre) → Classic {instance-name}</p>
 
@@ -144,7 +144,7 @@ alle meldinger eller notiser fra brukere du følger.</p>
 <p><strong>Offentlig tidslinje:</strong><br>
 alle meldinger eller notiser sendt av brukere på {instance-name} .</p>
 <p><strong>Hele nettverket:</strong><br>
-ikke bare meldinger / notiser fra den offentlige tidslinjen men også fra alle andre brukere på andre GNU Social-/StatusNet instanser som følges av minimum en {instance-name} bruker (f.eks, brukere kjent av  {instance-name}, se ovenfor <a href="#faq-2">Hva er GNU Social/StatusNet og federasjonen?</a>).</p>
+ikke bare meldinger / notiser fra den offentlige tidslinjen men også fra alle andre brukere på andre GNU social-/StatusNet instanser som følges av minimum en {instance-name} bruker (f.eks, brukere kjent av  {instance-name}, se ovenfor <a href="#faq-2">Hva er GNU social/StatusNet og federasjonen?</a>).</p>
 
 
 <!-- 10 -->
@@ -216,14 +216,14 @@ Det betyr at meldinger i gruppen er kun synlige til gruppens medlemmer (de er ik
 
 <!-- 17 -->
 <h2 id="faq-17">Lister <a href="#faq-table-of-contents">Top</a></h2>
-<p>Lister er kun tilgjengelige ved bruk av det klassiske grensesnittet på {instance-name}. Fordi funksjonalitetene blandes mellom Qvitter og GNU Social så virker disse, men de kan oppleves som ikke optimale å håndtere.</p>
+<p>Lister er kun tilgjengelige ved bruk av det klassiske grensesnittet på {instance-name}. Fordi funksjonalitetene blandes mellom Qvitter og GNU social så virker disse, men de kan oppleves som ikke optimale å håndtere.</p>
 <h3>Legge til brukere i lister</h3>
 <p>Hoved utfordringen med lister på {instance-name} er å opprette en ny. Etter opprettelsen, kan du administrere den og legge til brukere som tilhører {instance-name} men også brukere fra fjerne/andre/remote instanser i den nye listen (se nedenfor).</p>
 <p>For å starte en liste i det klassiske grensesnittet på {instance-name} , navigerer du til en liste som noen andre brukere har på {instance-name}, ikke til en fjern instans. I det siste nevnte tilfellet vil du ikke kunne ha mulighet til å legge til brukere fra deres lister til din egen.</p>
 <p>I begge lister vil du under brukeren finne en liten boks med ett redigerings-symbol. Siden de er synlige i disse listene, er det ikke et problem om deres konto er på {instance-name} eller på en annen fjern instans. Klikk på symbolet og skriv inn navnet på din egen liste. Du vil få en feilmelding, men se bort fra denne meldingen og klikk "ok", deretter last inn nettsiden på ny. Listen er nå opprettet og vises nå i venstre kolonne.</p>
 <h3>Administrer dine lister</h3>
 <p>For å administrere listene, gå til din side i det klassiske grensesnittet på {instance-name} og åpne listen ved å klikke på listens navn (vises i venstre kolonne). På siden klikk på "Endre" så vil en meny bli tilgjengelig.</p>
-<p>Under seksjonen "Legg til eller fjern brukere" kan du nå søke brukere som befinner seg på {instance-name} og fra hele det kjente nettverket (see above <a href="#faq-2">Hva er GNU Social/StatusNet og federasjonen?</a>) ved navn og legge brukeren til din egen liste. (Dette er ikke mulig før selve opprettelsen av listen når personen kun vises i abonnerings listen av brukere på fjerne instanser. Se ovenfor). På samme måte kan du fjerne brukere fra listen.</p>
+<p>Under seksjonen "Legg til eller fjern brukere" kan du nå søke brukere som befinner seg på {instance-name} og fra hele det kjente nettverket (see above <a href="#faq-2">Hva er GNU social/StatusNet og federasjonen?</a>) ved navn og legge brukeren til din egen liste. (Dette er ikke mulig før selve opprettelsen av listen når personen kun vises i abonnerings listen av brukere på fjerne instanser. Se ovenfor). På samme måte kan du fjerne brukere fra listen.</p>
 <p>På nåværende tidspunkt kan du fjerne brukere fra listen, tømme listen, men du kan ikke slette listen. Ved forsøk på å slette listen vil du kun motta en feil melding. Vær derfor varsom med å ikke opprette for mange lister, som kan forkludre innholdet i din venstre kolonne.</p>
 <p>I den øverste seksjonen så kan du endre navnet på listen og gi den en beskrivelse som vises på siden over lister du innehar. Ved bruk av opsjonen "privat" kan du gjøre listen usynlig for andre brukere ved  {instance-name}.</p>
 
@@ -281,6 +281,6 @@ søkeord og setninger: <a href="{instance-url-with-protocol}{nickname}/search-su
 
 <!-- 23 -->
 <h2 id="faq-23">Hvorfor blir ikke mine gjentagelser av notiser synlig på andre instanser? <a href="#faq-table-of-contents">Top</a></h2>
-<p>I nåvernde versjon av GNU Social, så blir ikke gjentakelser/requeets sendt til dine følgere på andre instanser. Dette var mulig i den gamle programvaren ved navn StatusNet, men denne muligheten er nå fjernet fra programvaren pga. en sikkerhets brist. GNU Social utviklere jobber med en løsning på problemet. I mellomtiden, hvis du virkelig vil gjenta en notis fra en annen bruker, for å spre ut på de andre instansene, må du "manuelt" repetere meldingen ved f.eks å skrive RQ @username, og så legge til meldingen ved kopier-lim-inn funksjon.</p>
+<p>I nåvernde versjon av GNU social, så blir ikke gjentakelser/requeets sendt til dine følgere på andre instanser. Dette var mulig i den gamle programvaren ved navn StatusNet, men denne muligheten er nå fjernet fra programvaren pga. en sikkerhets brist. GNU social utviklere jobber med en løsning på problemet. I mellomtiden, hvis du virkelig vil gjenta en notis fra en annen bruker, for å spre ut på de andre instansene, må du "manuelt" repetere meldingen ved f.eks å skrive RQ @username, og så legge til meldingen ved kopier-lim-inn funksjon.</p>
 
 <p class="faq-credits"><em>Takk til <a href="https://quitter.se/simsa0">@simsa0</a> and <a href="https://quitter.se/mcscx">@mcscx</a> for deres arbeid med denne FAQ. Alle feil i denne oversettelsen, kommer av elendig editering av <a href="https://quitter.no/knuthollund">@knuthollund</a>.</em></p>

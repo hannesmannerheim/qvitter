@@ -1,6 +1,6 @@
-<p id="top">Esta guía de {instance-name} es para usuarios nuevos. Se centra en los aspectos más básicos, sin entrar mucho en detalles. Para cuestiones técnicas determinadas (p. ej. cómo establecer un nodo GNU Social) pregunta a los usuarios en los grupos <a href="https://status.vinilox.eu/group/gnusocial">!gnusocial</a> y <a href="http://sn.postblue.info/group/sn">!sn</a>, o en la línea temporal pública de {instance-name}. También puedes encontrar información técnica en <a href="http://federation.skilledtests.com/">http://federation.skilledtests.com/</a></p>
+<p id="top">Esta guía de {instance-name} es para usuarios nuevos. Se centra en los aspectos más básicos, sin entrar mucho en detalles. Para cuestiones técnicas determinadas (p. ej. cómo establecer un nodo GNU social) pregunta a los usuarios en los grupos <a href="https://status.vinilox.eu/group/gnusocial">!gnusocial</a> y <a href="http://sn.postblue.info/group/sn">!sn</a>, o en la línea temporal pública de {instance-name}. También puedes encontrar información técnica en <a href="http://federation.skilledtests.com/">http://federation.skilledtests.com/</a></p>
 <p>El orden de las cuestiones corresponde más o menos con la frecuencia con que las plantean los usuarios nuevos.</p>
-<p>Otras «Preguntas frecuentes» y wikis de GNU Social (antiguo StatusNet):<br>
+<p>Otras «Preguntas frecuentes» y wikis de GNU social (antiguo StatusNet):<br>
 <a href="https://wiki.loadaverage.org/gnusocial/begin_to_be_social">https://wiki.loadaverage.org/gnusocial/begin_to_be_social</a> (en inglés)<br>
 <a href="http://wiki.gnusocial.de">http://wiki.gnusocial.de</a> (en alemán)</p>
  
@@ -8,10 +8,10 @@
 <h2 id="faq-table-of-contents">Tabla de contenido</h2>
 <ul>
 	<li><a href="#faq-1">¿Qué es {instance-name}?</a></li>
-	<li><a href="#faq-2">¿Qué son GNU Social (antiguo StatusNet) y la Federación?</a></li>
+	<li><a href="#faq-2">¿Qué son GNU social (antiguo StatusNet) y la Federación?</a></li>
 	<li><a href="#faq-3">Cómo cambiar la imagen de perfil (avatar)</a></li>
 	<li><a href="#faq-4">¿Por qué no puedo encontrar ninguna «aplicación {instance-name}» en Google Play Store o App Store de Apple?</a></li>
-	<li><a href="#faq-5">¿Qué clientes hay para GNU Social/{instance-name}?</a></li>
+	<li><a href="#faq-5">¿Qué clientes hay para GNU social/{instance-name}?</a></li>
 	<li><a href="#faq-6">¿Dónde está el acortador de URL?</a></li>
 	<li><a href="#faq-7">Cómo establecer preferencias de correo electrónico</a></li>
 	<li><a href="#faq-8">{instance-name} Nuevo y {instance-name} Clásico</a></li>
@@ -34,21 +34,21 @@
 
 <!-- 1 -->
 <h2 id="faq-1">¿Qué es {instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
-<p>{instance-name} es uno de muchos nodos de GNU Social (antiguo StatusNet).</p>
-<p>{instance-name} es un proyecto que usa el sistema de GNU Social combinado con una interfaz gráfica familiar (IGU).</p>
-<p>El original de la IGU de GNU Social está disponible como <em>Classic {instance-name} / {instance-name} Clásico</em>; se puede elegir haciendo clic en tu avatar en la cabecera (parte superior derecha).</p>
+<p>{instance-name} es uno de muchos nodos de GNU social (antiguo StatusNet).</p>
+<p>{instance-name} es un proyecto que usa el sistema de GNU social combinado con una interfaz gráfica familiar (IGU).</p>
+<p>El original de la IGU de GNU social está disponible como <em>Classic {instance-name} / {instance-name} Clásico</em>; se puede elegir haciendo clic en tu avatar en la cabecera (parte superior derecha).</p>
  
  
  
  
 <!-- 2 -->
-<h2 id="faq-2">¿Qué son GNU Social (antiguo StatusNet) y la Federación? <a href="#faq-table-of-contents">Top</a></h2>
-<p>GNU Social, anteriormente llamado StatusNet, es una plataforma de microblogueo descentralizada.</p>
+<h2 id="faq-2">¿Qué son GNU social (antiguo StatusNet) y la Federación? <a href="#faq-table-of-contents">Top</a></h2>
+<p>GNU social, anteriormente llamado StatusNet, es una plataforma de microblogueo descentralizada.</p>
 <p>Los usuarios de un nodo (o servidor ) pueden seguir, ser seguidos y comunicarse con los usuarios de cualquier otro.</p>
-<p>Otros nodos son, p.ej., <a href="https://loadaverage.org/">loadaverage.org</a>, <a href="http://status.vinilox.eu/">status.vinilox.eu</a>, <a href="http://micro.fragdev.com/">micro.fragdev.com</a>, <a href="https://gnusocial.de/">gnusocial.de</a>, <a href="https://indy.im/">indy.im</a>, <a href="https://quitter.no/">quitter.no, <a href="http://rainbowdash.net/">rainbowdash.net</a>, etc. El número actual de nodos de microblogueo usando el software de GNU Social es aprox. 285. {instance-name} es uno de ellos. Puesto que todos utilizan el mismo software —GNU Social— y el mismo protocolo de transmisión —Ostatus—, pueden conversar entre sí como los servidores de correo electrónico pueden conversar entre sí, a pesar de que son independientes y están dirigidos por particulares o empresas diferentes.</p>
-<p>Las conexiones entre los nodos son establecidas por los usuarios siguiéndose entre sí. A través de tales relaciones de «seguimiento», todos los nodos pueden unirse, al menos en principio, en un compuesto o una red de nodos independientes. Esto se llama la Federación. GNU Social está estructurado de tal manera que se necesita solamente una relación de siguiendo de un usuario <strong>a</strong> de un nodo <strong>A</strong> a un usuario <strong>b</strong> de un nodo <strong>B</strong> para hacer visible <strong>b</strong> a todos los usuarios en el nodo <strong>A</strong>, a través de <em>Toda la red conocida</em>. (Véase abajo <a href="#faq-9">Las tres líneas temporales</a>.) <em>Toda la red conocida</em> es la red más amplia de los nodos como se ve desde {instance-name}. Tiene un aspecto diferente, p.ej., en loadaverage, porque aquí las relaciones de seguimiento a instancias remotas son diferentes a las de {instance-name}.</p>
-<p>No hay una «unidad central» cuya ruptura podría provocar un fallo general de la red de las instancias o nodos. Si una instancia se quiebra o sus administradores empiezan a hacer cosas que no te gustan, puedes crear tu cuenta en otra instancia (otro nodo, otro servidor). Tú seguirás estando en la red GNU Social y todavía serás capaz de comunicarte con tus amigos en GNU Social. Solamente tendrás que decirles a tus contactos la nueva dirección.</p>
-<p>Las direcciones en GNU Social se ven así:</p>
+<p>Otros nodos son, p.ej., <a href="https://loadaverage.org/">loadaverage.org</a>, <a href="http://status.vinilox.eu/">status.vinilox.eu</a>, <a href="http://micro.fragdev.com/">micro.fragdev.com</a>, <a href="https://gnusocial.de/">gnusocial.de</a>, <a href="https://indy.im/">indy.im</a>, <a href="https://quitter.no/">quitter.no, <a href="http://rainbowdash.net/">rainbowdash.net</a>, etc. El número actual de nodos de microblogueo usando el software de GNU social es aprox. 285. {instance-name} es uno de ellos. Puesto que todos utilizan el mismo software —GNU social— y el mismo protocolo de transmisión —Ostatus—, pueden conversar entre sí como los servidores de correo electrónico pueden conversar entre sí, a pesar de que son independientes y están dirigidos por particulares o empresas diferentes.</p>
+<p>Las conexiones entre los nodos son establecidas por los usuarios siguiéndose entre sí. A través de tales relaciones de «seguimiento», todos los nodos pueden unirse, al menos en principio, en un compuesto o una red de nodos independientes. Esto se llama la Federación. GNU social está estructurado de tal manera que se necesita solamente una relación de siguiendo de un usuario <strong>a</strong> de un nodo <strong>A</strong> a un usuario <strong>b</strong> de un nodo <strong>B</strong> para hacer visible <strong>b</strong> a todos los usuarios en el nodo <strong>A</strong>, a través de <em>Toda la red conocida</em>. (Véase abajo <a href="#faq-9">Las tres líneas temporales</a>.) <em>Toda la red conocida</em> es la red más amplia de los nodos como se ve desde {instance-name}. Tiene un aspecto diferente, p.ej., en loadaverage, porque aquí las relaciones de seguimiento a instancias remotas son diferentes a las de {instance-name}.</p>
+<p>No hay una «unidad central» cuya ruptura podría provocar un fallo general de la red de las instancias o nodos. Si una instancia se quiebra o sus administradores empiezan a hacer cosas que no te gustan, puedes crear tu cuenta en otra instancia (otro nodo, otro servidor). Tú seguirás estando en la red GNU social y todavía serás capaz de comunicarte con tus amigos en GNU social. Solamente tendrás que decirles a tus contactos la nueva dirección.</p>
+<p>Las direcciones en GNU social se ven así:</p>
 <p class="indent">@usuario@instancia.org</p>
 <p>Tu dirección es:</p>
 <p class="indent">@{nickname}@{instance-url}</p>
@@ -68,14 +68,14 @@
  
 <!-- 4 -->
 <h2 id="faq-4">¿Por qué no puedo encontrar ninguna «aplicación {instance-name}» en Google Play Store o App Store de Apple? <a href="#faq-table-of-contents">Top</a></h2>
-<p>El nombre de la red es «GNU Social» (antiguamente «StatusNet»), así que lo que quieres es una aplicación GNU Social o StatusNet.</p>
-<p>Recuerda, {instance-name} es sólo una instancia en la federación de GNU Social.</p>
+<p>El nombre de la red es «GNU social» (antiguamente «StatusNet»), así que lo que quieres es una aplicación GNU social o StatusNet.</p>
+<p>Recuerda, {instance-name} es sólo una instancia en la federación de GNU social.</p>
  
  
  
  
 <!-- 5 -->
-<h2 id="faq-5">¿Qué clientes hay para GNU Social/{instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
+<h2 id="faq-5">¿Qué clientes hay para GNU social/{instance-name}? <a href="#faq-table-of-contents">Top</a></h2>
 <p>Puedes encontrar información sobre los clientes y los enlaces para la descarga aquí:<br>
 <a href="http://federation.skilledtests.com/Statusnet_clients.html">http://federation.skilledtests.com/Statusnet_clients.html</a><br>
 <a href="http://wiki.gnusocial.de/gnusocial:clients">http://wiki.gnusocial.de/gnusocial:clients</a> (en alemán)</p>
@@ -153,7 +153,7 @@ Captura de pantalla: <a href="https://quitter.se/attachment/710078">https://quit
 <!-- 8 -->
 <h2 id="faq-8">{instance-name} Nuevo y {instance-name} Clásico <a href="#faq-table-of-contents">Top</a></h2>
 <p><em>{instance-name} Nuevo</em> es la interfaz de usuario predeterminada. Visualmente es muy similar a otros servicios de microblogueo comerciales bien conocidos. Su nombre técnico es «Qvitter». En las discusiones, «Qvitter» y «{instance-name} Nuevo» pueden significar la misma cosa, pero «Qvitter» se refiere principalmente al software y «{instance-name} Nuevo» se refiere a la instalación del software Qvitter en {instance-name}.</p>
-<p><em>{instance-name} Clásico</em> usa la interfaz canónica de GNU Social/StatusNet. En este momento algunos ajustes y características (p.ej., la creación de un grupo) tienen que hacerse en {instance-name} Clásico porque no están implementados en {instance-name} Nuevo.</p>
+<p><em>{instance-name} Clásico</em> usa la interfaz canónica de GNU social/StatusNet. En este momento algunos ajustes y características (p.ej., la creación de un grupo) tienen que hacerse en {instance-name} Clásico porque no están implementados en {instance-name} Nuevo.</p>
 <p>Para cambiar al {instance-name} Clásico ve a:</p>
 <p class="indent">Tu imagen en la cabecera (superior derecha) → Classic {instance-name}</p>
  
@@ -168,7 +168,7 @@ Todas noticias de las personas que sigues (no sólo las que mandan a la gente cu
 <p><strong>Línea temporal pública:</strong><br>
 Todas noticias publicadas por cuentas de tu servidor {instance-name}.</p>
 <p><strong>Toda la red conocida:</strong><br>
-No sólo todas publicaciones de la Línea temporal pública, sino también todas las de la gente en todas otras instancias de la federación de GNU Social/StatusNet que son seguidas por al menos un usuario de tu servidor {instance-name} (es decir, las cuentas conocidas por {instance-name}, véase más arriba <a href="#faq-2">¿Qué es la Federación?</a>).</p>
+No sólo todas publicaciones de la Línea temporal pública, sino también todas las de la gente en todas otras instancias de la federación de GNU social/StatusNet que son seguidas por al menos un usuario de tu servidor {instance-name} (es decir, las cuentas conocidas por {instance-name}, véase más arriba <a href="#faq-2">¿Qué es la Federación?</a>).</p>
  
  
  
@@ -257,7 +257,7 @@ No sólo todas publicaciones de la Línea temporal pública, sino también todas
  
 <!-- 17 -->
 <h2 id="faq-17">Listas <a href="#faq-table-of-contents">Top</a></h2>
-<p>Las listas están disponibles sólo en {instance-name} Clásico. Debido a fusiones de características en GNU Social las listas funcionan, pero son un poco desordenadas de gestionar.</p>
+<p>Las listas están disponibles sólo en {instance-name} Clásico. Debido a fusiones de características en GNU social las listas funcionan, pero son un poco desordenadas de gestionar.</p>
  
 <h3>Añadir usuarios a una lista</h3>
 <p>El obstáculo principal con listas en {instance-name} es crear una nueva. Después de su creación puedes gestionarla y añadir personas de {instance-name} y de las instancias remotas en la página de la lista (véase más adelante).</p>
@@ -279,7 +279,7 @@ No sólo todas publicaciones de la Línea temporal pública, sino también todas
 <p>Para bloquear a un usuario de {instance-name} donde tienes tu cuenta, ve a su perfil en {instance-name} Clásico</p>
 <p class="indent">{instance-url-with-protocol}&lt;nombre de usuario&gt;</p>
 <p>y haz clic en «Bloquear» por debajo de su descripción de perfil.</p>
-<p>No recomendamos el bloqueo de la gente de otros servidores de GNU Social en general porque todavía hay problemas con esta característica.</p>
+<p>No recomendamos el bloqueo de la gente de otros servidores de GNU social en general porque todavía hay problemas con esta característica.</p>
  
  
  
@@ -337,7 +337,7 @@ palabras y frases de búsqueda: <a href="{instance-url-with-protocol}{nickname}/
  
 <!-- 23 -->
 <h2 id="faq-23">¿Por qué mi Repetición/Requeet no aparece en otros nodos? <a href="#faq-table-of-contents">Top</a></h2>
-<p>En las últimas versiones de GNU Social, las Repeticiones/Requeets no son enviadas a tus seguidores en nodos remotos. Esto fue posible en StatusNet hace algún tiempo, pero esta característica se ha eliminado debido a un problema de seguridad. Los desarrolladores de GNU Social están trabajando en una solución. Mientras tanto, si quieres que tu Repetición/Requeet se envíe a otros nodos, puedes hacer una «repetición manual», es decir, escribe RQ @&lt;nombre de usuario&gt; y copia y pega la noticia en esta nueva.</p>
+<p>En las últimas versiones de GNU social, las Repeticiones/Requeets no son enviadas a tus seguidores en nodos remotos. Esto fue posible en StatusNet hace algún tiempo, pero esta característica se ha eliminado debido a un problema de seguridad. Los desarrolladores de GNU social están trabajando en una solución. Mientras tanto, si quieres que tu Repetición/Requeet se envíe a otros nodos, puedes hacer una «repetición manual», es decir, escribe RQ @&lt;nombre de usuario&gt; y copia y pega la noticia en esta nueva.</p>
  
  
 <p class="faq-credits"><em>Traducción del inglés al español por <a href="https://quitter.se/simsa01">@simsa01@quitter.se</a>. Revisión de <a href="https://status.vinilox.eu/moshpirit">@moshpirit@status.vinilox.eu</a>, <a href="https://quitter.se/larjona">@larjona@quitter.se</a> y <a href="https://quitter.no/efedoso">@efedoso@quitter.no</a>. (2015)</em></p>

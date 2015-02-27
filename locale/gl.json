@@ -97,7 +97,7 @@
 	"signUpEmail": "Enderezo electrónico",
 	"signUpButtonText": "Rexístrate en {site-title}",
 	"welcomeHeading": "Benvido/a a {site-title}.",
-	"welcomeText": "Somos unha <span id=\"federated-tooltip\"><div id=\"what-is-federation\">«Federación», isto significa que non é necesario ter unha conta en {site-title} para poder seguir, ser seguido por ou interactuar cos usuarios de {site-title}. Podes rexistrarte en calquera servidor StatusNet ou GNU Social, ou servizo baseado no protocolo <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">OStatus</a>! Tampouco tes porque rexistrarse en calquera servizo para participar, simplemente instala o software GNU Social no teu propio servidor. :) </div>federación</span> de microblogueros que, coma ti, están motivados pola ética e a solidariedade e queren abandonar os servizos centralizados capitalistas.",
+	"welcomeText": "Somos unha <span id=\"federated-tooltip\"><div id=\"what-is-federation\">«Federación», isto significa que non é necesario ter unha conta en {site-title} para poder seguir, ser seguido por ou interactuar cos usuarios de {site-title}. Podes rexistrarte en calquera servidor StatusNet ou GNU social, ou servizo baseado no protocolo <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">OStatus</a>! Tampouco tes porque rexistrarse en calquera servizo para participar, simplemente instala o software GNU social no teu propio servidor. :) </div>federación</span> de microblogueros que, coma ti, están motivados pola ética e a solidariedade e queren abandonar os servizos centralizados capitalistas.",
 	"registerNickname": "Nome do usuario",
 	"registerHomepage": "Sitio web",
 	"registerBio": "Biografía",

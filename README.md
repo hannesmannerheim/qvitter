@@ -22,7 +22,7 @@ along with Qvitter. If not, see <http://www.gnu.org/licenses/>.
 Setup
 -----
 
-1. Install GNU Social
+1. Install GNU social
 
 2. Put all files in /plugins/Qvitter
 
@@ -61,7 +61,7 @@ $config['site']['qvitter']['blocked_ips'] = array();
 $config['thumbnail']['maxsize'] = 3000;
 ````
 
-Note: Qvitter is tested with GNU Social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).
+Note: Qvitter is tested with GNU social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).
 
 
 TODO
