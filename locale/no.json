@@ -97,14 +97,14 @@
 	"signUpEmail": "e-Post",
 	"signUpButtonText": "Registrere deg på {site-title}",
 	"welcomeHeading": "Velkommen til {site-title}.",
-	"welcomeText": "Vi er en <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Forenet eller (Federation)\" betyr i denne konteksten at du ikke behøver å ha en {site-title}-konto for å følge eller følges av andre og prate med andre i nettverket. Du kan registrere deg på hvilken som helst instans/server som støtter protokollen <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">Ostatus</a>, eller mikroblogge på en helt egen server, med den frie programvaren <a href=\"http://www.gnu.org/software/social/\">GNU Social</a> (som {site-title} bygger på).</div>forenet</span> allmenhet, der du som har hoppet av de sentraliserte tjenestene kan mikroblogge etisk og solidarisk.",
+	"welcomeText": "Vi er en <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Forenet eller (Federation)\" betyr i denne konteksten at du ikke behøver å ha en {site-title}-konto for å følge eller følges av andre og prate med andre i nettverket. Du kan registrere deg på hvilken som helst instans/server som støtter protokollen <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">Ostatus</a>, eller mikroblogge på en helt egen server, med den frie programvaren <a href=\"http://www.gnu.org/software/social/\">GNU social</a> (som {site-title} bygger på).</div>forenet</span> allmenhet, der du som har hoppet av de sentraliserte tjenestene kan mikroblogge etisk og solidarisk.",
 	"registerNickname": "Kallenavn",
 	"registerHomepage": "Hjemmeside",
 	"registerBio": "Informasjon om deg",
 	"registerLocation": "Lokasjon",
 	"registerRepeatPassword": "Gjenta passord",
 	"moreSettings": "Flere innstillinger",
-	"otherServers": "Det finnes flere instanser i GNUsocial nettverket som alternativt kan benyttes. <a href=\"http://gnu.io/social/try/\">Følger du denne lenken finner du noen anbefalinger.</a>",
+	"otherServers": "Det finnes flere instanser i GNU social nettverket som alternativt kan benyttes. <a href=\"http://gnu.io/social/try/\">Følger du denne lenken finner du noen anbefalinger.</a>",
 	"editMyProfile": "Rediger profil",
 	"notifications": "Varsler",
 	"xFavedYourQueet": "favorittmarkerte queeten din",
@@ -118,5 +118,5 @@
 	"showTerms": "Vilkår for bruk",
 	"ellipsisMore": "Mer",
 	"blockUser": "Blokker {username}",
-	"goToOriginalNotice": "Go to original notice"
+	"goToOriginalNotice": "Gå til den opprinnelige queeten"
 }
