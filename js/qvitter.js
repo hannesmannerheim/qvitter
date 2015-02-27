@@ -76,10 +76,10 @@ $(window).scroll(function(e){
    · 
    · · · · · · · · · · · · · */ 
 	
-$('#federated-tooltip').on('mouseenter',function(){
+$('body').on('mouseenter','#federated-tooltip',function(){
 	$('#what-is-federation').fadeIn(100);
 	});
-$('#what-is-federation').on('mouseleave',function(){
+$('body').on('mouseleave','#what-is-federation',function(){
 	$('#what-is-federation').fadeOut(100);
 	});	
 
