@@ -97,7 +97,7 @@
 	"signUpEmail": "E-post",
 	"signUpButtonText": "Registrera dig på {site-title}",
 	"welcomeHeading": "Välkommen till {site-title}.",
-	"welcomeText": "Vi är en <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Federering\" betyder att du inte behöver ha ett {site-title}-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href=\"http://www.gnu.org/software/social/\">GNU Social</a> (som {site-title} bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt.",
+	"welcomeText": "Vi är en <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Federering\" betyder att du inte behöver ha ett {site-title}-konto för att följa, följas av eller prata med quittrare. Du kan registrera dig på  vilken sajt som helst som stödjer protokollet <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">Ostatus</a>, eller mikroblogga på en helt egen server, förslagsvis med den fria programvaran <a href=\"http://www.gnu.org/software/social/\">GNU social</a> (som {site-title} bygger på).</div>federerad</span> allmänning, där du som har hoppat av de centraliserade kapitalistiska tjänsterna kan mikroblogga etiskt och solidariskt.",
 	"registerNickname": "Användarnamn",
 	"registerHomepage": "Webbplats",
 	"registerBio": "Biografi",
