@@ -303,6 +303,12 @@ class QvitterAction extends ApiAction
 						}
 						
 				</style>
+				<?php
+				
+	            // event for other plugins to use to add head elements to qvitter
+	            Event::handle('QvitterEndShowHeadElements', array($this));			
+				
+				?>
 			</head>
 			<body style="background-color:<?php print QvitterPlugin::settings("defaultbackgroundcolor"); ?>">
 				<input id="upload-image-input" class="upload-image-input" type="file" name="upload-image-input" accept="image/*"> 
@@ -492,6 +498,9 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/ajax-functions.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/qvitter.js')); ?>"></script>
 				<?php
+				
+					// event for other plugins to add scripts to qvitter
+					Event::handle('QvitterEndShowScripts', array($this));
 				
 					// we might have custom javascript in the config file that we want to add
 					if(QvitterPlugin::settings('js')) {
