@@ -113,6 +113,12 @@ class QvitterAction extends ApiAction
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/css/qvitter.css')); ?>" />
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
 				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?><?php print QvitterPlugin::settings("favicon"); ?>">
+				
+				<!-- GOTABULO -->
+                <?php if(defined('GOTABULO')) { ?>
+                       <link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/wgo.player.css" />
+                <?php } ?>
+
 				<?php
 
 				// if qvitter is a webapp and this is a users url we add feeds
@@ -312,6 +318,10 @@ class QvitterAction extends ApiAction
 			</head>
 			<body style="background-color:<?php print QvitterPlugin::settings("defaultbackgroundcolor"); ?>">
 				<input id="upload-image-input" class="upload-image-input" type="file" name="upload-image-input" accept="image/*"> 
+				
+			    <?php if(defined('GOTABULO')) { ?>
+                        <input id="upload-sgf-input" class="upload-sgf-input" type="file" name="upload-sgf-input" accept=".sgf">				
+				<?php } ?>
 				<div class="topbar">
 					<a href="<?php print $instanceurl; ?>"><div id="logo"></div></a>
 					<a id="settingslink">
@@ -454,6 +464,10 @@ class QvitterAction extends ApiAction
 								<div class="queet-toolbar">
 									<div class="queet-box-extras">
 										<button class="upload-image"></button>
+                                        <!-- UPLOAD SGF FILE GOTABULO -->
+                                        <?php if(defined('GOTABULO')) { ?>
+                                            <button class="upload-sgf">SGF</button>
+                                        <?php } ?>										
 										<button class="shorten disabled">URL</button>
 									</div>
 									<div class="queet-button">
@@ -497,6 +511,11 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/misc-functions.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/ajax-functions.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/qvitter.js')); ?>"></script>
+				
+				<!-- SCRIPS FOR GOTABULO -->
+                <script type="text/javascript" src="<?php print $qvitterpath; ?>js/wgo.min.js"></script>
+                <script type="text/javascript" src="<?php print $qvitterpath; ?>js/wgo.player.min.js"></script>				
+				
 				<?php
 				
 					// event for other plugins to add scripts to qvitter

@@ -3380,7 +3380,33 @@ button.shorten:after {
     left: 50%;
     margin-left: 0;
     text-align: left;
-	}		
+	}
+	
+button.upload-sgf {
+	font-weight:bold;	
+	}
+button.upload-sgf:before,
+button.upload-sgf:after {
+	content:"\f10c";
+	display: block;
+    font-family: FontAwesome;
+    font-size: 12px;
+    height: 15px;
+    right: 50%;
+    margin-right: 0px;
+    margin-top: 13px;
+    position: absolute;
+    text-align: right;
+    top: 0;
+    width: 20px;
+    z-index: 101;
+	}
+button.upload-sgf:after {
+	content:"\f111";
+    left: 50%;
+    margin-left: 0;
+    text-align: left;
+	}			
 
 	
 /* SPINNER */
@@ -3917,6 +3943,14 @@ input#background-image-input {
 	width:0;
 	overflow:hidden;
 	}
+	
+input#upload-sgf-input {
+	opacity:0;
+	position:absolute;
+	height:0;
+	width:0;
+	overflow:hidden;
+	}	
 
 .jwc_frame.avatar-to-crop {
 	top:20px;

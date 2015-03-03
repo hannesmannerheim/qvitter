@@ -1866,6 +1866,13 @@ $('body').on('blur','.queet-box-syntax',function (e) {
 		clickedToolbarButtons.removeClass('clicked');
 		return true;		
 		}
+		
+	// don't collapse if upload-sgf-button has been clicked
+	var uploadSgfButton = $(this).siblings('.queet-toolbar').find('button.upload-sgf');
+	if(uploadSgfButton.hasClass('clicked')) {	
+		uploadSgfButton.removeClass('clicked');
+		return true;
+		}		
 
 	// don't collapse if we're clicking around inside queet-box
 	var syntaxTwoBox = $(this).siblings('.syntax-two');
@@ -2750,6 +2757,123 @@ function uploadImage(e, thisUploadButton) {
 		});			
 	
 	}	
+
+/* · 
+   · 
+   ·   Upload sgf file GOTABULO plugin
+   ·   
+   · · · · · · · · · · · · · */ 	
+	
+$('body').on('mousedown','.upload-sgf',function () {
+
+	// remember caret position
+	var caretPos = getSelectionInElement($(this).closest('.queet-toolbar').siblings('.queet-box-syntax')[0]);
+	$(this).attr('data-caret-pos',caretPos);
+	
+	// prevent queet-box collapse
+	$(this).addClass('clicked');
+
+	});
+
+$('body').on('click','.upload-sgf',function () {
+
+        var thisUploadSGFButton = $(this);
+        $('#upload-sgf-input').one('click',function(){ // trick to make the change event only fire once when selecting a file
+                $(this).one('change',function(e){
+                        uploadFileSGF(e, thisUploadSGFButton);
+                        })
+                });
+
+        // trigger click for firefox
+        if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+                $('#upload-sgf-input').trigger('click');
+                }
+        // other browsers
+        else {
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("click", true, true);
+                $('#upload-sgf-input')[0].dispatchEvent(evt);
+        }
+});
+
+// only tested working on Firefox 3.6 and 18
+function uploadFileSGF(e, thisUploadSGFButton) {
+
+    var input = e.target;
+
+    var reader = new FileReader();
+    reader.onload = function(){
+      var dataURL = reader.result;
+      thisUploadSGFButton.closest('.queet-toolbar').before('<span class="upload-image-container"><img class="to-upload" src="' + location.protocol + '//' + location.hostname + '/plugins/Qvitter/img/gotabulo.png" /></span>');
+
+
+                        var sgfFormData = new FormData();
+						sgfFormData.append('media', $('#upload-sgf-input')[0].files[0]);
+						// upload
+						$.ajax({ url: window.apiRoot + 'statusnet/media/upload',
+							type: "POST", 
+							data: sgfFormData,
+							contentType: false,
+							processData: false,
+							dataType: "xml",
+							error: function(data){ console.log('error'); console.log(data); $('.queet-box-loading-cover').remove(); },
+							success: function(data) {						
+								var rsp = $(data).find('rsp');
+								if (rsp.attr('stat') == 'ok') {
+									cleanUpAfterCropping();
+
+									// If doing 'multiple' input element, maybe reply with many mediaurl elements
+									// and then rsp.find('mediaurl').each(...)?
+									var mediaurl = rsp.find('mediaurl').text();
+
+									var uploadButton = $('img.to-upload').parent().siblings('.queet-toolbar').find('.upload-sgf');
+									var queetBox = $('img.to-upload').parent().siblings('.queet-box-syntax');									
+									var caretPos = uploadButton.attr('data-caret-pos').split(',');
+									
+									// if this site is like quitter.se, we have to do this, otherwise
+									// gnusocial will not recognize the link to the image as a local attachment
+									if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
+										mediaurl = mediaurl.replace('https://','http://');
+										}
+									
+									$('img.to-upload').attr('data-shorturl', mediaurl);
+									$('img.to-upload').addClass('uploaded');
+									$('img.to-upload').removeClass('to-upload');		
+									
+									// insert shorturl in queet box	
+									deleteBetweenCharacterIndices(queetBox[0], caretPos[0], caretPos[1]);
+									var range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);
+									if(typeof range == 'undefined') { 
+										// if queetbox is empty no range is returned, and inserting will fail,
+										// so we insert a space and try to get range again...
+										queetBox.html('&nbsp;');
+									    range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);										 
+										}
+									range.insertNode(document.createTextNode(' ' + mediaurl + ' '));	
+	
+									// put caret after
+									queetBox.focus();									
+									var putCaretAt = parseInt(caretPos[0],10)+mediaurl.length+2;
+									setSelectionRange(queetBox[0], putCaretAt, putCaretAt);					
+									queetBox.trigger('input'); // avoid some flickering
+									setTimeout(function(){ queetBox.trigger('input');},1); // make sure chars are counted and shorten-button activated
+									$('.queet-box-loading-cover').remove();
+									}
+								 else {
+									alert('Try again! ' + rsp.find('err').attr('msg'));
+									$('.save-profile-button').removeAttr('disabled');		
+									$('.save-profile-button').removeClass('disabled');
+									$('img.to-upload').parent().remove();
+									$('.queet-box-loading-cover').remove();
+									}
+								 }
+							});	
+
+    };
+    reader.readAsDataURL(input.files[0]);
+    
+}
+	
 
 /* · 
    · 
