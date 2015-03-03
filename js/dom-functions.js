@@ -1029,20 +1029,17 @@ function expand_queet(q,doScrolling) {
 							q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="420" height="315" src="//www.youtube.com/embed/' + youtubeId + '" frameborder="0" allowfullscreen></iframe></div>');						
 							}
 						}
-				    // sgf files GOTABULO
-                    else if(attachment_title.indexOf('.sgf') > -1 ) {
-
-                            q.children('.queet').find('.expanded-content').prepend('<div width="80%" id="gotabulo' + $(this).attr('id') + '"></div><script> \
-                            var elem = document.getElementById("gotabulo' + $(this).attr('id') + '"); \
-                            var player = new WGo.BasicPlayer(elem, { \
-                            sgfFile:"' + attachment_title + '",        \
-                            layout: { \
-                                        top: ["InfoBox"], \
-                                        bottom: ["Control", "CommentBox"] \
-                                    } \
-                            }); \
-                            </script>');
-                        }
+					else {
+						// other plugins, e.g. gotabulo, can check for other attachment file formats to expand
+						window.currentlyExpanding = {
+							"attachment_title":attachment_title,
+							"attachment_mimetype":attachment_mimetype,
+							"attachment_title_extension":attachment_title_extension,
+							"streamItem":q,
+							"thisAttachmentLink":$(this)													
+							};
+						$(document).trigger('qvitterExpandOtherAttachments');
+						}
 					}
 				});
 			
