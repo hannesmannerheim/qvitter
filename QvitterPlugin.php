@@ -501,9 +501,9 @@ class QvitterPlugin extends Plugin {
 	                $attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
                 } catch (ServerException $e) {
 					$thumb = File_thumbnail::getKV('file_id', $attachment->id);
-					if(isset($thumb->url)) {
+					if ($thumb instanceof File_thumbnail) {
 						$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
-						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->url;
+						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
 						} 
                 }
             }
@@ -543,7 +543,7 @@ class QvitterPlugin extends Plugin {
 			}
 		else {
 			$twitter_status['is_local'] = false;            					
-			$twitter_status['external_url'] = $notice->url;			
+			$twitter_status['external_url'] = $notice->getUrl();			
 			}
 		if($notice->object_type == 'activity') {
 			$twitter_status['is_activity'] = true;            					
