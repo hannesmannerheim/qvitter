@@ -358,18 +358,19 @@ function changeDesign(obj) {
    · · · · · · · · · */  
 
 function changeLinkColor(newLinkColor) {
-	var linkstyle = $('style').text();
-	$('style').text(linkstyle.substring(0,linkstyle.indexOf('color:')+6) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*COLOREND*/')));
-	var linkstyle = $('style').html();
-	$('style').text(linkstyle.substring(0,linkstyle.indexOf('background-color:')+17) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BACKGROUNDCOLOREND*/')));		
-	var linkstyle = $('style').html();
-	$('style').text(linkstyle.substring(0,linkstyle.indexOf('border-color:')+13) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BORDERCOLOREND*/')));		
-	var linkstyle = $('style').html();
-	$('style').text(linkstyle.substring(0,linkstyle.indexOf('background-color:rgb(')+17) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBACKGROUNDCOLOREND*/')));		
-	var linkstyle = $('style').html();
-	$('style').text(linkstyle.substring(0,linkstyle.indexOf('border-color:rgb(')+13) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.6) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERCOLOREND*/')));		
-	var linkstyle = $('style').html();
-	$('style').text(linkstyle.substring(0,linkstyle.indexOf('border-bottom-color:rgb(')+20) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERBOTTOMCOLOREND*/')));		
+	var headStyle = $('head').children('style');
+	var linkstyle = headStyle.text();
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('color:')+6) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*COLOREND*/')));
+	var linkstyle = headStyle.html();
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('background-color:')+17) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BACKGROUNDCOLOREND*/')));		
+	var linkstyle = headStyle.html();
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-color:')+13) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BORDERCOLOREND*/')));		
+	var linkstyle = headStyle.html();
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('background-color:rgb(')+17) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBACKGROUNDCOLOREND*/')));		
+	var linkstyle = headStyle.html();
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-color:rgb(')+13) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.6) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERCOLOREND*/')));		
+	var linkstyle = headStyle.html();
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-bottom-color:rgb(')+20) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERBOTTOMCOLOREND*/')));		
 	}
 function blendRGBColors(c0, c1, p) {
     var f=c0.split(","),t=c1.split(","),R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);
