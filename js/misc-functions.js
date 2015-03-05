@@ -96,7 +96,7 @@ function displayOrHideUnreadNotifications(notifications) {
 		
 		// if this is notifications page, we use the info from the hidden items in the feed
 		if(window.currentStream == 'qvitter/statuses/notifications.json') { 
-			var new_queets_num = $('#feed-body').find('.stream-item.hidden').length;
+			var new_queets_num = $('#feed-body').find('.stream-item.notification.hidden').length;
 			
 			if(new_queets_num == 0) {
 				document.title = window.siteTitle;
