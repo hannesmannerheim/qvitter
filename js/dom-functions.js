@@ -979,8 +979,8 @@ function expand_queet(q,doScrolling) {
 				// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
 				if(typeof attachment_title != 'undefined') {
 					// images
-					if($.inArray(attachment_mimetype, ['image/gif', 'image/jpeg', 'image/png']) >= 0
-					|| $.inArray(attachment_title_extension, ['jpeg', 'gif', 'jpg','png']) >= 0) {
+					if($.inArray(attachment_mimetype, ['image/gif', 'image/jpeg', 'image/png', , 'image/svg+xml']) >= 0
+					|| $.inArray(attachment_title_extension, ['jpeg', 'gif', 'jpg','png','svg']) >= 0) {
 						if(q.children('.queet').find('.expanded-content').children('.media').children('a[href="' + attachment_title + '"]').length < 1) { // not if already showed
 							
 							// local attachment with a thumbnail
@@ -1807,6 +1807,9 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 					}
 				
 				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-mime-type="' + this.mimetype + '" data-big-thumbnail="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH + '" src="' + thumb_url + '"/></a>';
+				}
+			else if (this.mimetype == 'image/svg+xml') {
+				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
 				}
 			});
 		}	
