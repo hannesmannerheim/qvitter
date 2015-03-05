@@ -979,7 +979,7 @@ function expand_queet(q,doScrolling) {
 				// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
 				if(typeof attachment_title != 'undefined') {
 					// images
-					if($.inArray(attachment_mimetype, ['image/gif', 'image/jpeg', 'image/png', , 'image/svg+xml']) >= 0
+					if($.inArray(attachment_mimetype, ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml']) >= 0
 					|| $.inArray(attachment_title_extension, ['jpeg', 'gif', 'jpg','png','svg']) >= 0) {
 						if(q.children('.queet').find('.expanded-content').children('.media').children('a[href="' + attachment_title + '"]').length < 1) { // not if already showed
 							
