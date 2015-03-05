@@ -55,10 +55,66 @@ function localStorageObjectCache_STORE(name, unique_id, object) {
 				}
 			}
 		else {
-			localStorage[name + '-' + unique_id] = JSON.stringify(object);
+
+			var dataToSave = {};
+			dataToSave.modified = Date.now();
+			dataToSave.data = object;
+
+			try {
+				localStorage.setItem(name + '-' + unique_id, JSON.stringify(dataToSave));
+				}
+			catch (e) {
+				if (e.name == 'QUOTA_EXCEEDED_ERR' || e.name == 'NS_ERROR_DOM_QUOTA_REACHED' || e.name == 'QuotaExceededError' || e.name == 'W3CException_DOM_QUOTA_EXCEEDED_ERR') {
+					
+					removeOldestLocalStorageEntries(function(){
+						localStorageObjectCache_STORE(name, unique_id, object);
+						});
+					
+					}
+				else {
+					console.log('could not store in localStorage, unknown error');
+					}
+				}
 			}			
 		}	
 	}
+
+/* ·  
+   · 
+   ·   Remove the 100 oldest cached items
+   · 
+   · · · · · · · · · */
+
+function removeOldestLocalStorageEntries(callback) {	
+
+	// grab the expiry and store the modified-key into an object
+	var modified = Object.keys(localStorage).reduce(function(collection,key){
+		var currentModified = JSON.parse(localStorage.getItem(key)).modified;
+		collection[currentModified] = key;
+		return collection;
+		},{});
+		
+	delete modified['undefined']; // we don't want those
+
+	// get the modified dates into an array
+	var modifiedDates = Object.keys(modified);
+	
+	modifiedDates.sort();
+	
+	var i = 0;
+	$.each(modifiedDates,function(k,v){
+		delete localStorage[modified[v]];		
+		i++;
+		if(i>=100) {
+			return false;
+			}
+		});
+
+	console.log('removed 100 old localstorage items');
+
+	callback();
+	}
+
 
 /* ·  
    · 
@@ -74,15 +130,80 @@ function localStorageObjectCache_GET(name, unique_id, callback) {
 
 	if(localStorageIsEnabled()) {
 		if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
-			callback(JSON.parse(localStorage[name + '-' + unique_id]));
+			var parsedObject = JSON.parse(localStorage[name + '-' + unique_id]);
+			if(typeof parsedObject.modified == 'undefined' || parsedObject.modified === null) {			
+				// invalid or old localstorage object found, check the whole localstorage!
+				checkLocalStorage();
+				callback(false);
+				}
+			else {
+				callback(parsedObject.data);				
+				}
 			}
 		else {
 			callback(false);
 			}
+		}
+	else {
+		callback(false);
 		}	
 	}
 
+function checkLocalStorage() {
+	console.log('checking localStorage for invalid entries');
+	var dateNow = Date.now()
+	var corrected = 0;
+	var deleted = 0;
+	$.each(localStorage, function(k,entry){
+		if(typeof entry == 'string') {
 
+			// check that entry is valid json
+			try {
+				var entryParsed = JSON.parse(entry);			
+				}
+			catch(e) {
+				delete localStorage[k];
+				deleted++;
+				return true;
+				} 
+			
+			// check that it is a valid/currently used data type
+			var validDataTypes = [
+				'browsingHistory',
+				'conversation',
+				'favsAndRequeets',
+				'languageData',
+				'fullQueetHtml',
+				'selectedLanguage'
+				];
+			var thisDataType = k.substring(0,k.indexOf('-'));
+			if($.inArray(thisDataType, validDataTypes) == -1 || k.indexOf('-') == -1) {
+				delete localStorage[k];
+				deleted++;
+				return true;								
+				}	
+				
+			// check that it has a modified entry, if not: add one				
+			if(typeof entryParsed.modified == 'undefined' || entryParsed.modified === null) {
+				var newEntry = {};
+				newEntry.modified = dateNow - corrected; // we want as unique dates as possible
+				newEntry.data = entryParsed;
+				try {
+					localStorage.setItem(k, JSON.stringify(newEntry));
+					}
+				catch (e) {
+					if (e.name == 'QUOTA_EXCEEDED_ERR' || e.name == 'NS_ERROR_DOM_QUOTA_REACHED' || e.name == 'QuotaExceededError' || e.name == 'W3CException_DOM_QUOTA_EXCEEDED_ERR') {
+						removeOldestLocalStorageEntries(function(){
+							localStorage.setItem(k, JSON.stringify(newEntry));
+							});
+						}
+					}
+				corrected++;
+				}			
+			}			
+		});
+	console.log(corrected + ' entries corrected, ' + deleted + ' entries deleted');	
+	}
 
 /* ·  
    · 
@@ -620,14 +741,13 @@ function convertAttachmentMoreHref() {
 
 /* · 
    · 
-   ·   Updates the local storage
+   ·   Updates the browsing history local storage
    ·
    · · · · · · · · · · · · · */
    
 function updateHistoryLocalStorage() {
 	if(localStorageIsEnabled()) {
 		var i=0;
-		var localStorageName = window.loggedIn.screen_name + '-history-container-v2';
 		var historyContainer = new Object();
 		$.each($('#history-container .stream-selection'), function(key,obj) {
 			historyContainer[i] = new Object();
@@ -635,7 +755,7 @@ function updateHistoryLocalStorage() {
 			historyContainer[i].dataStreamHeader = $(obj).attr('data-stream-header');			
 			i++;
 			});
-		localStorage[localStorageName] = JSON.stringify(historyContainer);
+		localStorageObjectCache_STORE('browsingHistory', window.loggedIn.screen_name,historyContainer);
 		if($('#history-container .stream-selection').length==0) {
 			$('#history-container').css('display','none');
 			}
@@ -656,15 +776,15 @@ function updateHistoryLocalStorage() {
    
 function loadHistoryFromLocalStorage() {
 	if(localStorageIsEnabled()) {
-		var localStorageName = window.loggedIn.screen_name + '-history-container-v2';
-		if(typeof localStorage[localStorageName] != "undefined") {
-			$('#history-container').css('display','block');
-			$('#history-container').html('');																										
-			var historyContainer = $.parseJSON(localStorage[localStorageName]);
-			$.each(historyContainer, function(key,obj) {
-				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right"></i></a>');
-				});
-			}
+		localStorageObjectCache_GET('browsingHistory', window.loggedIn.screen_name,function(data){
+			if(data) {
+				$('#history-container').css('display','block');
+				$('#history-container').html('');																										
+				$.each(data, function(key,obj) {
+					$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right"></i></a>');
+					});				
+				}
+			});
 		updateHistoryLocalStorage();
 		}
 	}	

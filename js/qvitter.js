@@ -36,6 +36,9 @@
 // object to keep old states of streams in, to speed up stream change  
 window.oldStreams = new Object();
 
+// check our localStorage and make sure it's correct
+checkLocalStorage();
+
 
 /* · 
    · 
@@ -270,15 +273,27 @@ $(window).load(function() {
 		}
 			
 	window.selectedLanguage = 'en';      
-	  	
-	if(localStorageIsEnabled()) {
-		if(typeof localStorage.selectedLanguage != 'undefined' && localStorage.selectedLanguage != null) {
-			window.selectedLanguage = localStorage.selectedLanguage;
-			}
-		else if(typeof window.availableLanguages[browserLang] != 'undefined') {
-			window.selectedLanguage =  browserLang;        	
-			}
+	
+	if(window.loggedIn === false) {
+		var selectedForUser = 'logged_out';
 		}
+	else {
+		var selectedForUser = window.loggedIn.id;
+		}
+	
+	localStorageObjectCache_GET('selectedLanguage',selectedForUser, function(data){
+		if(data) {
+			window.selectedLanguage = data;			
+			}
+		else {
+			window.selectedLanguage = browserLang;			
+			}
+		});
+		
+	// check that this language is available, otherwise use english
+	if(typeof window.availableLanguages[window.selectedLanguage] == 'undefined') {
+		window.selectedLanguage = 'en';
+		}	
 
 	// if this is a RTL-language, add rt classes and change some things
 	if(window.selectedLanguage == 'ar') {
@@ -289,31 +304,28 @@ $(window).load(function() {
 		$('body').addClass('rtl');
 		$('title').html('&#x202b;واگذارنده');
 		}
-		
+				
 	// if we already have this version of this language in localstorage, we
 	// use that cached version. we do this because $.ajax doesn't respect caching, it seems
-	if(localStorageIsEnabled()
-	&& (typeof localStorage['languageData-' + window.availableLanguages[window.selectedLanguage]] != 'undefined' && localStorage['languageData-' + window.availableLanguages[window.selectedLanguage]] !== null)) {
-		proceedToSetLanguageAndLogin(JSON.parse(localStorage['languageData-' + window.availableLanguages[window.selectedLanguage]]));
-		}	
-	// if we need to get the language file from the server
-	else {
-		$.ajax({
-			dataType: "json",
-			url: window.fullUrlToThisQvitterApp + 'locale/' + window.availableLanguages[window.selectedLanguage],
-			error: function(data){console.log(data)},
-			success: function(data) {
+	localStorageObjectCache_GET('languageData',window.availableLanguages[window.selectedLanguage], function(data){
+		if(data) {
+			proceedToSetLanguageAndLogin(data);
+			}
+		else {
+			$.ajax({
+				dataType: "json",
+				url: window.fullUrlToThisQvitterApp + 'locale/' + window.availableLanguages[window.selectedLanguage],
+				error: function(data){console.log(data)},
+				success: function(data) {
 				
-				// store this response in localstorage
-				if(localStorageIsEnabled())	 {
-					localStorage['languageData-' + window.availableLanguages[window.selectedLanguage]] = JSON.stringify(data);
+					// store this response in localstorage
+					localStorageObjectCache_STORE('languageData',window.availableLanguages[window.selectedLanguage], data);
+			
+					proceedToSetLanguageAndLogin(data);
 					}
-				
-				proceedToSetLanguageAndLogin(data);
-				}
-			});
-		
-		}
+				});		
+			}
+		});
 
 	});
 	
@@ -605,9 +617,16 @@ $(document).bind('click', function (e) {
 		}
 	});
 $('.language-link').click(function(){
-	if(localStorageIsEnabled()) {
-		localStorage.selectedLanguage = $(this).attr('data-lang-code'); // save langage selection
+
+	if(window.loggedIn === false) {
+		var selectedForUser = 'logged_out';
 		}
+	else {
+		var selectedForUser = window.loggedIn.id;
+		}
+	
+	localStorageObjectCache_STORE('selectedLanguage',selectedForUser, $(this).attr('data-lang-code'));
+
 	location.reload(); // reload	
 	});
 

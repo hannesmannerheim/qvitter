@@ -365,18 +365,19 @@ function unRequeet(this_stream_item, this_action, my_rq_id) {
 function getFavsAndRequeetsForQueet(q,qid) { 
 
 	// get immediately from localstorage cache
-	if(localStorageIsEnabled()) {
-		if(typeof localStorage['favsAndRequeets-' + qid] != 'undefined' && localStorage['favsAndRequeets-' + qid] !== null) {
-			showFavsAndRequeetsInQueet(q, JSON.parse(localStorage['favsAndRequeets-' + qid]));
-			}				
-		}
+	localStorageObjectCache_GET('favsAndRequeets',qid,function(data){
+		if(data) {
+			showFavsAndRequeetsInQueet(q, data);					
+			}
+		});
 
 	$.ajax({ url: window.apiRoot + "qvitter/favs_and_repeats/" + qid + ".json?t=" + timeNow(),
 		type: "GET", 
 		dataType: 'json', 
 		success: function(data) { 
 			if(data.favs.length > 0 || data.repeats.length > 0) {
-				if(localStorageIsEnabled()) { localStorage['favsAndRequeets-' + qid] = JSON.stringify(data);} // cache response
+
+				localStorageObjectCache_STORE('favsAndRequeets',qid, data); // cache response
 
 				if(q.hasClass('expanded') && !q.hasClass('collapsing')) {
 					showFavsAndRequeetsInQueet(q,data);
@@ -384,11 +385,7 @@ function getFavsAndRequeetsForQueet(q,qid) {
 				}
 			else {
 				// remove from cache and DOM if all favs and repeats are deleted
-				if(localStorageIsEnabled()) {
-					if(typeof localStorage['favsAndRequeets-' + qid] != 'undefined' && localStorage['favsAndRequeets-' + qid] !== null) {					
-						delete localStorage['favsAndRequeets-' + qid];
-						}
-					}
+				localStorageObjectCache_STORE('favsAndRequeets',qid, false);
 				q.children('.queet').find('.stats').remove();
 				}
 			}, 
@@ -398,3 +395,4 @@ function getFavsAndRequeetsForQueet(q,qid) {
 			}
 		});  
 	}
+showFavsAndRequeetsInQueet
