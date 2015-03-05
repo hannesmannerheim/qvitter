@@ -1215,26 +1215,17 @@ function convertNewGNUSocialURItoURL(obj) {
 function getConversation(q, qid) {
 
 	// check if we have a conversation for this notice cached in localstorage
-	localStorageObjectCache_GET('conversation',qid, function(data){
+	localStorageObjectCache_GET('conversation',q.attr('data-conversation-id'), function(data){
 		if(data) {
 			showConversation(q, qid, data);
-			}
-		// if we have a conversation for the notice that this notice is a reply to, 
-		// we assume it's the same conversation, and use that
-		else if(q.attr('data-in-reply-to-status-id') !== null && q.attr('data-in-reply-to-status-id') != 'null') {
-			localStorageObjectCache_GET('conversation',q.attr('data-in-reply-to-status-id'), function(data){
-				if(data) {
-					showConversation(q, qid, data);				
-					}
-				});		
 			}
 		});
 	
 	// always get most recent conversation from server
-	getFromAPI('statusnet/conversation/' + $('#stream-item-' + qid).attr('data-conversation-id') + '.json?count=100', function(data){ if(data) { 
+	getFromAPI('statusnet/conversation/' + q.attr('data-conversation-id') + '.json?count=100', function(data){ if(data) { 
 
 		// cache in localstorage
-		localStorageObjectCache_STORE('conversation',qid, data);
+		localStorageObjectCache_STORE('conversation',q.attr('data-conversation-id'), data);
 
 		showConversation(q, qid,data);	
 		}});
