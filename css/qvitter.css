@@ -1002,6 +1002,12 @@ button#submit-login:hover {
 	position:relative;	
 	text-align: center;
 	}
+body.rtl #footer-spinner-container {
+	float: right;
+	width:590px;
+	position:relative;	
+	text-align: center;
+	}	
 
 #user-container {
 	width:290px;
@@ -1523,14 +1529,6 @@ background-repeat: no-repeat;
 body.rtl .queet.rtl .expanded-content {
 	direction:rtl;
 	}
-body.rtl .queet:not(.rtl) .client-and-actions {	
-	direction:rtl;
-	text-align:left;
-	}
-body.rtl .queet:not(.rtl) .stream-item-header {		
-    direction: rtl;
-    text-align: left;	
-	}
 .stream-item.expanded div:first-child {
 	border-top-left-radius:6px;
 	border-top-right-radius:6px;	
@@ -1753,6 +1751,10 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	box-sizing:border-box;	
 	border-radius: 6px;	
 	}	
+.stream-item:not(.like):not(.repeat):not(.follow) .queet.rtl .stream-item-header .name:before {
+	right:12px;
+	left:auto;
+	}
 .modal-container .modal-body .stream-item-header .avatar {
 	left:10px;	
 	}	
@@ -1950,6 +1952,10 @@ ul.queet-actions li .icon {
     margin-right:31px;      
     font-size:17px;
 	}	
+.queet.rtl ul.queet-actions li .icon {
+    margin-right:0;      	
+    margin-left:31px;          
+	}
 ul.queet-actions li.action-rt-container .with-icn.done .icon:before {
 	color: #609928;
 	}
@@ -2044,22 +2050,25 @@ ul.queet-actions li .icon.is-mine:before {
 	left:auto;
 	right:12px;
 	}
+.modal-container .queet.rtl .account-group > .avatar {
+	right:0;
+	}	
 .queet.rtl .stream-item-header {
 	direction: rtl;
-	text-align:right;
+	text-align: right;
 	}
 .queet.rtl .account-group > .name {
 	direction: rtl;
 	text-align:right;
 	}
 .queet.rtl .account-group > .screen-name {
-	direction: rtl;
-	text-align:right;	
+	direction: ltr;
+	display: inline-block;
 	}			
 .queet.rtl .created-at {
-	left: 12px;
-    right: auto;
-	}	
+    direction: rtl;
+	display: inline-block;
+	}
 .queet.rtl .queet-text {
 	text-align:right;
 	direction: rtl;
@@ -2386,6 +2395,9 @@ span.inline-reply-caret {
 	left:auto;
 	right:34px;
 	}
+.queet.rtl span.inline-reply-caret:before {
+	left:-13px;
+	}	
 .modal-container span.inline-reply-caret {
 	display:none;
 	}
@@ -2426,6 +2438,15 @@ span.inline-reply-caret .caret-inner {
 .inline-reply-queetbox .syntax-two {
 	left:70px;
 	}
+.queet.rtl .inline-reply-queetbox .queet-box-syntax {
+	direction: rtl;
+	}
+.queet.rtl .inline-reply-queetbox .syntax-middle,
+.queet.rtl .inline-reply-queetbox .syntax-two {
+	left:12px;
+	direction: rtl;
+	}
+
 
 .inline-reply-queetbox .mentions-suggestions {
     left: 71px;
@@ -2567,6 +2588,9 @@ span.inline-reply-caret .caret-inner {
     box-sizing: border-box;    
     min-width: 100%;  
     padding: 10px 0 10px 11px;      
+	}
+body.rtl #user-body {
+    padding: 10px 11px 10px 0;    	
 	}
 
 #user-body > li {
@@ -2852,7 +2876,9 @@ div.syntax-middle {
 .queet-box-extras {
     float: left;
 	}	
-
+body.rtl .queet-box-extras {
+    float: right;
+	}	
 .queet-button {
     float: right;
 	}
@@ -3782,6 +3808,12 @@ body.rtl .modal-footer button {
 	right:0;
 	box-shadow:0 0 100px 100px rgba(0, 0, 0, 0.4);
 	}
+
+body.rtl .edit-profile-container .profile-card {
+	right:auto;
+	left:0;
+	}
+
 .edit-profile-container .profile-banner-footer {	
 	padding-left:5px;
     text-align: left;
@@ -4061,6 +4093,7 @@ body.rtl .flex-table-primary {
 
 body.rtl #search {
 	float:left;
+	margin-left:93px;
 	}
 body.rtl .search-icon {
 	left:2px;
@@ -4079,6 +4112,11 @@ body.rtl .profile-card {
 body.rtl #user-body {
 	direction:rtl;	
 	}	
+	
+body.rtl .reload-stream {
+	right:auto;
+	left:5px;
+	}
 
 body.rtl #remember-forgot,
 body.rtl #login-content input#nickname,
@@ -4089,7 +4127,6 @@ body.rtl .syntax-two,
 body.rtl #user-header,
 body.rtl .queet-box-template,
 body.rtl #new-queets-bar,
-body.rtl .queet-actions,
 body.rtl .longdate {
 	direction:rtl;
 	}
@@ -4115,12 +4152,6 @@ body.rtl #user-body #user-followers,
 body.rtl .profile-banner-footer ul.stats li {
 	float:right;
 	direction: rtl;	
-	}
-body.rtl .profile-banner-footer ul.stats li:first-child a,
-body.rtl #user-body #user-queets, 
-body.rtl #user-body #user-following,
-body.rtl #user-body #user-followers	{
-	border-left:1px solid #E8E8E8;
 	}
 body.rtl .profile-banner-footer ul.stats li:last-child a {
 	border-left:0 none;
@@ -4152,16 +4183,24 @@ body.rtl .language-dropdown {
 body.rtl .quitter-settings.dropdown-menu {
 	left:auto;
 	right:50%;
-	margin-right:-410px;
+	margin-right:147px;
 	margin-left:0;
 	}	
 	
 body.rtl #logo {	
 	left:auto;
 	right:50%;
-	margin-right: -420px;	
+	margin-right: -443px;	
 	margin-left:auto;
 	}
+
+body.rtl #top-compose {	
+	left:auto;
+	right:50%;
+	margin-right: 412px;	
+	margin-left:auto;
+	}	
+	
 body.rtl .dropdown-caret.right {
     right: auto;
     left: 10px;
@@ -4177,10 +4216,7 @@ body.rtl .dropdown-toggle .caret {
 	}
 	
 body.rtl #settingslink .dropdown-toggle {
-    left: auto;
-    right:50%;
-	margin-left:0;
-    margin-right: -343px;
+    margin-right: 358px;
     direction:rtl;
 	}	
 body.rtl #settingslink div.nav-session {
