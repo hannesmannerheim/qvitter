@@ -1003,10 +1003,7 @@ button#submit-login:hover {
 	text-align: center;
 	}
 body.rtl #footer-spinner-container {
-	float: right;
-	width:590px;
-	position:relative;	
-	text-align: center;
+	float: left;
 	}	
 
 #user-container {
@@ -1898,11 +1895,6 @@ body.rtl .stream-item.user .queet-content {
 body.rtl .stream-item.user .queet-text,
 body.rtl .stream-item.user .queet-content .stream-item-header {
 	text-align:right;
-	}
-body.rtl .stream-item.user .queet-content .stream-item-header .avatar {
-	float:right;
-	margin-left:auto;
-	margin-right:-58px;
 	}
 
 	

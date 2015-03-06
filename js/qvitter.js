@@ -295,14 +295,10 @@ $(window).load(function() {
 		window.selectedLanguage = 'en';
 		}	
 
-	// if this is a RTL-language, add rt classes and change some things
-	if(window.selectedLanguage == 'ar') {
+	// if this is a RTL-language, add rtl class to body
+	if(window.selectedLanguage == 'ar'
+	|| window.selectedLanguage == 'fa') {
 		$('body').addClass('rtl');
-		$('title').html('&#x202b;ترك');
-		}
-	else if(window.selectedLanguage == 'fa') {
-		$('body').addClass('rtl');
-		$('title').html('&#x202b;واگذارنده');
 		}
 				
 	// if we already have this version of this language in localstorage, we

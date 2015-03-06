@@ -1497,6 +1497,12 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.statusnet_profile_url + '"></a>';
 					}				
 				
+				// rtl or not
+				var rtlOrNot = '';
+				if($('body').hasClass('rtl')) {
+					rtlOrNot = 'rtl';
+					}
+				
 				// show user actions
 				var followingClass = '';
 				if(obj.following) {
@@ -1510,7 +1516,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 						}
 					}
 				
-				var userHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet">' + followButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.statusnet_profile_url + '"><img class="avatar" src="' + obj.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> <span class="screen-name">@' + obj.screen_name + '</span></a>' + ostatusHtml + '</div><div class="queet-text">' + obj.description + '</div></div></div></div>';
+				var userHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet ' + rtlOrNot + '">' + followButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.statusnet_profile_url + '"><img class="avatar" src="' + obj.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> <span class="screen-name">@' + obj.screen_name + '</span></a>' + ostatusHtml + '</div><div class="queet-text">' + obj.description + '</div></div></div></div>';
 				
 				if(after) {
 					$('#' + after).after(userHtml);							
@@ -1532,6 +1538,12 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				obj.description = obj.description || '';
 				obj.stream_logo = obj.stream_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-profile.png';
 	
+				// rtl or not
+				var rtlOrNot = '';
+				if($('body').hasClass('rtl')) {
+					rtlOrNot = 'rtl';
+					}
+	
 				// show group actions if logged in
 				var memberClass = '';
 				if(obj.member) {
@@ -1546,7 +1558,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				if(obj.homepage_logo != null) {
 					groupAvatar = obj.homepage_logo;
 					}
-				var groupHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet">' + memberButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.url + '"><img class="avatar" src="' + groupAvatar + '" /><strong class="name" data-group-id="' + obj.id + '">' + obj.fullname + '</strong> <span class="screen-name">!' + obj.nickname + '</span></a></div><div class="queet-text">' + obj.description + '</div></div></div></div>';
+				var groupHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet ' + rtlOrNot + '">' + memberButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.url + '"><img class="avatar" src="' + groupAvatar + '" /><strong class="name" data-group-id="' + obj.id + '">' + obj.fullname + '</strong> <span class="screen-name">!' + obj.nickname + '</span></a></div><div class="queet-text">' + obj.description + '</div></div></div></div>';
 	
 				if(after) {
 					$('#' + after).after(groupHtml);							
