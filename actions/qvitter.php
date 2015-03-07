@@ -488,7 +488,7 @@ class QvitterAction extends ApiAction
 			
 					<div id="footer"><div id="footer-spinner-container"></div></div>
 				</div>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.1.1.min.js"></script>
+				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.1.3.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-ui-1.10.3.min.js"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.minicolors.min.js"></script>	    	    
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.jWindowCrop.js"></script>	
