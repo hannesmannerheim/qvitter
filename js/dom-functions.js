@@ -370,7 +370,8 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	// if this is a #tag stream
 	else if(stream.substring(0,24) == 'statusnet/tags/timeline/')	{
 		var defaultStreamName = stream;
-		var streamHeader = '#' + stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
+		var hashtagString = stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
+		var streamHeader = '#' + replaceHtmlSpecialChars(decodeURIComponent(hashtagString));
 		}			
 	// if this is a notice stream
 	else if(stream.substring(0,14) == 'statuses/show/')	{
