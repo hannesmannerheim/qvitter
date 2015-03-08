@@ -415,7 +415,7 @@ class QvitterAction extends ApiAction
 									<input type="hidden" id="token" name="token" value="<?php print common_session_token(); ?>">					
 									<?php 
 
-									if(!common_config('plugins','disable-OpenID')) {
+									if (array_key_exists('OpenID', StatusNet::getActivePlugins())) {
 										print '<a href="'.$instanceurl.'main/openid" id="openid-login" title="OpenID" donthijack>OpenID</a>';
 										}
 										
