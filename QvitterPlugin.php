@@ -481,7 +481,7 @@ class QvitterPlugin extends Plugin {
 		$twitter_status['statusnet_in_groups'] = $group_addressees;    
 
 		// include the repeat-id, which we need when unrepeating later
-		if($twitter_status['repeated'] === true) {
+		if(array_key_exists('repeated', $twitter_status) && $twitter_status['repeated'] === true) {
 			$repeated = Notice::pkeyGet(array('profile_id' => $scoped->id,
                                         	'repeat_of' => $notice->id));
 			$twitter_status['repeated_id'] = $repeated->id;
