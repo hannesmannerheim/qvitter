@@ -1720,40 +1720,35 @@ $('body').on('click', '.queet-toolbar button',function () {
 		// remove any popups
 		$('.modal-container').remove();			
 
-		// try to find a queet to add the temp queet to
-		if($('.stream-item.replying-to').length > 0) {
-			// if the queet is in conversation, add it to parent's conversation
-			if($('.stream-item.replying-to').hasClass('conversation')) {
-				$('.stream-item.replying-to').parent().append(queetHtml);				
-				}
-			else {
-				// if the queet is expanded, add it to its conversation
-				if($('.stream-item.replying-to').hasClass('expanded')) {
-					$('.stream-item.replying-to').append(queetHtml);
-					}
-				// it it's not expanded, add it to top
-				else {
-					$('#feed-body').prepend(queetHtml.replace('class="stream-item conversation','class="stream-item'));										
-					}
-				}
-			$('.stream-item').removeClass('replying-to');				
+		// try to find a queet to add the temp queet to:			
+			
+		// if the queet is in conversation, add it to parent's conversation		
+		if($('.stream-item.replying-to').length > 0 && $('.stream-item.replying-to').hasClass('conversation')) {
+			$('.stream-item.replying-to').parent().append(queetHtml);				
 			}
+		// if the queet is expanded, add it to its conversation
+		else if($('.stream-item.replying-to').length > 0 && $('.stream-item.replying-to').hasClass('expanded')) {
+			$('.stream-item.replying-to').append(queetHtml);			
+			}
+		// maybe the replying-to class is missing but we still have a suiting place to add it
 		else if($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').length > 0) {
 			$('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').append(queetHtml);
 			}
-		// if we cant find a proper place, add it to top and remove conversation class
-		// but only if this is either 1) our home/all feed, 2) our user timeline or 3) whole site or 4) whole network
+		// if we can't find a proper place, add it to top and remove conversation class
+		// if this is either 1) our home/all feed, 2) our user timeline or 3) whole site or 4) whole network		
 		else if(window.currentStream.indexOf('statuses/friends_timeline.json') > -1 
 		|| window.currentStream.indexOf('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name) > -1 						
 		|| window.currentStream.indexOf('statuses/public_timeline.json') > -1 
-		|| window.currentStream.indexOf('statuses/public_and_external_timeline.json') > -1 
-			) {
+		|| window.currentStream.indexOf('statuses/public_and_external_timeline.json') > -1 ) {
 			$('#feed-body').prepend(queetHtml.replace('class="stream-item conversation','class="stream-item'));					
 			}
 		// don't add it to the current stream, open a popup instead, without conversation class
 		else {
 			popUpAction('popup-sending', '',queetHtml.replace('class="stream-item conversation','class="stream-item'),false);		
 			}
+		
+		// remove any replying-to classes
+		$('.stream-item').removeClass('replying-to');						
 		
 		// null reply box
 		collapseQueetBox(queetBox)				
