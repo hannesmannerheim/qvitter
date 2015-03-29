@@ -1787,7 +1787,6 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	// image attachment thumbnails
 	var attachment_html = '';
 	if(typeof obj.attachments != "undefined") {
-		obj.attachments.reverse(); // last on top
 		$.each(obj.attachments, function(){
 			if(this.id != null) {
 				var bigThumbW = 1000;
