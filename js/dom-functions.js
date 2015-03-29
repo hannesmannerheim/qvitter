@@ -854,7 +854,6 @@ function expand_queet(q,doScrolling) {
 			q.find('.inline-reply-caret').remove();
 			
 			q.addClass('collapsing');
-			q.css('overflow','hidden');
 			if(q.hasClass('conversation')) {
 				q.removeClass('expanded');	 
 				q.removeClass('collapsing');				

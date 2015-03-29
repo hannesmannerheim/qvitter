@@ -1361,7 +1361,6 @@ body.rtl #footer-spinner-container {
 	background-color:#F6F6F6;
 	}	
 .stream-item.conversation.visible {
-	overflow: hidden;
 	opacity:1;	
 	}	
 .stream-item.conversation.hidden-conversation {

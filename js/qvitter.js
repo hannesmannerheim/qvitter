@@ -1146,9 +1146,9 @@ $('body').on('click','.sm-ellipsis',function(){
 	// show
 	else {
 		$('.action-ellipsis-container').children('.dropdown-menu').remove(); // remove menu from other queets
-		var streamItemUsername = $(this).closest('.stream-item').find('.stream-item-header').find('.screen-name').text();
-		var streamItemUserID = $(this).closest('.stream-item').find('.stream-item-header').find('.name').attr('data-user-id');		
-		var streamItemID = $(this).closest('.stream-item').attr('data-quitter-id');				
+		var streamItemUsername = $(this).closest('.queet').find('.stream-item-header').find('.screen-name').text();
+		var streamItemUserID = $(this).closest('.queet').find('.stream-item-header').find('.name').attr('data-user-id');		
+		var streamItemID = $(this).closest('.queet').parent('.stream-item').attr('data-quitter-id');				
 		
 		var blockHtml = '';
 		var deleteHtml = '';		
