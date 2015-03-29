@@ -958,8 +958,8 @@ function expand_queet(q,doScrolling) {
 			q.find('.stream-item-footer').before('<div class="expanded-content"><div class="queet-stats-container"></div><div class="client-and-actions"><span class="metadata">' + metadata + '</span></div></div>');					
 	
 			
-			// maybe show images or videos
-			$.each($('#' + q.children('.queet').attr('id') + ' .queet-text, #' + q.children('.queet').attr('id') + ' > .attachments').find('a'), function() {
+			// maybe show images or videos, look for them in both the text and in the thumbnail container
+			$.each(q.children('.queet').find('.queet-text, .attachments').find('a'), function() {
 
 				var attachment_mimetype = $(this).find('img').attr('data-mime-type');
 
