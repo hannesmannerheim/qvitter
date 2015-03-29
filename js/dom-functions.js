@@ -1330,7 +1330,9 @@ function findInReplyToStatusAndShow(q, qid,reply,only_first,onlyINreplyto) {
 		reply_found.css('opacity','1');
 		if(only_first && reply_found_reply_to.length>0) {
 			if(q.children('.view-more-container-top').length < 1) {
-				reply_found.before('<div class="view-more-container-top" data-trace-from="' + reply + '"><a>' + window.sL.viewMoreInConvBefore + '</a></div>');							
+				if(q.children('.queet').prevAll('.hidden-conversation').length>0) {	
+					q.prepend('<div class="view-more-container-top" data-trace-from="' + reply + '"><a>' + window.sL.viewMoreInConvBefore + '</a></div>');												
+					}
 				}
 			findReplyToStatusAndShow(q, qid,qid,true);
 			}
@@ -1362,7 +1364,9 @@ function findReplyToStatusAndShow(q, qid,this_id,only_first) {
 			}					
 		if(only_first && reply_founds_reply.length>0) {
 			if(q.children('.view-more-container-bottom').length < 1) {
-				q.append('<div class="view-more-container-bottom" data-replies-after="' + qid + '"><a>' + window.sL.viewMoreInConvAfter + '</a></div>');			
+				if(q.children('.queet').nextAll('.hidden-conversation').length>0) {	
+					q.append('<div class="view-more-container-bottom" data-replies-after="' + qid + '"><a>' + window.sL.viewMoreInConvAfter + '</a></div>');			
+					}			
 				}		
 			}
 		
