@@ -547,7 +547,18 @@ function detectRTL(s) {
 	return $streamItem.html().replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">'); // hacky way to get @#! into mention tags to stop bidirection (css sets an @ with before content method)
 	}
 	
-	
+function secondsToTime(s){
+    var h  = Math.floor( s / ( 60 * 60 ) );
+        s -= h * ( 60 * 60 );
+    var m  = Math.floor( s / 60 );
+        s -= m * 60;
+  
+    return {
+        "h": h,
+        "m": m,
+        "s": s
+    };
+}	
 	
 /* · 
    · 
@@ -578,10 +589,11 @@ function parseTwitterDate(tdate) {
     var system_date = new Date(Date.parse(tdate));
     var user_date = new Date();
     var diff = Math.floor((user_date - system_date) / 1000);
+    var hms = secondsToTime(diff)
     if (diff <= 10) {return window.sL.now;}
     if (diff < 60) {return window.sL.shortDateFormatSeconds.replace('{seconds}',Math.round(diff/10)*10);}
-    if (diff <= 3540) {return window.sL.shortDateFormatMinutes.replace('{minutes}',Math.round(diff / 60));}
-    if (diff <= 86400) {return window.sL.shortDateFormatHours.replace('{hours}',Math.round(diff / 3600));}
+    if (diff <= 3540) {return window.sL.shortDateFormatMinutes.replace('{minutes}',hms["m"]).replace('{seconds}',hms["s"]);}
+    if (diff <= 86400) {return window.sL.shortDateFormatHours.replace('{hours}',hms["h"]).replace('{minutes}',hms["m"]);}
     if (diff <= 31536000) {return window.sL.shortDateFormatDate.replace('{day}',system_date.getDate()).replace('{month}',month_names[system_date.getMonth()]);}
     if (diff > 31536000) {return window.sL.shortDateFormatDateAndY.replace('{day}',system_date.getDate()).replace('{month}',month_names[system_date.getMonth()]).replace('{year}',system_date.getFullYear());}
     return system_date;
@@ -1104,24 +1116,25 @@ function deleteBetweenCharacterIndices(el, from, to) {
    · · · · · · · · · · · · · */ 
 
 function shortenUrlsInBox(shortenButton) {
-	shortenButton.addClass('disabled');
-	
-	$.each(shortenButton.parent().parent().siblings('.syntax-middle').find('span.url'),function(key,obj){
+        shortenButton.addClass('disabled');
 
-		var url = $.trim($(obj).text());
-		
-		display_spinner();
-		
-		$.ajax({ url: window.urlShortenerAPIURL + '?format=jsonp&action=shorturl&signature=' + window.urlShortenerSignature + '&url=' + encodeURIComponent(url), type: "GET", dataType: "jsonp", success: function(data) {
+        $.each(shortenButton.parent().parent().siblings('.syntax-middle').find('span.url'),function(key,obj){
 
-			if(typeof data.shorturl != 'undefined') {
-				
-				shortenButton.closest('.queet-toolbar').siblings('.upload-image-container').children('img[data-shorturl="' + data.url.url + '"]').attr('data-shorturl',data.shorturl);
-				shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace($('<div/>').text(data.url.url).html(), data.shorturl));
-				shortenButton.parent().parent().siblings('.queet-box-syntax').trigger('keyup');
-				shortenButton.addClass('disabled'); // make sure the button is disabled right after
-				}
-			remove_spinner();
-			}});
-		});
-}	
+                var url = $.trim($(obj).text());
+
+                display_spinner();
+
+                $.ajax({ url: window.urlShortenerAPIURL + '?format=jsonp&action=shorturl&signature=' + window.urlShortenerSignature + '&url=' + encodeURIComponent(url), type: "GET", dataType: "jsonp", success: function(data) {
+
+                        if(typeof data.shorturl != 'undefined') {
+
+                                shortenButton.closest('.queet-toolbar').siblings('.upload-image-container').children('img[data-shorturl="' + data.url.url + '"]').attr('data-shorturl',data.shorturl);
+                                shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace($('<div/>').text(data.url.url).html(), data.shorturl));
+                                shortenButton.parent().parent().siblings('.queet-box-syntax').trigger('keyup');
+                                shortenButton.addClass('disabled'); // make sure the button is disabled right after
+                                }
+                        remove_spinner();
+                        }});
+                });
+}
+

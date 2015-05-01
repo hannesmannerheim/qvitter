@@ -494,6 +494,7 @@ class QvitterPlugin extends Plugin {
         $attachment_url_to_id = array();
         if (!empty($attachments)) {
             foreach ($attachments as $attachment) {
+				if(is_object($attachment)) {                 
                 try {
                     $enclosure_o = $attachment->getEnclosure();
 	                $thumb = $attachment->getThumbnail();
@@ -506,6 +507,7 @@ class QvitterPlugin extends Plugin {
 						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
 						} 
                 }
+            }
             }
         }
 		
