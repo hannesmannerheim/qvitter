@@ -547,7 +547,6 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
    · 
    ·   @param streamHeader: the header to show in the menu
    ·   @param defaultStreamName: the stream to link in the history menu
-   ·   @returns: relative path
    · 
    · · · · · · · · · */
 	
