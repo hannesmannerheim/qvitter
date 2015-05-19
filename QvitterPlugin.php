@@ -591,21 +591,30 @@ class QvitterPlugin extends Plugin {
     function insertNotification($to_profile_id, $from_profile_id, $ntype, $notice_id=false)
     {
 		
-		// never notify myself
-		if($to_profile_id != $from_profile_id) {
-					
-			// insert				
-			$notif = new QvitterNotification();
-			$notif->to_profile_id = $to_profile_id;
-			$notif->from_profile_id = $from_profile_id;		
-			$notif->ntype = $ntype;
-			$notif->notice_id = $notice_id;		
-			$notif->created = common_sql_now();	
-			if (!$notif->insert()) {
-				common_log_db_error($notif, 'INSERT', __FILE__);
-				return false;
-				}
+		// no notifications from blocked profiles
+		$to_user = User::getKV('id', $to_profile_id);
+		$from_user = Profile::getKV($from_profile_id);
+		if ($to_user instanceof User && $to_user->hasBlocked($from_user)) {
+			return false;
 			}
+		
+		// never notify myself
+		if($to_profile_id == $from_profile_id) {
+			return false;
+			}
+					
+		// insert				
+		$notif = new QvitterNotification();
+		$notif->to_profile_id = $to_profile_id;
+		$notif->from_profile_id = $from_profile_id;		
+		$notif->ntype = $ntype;
+		$notif->notice_id = $notice_id;		
+		$notif->created = common_sql_now();	
+		if (!$notif->insert()) {
+			common_log_db_error($notif, 'INSERT', __FILE__);
+			return false;
+			}
+
         return true;
     }   
     
@@ -650,6 +659,21 @@ class QvitterPlugin extends Plugin {
 			return true;			
 			}
 
+		// mark reply/mention-notifications as read if we're replying to a notice we're notified about
+		if($notice->reply_to) {
+
+			$user = common_current_user();
+            $notification_to_mark_as_seen = QvitterNotification::pkeyGet(array('is_seen' => 0,
+                                                                                'notice_id' => $notice->reply_to,
+                                                                                'to_profile_id' => $user->id));
+            if($notification_to_mark_as_seen instanceof QvitterNotification
+            && ($notification_to_mark_as_seen->ntype == 'mention' || $notification_to_mark_as_seen->ntype == 'reply')) {
+                $orig = clone($notification_to_mark_as_seen);
+                $notification_to_mark_as_seen->is_seen = 1;
+                $notification_to_mark_as_seen->update($orig);            	
+            	}                                                               
+			}		
+
 		// repeats
         if ($notice->isRepeat()) {
 			$repeated_notice = Notice::getKV('id', $notice->repeat_of);
@@ -683,12 +707,6 @@ class QvitterPlugin extends Plugin {
 						continue;
 						}					
 					$all_mentioned_user_ids[] = $mentioned->id;
-					
-					// Not from blocked profile
-					$mentioned_user = User::getKV('id', $mentioned->id);
-					if ($mentioned_user instanceof User && $mentioned_user->hasBlocked($sender)) {
-						continue;
-						}
 				
 					// only notify if mentioned user is not already notified for reply
 					if($reply_notification_to != $mentioned->id && !empty($notice->id)) {
