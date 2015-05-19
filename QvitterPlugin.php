@@ -674,9 +674,16 @@ class QvitterPlugin extends Plugin {
 			// check for mentions to insert in notifications
 			$mentions = common_find_mentions($notice->content, $notice);
 			$sender = Profile::getKV($notice->profile_id);        
+			$all_mentioned_user_ids = array();
 			foreach ($mentions as $mention) {
 				foreach ($mention['mentioned'] as $mentioned) {
-
+					
+					// no duplicate mentions
+					if(in_array($mentioned->id, $all_mentioned_user_ids)) {
+						continue;
+						}					
+					$all_mentioned_user_ids[] = $mentioned->id;
+					
 					// Not from blocked profile
 					$mentioned_user = User::getKV('id', $mentioned->id);
 					if ($mentioned_user instanceof User && $mentioned_user->hasBlocked($sender)) {
