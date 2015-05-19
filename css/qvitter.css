@@ -4789,7 +4789,10 @@ body.rtl #feed-header-inner h2  {
 	.stream-item > .queet a {
 		pointer-events: none;
 		}
-	.stream-item.expanded > .queet a {
+	.stream-item.expanded > .queet a,
+	.stream-item.follow > .queet a,
+	.stream-item.repeat > .queet a,
+	.stream-item.like > .queet a {
 		pointer-events: auto;
 		}
 
