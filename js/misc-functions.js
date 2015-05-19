@@ -447,34 +447,47 @@ function changeDesign(obj) {
               typeof obj.userBackgroundColor != 'undefined') {
 		if(obj.userLinkColor == null) {
 			changeLinkColor(window.defaultLinkColor);
+			obj.linkcolor = window.defaultLinkColor;
 			}
 		else if(obj.userLinkColor.length == 6) {
 			changeLinkColor('#' + obj.userLinkColor);
+			obj.linkcolor = obj.userLinkColor;
 			}
 		else {
 			changeLinkColor(window.defaultLinkColor);
 			}	
 		if(obj.userBackgroundColor == null) {
 			$('body').css('background-color',window.defaultBackgroundColor);
+			obj.backgroundcolor = window.defaultBackgroundColor;
 			}
 		else if(obj.userBackgroundColor.length == 6) {
 			$('body').css('background-color','#' + obj.userBackgroundColor);
+			obj.backgroundcolor = obj.userBackgroundColor;
 			}
 		else {
 			$('body').css('background-color',window.defaultBackgroundColor);
+			obj.backgroundcolor = window.defaultBackgroundColor;
 			}		  	
 
 	  	// background image
 	  	if(obj.userBackgroundImage.length > 0) {
 		  	$('body').css('background-image','url(\'' + obj.userBackgroundImage + '\')');
+		  	obj.background_image = obj.userBackgroundImage;
 	  		}
 	  	else {
 	  		$('body').css('background-image','url(\'\')');
 	  		}
 	  	}
 	  	
+	// remember the design for this stream
+	window.oldStreamsDesigns[window.currentStream] = {backgroundcolor:obj.backgroundcolor, linkcolor:obj.linkcolor, background_image:obj.background_image};		  	
+	console.log(window.oldStreamsDesigns[window.currentStream]);
 	}
 
+// create object to remember designs on page load
+window.oldStreamsDesigns = new Object();
+    
+    
     
 /* ·  
    · 

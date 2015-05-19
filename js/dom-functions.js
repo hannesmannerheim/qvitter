@@ -428,6 +428,12 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		$('#feed').show();
 		$('#feed-header-inner h2').css('opacity','0.2');
 		$('#feed-header-inner h2').animate({opacity:'1'},1000);
+
+		// also mark this stream as the current stream immediately, if a saved copy exists
+		addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);	
+		
+		// and change design immediately
+		changeDesign(window.oldStreamsDesigns[window.currentStream]);
 		}
 
 	// otherwise we fade out and wait for stream to load
@@ -439,18 +445,6 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 			$('#feed-header-inner h2').html(h2FeedHeader);
 			});	
 		}
-			
-	// add this stream to history menu if it doesn't exist there (but not if this is me or if we're not logged in)
-	if($('.stream-selection[data-stream-header="' + streamHeader + '"]').length==0
-	&& streamHeader != '@' + window.loggedIn.screen_name
-	&& typeof window.loggedIn.screen_name != 'undefined') { 			
-		$('#history-container').append('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + $('.stream-selection.public-timeline').attr('href') + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="chev-right"></i></a>');
-		updateHistoryLocalStorage();
-		}
-	
-	// mark this stream as current in menu	
-	$('.stream-selection').removeClass('current');
-	$('.stream-selection[data-stream-header="' + streamHeader + '"]').addClass('current');
 	
 
 	// if this is user's user feed, i.e. followers etc, we want a profile card, which we need to get from user_timeline since the users/show api action is broken (auth doesn't work) 
@@ -483,6 +477,9 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 							// start checking for new queets again
 							window.clearInterval(checkForNewQueetsInterval);
 							checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
+
+							// add this stream to the history menu
+							addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);
 
 							remove_spinner();				
 							$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
@@ -526,6 +523,9 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 					window.clearInterval(checkForNewQueetsInterval);
 					checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
 
+					// add this stream to the history menu
+					addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);
+
 					remove_spinner();				
 					$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
 					$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
@@ -538,6 +538,32 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 				}
 			});		
 		}	
+	}
+	
+/* ·  
+   · 
+   ·   Add this stream to history menu if it doesn't exist there (but not if this is me or if we're not logged in)
+   ·   and mark this stream as current in menu	
+   · 
+   ·   @param streamHeader: the header to show in the menu
+   ·   @param defaultStreamName: the stream to link in the history menu
+   ·   @returns: relative path
+   · 
+   · · · · · · · · · */
+	
+
+function addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName) {
+
+	if($('.stream-selection[data-stream-header="' + streamHeader + '"]').length==0
+	&& streamHeader != '@' + window.loggedIn.screen_name
+	&& typeof window.loggedIn.screen_name != 'undefined') { 			
+		$('#history-container').append('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + window.siteInstanceURL + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="chev-right"></i></a>');
+		updateHistoryLocalStorage();
+		}
+	
+
+	$('.stream-selection').removeClass('current');
+	$('.stream-selection[data-stream-header="' + streamHeader + '"]').addClass('current');
 	}
 
 
