@@ -150,6 +150,12 @@ function localStorageObjectCache_GET(name, unique_id, callback) {
 	}
 
 function checkLocalStorage() {
+
+	if(localStorageIsEnabled() === false) {
+		console.log('localstorage disabled');
+		return false;
+		}
+
 	console.log('checking localStorage for invalid entries');
 	var dateNow = Date.now()
 	var corrected = 0;
