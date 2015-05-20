@@ -481,7 +481,6 @@ function changeDesign(obj) {
 	  	
 	// remember the design for this stream
 	window.oldStreamsDesigns[window.currentStream] = {backgroundcolor:obj.backgroundcolor, linkcolor:obj.linkcolor, background_image:obj.background_image};		  	
-	console.log(window.oldStreamsDesigns[window.currentStream]);
 	}
 
 // create object to remember designs on page load
