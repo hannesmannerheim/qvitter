@@ -434,7 +434,7 @@ function changeDesign(obj) {
 			}				
 
 	  	// background image
-	  	if(obj.background_image.length > 0) {
+	  	if(typeof obj.background_image != 'undefined' && obj.background_image.length > 0) {
 		  	$('body').css('background-image','url(\'' + obj.background_image + '\')');
 	  		}
 	  	else {
