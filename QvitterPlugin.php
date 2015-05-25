@@ -545,8 +545,11 @@ class QvitterPlugin extends Plugin {
 			}
 		else {
 			$twitter_status['is_local'] = false;            					
-			$twitter_status['external_url'] = $notice->getUrl(true);			
+			if($notice->object_type != 'activity') {
+				$twitter_status['external_url'] = $notice->getUrl(true);							
+				}
 			}
+			
 		if($notice->object_type == 'activity') {
 			$twitter_status['is_activity'] = true;            					
 			}
