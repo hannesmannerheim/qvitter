@@ -2,7 +2,7 @@ Qvitter
 ==========================================
 
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
-* Last mod.: Nov, 2014
+* Last mod.: May, 2015
 * Version:   4
 * GitHub:    <https://github.com/hannesmannerheim/qvitter>
 
@@ -61,38 +61,4 @@ $config['site']['qvitter']['blocked_ips'] = array();
 $config['thumbnail']['maxsize'] = 3000;
 ````
 
-Note: Qvitter is tested with GNU social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).
-
-
-TODO
-----
-
-1. rtl is a little broken, also mobile rtl
-
-1. DM's
-
-1. user actions-cog wheel in users lists, ellipsis button in queets, with block etc
-
-1. lists
-
-1. proxy to non-https for getting conversations the instance doesn't have via jsonp
-
-1. preview different types of attachments, not just images. e.g. mp3's, torrents etc etc
-
-1. Join _new_ external groups and follow _new_ external users ("New" meaning users/groups that the server don't know yet) 
-
-1. Creating groups, make admin, block user
-
-1. Search users
-
-1. Recommended users
-
-1. Filters (hide queets containing strings, e.g. mute users)
-
-1. More languages, maybe make proper po/mo-files
-
-1. Admin-interface
-
-1. New "expand queet" api for getting conversation, retweets, favs and attachment in the same request
-
-1. Node.js long polling server and an new api that serve aggregate of all polling users requests in one go
+Note: This version of Qvitter is tested with GNU social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135).
