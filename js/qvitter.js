@@ -58,15 +58,49 @@ window.onpopstate = function(event) {
 	
 /* · 
    · 
+   ·   welcome text expand and collapse
+   · 
+   · · · · · · · · · · · · · */ 
+$('body').on('click','.show-full-welcome-text, .front-welcome-text:not(.expanded) sup',function(){
+	$('.front-welcome-text').toggleClass('expanded');
+	if($('.front-welcome-text').hasClass('expanded')) {
+		var welcomeTextInnerObjectsHeightSum = $('.front-welcome-text > p').outerHeight() + $('.front-welcome-text > h1').outerHeight() + 50;
+		$('.front-welcome-text').css('height', welcomeTextInnerObjectsHeightSum + 'px')		
+		}
+	else {
+		$('.front-welcome-text').css('height', '180px');
+		$('.front-welcome-text').css('overflow', 'hidden');
+		var scrollTo = $(window).scrollTop() - ($('.front-welcome-text').outerHeight()-200);
+		if(scrollTo < 0) { scrollTo = 0;}
+		$('html, body').animate({ scrollTop: scrollTo}, 300, 'linear');		
+		}
+	});
+$('body').on('click','.welcome-text-register-link',function(){	
+	var scrollTo = $('#user-container').offset().top;
+	$('html, body').animate({ scrollTop: scrollTo}, 300, 'linear');		
+	});
+	
+
+
+/* · 
+   · 
    ·   fix login and register box to top when they reach top 
    · 
    · · · · · · · · · · · · · */ 
 	
 $(window).scroll(function(e){ 
-	if ($(this).scrollTop() > ($('#feed').offset().top-50) && $('#login-content').css('position') != 'fixed'){ 
-		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'fixed', 'top': '50px'}); 
+
+	if($('#page-container > .profile-card').length > 0) {
+		var feedOrProfileCardOffsetTop = $('#page-container > .profile-card').offset().top;
 		}
-	else if ($(this).scrollTop() < ($('#feed').offset().top-50) && $('#login-content').css('position') != 'absolute'){ 
+	else {
+		var feedOrProfileCardOffsetTop = $('#feed').offset().top;
+		}
+		
+	if ($(this).scrollTop() > (feedOrProfileCardOffsetTop-55) && $('#login-content').css('position') != 'fixed'){ 
+		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'fixed', 'top': '55px'}); 
+		}
+	else if ($(this).scrollTop() < (feedOrProfileCardOffsetTop-55) && $('#login-content').css('position') != 'absolute'){ 
 		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'absolute', 'top': 'auto'}); 
 		}		
  	});	
@@ -331,16 +365,30 @@ function proceedToSetLanguageAndLogin(data){
 
 	window.siteTitle = $('head title').html(); // remember this for later use
 
+
 	// replace placeholders in translation
 	$.each(window.sL,function(k,v){
 		window.sL[k] = v.replace(/{site-title}/g,window.siteTitle);
 		});
 
-	// set some static string
-	$('.front-welcome-text h1').html(window.sL.welcomeHeading);
-	if (window.enableWelcomeText) {
-		$('.front-welcome-text p').html(window.sL.welcomeText);
-	}
+
+	// set some static strings
+	if(window.customWelcomeText !== false && typeof window.customWelcomeText[window.selectedLanguage] != 'undefined') {
+		$('.front-welcome-text').html(window.customWelcomeText[window.selectedLanguage]);
+		
+		// collapse long welcome texts and add expand button
+		if($('.front-welcome-text').outerHeight()>250) {
+			$('.front-welcome-text').css('height','240px');
+			$('.front-welcome-text').css('overflow', 'hidden');			
+			$('.front-welcome-text').append('<div class="show-full-welcome-text"></div>');
+			}
+		}
+	else {	
+		$('.front-welcome-text').html('<h1>' + window.sL.welcomeHeading +  '</h1>');		
+		if(window.enableWelcomeText) {
+			$('.front-welcome-text').append(window.sL.welcomeText);				
+			}
+		}
 	$('#nickname').attr('placeholder',window.sL.loginUsername);
 	$('#password').attr('placeholder',window.sL.loginPassword);
 	$('button#submit-login').html(window.sL.loginSignIn);
@@ -420,26 +468,6 @@ function doLogin(streamToSet) {
 	$('#submit-login').attr('disabled','disabled');
 	$('#submit-login').focus(); // prevents submit on enter to close alert-popup on wrong credentials
 	display_spinner();
-		
-		// set colors if the api supports it
-		if(typeof window.loggedIn.linkcolor != 'undefined' &&
-	       typeof window.loggedIn.backgroundcolor != 'undefined') {
-			window.loggedIn.linkcolor = window.loggedIn.linkcolor || '';	// no null value		
-			window.loggedIn.backgroundcolor = window.loggedIn.backgroundcolor || ''; // no null value
-			window.userLinkColor = window.loggedIn.linkcolor;
-			window.userBackgroundColor = window.loggedIn.backgroundcolor;			       
-			window.userBackgroundImage = window.loggedIn.background_image;			       			
-			if(window.userLinkColor.length != 6) {
-				window.userLinkColor = window.defaultLinkColor;
-				}	
-			if(window.userBackgroundColor.length != 6) {
-				window.userBackgroundColor = window.defaultBackgroundColor;
-				}		  		
-			if(window.userBackgroundImage.length < 1) {
-				window.userBackgroundImage = '';
-				}		  						    
-	        }
-		
 		
 		// add user data to DOM, show search form, remeber user id, show the feed
 		$('#user-container').css('z-index','1000');
@@ -573,11 +601,7 @@ $('#classic-link').click(function(){
    · · · · · · · · · · · · · */ 
 
 function logoutWithoutReload(doShake) {
-
-	if(window.currentStream == 'statuses/public_timeline.json') {
-		$('body').css('background-image', 'url(' + window.fullUrlToThisQvitterApp + window.siteBackground +')');
-		}
-											
+					
 	$('input#nickname').focus();	
 	$('.front-signup').animate({opacity:'1'},200);
 	if(doShake) {
@@ -591,7 +615,7 @@ function logoutWithoutReload(doShake) {
 				$('input#password').animate({backgroundColor:'#fff'},1000);					
 				});
 			}
-		$('.front-welcome-text').fadeIn(3000);						
+		$('.front-welcome-text').show();						
 		});
 	$('#page-container').animate({opacity:'1'},200);	
 	
@@ -1393,13 +1417,14 @@ $('body').on('click','.queet',function (event) {
 	
 /* · 
    · 
-   ·   Collapse all open conversations and ellipsis menus on esc or when clicking the margin  
+   ·   Collapse all open conversations, ellipsis menus and the welcome text on esc or when clicking the margin  
    ·   
    · · · · · · · · · · · · · */ 
 
 $('body').click(function(event){	
 	if($(event.target).is('body')) {
 		$('.action-ellipsis-container').children('.dropdown-menu').remove();
+		$('.front-welcome-text.expanded > .show-full-welcome-text').trigger('click');
 		$.each($('.stream-item.expanded'),function(){
 			expand_queet($(this), false);
 			});
@@ -1409,6 +1434,7 @@ $('body').click(function(event){
 $(document).keyup(function(e){
 	if(e.keyCode==27) { // esc
 		$('.action-ellipsis-container').children('.dropdown-menu').remove();
+		$('.front-welcome-text.expanded > .show-full-welcome-text').trigger('click');		
 		$.each($('.stream-item.expanded'),function(){
 			expand_queet($(this), false);
 			});
@@ -2249,11 +2275,11 @@ $('body').on('click','.edit-profile-button',function(){
 							<div class="profile-banner-footer">\
 							   <div class="color-selection">\
 							      <label for="link-color-selection">' + window.sL.linkColor + '</label>\
-							      <input id="link-color-selection" type="text" value="#' + window.userLinkColor + '" />\
+							      <input id="link-color-selection" type="text" value="#' + window.loggedIn.linkcolor + '" />\
 							   </div>\
 							   <div class="color-selection">\
 							      <label for="link-color-selection">' + window.sL.backgroundColor + '</label>\
-							      <input id="background-color-selection" type="text" value="#' + window.userBackgroundColor + '" />\
+							      <input id="background-color-selection" type="text" value="#' + window.loggedIn.backgroundcolor + '" />\
 							   </div>\
 							   <div class="user-actions">\
 							       <button type="button" class="abort-edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.cancelVerb + '</span>\
@@ -2268,14 +2294,16 @@ $('body').on('click','.edit-profile-button',function(){
 				// save colors on change
 				$('#link-color-selection').minicolors({
 					change: function(hex) {
-						changeLinkColor(hex);
+						changeDesign({linkcolor:hex});
 						postNewLinkColor(hex.substring(1));
+						window.loggedIn.linkcolor = hex.substring(1);
 						}
 					});
 				$('#background-color-selection').minicolors({
 					change: function(hex) {
-						$('body').css('background-color',hex);
+						changeDesign({backgroundcolor:hex});
 						postNewBackgroundColor(hex.substring(1));
+						window.loggedIn.backgroundcolor = hex.substring(1);
 						}
 					});
 				// also on keyup in input (minicolors 'change' event does not do this, apparently)
@@ -2450,8 +2478,8 @@ $('body').on('click','.crop-and-save-button',function(){
 						$('.crop-and-save-button').removeAttr('disabled');		
 						$('.crop-and-save-button').removeClass('disabled');
 						cleanUpAfterCropping();
-						$('body').css('background-image','url(\'' + data.url + '\')');
-						window.userBackgroundImage = data.url;
+						changeDesign({backgroundimage:data.url});
+						window.loggedIn.background_image = data.url;
 						}
 					 else {
 						alert('Try again! ' + data.error);

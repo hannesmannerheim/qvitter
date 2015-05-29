@@ -200,7 +200,8 @@ class QvitterAction extends ApiAction
 					window.defaultLinkColor = '<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>';
 					window.defaultBackgroundColor = '<?php print QvitterPlugin::settings("defaultbackgroundcolor"); ?>';
 					window.siteBackground = '<?php print QvitterPlugin::settings("sitebackground"); ?>';
-					window.enableWelcomeText = '<?php print QvitterPlugin::settings("enablewelcometext"); ?>';
+					window.enableWelcomeText = <?php print json_encode(QvitterPlugin::settings("enablewelcometext")); ?>;
+					window.customWelcomeText = <?php print json_encode(QvitterPlugin::settings("customwelcometext")); ?>;
 					window.urlShortenerAPIURL = '<?php print QvitterPlugin::settings("urlshortenerapiurl"); ?>';					
 					window.urlShortenerSignature = '<?php print QvitterPlugin::settings("urlshortenersignature"); ?>';
 					window.commonSessionToken = '<?php print common_session_token(); ?>';
@@ -391,8 +392,6 @@ class QvitterAction extends ApiAction
 						}														
 					
 					?><div class="front-welcome-text <?php if ($registrationsclosed) { print 'registrations-closed'; } ?>">
-						<h1></h1>
-						<p></p>
 					</div>		
 					<div id="user-container" style="display:none;">		
 						<div id="login-content">

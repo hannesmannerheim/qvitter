@@ -3,7 +3,7 @@ Qvitter
 
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
 * Last mod.: May, 2015
-* Version:   4
+* Version:   5-alpha
 * GitHub:    <https://github.com/hannesmannerheim/qvitter>
 
 Qvitter is free  software:  you can  redistribute it  and / or  modify it  

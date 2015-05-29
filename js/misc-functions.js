@@ -398,118 +398,141 @@ function validateEditProfileForm(o) {
 		
 	return allFieldsValid;
 	}	
-    
+
+
+/* ·  
+   · 
+   ·   Validate a hex color and add # if missing
+   · 
+   ·   @returns hex color with # or false
+   ·
+   · · · · · · · · · */ 
+
+function isValidHexColor(maybeValidHexColor) {
+	
+	if(maybeValidHexColor.substring(0,1) != '#') {
+		maybeValidHexColor = '#' + maybeValidHexColor;
+		}
+	
+	var validHexColor  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(maybeValidHexColor);
+	if(validHexColor) {
+		validHexColor = maybeValidHexColor;
+		}
+	return validHexColor;
+	}
+
 
     
 /* ·  
    · 
    ·   Change profile design
    ·
-   ·   @param obj: user object that _might_ contain colors, or window object, that _might_ contain user settings 
+   ·   @param obj: user object that should contain one, two or all of backgroundimage, backgroundcolor and linkcolor
+   ·               false or empty string unsets the parameter to default
    · 
    · · · · · · · · · */  
 
 function changeDesign(obj) {
 	
-	// user object that might contains other user's colors
-	if(typeof obj.linkcolor != 'undefined' &&
-       typeof obj.backgroundcolor != 'undefined') {
-		if(obj.linkcolor == null) {
-			changeLinkColor(window.defaultLinkColor);
+	// if we're logged out and this is the front page, we use the default design
+	if(!window.loggedIn && window.currentStream == 'statuses/public_timeline.json') {
+		obj.backgroundimage = window.fullUrlToThisQvitterApp + window.siteBackground;
+		obj.backgroundcolor = window.defaultBackgroundColor;
+		obj.linkcolor = window.defaultLinkColor;
+		}
+		
+	
+	// if no object is defined, abort
+	if(typeof obj == 'undefined') {
+		return false;
+		}	
+		
+	// remember the design for this stream
+	if(typeof window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)] == 'undefined') {
+		window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)] = new Object();
+		}
+	
+	// change design elements
+	if(typeof obj.backgroundimage != 'undefined') {		
+		if(obj.backgroundimage === false || obj.backgroundimage == '') {
+			$('body').css('background-image','url(\'\')');
 			}
-		else if(obj.linkcolor.length == 6) {
-			changeLinkColor('#' + obj.linkcolor);
+		else if(obj.backgroundimage.length > 4) {
+			$('body').css('background-image','url(\'' + obj.backgroundimage + '\')');			
 			}
-		else {
-			changeLinkColor(window.defaultLinkColor);
-			}	
-		if(obj.backgroundcolor == null) {
-			$('body').css('background-color',window.defaultBackgroundColor);
-			}							   
-		else if(obj.backgroundcolor.length == 6) {
-			$('body').css('background-color','#' + obj.backgroundcolor);
+		window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)].backgroundimage = obj.backgroundimage;			
+		}		
+	if(typeof obj.backgroundcolor != 'undefined') {
+		if(obj.backgroundcolor === false || obj.backgroundcolor == '') {
+			obj.backgroundcolor = window.defaultBackgroundColor;
 			}
-		else {
-			$('body').css('background-color',window.defaultBackgroundColor);
-			}				
-
-	  	// background image
-	  	if(typeof obj.background_image != 'undefined' && obj.background_image.length > 0) {
-		  	$('body').css('background-image','url(\'' + obj.background_image + '\')');
-	  		}
-	  	else {
-	  		$('body').css('background-image','url(\'\')');
-	  		}	  						   
-	   }
-	   
-	  // window object that might contain my colors
-	  else if(typeof obj.userLinkColor != 'undefined' &&
-              typeof obj.userBackgroundColor != 'undefined') {
-		if(obj.userLinkColor == null) {
-			changeLinkColor(window.defaultLinkColor);
+		changeBackgroundColor(obj.backgroundcolor);
+		window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)].backgroundcolor = obj.backgroundcolor;	
+		}
+	if(typeof obj.linkcolor != 'undefined') {
+		if(obj.linkcolor === false || obj.linkcolor == '') {
 			obj.linkcolor = window.defaultLinkColor;
 			}
-		else if(obj.userLinkColor.length == 6) {
-			changeLinkColor('#' + obj.userLinkColor);
-			obj.linkcolor = obj.userLinkColor;
-			}
-		else {
-			changeLinkColor(window.defaultLinkColor);
-			}	
-		if(obj.userBackgroundColor == null) {
-			$('body').css('background-color',window.defaultBackgroundColor);
-			obj.backgroundcolor = window.defaultBackgroundColor;
-			}
-		else if(obj.userBackgroundColor.length == 6) {
-			$('body').css('background-color','#' + obj.userBackgroundColor);
-			obj.backgroundcolor = obj.userBackgroundColor;
-			}
-		else {
-			$('body').css('background-color',window.defaultBackgroundColor);
-			obj.backgroundcolor = window.defaultBackgroundColor;
-			}		  	
-
-	  	// background image
-	  	if(obj.userBackgroundImage.length > 0) {
-		  	$('body').css('background-image','url(\'' + obj.userBackgroundImage + '\')');
-		  	obj.background_image = obj.userBackgroundImage;
-	  		}
-	  	else {
-	  		$('body').css('background-image','url(\'\')');
-	  		}
-	  	}
-	  	
-	// remember the design for this stream
-	window.oldStreamsDesigns[window.currentStream] = {backgroundcolor:obj.backgroundcolor, linkcolor:obj.linkcolor, background_image:obj.background_image};		  	
+		changeLinkColor(obj.linkcolor);
+		window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)].linkcolor = obj.linkcolor;
+		}
 	}
 
 // create object to remember designs on page load
 window.oldStreamsDesigns = new Object();
-    
-    
+
+
+/* ·  
+   · 
+   ·   Change background color
+   ·
+   ·   @param newLinkColor: hex value with or without #
+   · 
+   · · · · · · · · · */  
+
+function changeBackgroundColor(newBackgroundColor) {
+
+	// check hex value
+	var validHexColor = isValidHexColor(newBackgroundColor);
+	if(!validHexColor) {
+		console.log('invalid hex value for backgroundcolor: ' + newBackgroundColor);
+		return false;
+		}
+	
+	$('body').css('background-color',validHexColor);	
+	}
+
     
 /* ·  
    · 
    ·   Change link color
    ·
-   ·   @param newLinkColor: hex value with #
+   ·   @param newLinkColor: hex value with or without #
    · 
    · · · · · · · · · */  
 
 function changeLinkColor(newLinkColor) {
+
+	// check hex value
+	var validHexColor = isValidHexColor(newLinkColor);
+	if(!validHexColor) {
+		console.log('invalid hex value for linkcolor: ' + newLinkColor);
+		return false;
+		}
+	
 	var headStyle = $('head').children('style');
 	var linkstyle = headStyle.text();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('color:')+6) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*COLOREND*/')));
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('color:')+6) + validHexColor + linkstyle.substring(linkstyle.indexOf(';/*COLOREND*/')));
 	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('background-color:')+17) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BACKGROUNDCOLOREND*/')));		
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('background-color:')+17) + validHexColor + linkstyle.substring(linkstyle.indexOf(';/*BACKGROUNDCOLOREND*/')));		
 	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-color:')+13) + newLinkColor + linkstyle.substring(linkstyle.indexOf(';/*BORDERCOLOREND*/')));		
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-color:')+13) + validHexColor + linkstyle.substring(linkstyle.indexOf(';/*BORDERCOLOREND*/')));		
 	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('background-color:rgb(')+17) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBACKGROUNDCOLOREND*/')));		
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('background-color:rgb(')+17) + blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBACKGROUNDCOLOREND*/')));		
 	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-color:rgb(')+13) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.6) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERCOLOREND*/')));		
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-color:rgb(')+13) + blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.6) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERCOLOREND*/')));		
 	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-bottom-color:rgb(')+20) + blendRGBColors(hex2rgb(newLinkColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERBOTTOMCOLOREND*/')));		
+	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-bottom-color:rgb(')+20) + blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERBOTTOMCOLOREND*/')));		
 	}
 function blendRGBColors(c0, c1, p) {
     var f=c0.split(","),t=c1.split(","),R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);
@@ -1142,4 +1165,38 @@ function shortenUrlsInBox(shortenButton) {
 			remove_spinner();
 			}});
 		});
-}	
+}
+
+/* · 
+   ·     
+   ·   Return the user screen name that this stream belongs to. last resort just return the stream
+   ·     
+   · · · · · · · · · · · · · */ 
+
+function theUserOrGroupThisStreamBelongsTo(stream) {
+	// if screen_name is given as get-var, use that
+	if(stream.indexOf('screen_name=')>-1) {
+		var thisUsersScreenName = stream.substring(stream.indexOf('screen_name=')+12);
+		if(thisUsersScreenName.indexOf('&=')>-1) {
+			thisUsersScreenName = thisUsersScreenName.substring(0,stream.indexOf('&'));			
+			}
+		return thisUsersScreenName;
+		}
+	// 	groups
+	else if(stream.indexOf('statusnet/groups/timeline/')>-1
+	     || stream.indexOf('statusnet/groups/membership/')>-1
+	     || stream.indexOf('statusnet/groups/admins/')>-1) {
+		var groupName = '!' + stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));				     	     
+		return groupName;
+		}
+	// otherwise, and if we're logged in, we assume this is my stream		
+	else if (window.loggedIn){
+		return window.loggedIn.screen_name;
+		}
+	else {
+		return stream;
+		}
+	}
+	
+	
+	

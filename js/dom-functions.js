@@ -188,7 +188,7 @@ function profileCardFromFirstObject(data,screen_name) {
 
 			
 		// change design
-		changeDesign(first.user);			
+		changeDesign({backgroundimage:first.user.background_image, backgroundcolor:first.user.backgroundcolor, linkcolor:first.user.linkcolor});
 
 		// remove any old profile card 
 		$('#feed').siblings('.profile-card').remove();
@@ -241,7 +241,7 @@ function profileCardFromFirstObject(data,screen_name) {
 				}
 				
 			// change design
-			changeDesign(data);
+			changeDesign({backgroundimage:data.background_image, backgroundcolor:data.backgroundcolor, linkcolor:data.linkcolor});
 
 			// remove any old profile card and show profile card
 			$('#feed').siblings('.profile-card').remove();
@@ -289,6 +289,10 @@ function groupProfileCard(groupAlias) {
 		if(typeof window.loggedIn.screen_name == 'undefined') {			
 			var memberButton = '<div class="user-actions"><button type="button" class="external-member-button"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinExternalGroup + '</span></button></div>';	
 			}			
+
+		// change design
+		changeDesign({backgroundimage:false, backgroundcolor:false, linkcolor:false});
+
 		
 		// add card to DOM
 		$('#feed').siblings('.profile-card').remove();  // remove any old profile card 
@@ -433,7 +437,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);	
 		
 		// and change design immediately
-		changeDesign(window.oldStreamsDesigns[window.currentStream]);
+		changeDesign(window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)]);
 		}
 
 	// otherwise we fade out and wait for stream to load
@@ -462,7 +466,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 						if(window.currentStream == stream) {	
 							
 							// change design
-							changeDesign(window);
+							changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
 							
 							// get screen name from stream, if not found, this is me
 							if(stream.indexOf('screen_name=')>-1) {
@@ -504,7 +508,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 				if(window.currentStream == stream) {
 					
 					// change design
-					changeDesign(window);
+					changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
 						
 					// show profile card if this is a user's queet stream
 					if(stream.substring(0,27) == 'statuses/user_timeline.json')	{

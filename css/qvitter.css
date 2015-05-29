@@ -474,8 +474,7 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
 	direction: ltr;
     unicode-bidi: bidi-override;	
 	}	
-	
-.front-welcome-text,
+
 #site-notice {
 	color: #EEEEEE;
     font-size: 30px;
@@ -487,7 +486,101 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     text-shadow: 0 1px 2px #000000;
 	display:none;
 	font-family: "Helvetica Neue",Arial,sans-serif;
+	}		
+	
+.front-welcome-text {
+	color: #333;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 32px;
+    margin: 0;
+    padding: 20px 30px 20px 30px;
+    margin:10px 0 20px 0;
+    text-align: left;
+    text-shadow: 0 1px 2px #fff;
+	display:none;
+	font-family: "Helvetica Neue",Arial,sans-serif;
+	background-color:rgba(255,255,255,0.8);
+	position:relative;
+	border-radius:3px;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -o-transition: all 0.3s linear;
+    transition: all 0.3s linear;	
+	}
+.front-welcome-text.expanded  {
+	padding-bottom:100px;
+	background-color:rgba(255,255,255,1);
+	}
+.front-welcome-text.expanded .show-full-welcome-text:before {	
+	content: "\f106";	
+	}
+
+.show-full-welcome-text {
+	width:100%;
+	height:100px;
+	position:absolute;
+	bottom:0;
+	left:0;
+	cursor:pointer;
+	}
+.show-full-welcome-text:before {
+	content: "\f107";
+	font-family:FontAwesome;
+	position:absolute;
+	background:blue;
+	text-align:center;
+	display:block;	
+	width:100%;
+	height:60px;
+	padding-top:40px;
+	font-size:100px;
+	background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0px, rgba(255,255,255,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0px,rgba(255,255,255,0)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0px,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(255,255,255,0) 0px,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(255,255,255,0) 0px,rgba(255,255,255,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(255,255,255,0) 0px,rgba(255,255,255,1) 100%); /* W3C */
+	text-shadow:2px 2px 3px rgba(255,255,255,0.9), -2px 2px 3px rgba(255,255,255,0.9), -2px -2px 3px rgba(255,255,255,0.9), 2px -2px 3px rgba(255,255,255,0.9);
 	}	
+
+.front-welcome-text h1 {
+    color: #333;
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 3px 0;
+    padding:0;
+	line-height: 1.2;
+	}
+	
+.front-welcome-text sup {
+	font-size:0.8em;
+	cursor:pointer;	
+	}	
+	
+.front-welcome-text p {
+    font-size:23px;
+    line-height:29px;
+	}
+.front-welcome-text p a,
+.front-welcome-text p a:active,
+.front-welcome-text p a:visited {
+	color:#333;
+	text-decoration:underline;
+	}	
+.welcome-text-register-link	{
+	text-decoration:underline;
+	cursor:pointer;
+	}
+.front-welcome-text p small.notes {
+	display:inline-block;
+    font-size:12px;
+    line-height:17px;	
+    border-top:1px solid #666;
+    padding-top:10px;
+	}
+
+
 body.rtl .front-welcome-text {
 	direction:rtl;
 	text-align:right;
@@ -512,15 +605,7 @@ body.rtl .front-welcome-text {
 #qvitter-notice a:hover {
 	opacity:0.8;
 	}	
-		
-.front-welcome-text h1 {
-    color: #FFFFFF;
-    font-size: 30px;
-    font-weight: 700;
-    margin-bottom: 3px;
-	line-height: 1;
-    text-shadow: 0 1px 2px #000000;	
-	}	
+			
 .front-welcome-text #federated-tooltip {
 	text-decoration:underline;
 	position:relative;

@@ -199,9 +199,9 @@ function postNewBackgroundColor(newBackgroundColor) {
 		dataType:"json",
 		error: function(data){ console.log(data); },
 		success: function(data) { 
-			window.userBackgroundColor = newBackgroundColor;
-	  		$('body').css('background-image','url(""'); // unset background image			
-			window.userBackgroundImage = '';	  		
+			// unset background image and set new color
+			window.loggedIn.background_image = false;
+			changeDesign({backgroundimage:false,backgroundcolor:newBackgroundColor});
 			}
 		});	
 	}
