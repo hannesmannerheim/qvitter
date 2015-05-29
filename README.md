@@ -57,6 +57,8 @@ $config['site']['qvitter']['urlshortenersignature'] = 'b6afeec983';
 $config['site']['qvitter']['sitebackground'] = 'img/vagnsmossen.jpg';
 $config['site']['qvitter']['favicon'] = 'img/favicon.ico?v=4';
 $config['site']['qvitter']['enablewelcometext'] = true;
+$config['site']['qvitter']['customwelcometext']['sv'] = '<h1>Välkommen till Quitter.se – en federerad<sup>1</sup> mikrobloggsallmänning!</h1><p>Etc etc...</p>';
+$config['site']['qvitter']['customwelcometext']['en'] = '<h1>Welcome to Quitter.se – a federated microblog common!</h1><p>Etc etc...</p>';
 $config['site']['qvitter']['blocked_ips'] = array();
 $config['thumbnail']['maxsize'] = 3000;
 ````
