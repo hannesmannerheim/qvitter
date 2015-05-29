@@ -66,7 +66,7 @@ class QvitterPlugin extends Plugin {
 		$settings['defaultlinkcolor'] = '#0084B4';
 
 		// ENABLE DEFAULT WELCOME TEXT
-		$settings['enablewelcometext'] = false;	
+		$settings['enablewelcometext'] = true;	
 
 		// CUSTOM WELCOME TEXT (overrides the previous setting)
 		$settings['customwelcometext'] = false;	
