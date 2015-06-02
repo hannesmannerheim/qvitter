@@ -254,6 +254,43 @@ class QvitterPlugin extends Plugin {
 						array('action' => 'qvitter')); 			
 			}
 						
+
+
+			
+		// add user arrays for some urls, to use to build profile cards
+		// this way we don't have to request this in a separate http request
+		
+		if(isset($_GET['withuserarray']) &&
+		 ( $_GET['p'] == 'api/statuses/followers.json' 
+		|| $_GET['p'] == 'api/statuses/friends.json'
+		|| $_GET['p'] == 'api/statusnet/groups/list.json'
+		|| $_GET['p'] == 'api/statuses/mentions.json'
+		|| $_GET['p'] == 'api/favorites.json'
+		|| $_GET['p'] == 'api/statuses/friends_timeline.json'
+		|| $_GET['p'] == 'api/statuses/user_timeline.json')) {
+			
+			// add logged in user's user array
+			if (common_logged_in() && !isset($_GET['screen_name'])) {
+				$profilecurrent = Profile::current();				
+				header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($profilecurrent)));
+				}
+
+			// add screen_name's user array
+			elseif(isset($_GET['screen_name'])){				
+				$screen_name_user = User::getKV('nickname', $_GET['screen_name']);
+				if($screen_name_user instanceof User) {				
+					if (common_logged_in()) {
+						$profilecurrent = Profile::current();
+						$currentuser = $profilecurrent->getUser();				
+						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($screen_name_user->getProfile(),$currentuser)));
+						}
+					else {
+						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($screen_name_user->getProfile())));						
+						}
+					}
+				}		 	
+		 	}						
+						
     }
     
     
@@ -295,130 +332,7 @@ class QvitterPlugin extends Plugin {
         }
     }
 
-    /**
-     * User colors in default UI too, if theme is neo-quitter
-     *
-     * @return boolean hook return
-     */    
 
-    function onEndShowStylesheets($action) {
-			
-		$theme = common_config('site','theme');
-
-        if (common_logged_in() && substr($theme,0,11) == 'neo-quitter') {		
-
-			$user = common_current_user();
-			$profile = $user->getProfile();
-
-			$backgroundcolor = Profile_prefs::getConfigData($profile, 'theme', 'backgroundcolor');
-			if(!$backgroundcolor) {
-				$backgroundcolor = substr(QvitterPlugin::settings('defaultbackgroundcolor'),1);
-				}
-			$linkcolor = Profile_prefs::getConfigData($profile, 'theme', 'linkcolor');
-			if(!$linkcolor) {
-				$linkcolor = substr(QvitterPlugin::settings('defaultlinkcolor'),1);				
-				}				
-			
-			$ligthen_elements = '';
-			if($this->darkness($backgroundcolor)<0.5) {
-			$ligthen_elements = "
-				#nav_profile a:before, 
-				#nav_timeline_replies a:before, 
-				#nav_timeline_personal a:before, 
-				#nav_local_default li:first-child ul.nav li:nth-child(4) a:before, 
-				#nav_timeline_favorites a:before, 
-				#nav_timeline_public a:before, 
-				#nav_groups a:before, 
-				#nav_recent-tags a:before, 
-				#nav_timeline_favorited a:before, 
-				#nav_directory a:before, 
-				#nav_lists a:before,
-				#site_nav_local_views h3,
-				#content h1,
-				#aside_primary h2,
-				#gnusocial-version p,
-				#page_notice,
-				#pagination .nav_next a {
-					color:rgba(255,255,255,0.4);
-					}
-				.nav li.current a:before,
-				.entity_actions a {
-					color: rgba(255,255,255, 0.6) !important;					
-					}
-				#aside_primary,
-				.entity_edit a:before, 
-				.entity_remote_subscribe:before, 
-				#export_data a:before, 
-				.peopletags_edit_button:before, 
-				.form_group_join:before, 
-				.form_group_leave:before, 
-				.form_group_delete:before,
-				#site_nav_object li.current a,
-				#pagination .nav_next a:hover,
-				#content .guide {
-					color: rgba(255,255,255, 0.6);
-					}				
-				#site_nav_local_views a, 
-				#site_nav_object a,
-				#aside_primary a:not(.invite_button) {
-					color: rgba(255,255,255, 0.7);
-					}
-				#site_nav_local_views li.current a,
-				.entity_edit a:hover:before,
-				.entity_remote_subscribe:hover:before,
-				.peopletags_edit_button:hover:before,
-				.form_group_join:hover:before,
-				.form_group_leave:hover:before,
-				.form_group_delete:hover:before	{
-					color: rgba(255,255,255, 0.8);
-					}	
-				#site_nav_local_views li.current a {
-					background-position: -3px 1px;
-					}				
-				#site_nav_local_views li a:hover {
-					background-position:-3px -24px;					
-					}
-				#gnusocial-version,
-				#pagination .nav_next a {
-					border-color: rgba(255,255,255, 0.3);					
-					}
-				#pagination .nav_next a:hover {
-					border-color: rgba(255,255,255, 0.5);					
-					}	
-				#site_nav_object li.current a {
-					background-position: -3px 2px;
-					}	
-				#site_nav_object li a:hover {
-					background-position: -3px -23px;
-					}						
-				";				
-				}
-
-			$action->style("
-				body {
-					background-color:#".$backgroundcolor.";
-					}
-				a,
-				a:hover,				
-				a:active,								
-				#site_nav_global_primary a:hover,
-				.threaded-replies .notice-faves:before, 
-				.threaded-replies .notice-repeats:before, 
-				.notice-reply-comments > a:before,
-				#content .notices > .notice > .entry-metadata .conversation {
-					color:#".$linkcolor.";
-					}
-				#site_nav_global_primary a:hover {
-					border-color:#".$linkcolor.";
-					}
-				address {
-					background-color:#".$linkcolor.";
-					}										
-				".$ligthen_elements);
-			}
-    	}
-
-    
     
     /**
      * Menu item for Qvitter
@@ -850,7 +764,7 @@ class QvitterPlugin extends Plugin {
         
 
    /**
-     * Add unread notification count to all API responses
+     * Add unread notification count to all API responses, when logged in
      *
      * @return boolean hook flag
      */        
@@ -893,12 +807,91 @@ class QvitterPlugin extends Plugin {
     }
 
 
-	function darkness($hex) {
-		$r = hexdec($hex[0].$hex[1]);
-		$g = hexdec($hex[2].$hex[3]);
-		$b = hexdec($hex[4].$hex[5]);
-	    return (max($r, $g, $b) + min($r, $g, $b)) / 510.0; // HSL algorithm
-	}			
+    function qvitterTwitterUserArray($profile, $logged_in=false)
+    {
+        $twitter_user = array();
+
+        try {
+            $user = $profile->getUser();
+        } catch (NoSuchUserException $e) {
+            $user = null;
+        }
+
+        $twitter_user['id'] = intval($profile->id);
+        $twitter_user['name'] = $profile->getBestName();
+        $twitter_user['screen_name'] = $profile->nickname;
+        $twitter_user['location'] = ($profile->location) ? $profile->location : null;
+        $twitter_user['description'] = ($profile->bio) ? $profile->bio : null;
+
+        // TODO: avatar url template (example.com/user/avatar?size={x}x{y})
+        $twitter_user['profile_image_url'] = Avatar::urlByProfile($profile, AVATAR_STREAM_SIZE);
+        $twitter_user['profile_image_url_https'] = $twitter_user['profile_image_url'];
+
+        // START introduced by qvitter API, not necessary for StatusNet API
+        $twitter_user['profile_image_url_profile_size'] = Avatar::urlByProfile($profile, AVATAR_PROFILE_SIZE);
+        try {
+            $avatar  = Avatar::getUploaded($profile);
+            $origurl = $avatar->displayUrl();
+        } catch (Exception $e) {
+            $origurl = $twitter_user['profile_image_url_profile_size'];
+        }
+        $twitter_user['profile_image_url_original'] = $origurl;
+
+        $twitter_user['groups_count'] = $profile->getGroupCount();
+        foreach (array('linkcolor', 'backgroundcolor') as $key) {
+            $twitter_user[$key] = Profile_prefs::getConfigData($profile, 'theme', $key);
+        }
+        // END introduced by qvitter API, not necessary for StatusNet API
+
+        $twitter_user['url'] = ($profile->homepage) ? $profile->homepage : null;
+        $twitter_user['protected'] = (!empty($user) && $user->private_stream) ? true : false;
+        $twitter_user['followers_count'] = $profile->subscriberCount();
+
+        // Note: some profiles don't have an associated user
+
+        $twitter_user['friends_count'] = $profile->subscriptionCount();
+
+        $twitter_user['created_at'] = ApiAction::dateTwitter($profile->created);
+
+        $timezone = 'UTC';
+
+        if (!empty($user) && $user->timezone) {
+            $timezone = $user->timezone;
+        }
+
+        $t = new DateTime;
+        $t->setTimezone(new DateTimeZone($timezone));
+
+        $twitter_user['utc_offset'] = $t->format('Z');
+        $twitter_user['time_zone'] = $timezone;
+        $twitter_user['statuses_count'] = $profile->noticeCount();
+
+        // Is the requesting user following this user?
+        $twitter_user['following'] = false;
+        $twitter_user['statusnet_blocking'] = false;
+	
+		$logged_in_profile = Profile::current();
+
+        if ($logged_in) {
+
+            $twitter_user['following'] = $logged_in->isSubscribed($profile);
+            $twitter_user['statusnet_blocking']  = $logged_in->hasBlocked($profile);
+
+            $logged_in_profile = $logged_in->getProfile();
+
+        }
+
+        // StatusNet-specific
+
+        $twitter_user['statusnet_profile_url'] = $profile->profileurl;
+
+        // The event call to handle NoticeSimpleStatusArray lets plugins add data to the output array
+        
+        Event::handle('TwitterUserArray', array($profile, &$twitter_user, $logged_in_profile, array()));
+
+        return $twitter_user;
+    }
+
 
 }
 

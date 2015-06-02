@@ -145,7 +145,15 @@ function getFromAPI(stream, actionOnSuccess) {
 			},
 		success: function(data, textStatus, request) { 
 
-			displayOrHideUnreadNotifications(request.getResponseHeader('Qvitter-Notifications'));
+			displayOrHideUnreadNotifications(request.getResponseHeader('Qvitter-Notifications'));			
+			
+			// profile card from user array
+			if(request.getResponseHeader('Qvitter-User-Array') !== null) {
+				addProfileCardToDOM(
+					buildProfileCard(
+						$.parseJSON(
+							request.getResponseHeader('Qvitter-User-Array'))));
+				}
 			
 			data = convertEmptyObjectToEmptyArray(data);		
 

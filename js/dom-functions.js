@@ -128,6 +128,221 @@ function showFavsAndRequeetsInQueet(q,data) {
 
 	}
 	
+
+/* ·  
+   · 
+   ·   Build profile card HTML
+   · 
+   ·   @param data: an object with a user array
+   · 
+   · · · · · · · · · */
+   
+function buildProfileCard(data) {
+
+	data = cleanUpUserObject(data);
+	
+	// use avatar if no cover photo
+	var coverPhotoHtml = '';
+	if(data.cover_photo !== false) {
+		coverPhotoHtml = 'background-image:url(\'' + data.cover_photo + '\')';
+		}				
+
+	// follows me?
+	var follows_you = '';
+	if(data.follows_you === true  && window.myUserID != data.id) {
+		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';			
+		}
+
+	// show user actions if logged in
+	var followingClass = '';
+	if(data.following) {
+		followingClass = 'following';
+		}			
+	var followButton = '';
+	if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID != data.id) {			
+		var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
+		}
+		
+	// follow from external instance if logged out
+	if(typeof window.loggedIn.screen_name == 'undefined') {			
+		var followButton = '<div class="user-actions"><button type="button" class="external-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';	
+		}
+
+	// edit profile button if me
+	if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID == data.id) {			
+		var followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';	
+		}						
+	
+	// is webpage empty?
+	var emptyWebpage = '';
+	if(data.url.length<1) {
+		emptyWebpage = ' empty';				
+		}
+	
+	// full card html
+	data.profileCardHtml = '\
+		<div class="profile-card">\
+			<div class="profile-header-inner" style="' + coverPhotoHtml + '">\
+				<div class="profile-header-inner-overlay"></div>\
+				<a class="profile-picture" href="' + data.profile_image_url_original + '">\
+					<img src="' + data.profile_image_url_profile_size + '" />\
+				</a>\
+				<div class="profile-card-inner">\
+					<h1 class="fullname">' + data.name + '<span></span></h1>\
+					<h2 class="username">\
+						<span class="screen-name">@' + data.screen_name + '</span>\
+						' + follows_you + '\
+					</h2>\
+					<div class="bio-container"><p>' + data.description + '</p></div>\
+					<p class="location-and-url">\
+						<span class="location">' + data.location + '</span>\
+						<span class="url' + emptyWebpage + '">\
+							<span class="divider"> · </span>\
+							<a href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a>\
+						</span>\
+					</p>\
+				</div>\
+			</div>\
+			<div class="profile-banner-footer">\
+				<ul class="stats">\
+					<li><a class="tweet-stats">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li>\
+					<li><a class="following-stats">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li>\
+					<li><a class="follower-stats">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
+					<li><a class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li>\
+				</ul>\
+				' + followButton + '\
+				<div class="clearfix"></div>\
+			</div>\
+		</div>\
+		';
+
+	return data;
+	}
+
+
+/* ·  
+   · 
+   ·   Build external profile card HTML
+   · 
+   ·   @param data: an object containing data.external user array, 
+   ·   				and maybe (hopefully) also a data.local user array
+   · 
+   · · · · · · · · · */
+   
+function buildExternalProfileCard(data) {
+
+	// local profile id and follow class
+	var followLocalIdHtml = '';
+	var followingClass = '';					
+	if(typeof data.local != 'undefined' && data.local !== null) {
+		followLocalIdHtml = ' data-follow-user-id="' + data.local.id + '"';
+
+		if(data.local.following) {
+			followingClass = 'following';
+			}
+		}
+	
+	// follows me?
+	var follows_you = '';
+	if(data.local !== null && data.local.follows_you === true  && window.myUserID != data.local.id) {
+		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';			
+		}						
+					
+	// empty strings and zeros instead of null
+	data = cleanUpUserObject(data.external);
+	
+	// old statusnet-versions might not have full avatar urls in their api response
+	if(typeof data.profile_image_url_original == 'undefined'
+		   || data.profile_image_url_original === null
+		   || data.profile_image_url_original.length == 0) {
+		data.profile_image_url_original = data.profile_image_url;													
+		}
+	if(typeof data.profile_image_url_profile_size == 'undefined'
+		   || data.profile_image_url_profile_size === null
+		   || data.profile_image_url_profile_size.length == 0) {
+		data.profile_image_url_profile_size = data.profile_image_url;													
+		}						
+	
+	// we might have a cover photo
+	if(typeof data.cover_photo != 'undefined' && data.cover_photo !== false) {
+		var cover_photo = data.cover_photo;
+		}
+	else {
+		var cover_photo = data.profile_image_url_original;						
+		}
+
+	// is webpage empty?
+	var emptyWebpage = '';
+	if(data.url.length<1) {
+		emptyWebpage = ' empty';				
+		}						
+	
+	var serverUrl = data.statusnet_profile_url.replace('/' + data.screen_name,'');
+	var userApiUrl = serverUrl + '/api/statuses/user_timeline.json?screen_name=' + data.screen_name;
+	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl.replace('http://','').replace('https://','');						
+	var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';						
+
+	data.profileCard = '\
+		<div class="profile-card">\
+			<div class="profile-header-inner" style="background-image:url(\'' + cover_photo + '\')">\
+				<div class="profile-header-inner-overlay"></div>\
+				<a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a>\
+				<div class="profile-card-inner">\
+					<h1 class="fullname">' + data.name + '<span></span></h1>\
+					<h2 class="username">\
+						<span class="screen-name">\
+							<a target="_blank" href="' + data.statusnet_profile_url + '">' + data.screenNameWithServer + '</a>\
+						</span>\
+						' + follows_you + '\
+					</h2>\
+					<div class="bio-container"><p>' + data.description + '</p></div>\
+					<p class="location-and-url">\
+						<span class="location">' + data.location + '</span>\
+						<span class="url' + emptyWebpage + '">\
+							<span class="divider"> · </span>\
+							<a target="_blank" href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a>\
+						</span>\
+					</p>\
+				</div>\
+			</div>\
+			<div class="profile-banner-footer">\
+				<ul class="stats">\
+					<li><a target="_blank" href="' + data.statusnet_profile_url + '">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li>\
+					<li><a target="_blank" href="' + data.statusnet_profile_url + '/subscriptions">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li>\
+					<li><a target="_blank" href="' + data.statusnet_profile_url + '/subscribers">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
+				</ul>\
+				' + followButton + '\
+				<div class="clearfix"></div>\
+			</div>\
+		</div>\
+		<div class="clearfix"></div>';		
+	
+	return data;
+	}
+
+	
+	
+	
+/* ·  
+   · 
+   ·   Adds a profile card before feed element
+   · 
+   ·   @param data: an object with a user array
+   · 
+   · · · · · · · · · */
+   
+function addProfileCardToDOM(data) {
+
+	
+	// change design
+	changeDesign({backgroundimage:data.background_image, backgroundcolor:data.backgroundcolor, linkcolor:data.linkcolor});
+
+	// remove any old profile card and show profile card
+	$('#feed').siblings('.profile-card').remove();
+	$('#feed').before(data.profileCardHtml);		
+	}
+	
+	
 	
 	
 /* ·  
@@ -139,7 +354,6 @@ function showFavsAndRequeetsInQueet(q,data) {
    · · · · · · · · · */
    	
 function profileCardFromFirstObject(data,screen_name) {
-	
 	var first = new Object();
 	for (var i in data) {
 	    if (data.hasOwnProperty(i) && typeof(i) !== 'function') {
@@ -147,110 +361,8 @@ function profileCardFromFirstObject(data,screen_name) {
 	        break;
 		    }
 		}
-	
 	if(typeof first.user != 'undefined') {
-
-		first.user = cleanUpUserObject(first.user);
-		
-		// use avatar if no cover photo
-		var coverPhotoHtml = '';
-		if(first.user.cover_photo !== false) {
-			coverPhotoHtml = 'background-image:url(\'' + first.user.cover_photo + '\')';
-			}
-		
-		// follows me?
-		var follows_you = '';
-		if(first.user.follows_you === true && window.myUserID != first.user.id) {
-			var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';			
-			}			
-		
-		// show user actions if logged in
-		var followingClass = '';
-		if(first.user.following) {
-			followingClass = 'following';
-			}	
-		var followButton = '';				
-		if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID != first.user.id) {			
-			var followButton = '<div class="user-actions"><button data-follow-user-id="' + first.user.id + '" data-follow-user="' + first.user.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
-			}
-		
-		// follow from external instance if logged out
-		if(typeof window.loggedIn.screen_name == 'undefined') {			
-			var followButton = '<div class="user-actions"><button type="button" class="external-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';	
-			}
-		
-		// edit profile button if me
-		if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID == first.user.id) {			
-			var followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';	
-			}		
-		
-		// is webpage empty?
-		var emptyWebpage = '';
-		if(first.user.url.length<1) {
-			emptyWebpage = ' empty';			
-			}
-
-			
-		// change design
-		changeDesign({backgroundimage:first.user.background_image, backgroundcolor:first.user.backgroundcolor, linkcolor:first.user.linkcolor});
-
-		// remove any old profile card 
-		$('#feed').siblings('.profile-card').remove();
-
-		// insert profile card into dom
-		$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="' + coverPhotoHtml + '"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + first.user.profile_image_url_original + '"><img src="' + first.user.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + first.user.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + first.user.screen_name + '</span>' + follows_you + '</h2><div class="bio-container"><p>' + first.user.description + '</p></div><p class="location-and-url"><span class="location">' + first.user.location + '</span><span class="url' + emptyWebpage + '"><span class="divider"> · </span><a href="' + first.user.url + '">' + first.user.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats">' + window.sL.notices + '<strong>' + first.user.statuses_count + '</strong></a></li><li><a class="following-stats">' + window.sL.following + '<strong>' + first.user.friends_count + '</strong></a></li><li><a class="follower-stats">' + window.sL.followers + '<strong>' + first.user.followers_count + '</strong></a></li><li><a class="groups-stats">' + window.sL.groups + '<strong>' + first.user.groups_count + '</strong></a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
-		}
-	
-	// if user hasn't queeted or if we're not allowed to read their queets
-	else {
-		getFromAPI('users/show/' + screen_name + '.json', function(data){ if(data){
-			data = cleanUpUserObject(data);
-			
-			// use avatar if no cover photo
-			var coverPhotoHtml = '';
-			if(data.cover_photo !== false) {
-				coverPhotoHtml = 'background-image:url(\'' + data.cover_photo + '\')';
-				}				
-
-			// follows me?
-			var follows_you = '';
-			if(data.follows_you === true  && window.myUserID != data.id) {
-				var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';			
-				}
-
-			// show user actions if logged in
-			var followingClass = '';
-			if(data.following) {
-				followingClass = 'following';
-				}			
-			var followButton = '';
-			if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID != data.id) {			
-				var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';	
-				}
-				
-			// follow from external instance if logged out
-			if(typeof window.loggedIn.screen_name == 'undefined') {			
-				var followButton = '<div class="user-actions"><button type="button" class="external-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';	
-				}
-		
-			// edit profile button if me
-			if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID == data.id) {			
-				var followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';	
-				}						
-			
-			// is webpage empty?
-			var emptyWebpage = '';
-			if(data.url.length<1) {
-				emptyWebpage = ' empty';				
-				}
-				
-			// change design
-			changeDesign({backgroundimage:data.background_image, backgroundcolor:data.backgroundcolor, linkcolor:data.linkcolor});
-
-			// remove any old profile card and show profile card
-			$('#feed').siblings('.profile-card').remove();
-			$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="' + coverPhotoHtml + '"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + data.profile_image_url_original + '"><img src="' + data.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.name + '<span></span></h1><h2 class="username"><span class="screen-name">@' + data.screen_name + '</span>' + follows_you + '</span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"><span class="location">' + data.location + '</span><span class="url' + emptyWebpage + '"><span class="divider"> · </span><a href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="tweet-stats">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li><li><a class="following-stats">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li><li><a class="follower-stats">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li><li><a class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li></ul>' + followButton + '<div class="clearfix"></div></div></div>');		
-			}});		
+		addProfileCardToDOM(first.user);	
 		}		
 	}
 	
@@ -339,7 +451,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	// remember the most recent stream selection in global var
 	window.currentStream = stream;	
 	
-	// if this is a @user stream, i.e. user's queets, user's followers, user's following, we set _queets_ as the default stream in the menu
+	// a @user stream, i.e. user's queets, user's followers, user's following, we set _queets_ as the default stream in the menu
 	if(stream.substring(0,45) == 'statuses/followers.json?count=20&screen_name='
 	|| stream.substring(0,43) == 'statuses/friends.json?count=20&screen_name='
 	|| stream.substring(0,48) == 'statusnet/groups/list.json?count=10&screen_name='	
@@ -350,14 +462,14 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		var defaultStreamName = 'statuses/user_timeline.json?' + stream.substring(stream.indexOf('screen_name='));
 		var streamHeader = '@' + stream.substring(stream.lastIndexOf('=')+1);
 		}
-	// if this is a my user streams, i.e. my followers, my following
+	// my user streams, i.e. my followers, my following
 	else if(stream == 'statuses/followers.json?count=20'
 	|| stream == 'statuses/friends.json?count=20'
 	|| stream == 'statusnet/groups/list.json?count=10')	{
 		var defaultStreamName = stream;
 		var streamHeader = '@' + window.loggedIn.screen_name;
 		}		
-	// if this is one of the default streams, get header from DOM
+	// the default streams, get header from DOM
 	else if(stream == 'statuses/friends_timeline.json'
 	|| stream == 'statuses/mentions.json'
 	|| stream == 'qvitter/statuses/notifications.json'	
@@ -368,25 +480,25 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		var streamHeader = $('.stream-selection[data-stream-name="' + stream + '"]').attr('data-stream-header');
 		}	
 		
-	// if this is a !group stream
+	// !group stream
 	else if(stream.substring(0,26) == 'statusnet/groups/timeline/'
 		 || stream.substring(0,28) == 'statusnet/groups/membership/'
 		 || stream.substring(0,24) == 'statusnet/groups/admins/')	{
 		var defaultStreamName = 'statusnet/groups/timeline/' + stream.substring(stream.lastIndexOf('/')+1);
 		var streamHeader = '!' + stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));
 		}		
-	// if this is a #tag stream
+	// #tag stream
 	else if(stream.substring(0,24) == 'statusnet/tags/timeline/')	{
 		var defaultStreamName = stream;
 		var hashtagString = stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
 		var streamHeader = '#' + replaceHtmlSpecialChars(decodeURIComponent(hashtagString));
 		}			
-	// if this is a notice stream
+	// notice stream
 	else if(stream.substring(0,14) == 'statuses/show/')	{
 		var defaultStreamName = stream;
 		var streamHeader = 'notice/' + stream.substring(stream.indexOf('/show/')+6,stream.indexOf('.json'));
 		}					
-	// if this is a search stream
+	// search stream
 	else if(stream.substring(0,11) == 'search.json')	{
 		var defaultStreamName = stream;
 		var streamHeader = window.sL.searchVerb + ': ' + replaceHtmlSpecialChars(decodeURIComponent(stream.substring(stream.indexOf('?q=')+3)));
@@ -454,98 +566,53 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 			});	
 		}
 	
-
-	// if this is user's user feed, i.e. followers etc, we want a profile card, which we need to get from user_timeline since the users/show api action is broken (auth doesn't work) 
+	// for these streams we want a user array in the header to build a profile card 
+	var addUserArray = '';
 	if(stream.substring(0,23) == 'statuses/followers.json'
 	|| stream.substring(0,21) == 'statuses/friends.json'
 	|| stream.substring(0,26) == 'statusnet/groups/list.json'	
 	|| stream.substring(0,35) == 'statuses/mentions.json?screen_name='
-	|| stream.substring(0,27) == 'favorites.json?screen_name='			
+	|| stream.substring(0,27) == 'favorites.json?screen_name='
+	|| stream.substring(0,27) == 'statuses/user_timeline.json'			
 	|| stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=')	{
-		getFromAPI(defaultStreamName + '&count=1', function(profile_data){			
-			if(profile_data) {
-				getFromAPI(stream, function(user_data){
-					if(user_data) {
-						// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
-						if(window.currentStream == stream) {	
-							
-							// change design
-							changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
-							
-							// get screen name from stream, if not found, this is me
-							if(stream.indexOf('screen_name=')>-1) {
-								var thisUsersScreenName = stream.substring(stream.indexOf('screen_name=')+12);
-								}
-							else {
-								var thisUsersScreenName = window.loggedIn.screen_name;
-								}
-													
-							profileCardFromFirstObject(profile_data,thisUsersScreenName); // show profile card
-
-							// start checking for new queets again
-							window.clearInterval(checkForNewQueetsInterval);
-							checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
-
-							// add this stream to the history menu
-							addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);
-
-							remove_spinner();				
-							$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
-							$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
-							$('#feed-body').removeAttr('data-search-page-number'); // reset
-							addToFeed(user_data, false,'visible'); // add stream items to feed element
-							$('#feed').animate({opacity:'1'},150); // fade in
-							$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
-							actionOnSuccess(); // return
-							}
-						}
-					});
-				}
-			});
-		}
-
-	// if this is a queet stream
-	else {
-		getFromAPI(stream, function(queet_data){ 
-			if(queet_data) {
-				// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
-				if(window.currentStream == stream) {
-					
-					// change design
-					changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
-						
-					// show profile card if this is a user's queet stream
-					if(stream.substring(0,27) == 'statuses/user_timeline.json')	{
-						var thisUsersScreenName = stream.replace('statuses/user_timeline.json','').replace('?screen_name=','').replace('?id=','').replace('?user_id=','');
-						profileCardFromFirstObject(queet_data,thisUsersScreenName);
-						}
-					// show group profile card if this is a group stream
-					else if(stream.substring(0,26) == 'statusnet/groups/timeline/'
-						 || stream.substring(0,28) == 'statusnet/groups/membership/'
-						 || stream.substring(0,24) == 'statusnet/groups/admins/') {
-						var thisGroupAlias = stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));
-						groupProfileCard(thisGroupAlias);
-						}						
-	
-					// start checking for new queets again
-					window.clearInterval(checkForNewQueetsInterval);
-					checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
-
-					// add this stream to the history menu
-					addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);
-
-					remove_spinner();				
-					$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
-					$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
-					addToFeed(queet_data, false,'visible'); // add stream items to feed element
-					$('#feed').animate({opacity:'1'},150); // fade in
-					$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
-					$('html,body').scrollTop(0); // scroll to top
-					actionOnSuccess(); // return				
-					}
-				}
-			});		
+		addUserArray = '&withuserarray=1';
 		}	
+
+	// get stream
+	getFromAPI(stream + addUserArray, function(queet_data){ 
+		if(queet_data) {
+			// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
+			if(window.currentStream == stream) {
+				
+				// change design
+				changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
+					
+				// show group profile card if this is a group stream
+				if(stream.substring(0,26) == 'statusnet/groups/timeline/'
+					 || stream.substring(0,28) == 'statusnet/groups/membership/'
+					 || stream.substring(0,24) == 'statusnet/groups/admins/') {
+					var thisGroupAlias = stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));
+					groupProfileCard(thisGroupAlias);
+					}						
+
+				// start checking for new queets again
+				window.clearInterval(checkForNewQueetsInterval);
+				checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
+
+				// add this stream to the history menu
+				addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);
+
+				remove_spinner();				
+				$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
+				$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
+				addToFeed(queet_data, false,'visible'); // add stream items to feed element
+				$('#feed').animate({opacity:'1'},150); // fade in
+				$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
+				$('html,body').scrollTop(0); // scroll to top
+				actionOnSuccess(); // return				
+				}
+			}
+		});		
 	}
 	
 /* ·  

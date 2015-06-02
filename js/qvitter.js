@@ -1042,67 +1042,16 @@ $('body').on('click','a', function(e) {
 
 				if(data && data.external !== null) {
 					
-					// local profile id and follow class
-					var followLocalIdHtml = '';
-					var followingClass = '';					
-					if(typeof data.local != 'undefined' && data.local !== null) {
-						followLocalIdHtml = ' data-follow-user-id="' + data.local.id + '"';
-
-						if(data.local.following) {
-							followingClass = 'following';
-							}
-						}
-						
-					// follows me?
-					var follows_you = '';
-					if(data.local.follows_you === true  && window.myUserID != data.local.id) {
-						var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';			
-						}						
-										
-					// empty strings and zeros instead of null
-					data = cleanUpUserObject(data.external);
-						
-					// old statusnet-versions might not have full avatar urls in their api response
-					if(typeof data.profile_image_url_original == 'undefined'
-						   || data.profile_image_url_original === null
-						   || data.profile_image_url_original.length == 0) {
-						data.profile_image_url_original = data.profile_image_url;													
-						}
-					if(typeof data.profile_image_url_profile_size == 'undefined'
-						   || data.profile_image_url_profile_size === null
-						   || data.profile_image_url_profile_size.length == 0) {
-						data.profile_image_url_profile_size = data.profile_image_url;													
-						}						
-						
-					// we might have a cover photo
-					if(typeof data.cover_photo != 'undefined' && data.cover_photo !== false) {
-						var cover_photo = data.cover_photo;
-						}
-					else {
-						var cover_photo = data.profile_image_url_original;						
-						}
-
-					// is webpage empty?
-					var emptyWebpage = '';
-					if(data.url.length<1) {
-						emptyWebpage = ' empty';				
-						}						
-						
-					var serverUrl = data.statusnet_profile_url.replace('/' + data.screen_name,'');
-					var userApiUrl = serverUrl + '/api/statuses/user_timeline.json?screen_name=' + data.screen_name;
-					var screenNameWithServer = '@' + data.screen_name + '@' + serverUrl.replace('http://','').replace('https://','');						
-					var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';						
+					var data = buildExternalProfileCard(data);
 					
 					// preview latest notice
 					var noticeHtml = '';
 					if(typeof data.status != 'undefined') {
 						data.status.user = data;
 						var noticeHtml = buildQueetHtml(data.status);						
-						}
-
-					var profileCard = '<div class="profile-card"><div class="profile-header-inner" style="background-image:url(\'' + cover_photo + '\')"><div class="profile-header-inner-overlay"></div><a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.name + '<span></span></h1><h2 class="username"><span class="screen-name"><a target="_blank" href="' + data.statusnet_profile_url + '">' + screenNameWithServer + '</a>' + follows_you + '</span><span class="follow-status"></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"><span class="location">' + data.location + '</span><span class="url' + emptyWebpage + '"><span class="divider"> · </span><a target="_blank" href="' + data.url + '">' + data.url.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a target="_blank" href="' + data.statusnet_profile_url + '">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li><li><a target="_blank" href="' + data.statusnet_profile_url + '/subscriptions">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li><li><a target="_blank" href="' + data.statusnet_profile_url + '/subscribers">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li></ul>' + followButton + '<div class="clearfix"></div></div></div><div class="clearfix"></div>';		
+						}					
 					
-					popUpAction('popup-external-profile', screenNameWithServer,profileCard + noticeHtml,'<a class="go-to-external-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
+					popUpAction('popup-external-profile', data.screenNameWithServer,data.profileCard + noticeHtml,'<a class="go-to-external-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
 					
 					remove_spinner();	
 					$('a').removeClass('external-profile-clicked');					
