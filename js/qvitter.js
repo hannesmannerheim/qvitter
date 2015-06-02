@@ -1041,7 +1041,7 @@ $('body').on('click','a', function(e) {
 					// local profile id and follow class
 					var followLocalIdHtml = '';
 					var followingClass = '';					
-					if(typeof data.local != 'undefined') {
+					if(typeof data.local != 'undefined' && data.local !== null) {
 						followLocalIdHtml = ' data-follow-user-id="' + data.local.id + '"';
 
 						if(data.local.following) {

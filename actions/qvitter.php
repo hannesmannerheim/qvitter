@@ -518,10 +518,10 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery.jWindowCrop.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/jquery.jWindowCrop.js')); ?>"></script>	
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/load-image.min.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/xregexp-all-min-2.0.0.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/xregexp-all-min-2.0.0.js')); ?>"></script>				
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/dom-functions.js')); ?>"></script>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/misc-functions.js')); ?>"></script>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/ajax-functions.js')); ?>"></script>
-				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/qvitter.js')); ?>"></script>
+				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/dom-functions.js')); ?>"></script>
+				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/misc-functions.js')); ?>"></script>
+				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/ajax-functions.js')); ?>"></script>
+				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/qvitter.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/qvitter.js')); ?>"></script>
 				<?php
 				
 					// event for other plugins to add scripts to qvitter
