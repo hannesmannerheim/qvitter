@@ -143,14 +143,19 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
     /**
      * Get redirect(s) for an url
      *
-     * @return mixed  Location URL if redirect, null if no Location header (through HTTP_Request2_Response getHeader())
      */
 	function getRedirectUrl ($url) {
-        $client = new HTTPClient();
-        $response = $client->head($url);
-        return $response->getHeader('Location');    // null if it isn't set
+		stream_context_set_default(array(
+			'http' => array(
+				'method' => 'HEAD'
+			)
+		));
+		$headers = get_headers($url, 1);
+		if ($headers !== false && isset($headers['Location'])) {
+			return $headers['Location'];
+		}
+		return false;
 	}
-
 
     
 }
