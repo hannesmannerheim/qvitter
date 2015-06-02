@@ -705,8 +705,8 @@ class QvitterPlugin extends Plugin {
 				//} catch (NoParentNoticeException $e) {	// TODO: catch this when everyone runs latest GNU social!
 					// This is not a reply to something (has no parent)
 				} catch (NoResultException $e) {
-					// Parent notice or its author's profile not found! Complain louder?
-					common_log(LOG_ERR, 'NoResultException: '.$e->getMessage());
+					// Parent author's profile not found! Complain louder?
+					common_log(LOG_ERR, "Parent notice's author not found: ".$e->getMessage());
 				}
 			}
 
