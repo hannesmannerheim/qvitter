@@ -187,7 +187,7 @@ function profileCardFromFirstObject(data,screen_name) {
 		// is webpage empty?
 		var emptyWebpage = '';
 		if(first.user.url.length<1) {
-			emptyWebpage = ' empty';				
+			emptyWebpage = ' empty';			
 			}
 
 			
