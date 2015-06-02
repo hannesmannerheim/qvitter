@@ -663,6 +663,7 @@ class QvitterPlugin extends Plugin {
      * @return boolean hook flag
      */
     function onStartNoticeDistribute($notice) {
+        assert($notice->id > 0);    // since we removed tests below
 
 		// don't add notifications for activity type notices
 		if($notice->object_type == 'activity') {
@@ -697,13 +698,17 @@ class QvitterPlugin extends Plugin {
 	 		$reply_notification_to = false; 		
 			// check for reply to insert in notifications
 			if($notice->reply_to) {
-				$replyparent = $notice->getParent();
-				$replyauthor = $replyparent->getProfile();
-				if ($replyauthor instanceof Profile && !empty($notice->id)) {
+				try {
+					$replyauthor = $notice->getParent()->getProfile();
 					$reply_notification_to = $replyauthor->id;
 					$this->insertNotification($replyauthor->id, $notice->profile_id, 'reply', $notice->id);
-					}
+				//} catch (NoParentNoticeException $e) {	// TODO: catch this when everyone runs latest GNU social!
+					// This is not a reply to something (has no parent)
+				} catch (NoResultException $e) {
+					// Parent author's profile not found! Complain louder?
+					common_log(LOG_ERR, "Parent notice's author not found: ".$e->getMessage());
 				}
+			}
 
 			// check for mentions to insert in notifications
 			$mentions = common_find_mentions($notice->content, $notice);
@@ -719,7 +724,7 @@ class QvitterPlugin extends Plugin {
 					$all_mentioned_user_ids[] = $mentioned->id;
 				
 					// only notify if mentioned user is not already notified for reply
-					if($reply_notification_to != $mentioned->id && !empty($notice->id)) {
+					if($reply_notification_to != $mentioned->id) {
 						$this->insertNotification($mentioned->id, $notice->profile_id, 'mention', $notice->id);                	
 						}
 					}
