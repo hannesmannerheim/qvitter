@@ -505,8 +505,12 @@ function doLogin(streamToSet) {
 				$.each(data,function(k,v){
 					if(v[2] === false) { var avatar = window.defaultAvatarStreamSize; }
 					else { 	var avatar = v[2]; }
+					if(v[3]) {
+						// extract server base url
+						v[3] = v[3].substring(v[3].indexOf('://')+3,v[3].lastIndexOf(v[1])-1);
+						}					
 					v[0] = v[0] || v[1]; // if name is null we go with username there too
-					window.following[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar };
+					window.following[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
 					i++;
 					});
 				}
@@ -2149,13 +2153,35 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 				var term = match[0].substring(match[0].lastIndexOf('@')+1, match[0].length).toLowerCase();
 				window.lastMention.mentionPos = mentionPos;
 				window.lastMention.cursorPos = cursorPos;				
+
+				
+				// see if anyone we're following matches 
+				var suggestionsToShow = [];
+				var suggestionsUsernameCount = {};				
 				$.each(window.following,function(){
 					var userregex = new RegExp(term);
 					if(this.username.toLowerCase().match(userregex) || this.name.toLowerCase().match(userregex)) {
-						queetBox.siblings('.mentions-suggestions').append('<div><img height="24" width="24" src="' + this.avatar + '" /><strong>' + this.name + '</strong> @<span>' + this.username + '</span></div>')
+						suggestionsToShow.push({avatar:this.avatar, name:this.name, username:this.username,url:this.url});
+
+						// count the usernames to see if we need to show the server for any of them
+						if(typeof suggestionsUsernameCount[this.username] != 'undefined') {
+							suggestionsUsernameCount[this.username] = suggestionsUsernameCount[this.username] + 1;
+							}
+						else {
+							suggestionsUsernameCount[this.username] = 1;
+							}
 						}
 					});				
-
+				
+				// show matches
+				$.each(suggestionsToShow,function(){
+					var serverHtml = '';
+					if(suggestionsUsernameCount[this.username]>1) {
+						serverHtml = '@' + this.url;
+						}
+					queetBox.siblings('.mentions-suggestions').append('<div title="@' + this.username + serverHtml + '"><img height="24" width="24" src="' + this.avatar + '" /><strong>' + this.name + '</strong> @<span>' + this.username + serverHtml + '</span></div>')				
+					});
+				
 				}
 			else {
 				queetBox.siblings('.mentions-suggestions').empty();

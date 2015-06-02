@@ -82,6 +82,12 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 				$avatar = false;
 			}			
 			$this_user = array($p->fullname,$p->nickname,$avatar);
+			if(!$p->isLocal()) {
+				$this_user[3] = $p->getUrl();
+				}
+			else {
+				$this_user[3] = false;
+				}
 			$this->users_stripped[$p->id] = $this_user;
 			}
 
