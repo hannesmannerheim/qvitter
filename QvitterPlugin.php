@@ -60,7 +60,7 @@ class QvitterPlugin extends Plugin {
 		$settings['sitebackground'] = 'img/vagnsmossen.jpg';
 
 		// DEFAULT FAVICON
-		$settings['favicon'] = 'img/favicon.ico?v=4';
+		$settings['favicon'] = 'img/favicon.ico?v=5';
 
 		// DEFAULT LINK COLOR
 		$settings['defaultlinkcolor'] = '#0084B4';
