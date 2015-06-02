@@ -663,6 +663,7 @@ class QvitterPlugin extends Plugin {
      * @return boolean hook flag
      */
     function onStartNoticeDistribute($notice) {
+        assert($notice->id > 0);    // since we removed tests below
 
 		// don't add notifications for activity type notices
 		if($notice->object_type == 'activity') {
@@ -699,7 +700,7 @@ class QvitterPlugin extends Plugin {
 			if($notice->reply_to) {
 				$replyparent = $notice->getParent();
 				$replyauthor = $replyparent->getProfile();
-				if ($replyauthor instanceof Profile && !empty($notice->id)) {
+				if ($replyauthor instanceof Profile) {
 					$reply_notification_to = $replyauthor->id;
 					$this->insertNotification($replyauthor->id, $notice->profile_id, 'reply', $notice->id);
 					}
@@ -719,7 +720,7 @@ class QvitterPlugin extends Plugin {
 					$all_mentioned_user_ids[] = $mentioned->id;
 				
 					// only notify if mentioned user is not already notified for reply
-					if($reply_notification_to != $mentioned->id && !empty($notice->id)) {
+					if($reply_notification_to != $mentioned->id) {
 						$this->insertNotification($mentioned->id, $notice->profile_id, 'mention', $notice->id);                	
 						}
 					}
