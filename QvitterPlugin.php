@@ -588,10 +588,9 @@ class QvitterPlugin extends Plugin {
 		// mark reply/mention-notifications as read if we're replying to a notice we're notified about
 		if($notice->reply_to) {
 
-			$user = common_current_user();
             $notification_to_mark_as_seen = QvitterNotification::pkeyGet(array('is_seen' => 0,
                                                                                 'notice_id' => $notice->reply_to,
-                                                                                'to_profile_id' => $user->id));
+                                                                                'to_profile_id' => $notice->profile_id));
             if($notification_to_mark_as_seen instanceof QvitterNotification
             && ($notification_to_mark_as_seen->ntype == 'mention' || $notification_to_mark_as_seen->ntype == 'reply')) {
                 $orig = clone($notification_to_mark_as_seen);
