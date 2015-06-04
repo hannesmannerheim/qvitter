@@ -151,8 +151,9 @@ function getFromAPI(stream, actionOnSuccess) {
 			if(request.getResponseHeader('Qvitter-User-Array') !== null) {
 				addProfileCardToDOM(
 					buildProfileCard(
-						$.parseJSON(
-							request.getResponseHeader('Qvitter-User-Array'))));
+						iterateRecursiveReplaceHtmlSpecialChars(
+							$.parseJSON(
+								request.getResponseHeader('Qvitter-User-Array')))));
 				}
 			
 			data = convertEmptyObjectToEmptyArray(data);		
