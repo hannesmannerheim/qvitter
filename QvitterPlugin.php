@@ -260,14 +260,14 @@ class QvitterPlugin extends Plugin {
 		// add user arrays for some urls, to use to build profile cards
 		// this way we don't have to request this in a separate http request
 		
-		if(isset($_GET['withuserarray']) &&
-		 ( $_GET['p'] == 'api/statuses/followers.json' 
-		|| $_GET['p'] == 'api/statuses/friends.json'
-		|| $_GET['p'] == 'api/statusnet/groups/list.json'
-		|| $_GET['p'] == 'api/statuses/mentions.json'
-		|| $_GET['p'] == 'api/favorites.json'
-		|| $_GET['p'] == 'api/statuses/friends_timeline.json'
-		|| $_GET['p'] == 'api/statuses/user_timeline.json')) {
+		if(isset($_GET['withuserarray'])) switch (getPath($_REQUEST)) {
+		case 'api/statuses/followers.json':
+		case 'api/statuses/friends.json':
+		case 'api/statusnet/groups/list.json':
+		case 'api/statuses/mentions.json':
+		case 'api/favorites.json':
+		case 'api/statuses/friends_timeline.json':
+		case 'api/statuses/user_timeline.json':
 			
 			// add logged in user's user array
 			if (common_logged_in() && !isset($_GET['screen_name'])) {
@@ -289,6 +289,7 @@ class QvitterPlugin extends Plugin {
 						}
 					}
 				}		 	
+			break;
 		 	}						
 						
     }
