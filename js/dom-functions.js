@@ -978,7 +978,7 @@ function expand_queet(q,doScrolling) {
 		}	
 	
 	// don't expand if this is a remote profile popup
-	if(q.closest('#popup-external-profile').length>0) {
+	if(q.closest('#popup-external-profile, #popup-local-profile').length>0) {
 		return;
 		}
 	
