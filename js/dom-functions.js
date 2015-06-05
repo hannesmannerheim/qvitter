@@ -277,9 +277,8 @@ function buildExternalProfileCard(data) {
 		emptyWebpage = ' empty';				
 		}						
 	
-	var serverUrl = data.statusnet_profile_url.replace('/' + data.screen_name,'');
-	var userApiUrl = serverUrl + '/api/statuses/user_timeline.json?screen_name=' + data.screen_name;
-	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl.replace('http://','').replace('https://','');						
+	var serverUrl = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.statusnet_profile_url, data.screen_name);
+	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl;						
 	var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';						
 
 	data.profileCard = '\
@@ -343,6 +342,50 @@ function addProfileCardToDOM(data) {
 	}
 	
 	
+/* ·  
+   · 
+   ·   Open external profile card in popup
+   · 
+   ·   @param data: an object with a user array
+   · 
+   · · · · · · · · · */
+   
+function openExternalProfileInPopup(data) {
+
+	var data = buildExternalProfileCard(data);
+	
+	// preview latest notice
+	var noticeHtml = '';
+	if(typeof data.status != 'undefined') {
+		data.status.user = data;
+		var noticeHtml = buildQueetHtml(data.status);						
+		}					
+	
+	popUpAction('popup-external-profile', data.screenNameWithServer,data.profileCard + noticeHtml,'<a class="go-to-external-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
+	}	
+	
+	
+/* ·  
+   · 
+   ·   Open local profile card in popup
+   · 
+   ·   @param data: an object with a user array
+   · 
+   · · · · · · · · · */
+   
+function openLocalProfileInPopup(data) {
+
+	var data = buildProfileCard(data);
+	
+	// preview latest notice
+	var noticeHtml = '';
+	if(typeof data.status != 'undefined') {
+		data.status.user = data;
+		var noticeHtml = buildQueetHtml(data.status);						
+		}					
+	
+	popUpAction('popup-local-profile', '@' + data.screen_name, data.profileCardHtml + '<div class="clearfix"></div>' + noticeHtml,'<a class="go-to-local-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
+	}		
 	
 	
 /* ·  

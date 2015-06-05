@@ -935,6 +935,11 @@ $('body').on('click','a', function(e) {
 	if(!!$(this).attr('donthijack') || $(this).attr('donthijack') == '') {
 		return;		
 		}
+
+	// if we're clicking something in a profile card popup, close it!
+	if($(this).closest('#popup-local-profile, #popup-external-profile').length>0) {
+		$('.modal-container').remove();		
+		}
 		
 	// all links opens in new tab
 	$(this).attr('target','_blank'); 
@@ -969,8 +974,18 @@ $('body').on('click','a', function(e) {
 			setNewCurrentStream('favorites.json',function(){},true);				
 			}			
 		// profiles
-		else if ((/^[a-zA-Z0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','')))) {
-			var linkNickname = $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','');
+		else if ((/^[a-zA-Z0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','')))
+		|| (/^[0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/user/','')))) {
+			
+			if($(this).attr('href').indexOf('/user/') > -1) {
+				var linkNickname = $(this).text().toLowerCase();
+				if(linkNickname.substring(0,1) == '@') {
+					linkNickname = linkNickname.substring(1);
+					}
+				}
+			else {
+				var linkNickname = $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','');				
+				}
 			
 			// don't hijack /groups-url
 			if(linkNickname == 'groups') {
@@ -978,16 +993,51 @@ $('body').on('click','a', function(e) {
 				}
 			
 			e.preventDefault();
-			if($(this).parent().attr('id') == 'user-profile-link') { // logged in user
+
+			// logged in user
+			if($(this).parent().attr('id') == 'user-profile-link'
+			|| linkNickname == window.loggedIn.screen_name) {
 				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name,function(){},true);	
 				}
-			else { // any user
-				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + linkNickname,function(){},true);								
+			// when in local profile popups
+			else if($(this).closest('#popup-local-profile').length>0) {
+				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + linkNickname,function(){},true);												
+				}
+			// any local user, not in popups –> open popup
+			else { 
+
+				$(this).addClass('local-profile-clicked');
+			
+				popUpAction('popup-local-profile', '','<div id="popup-local-profile-spinner" style="height:300px;"></div>',false);			
+				display_spinner('#popup-local-profile-spinner');
+			
+				// try getting from cache, to display immediately
+				if($(this).hasClass('account-group')) {
+					var localNickname = $(this).children('.screen-name').text().toLowerCase();
+					}
+				else {
+					var localNickname = $(this).text().toLowerCase();
+					}
+				if(localNickname.substring(0,1) == '@') {
+					localNickname = localNickname.substring(1);
+					}
+				var cachedUserArray = userArrayCacheGetByProfileUrlAndNickname($(this).attr('href'), localNickname);
+
+				if(cachedUserArray && cachedUserArray.local) {
+					openLocalProfileInPopup(cachedUserArray.local);
+					remove_spinner();			
+					$('.local-profile-clicked').removeClass('local-profile-clicked');		
+					}
+			
+				// but always query the server also
+				getFromAPI('users/show.json?id=' + localNickname,function(data){
+					if(data) {
+						openLocalProfileInPopup(data);					
+						remove_spinner();	
+						$('.local-profile-clicked').removeClass('local-profile-clicked');					
+						}				
+					});	
 				}			
-			}
-		else if((/^[0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/user/','')))) {
-			e.preventDefault();
-			setNewCurrentStream('statuses/user_timeline.json?screen_name=' + $(this).text().toLowerCase(),function(){},true);	
 			}
 		// tags
 		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/tag/')>-1) {
@@ -1036,30 +1086,43 @@ $('body').on('click','a', function(e) {
 		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')==-1)) // or if it's a activity notice but not a group link
 		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in
 			e.preventDefault();
-			display_spinner();
 			$(this).addClass('external-profile-clicked');
+			
+			popUpAction('popup-external-profile', '','<div id="popup-external-profile-spinner" style="height:300px;"></div>',false);			
+			display_spinner('#popup-external-profile-spinner');
+			
+			// try getting from cache, to display immediately
+			if($(this).hasClass('account-group')) {
+				var externalNickname = $(this).children('.screen-name').text();
+				}
+			else {
+				var externalNickname = $(this).text();
+				}
+			if(externalNickname.substring(0,1) == '@') {
+				externalNickname = externalNickname.substring(1);
+				}
+			var cachedUserArray = userArrayCacheGetByProfileUrlAndNickname($(this).attr('href'), externalNickname);
+
+			if(cachedUserArray && cachedUserArray.external) {
+				openExternalProfileInPopup(cachedUserArray);
+				remove_spinner();			
+				$('.external-profile-clicked').removeClass('external-profile-clicked');		
+				}
+			
+			// but always query the server also
 			getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent($(this).attr('href')),function(data){
 
 				if(data && data.external !== null) {
 					
-					var data = buildExternalProfileCard(data);
-					
-					// preview latest notice
-					var noticeHtml = '';
-					if(typeof data.status != 'undefined') {
-						data.status.user = data;
-						var noticeHtml = buildQueetHtml(data.status);						
-						}					
-					
-					popUpAction('popup-external-profile', data.screenNameWithServer,data.profileCard + noticeHtml,'<a class="go-to-external-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
-					
+					openExternalProfileInPopup(data);					
 					remove_spinner();	
-					$('a').removeClass('external-profile-clicked');					
+
+					$('.external-profile-clicked').removeClass('external-profile-clicked');					
 					}
-				// if external lookup failed, trigger click again. 
+				// if external lookup failed, and we don't have a cached profile card, trigger click again. 
 				// it will not be hijacked since we don't remove the external-profile-clicked class here 
-				else {
-					remove_spinner();	
+				else if($('#popup-external-profile-spinner').length > 0){
+					$('.modal-container').remove();
 					$('.external-profile-clicked')[0].click();
 					$('.external-profile-clicked').removeClass('external-profile-clicked');
 					}

@@ -216,6 +216,185 @@ function checkLocalStorage() {
 	console.log(corrected + ' entries corrected, ' + deleted + ' entries deleted');	
 	}
 
+
+/* ·  
+   · 
+   ·  User array cache
+   ·  
+   ·  Stored in window.userArrayCache as instance_url/nickname
+   ·  with protocol (http:// or https://) trimmed off, e.g. "quitter.se/hannes2peer"
+   ·       
+   · · · · · · · · · */
+
+window.userArrayCache = new Object();
+
+function userArrayCacheStore(data) {
+
+	if(typeof data == 'undefined') {
+		return false;
+		}
+	
+	// if we are passed a data object with both local and external data, use external data as key
+	if(typeof data.local != 'undefined' 
+	&& typeof data.local.statusnet_profile_url != 'undefined' 
+	&& typeof data.external != 'undefined' 
+	&& typeof data.external.statusnet_profile_url != 'undefined') {
+		var instanceUrlWithoutProtocol = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.external.statusnet_profile_url, data.external.screen_name);
+		var key = instanceUrlWithoutProtocol + '/' + data.external.screen_name;		
+		var dataToStore = data;
+		}
+	// we can also get either local...
+	else if(typeof data.local != 'undefined' && typeof data.local.statusnet_profile_url != 'undefined' ) {
+		var instanceUrlWithoutProtocol = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.local.statusnet_profile_url, data.external.screen_name);
+		var key = instanceUrlWithoutProtocol + '/' + data.external.screen_name;		
+		data.external = false;
+		var dataToStore = data;
+		}
+	// ...or external...
+	else if(typeof data.external != 'undefined' && typeof data.external.statusnet_profile_url != 'undefined' ) {
+		var instanceUrlWithoutProtocol = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.external.statusnet_profile_url, data.external.screen_name);
+		var key = instanceUrlWithoutProtocol + '/' + data.external.screen_name;				
+		data.local = false;
+		var dataToStore = data;
+		}
+	// ...or an unspecified data object, in which case we check the avatar urls to see if it's local or external
+	else if (typeof data.statusnet_profile_url != 'undefined') {
+		var instanceUrlWithoutProtocol = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.statusnet_profile_url, data.screen_name);
+		var key = instanceUrlWithoutProtocol + '/' + data.screen_name;				
+		
+		var dataProfileImageUrlWithoutProtocol = removeProtocolFromUrl(data.profile_image_url);
+		var siteInstanceURLWithoutProtocol = removeProtocolFromUrl(window.siteInstanceURL);
+		
+		// local
+		if(dataProfileImageUrlWithoutProtocol.substring(0,siteInstanceURLWithoutProtocol.length) == siteInstanceURLWithoutProtocol){
+			var dataToStore = {local:data,external:false};
+			}
+		// external
+		else {
+			var dataToStore = {external:data,local:false};			
+			}
+		}
+	else {
+		return false;
+		}
+	
+	// store
+	if(typeof window.userArrayCache[key] == 'undefined') {
+		window.userArrayCache[key] = dataToStore;		
+		}
+	else {
+		if(dataToStore.local) {
+			
+			// keep old status if newer data doesn't have any
+			if(typeof dataToStore.local.status == 'undefined' && typeof window.userArrayCache[key].local.status != 'undefined') {
+				dataToStore.local.status = window.userArrayCache[key].local.status;
+				}
+			
+			window.userArrayCache[key].local = dataToStore.local;					
+			}
+		if(dataToStore.external) {
+			window.userArrayCache[key].external = dataToStore.external;					
+			}		
+		}
+	}
+	
+function userArrayCacheGetByLocalNickname(localNickname) {
+	if(typeof window.userArrayCache[window.siteRootDomain + '/' + localNickname] != 'undefined') {
+		return window.userArrayCache[window.siteRootDomain + '/' + localNickname];
+		}
+	else {
+		return false;
+		}
+	}
+	
+function userArrayCacheGetByProfileUrlAndNickname(profileUrl, nickname) {
+	var guessedInstanceUrl = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(profileUrl, nickname);
+	if(typeof window.userArrayCache[guessedInstanceUrl + '/' + nickname] == 'undefined') {
+		return false;
+		}
+	else {
+		return window.userArrayCache[guessedInstanceUrl + '/' + nickname];
+		}
+	}	
+
+
+
+/* ·  
+   · 
+   ·  Guess instance's base installation url without protocol from a profile url
+   · 
+   · · · · · · · · · */
+
+function guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(profileUrl, nickname) {
+
+	// remove protocol
+	var guessedInstanceUrl = removeProtocolFromUrl(profileUrl)
+
+	// user/id-style profile urls
+	if(guessedInstanceUrl.indexOf('/user/') > -1 &&
+	   $.isNumeric(guessedInstanceUrl.substring(guessedInstanceUrl.lastIndexOf('/user/')+6))) {		
+		guessedInstanceUrl = guessedInstanceUrl.substring(0,guessedInstanceUrl.lastIndexOf('/user/'));
+		}
+	
+	// nickname-style profile urls
+	else if(guessedInstanceUrl.substring(guessedInstanceUrl.lastIndexOf('/')+1) == nickname) {
+		guessedInstanceUrl = guessedInstanceUrl.substring(0,guessedInstanceUrl.lastIndexOf('/'));
+		}
+	
+	// remove trailing "index.php" if the instance doesn't use mod_rewrite
+	if(guessedInstanceUrl.substring(guessedInstanceUrl.lastIndexOf('/')) == '/index.php') {
+		guessedInstanceUrl = guessedInstanceUrl.substring(0,guessedInstanceUrl.lastIndexOf('/'));		
+		}	
+
+	// there was a bug once that made some instances have multiple /:s in their url,
+	// so make sure there's no trailing /:s
+	while (guessedInstanceUrl.slice(-1) == '/') {
+		guessedInstanceUrl = guessedInstanceUrl.slice(0,-1);
+		}
+
+	return guessedInstanceUrl;
+	}
+    
+
+
+/* ·  
+   · 
+   ·  Remove the protocol (e.g. "http://") from an URL
+   · 
+   · · · · · · · · · */
+
+function removeProtocolFromUrl(url) {
+	if(url.indexOf('://') == -1) {
+		return url;
+		}
+	return url.substring(url.indexOf('://')+3);
+	}
+
+
+
+/* · 
+   · 
+   ·   Iterates recursively through an API response in search for user data to cache
+   ·   If we find a "statusnet_profile_url" key we assume the parent is a user array/object   
+   ·   
+   · · · · · · · · · · · · · */ 
+
+
+function searchForUserDataToCache(obj) {
+	for (var property in obj) {
+		if (obj.hasOwnProperty(property)) {
+			if (typeof obj[property] == "object") {
+				searchForUserDataToCache(obj[property]);
+				}
+			else if(typeof obj[property] == 'string' && property == 'statusnet_profile_url') {
+				userArrayCacheStore(obj);
+				}
+			}
+		}  
+	}
+
+
+
 /* ·  
    · 
    ·  Display unread notifications
@@ -284,10 +463,8 @@ function iterateRecursiveReplaceHtmlSpecialChars(obj) {
 			if (typeof obj[property] == "object") {
 				iterateRecursiveReplaceHtmlSpecialChars(obj[property]);
 				}
-			else {
-				if(typeof obj[property] == 'string' && property != 'statusnet_html' && property != 'source') {
-					obj[property] = replaceHtmlSpecialChars(obj[property]);
-					}
+			else if(typeof obj[property] == 'string' && property != 'statusnet_html' && property != 'source') {
+				obj[property] = replaceHtmlSpecialChars(obj[property]);
 				}
 			}
 		}

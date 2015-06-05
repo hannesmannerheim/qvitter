@@ -147,18 +147,18 @@ function getFromAPI(stream, actionOnSuccess) {
 
 			displayOrHideUnreadNotifications(request.getResponseHeader('Qvitter-Notifications'));			
 			
-			// profile card from user array
+			// profile card from user array, also cache it
 			if(request.getResponseHeader('Qvitter-User-Array') !== null) {
-				addProfileCardToDOM(
-					buildProfileCard(
-						iterateRecursiveReplaceHtmlSpecialChars(
-							$.parseJSON(
-								request.getResponseHeader('Qvitter-User-Array')))));
+				var userArray = iterateRecursiveReplaceHtmlSpecialChars($.parseJSON(request.getResponseHeader('Qvitter-User-Array')));
+				userArrayCacheStore(userArray);
+				addProfileCardToDOM(buildProfileCard(userArray));
 				}
 			
 			data = convertEmptyObjectToEmptyArray(data);		
 
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			
+			searchForUserDataToCache(data);
 
 			actionOnSuccess(data);				
 			},
