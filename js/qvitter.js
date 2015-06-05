@@ -1118,11 +1118,12 @@ $('body').on('click','a', function(e) {
 				if(data && data.external !== null) {
 					
 					// update the popup if it's still open
-					if($('#popup-local-profile').length>0) {					
+					if($('#popup-external-profile').length>0) {					
 						openExternalProfileInPopup(data);					
 						remove_spinner();	
-						$('.external-profile-clicked').removeClass('external-profile-clicked');					
 						}
+						
+					$('.external-profile-clicked').removeClass('external-profile-clicked');						
 					}
 				// if external lookup failed, and we don't have a cached profile card, trigger click again. 
 				// it will not be hijacked since we don't remove the external-profile-clicked class here 
