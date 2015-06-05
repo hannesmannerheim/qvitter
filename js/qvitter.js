@@ -1032,9 +1032,12 @@ $('body').on('click','a', function(e) {
 				// but always query the server also
 				getFromAPI('users/show.json?id=' + localNickname,function(data){
 					if(data) {
-						openLocalProfileInPopup(data);					
-						remove_spinner();	
-						$('.local-profile-clicked').removeClass('local-profile-clicked');					
+						// update the popup if it's still open
+						if($('#popup-local-profile').length>0) {
+							openLocalProfileInPopup(data);					
+							remove_spinner();	
+							$('.local-profile-clicked').removeClass('local-profile-clicked');												
+							}
 						}				
 					});	
 				}			
@@ -1114,10 +1117,12 @@ $('body').on('click','a', function(e) {
 
 				if(data && data.external !== null) {
 					
-					openExternalProfileInPopup(data);					
-					remove_spinner();	
-
-					$('.external-profile-clicked').removeClass('external-profile-clicked');					
+					// update the popup if it's still open
+					if($('#popup-local-profile').length>0) {					
+						openExternalProfileInPopup(data);					
+						remove_spinner();	
+						$('.external-profile-clicked').removeClass('external-profile-clicked');					
+						}
 					}
 				// if external lookup failed, and we don't have a cached profile card, trigger click again. 
 				// it will not be hijacked since we don't remove the external-profile-clicked class here 
