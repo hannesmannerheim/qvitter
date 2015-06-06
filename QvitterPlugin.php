@@ -799,7 +799,7 @@ class QvitterPlugin extends Plugin {
     	}
         
         
-    function onPluginVersion(&$versions)
+    function onPluginVersion(array &$versions)
     {
         $versions[] = array('name' => 'Qvitter',
                             'version' => '4',
