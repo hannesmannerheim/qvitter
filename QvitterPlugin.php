@@ -62,6 +62,9 @@ class QvitterPlugin extends Plugin {
 		// DEFAULT FAVICON
 		$settings['favicon'] = 'img/favicon.ico?v=5';
 
+		// DEFAULT SPRITE
+		$settings['sprite'] = Plugin::staticPath('Qvitter', '').'img/sprite.png?v=40';
+
 		// DEFAULT LINK COLOR
 		$settings['defaultlinkcolor'] = '#0084B4';
 

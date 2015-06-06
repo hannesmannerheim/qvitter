@@ -3506,6 +3506,7 @@ button.shorten:after {
 	margin-left:-20px;
     top: 2px;
     z-index:10000;
+    background-color:#fff;
 	}
 #footer-spinner-container .loader,
 .queet-box-loading-cover .loader {
@@ -4466,7 +4467,6 @@ body.rtl #feed-header-inner h2  {
 		}
 
 	#search-query {
-		background-image: url("../img/sprite.png?v=40");
 		background-size: 500px 1329px;
 		background-position: -100px -804px;
 		border: 0 none;
@@ -4770,7 +4770,6 @@ body.rtl #feed-header-inner h2  {
 		padding:0 !important;
 		margin:0;
 		border-radius:0 0 0 0 !important;
-		background-image: url("../img/sprite.png?v=40");
 		background-size: 500px 1329px;
 		background-position: center -1003px;		
 		}
@@ -4804,7 +4803,6 @@ body.rtl #feed-header-inner h2  {
 		margin-left: -35px; 
 		width: 70px; 
 		height: 55px;
-		background-image: url("../img/sprite.png?v=40");
 		background-size: 500px 1329px;
 		background-color:#ccc;
 		}

@@ -702,19 +702,21 @@ function changeLinkColor(newLinkColor) {
 		return false;
 		}
 	
+	var lighterColor08 = blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.8);
+	var lighterColor06 = blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.6)
+	
 	var headStyle = $('head').children('style');
-	var linkstyle = headStyle.text();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('color:')+6) + validHexColor + linkstyle.substring(linkstyle.indexOf(';/*COLOREND*/')));
-	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('background-color:')+17) + validHexColor + linkstyle.substring(linkstyle.indexOf(';/*BACKGROUNDCOLOREND*/')));		
-	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-color:')+13) + validHexColor + linkstyle.substring(linkstyle.indexOf(';/*BORDERCOLOREND*/')));		
-	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('background-color:rgb(')+17) + blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBACKGROUNDCOLOREND*/')));		
-	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-color:rgb(')+13) + blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.6) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERCOLOREND*/')));		
-	var linkstyle = headStyle.html();
-	headStyle.text(linkstyle.substring(0,linkstyle.indexOf('border-bottom-color:rgb(')+20) + blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.8) + linkstyle.substring(linkstyle.indexOf(';/*LIGHTERBORDERBOTTOMCOLOREND*/')));		
+	var headStyleText = headStyle.text();
+	headStyleText = replaceFromStringEndToStringStart(headStyleText,'/*COLORSTART*/','/*COLOREND*/',validHexColor);
+	headStyleText = replaceFromStringEndToStringStart(headStyleText,'/*BACKGROUNDCOLORSTART*/','/*BACKGROUNDCOLOREND*/',validHexColor);
+	headStyleText = replaceFromStringEndToStringStart(headStyleText,'/*BORDERCOLORSTART*/','/*BORDERCOLOREND*/',validHexColor);
+	headStyleText = replaceFromStringEndToStringStart(headStyleText,'/*LIGHTERBACKGROUNDCOLORSTART*/','/*LIGHTERBACKGROUNDCOLOREND*/',lighterColor08);
+	headStyleText = replaceFromStringEndToStringStart(headStyleText,'/*LIGHTERBORDERCOLORSTART*/','/*LIGHTERBORDERCOLOREND*/',lighterColor06);
+	headStyleText = replaceFromStringEndToStringStart(headStyleText,'/*LIGHTERBORDERBOTTOMCOLORSTART*/','/*LIGHTERBORDERBOTTOMCOLOREND*/',lighterColor08);				
+	headStyle.text(headStyleText);
+	}
+function replaceFromStringEndToStringStart(string,fromStringEnd,toStringStart,withString) {
+	return string.substring(0,string.indexOf(fromStringEnd)+fromStringEnd.length) + withString + string.substring(string.indexOf(toStringStart));			
 	}
 function blendRGBColors(c0, c1, p) {
     var f=c0.split(","),t=c1.split(","),R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);

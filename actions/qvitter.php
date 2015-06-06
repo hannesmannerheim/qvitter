@@ -110,6 +110,9 @@ class QvitterAction extends ApiAction
 				<title><?php print $sitetitle; ?></title>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">		
+				<style>
+
+				</style>
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/css/qvitter.css')); ?>" />
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
 				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?><?php print QvitterPlugin::settings("favicon"); ?>">
@@ -287,7 +290,7 @@ class QvitterAction extends ApiAction
 					ul.stats a strong,
 					.queet-box-extras button,
 					#openid-login:hover:after {
-						color:<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>;/*COLOREND*/
+						color:/*COLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*COLOREND*/;
 						}			
 					#unseen-notifications,
 					.stream-item.notification .not-seen,
@@ -305,15 +308,15 @@ class QvitterAction extends ApiAction
 					.crop-and-save-button,
 					.topbar .global-nav.show-logo:before,
 					.topbar .global-nav.pulse-logo:before {
-						background-color:<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>;/*BACKGROUNDCOLOREND*/
+						background-color:/*BACKGROUNDCOLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*BACKGROUNDCOLOREND*/;
 						}	
 					.queet-box-syntax[contenteditable="true"]:focus {
-						border-color:#999999;/*BORDERCOLOREND*/						
+						border-color:/*BORDERCOLORSTART*/#999999/*BORDERCOLOREND*/;
 						}
 					#user-footer-inner,
 					.inline-reply-queetbox,
 					#popup-faq #faq-container p.indent {
-						background-color:rgb(205,230,239);/*LIGHTERBACKGROUNDCOLOREND*/
+						background-color:/*LIGHTERBACKGROUNDCOLORSTART*/rgb(205,230,239)/*LIGHTERBACKGROUNDCOLOREND*/;
 						}
 					#user-footer-inner,
 					.queet-box,
@@ -322,12 +325,47 @@ class QvitterAction extends ApiAction
 					span.inline-reply-caret,
 				    .stream-item.expanded .stream-item.first-visible-after-parent,
 					#popup-faq #faq-container p.indent {
-						border-color:rgb(155,206,224);/*LIGHTERBORDERCOLOREND*/
+						border-color:/*LIGHTERBORDERCOLORSTART*/rgb(155,206,224)/*LIGHTERBORDERCOLOREND*/;
 						}
 					span.inline-reply-caret .caret-inner {
-						border-bottom-color:rgb(205,230,239);/*LIGHTERBORDERBOTTOMCOLOREND*/
+						border-bottom-color:/*LIGHTERBORDERBOTTOMCOLORSTART*/rgb(205,230,239)/*LIGHTERBORDERBOTTOMCOLOREND*/;
 						}
 						
+					.modal-close .icon,
+					.chev-right,
+					.close-right,
+					button.icon.nav-search,
+					.member-button .join-text i,
+					.external-member-button .join-text i,
+					.external-follow-button .follow-text i,
+					.qvitter-follow-button .follow-text i,
+					#logo,
+					.upload-cover-photo,
+					.upload-avatar,
+					.upload-background-image,
+					button.shorten i,
+					.reload-stream,
+					.topbar .global-nav:before,
+					.stream-item.notification.repeat .dogear, 
+					.stream-item.notification.like .dogear,
+					.ostatus-link,
+					.close-edit-profile-window {
+						background-image: url("<?php print QvitterPlugin::settings("sprite"); ?>");	
+						background-size: 500px 1329px;						
+						}
+					@media (max-width: 910px) {	
+						#search-query,
+						.menu-container a,
+						.menu-container a.current,
+						.stream-selection.friends-timeline:after,
+						.stream-selection.notifications:after,
+						.stream-selection.my-timeline:after,	
+						.stream-selection.public-timeline:after {	
+							background-image: url("<?php print QvitterPlugin::settings("sprite"); ?>");	
+							background-size: 500px 1329px;
+							}												
+						}
+												
 				</style>
 				<?php
 				
