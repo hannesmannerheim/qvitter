@@ -274,6 +274,7 @@ class QvitterPlugin extends Plugin {
         }
 
         QvitterAction::run($args);
+        Event::handle('EndActionExecute', array($action));
         return false;
     }
 
