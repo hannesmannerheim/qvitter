@@ -38,6 +38,8 @@ const QVITTERDIR = __DIR__;
 
 class QvitterPlugin extends Plugin {
 
+    protected $hijack_ui = true;
+
 	public function settings($setting)
 	{
 	
@@ -113,7 +115,25 @@ class QvitterPlugin extends Plugin {
 			return false;
 		}
 	}
-	
+
+    public function initialize()
+    {
+		// check if we should reroute UI to qvitter
+		$scoped = Profile::current();
+		$qvitter_enabled_by_user = false;
+		$qvitter_disabled_by_user = false;
+		if ($scoped instanceof Profile) {
+			$qvitter_enabled_by_user = $scoped->getPref('qvitter', 'enable_qvitter', false);
+			$qvitter_disabled_by_user = $scoped->getPref('qvitter', 'disable_qvitter', false);
+		}
+
+		$this->hijack_ui = (self::settings('enabledbydefault') && !$logged_in_user)
+                            || (self::settings('enabledbydefault') && !$qvitter_disabled_by_user)
+                            || (!self::settings('enabledbydefault') && $qvitter_enabled_by_user);
+
+        // show qvitter link in the admin panel
+        common_config_append('admin', 'panels', 'qvitteradm');
+    }
 	
     // make sure we have a notifications table
     function onCheckSchema()
@@ -163,31 +183,10 @@ class QvitterPlugin extends Plugin {
                     array('action' => 'qvittersettings'));
         $m->connect('panel/qvitter',
                     array('action' => 'qvitteradminsettings')); 
-        common_config_append('admin', 'panels', 'qvitteradm');
         $m->connect('main/qlogin',
                     array('action' => 'qvitterlogin'));                    		
 		
-		// check if we should reroute UI to qvitter
-		$logged_in_user = common_current_user();
-		$qvitter_enabled_by_user = false;
-		$qvitter_disabled_by_user = false;		
-		if($logged_in_user) {
-			try {
-				$qvitter_enabled_by_user = Profile_prefs::getData($logged_in_user->getProfile(), 'qvitter', 'enable_qvitter');
-			} catch (NoResultException $e) {
-				$qvitter_enabled_by_user = false;
-			}
-			try {
-				$qvitter_disabled_by_user = Profile_prefs::getData($logged_in_user->getProfile(), 'qvitter', 'disable_qvitter');
-			} catch (NoResultException $e) {
-				$qvitter_disabled_by_user = false;
-			}		
-		}					
-		
-		if((self::settings('enabledbydefault') && !$logged_in_user) ||
-		   (self::settings('enabledbydefault') && !$qvitter_disabled_by_user) || 
-		  (!self::settings('enabledbydefault') && $qvitter_enabled_by_user)) {
-		
+        if ($this->hijack_ui) {
 			$m->connect('', array('action' => 'qvitter'));      
 			$m->connect('main/all', array('action' => 'qvitter'));              
 			$m->connect('search/notice', array('action' => 'qvitter')); 
