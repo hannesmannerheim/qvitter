@@ -127,7 +127,7 @@ class QvitterPlugin extends Plugin {
 			$qvitter_disabled_by_user = $scoped->getPref('qvitter', 'disable_qvitter', false);
 		}
 
-		$this->hijack_ui = (self::settings('enabledbydefault') && !$logged_in_user)
+		$this->hijack_ui = (self::settings('enabledbydefault') && !$scoped)
                             || (self::settings('enabledbydefault') && !$qvitter_disabled_by_user)
                             || (!self::settings('enabledbydefault') && $qvitter_enabled_by_user);
 
@@ -146,7 +146,6 @@ class QvitterPlugin extends Plugin {
 	// route/reroute urls
     public function onRouterInitialized($m)
     {
-		
 		$m->connect('api/qvitter/favs_and_repeats/:notice_id.json',
 					array('action' => 'ApiFavsAndRepeats'),
 					array('notice_id' => '[0-9]+'));
@@ -185,118 +184,100 @@ class QvitterPlugin extends Plugin {
                     array('action' => 'qvitteradminsettings')); 
         $m->connect('main/qlogin',
                     array('action' => 'qvitterlogin'));                    		
-		
-        if ($this->hijack_ui) {
-			$m->connect('', array('action' => 'qvitter'));      
-			$m->connect('main/all', array('action' => 'qvitter'));              
-			$m->connect('search/notice', array('action' => 'qvitter')); 
-		
-				
-			URLMapperOverwrite::overwrite_variable($m, ':nickname',
-									array('action' => 'showstream'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');
-			URLMapperOverwrite::overwrite_variable($m, ':nickname/',
-									array('action' => 'showstream'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');                                
-			URLMapperOverwrite::overwrite_variable($m, ':nickname/all',
-									array('action' => 'all'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');
-			URLMapperOverwrite::overwrite_variable($m, ':nickname/subscriptions',
-									array('action' => 'subscriptions'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');        
-			URLMapperOverwrite::overwrite_variable($m, ':nickname/subscribers',
-									array('action' => 'subscribers'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');     
-			URLMapperOverwrite::overwrite_variable($m, ':nickname/groups',
-									array('action' => 'usergroups'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');                  
-			URLMapperOverwrite::overwrite_variable($m, ':nickname/replies',
-									array('action' => 'replies'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');               
-			URLMapperOverwrite::overwrite_variable($m, ':nickname/favorites',
-									array('action' => 'showfavorites'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');                                                                                                                                                                                                                                                         
-			URLMapperOverwrite::overwrite_variable($m, 'group/:nickname',
-									array('action' => 'showgroup'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');                                
-			URLMapperOverwrite::overwrite_variable($m, 'group/:nickname/members',
-									array('action' => 'groupmembers'),
-									array('nickname' => Nickname::DISPLAY_FMT), 
-									'qvitter');                                 
 
-			$m->connect('group/:nickname/admins',
-						array('action' => 'qvitter'),
-						array('nickname' => Nickname::DISPLAY_FMT));
-
-			URLMapperOverwrite::overwrite_variable($m, 'tag/:tag',
-									array('action' => 'showstream'),
-									array('tag' => Router::REGEX_TAG), 
-									'qvitter'); 
-			URLMapperOverwrite::overwrite_variable($m, 'notice/:notice',
-									array('action' => 'shownotice'),
-									array('notice' => '[0-9]+'), 
-									'qvitter'); 									                                					
-		}					
+		$m->connect('group/:nickname/admins', array('action' => 'qvitter'),
+					array('nickname' => Nickname::DISPLAY_FMT));
 		
 		// if qvitter is opt-out, disable the default register page (if we don't have a valid invitation code)
         $valid_code = isset($_POST['code'])
                         ? Invitation::getKV('code', $_POST['code'])
                         : null;
-		if(self::settings('enabledbydefault') && empty($valid_code)) {
-			$m->connect('main/register',
-						array('action' => 'qvitter')); 			
-			}
-						
-
-
-			
-		// add user arrays for some urls, to use to build profile cards
-		// this way we don't have to request this in a separate http request
-		
-		if(isset($_GET['withuserarray'])) switch (getPath($_REQUEST)) {
-		case 'api/statuses/followers.json':
-		case 'api/statuses/friends.json':
-		case 'api/statusnet/groups/list.json':
-		case 'api/statuses/mentions.json':
-		case 'api/favorites.json':
-		case 'api/statuses/friends_timeline.json':
-		case 'api/statuses/user_timeline.json':
-			
-			// add logged in user's user array
-			if (common_logged_in() && !isset($_GET['screen_name'])) {
-				$profilecurrent = Profile::current();				
-				header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($profilecurrent)));
-				}
-
-			// add screen_name's user array
-			elseif(isset($_GET['screen_name'])){				
-				$screen_name_user = User::getKV('nickname', $_GET['screen_name']);
-				if($screen_name_user instanceof User) {				
-					if (common_logged_in()) {
-						$profilecurrent = Profile::current();
-						$currentuser = $profilecurrent->getUser();				
-						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($screen_name_user->getProfile(),$currentuser)));
-						}
-					else {
-						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($screen_name_user->getProfile())));						
-						}
-					}
-				}		 	
-			break;
-		 	}						
-						
+        if (self::settings('enabledbydefault') && empty($valid_code)) {
+            $m->connect('main/register', array('action' => 'qvitter'));
+        }
     }
-    
-    
+
+    public function onStartActionExecute(Action $action, array &$args)
+    {
+        // Because we overwrite everything with QvitterAction, let's avoid an endless loop!
+        if (!$this->hijack_ui || $action instanceof QvitterAction) {
+            return true;
+        }
+
+        $m = new URLMapper();
+        $m->connect('', array('action' => 'qvitter'));
+        $m->connect('main/all', array('action' => 'qvitter'));
+        $m->connect('search/notice', array('action' => 'qvitter'));
+
+        $m->connect(':nickname', array('action' => 'showstream'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect(':nickname/', array('action' => 'showstream'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect(':nickname/all', array('action' => 'all'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect(':nickname/subscriptions', array('action' => 'subscriptions'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect(':nickname/subscribers', array('action' => 'subscribers'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect(':nickname/groups', array('action' => 'usergroups'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect(':nickname/replies', array('action' => 'replies'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect(':nickname/favorites', array('action' => 'showfavorites'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect('group/:nickname', array('action' => 'qvitter'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+        $m->connect('group/:nickname/members', array('action' => 'qvitter'),
+                                array('nickname' => Nickname::DISPLAY_FMT));
+
+        $m->connect('tag/:tag', array('action' => 'showstream'),
+                                array('tag' => Router::REGEX_TAG));
+        $m->connect('notice/:notice', array('action' => 'shownotice'),
+                                array('notice' => '[0-9]+'));
+
+        // add user arrays for some urls, to use to build profile cards
+        // this way we don't have to request this in a separate http request
+        if(isset($args['withuserarray'])) switch (getPath($_REQUEST)) {
+        case 'api/statuses/followers.json':
+        case 'api/statuses/friends.json':
+        case 'api/statusnet/groups/list.json':
+        case 'api/statuses/mentions.json':
+        case 'api/favorites.json':
+        case 'api/statuses/friends_timeline.json':
+        case 'api/statuses/user_timeline.json':
+
+            // add logged in user's user array
+            if (common_logged_in() && !isset($args['screen_name'])) {
+                $profilecurrent = Profile::current();
+                header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($profilecurrent)));
+
+            } elseif (isset($args['screen_name'])) {    // add screen_name's user array
+                $screen_name_user = User::getKV('nickname', $args['screen_name']);
+                if ($screen_name_user instanceof User) {
+                    if (common_logged_in()) {
+                        $profilecurrent = Profile::current();
+                        $currentuser = $profilecurrent->getUser();
+                        header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($screen_name_user->getProfile(),$currentuser)));
+                    } else {
+                        header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($screen_name_user->getProfile())));
+                    }
+                }
+            }
+            break;
+        }
+
+        try {
+            $m->match(getPath($_REQUEST));
+        } catch (Exception $e) {
+            // No override found, just continue with StartActionExecute
+            return true;
+        }
+
+        QvitterAction::run($args);
+        return false;
+    }
+
+
     /**
      * Add script to default ui, to be able to toggle Qvitter with one click
      *
@@ -896,28 +877,3 @@ class QvitterPlugin extends Plugin {
 
 
 }
-
-
-
-
-/**
- * Overwrites variables in URL-mapping
- *
- */
-class URLMapperOverwrite extends URLMapper
-{
-    function overwrite_variable($m, $path, $args, $paramPatterns, $newaction)
-    {
-    
-        $m->connect($path, array('action' => $newaction), $paramPatterns);	
-		
-		$regex = URLMapper::makeRegex($path, $paramPatterns);
-	
-		foreach($m->variables as $n=>$v)
-			if($v[1] == $regex) 
-				$m->variables[$n][0]['action'] = $newaction;
-    }
-}
-
-
-?>
