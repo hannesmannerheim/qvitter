@@ -801,7 +801,7 @@ class QvitterPlugin extends Plugin {
     function onPluginVersion(array &$versions)
     {
         $versions[] = array('name' => 'Qvitter',
-                            'version' => '4',
+                            'version' => '5-alpha',
                             'author' => 'Hannes Mannerheim',
                             'homepage' => 'https://github.com/hannesmannerheim/qvitter',
                             'rawdescription' => _m('User interface'));
