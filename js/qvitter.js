@@ -1011,17 +1011,7 @@ $('body').on('click','a', function(e) {
 				popUpAction('popup-local-profile', '','<div id="popup-local-profile-spinner" style="height:300px;"></div>',false);			
 				display_spinner('#popup-local-profile-spinner');
 			
-				// try getting from cache, to display immediately
-				if($(this).hasClass('account-group')) {
-					var localNickname = $(this).children('.screen-name').text().toLowerCase();
-					}
-				else {
-					var localNickname = $(this).text().toLowerCase();
-					}
-				if(localNickname.substring(0,1) == '@') {
-					localNickname = localNickname.substring(1);
-					}
-				var cachedUserArray = userArrayCacheGetByProfileUrlAndNickname($(this).attr('href'), localNickname);
+				var cachedUserArray = userArrayCacheGetByProfileUrlAndNickname($(this).attr('href'), linkNickname);
 
 				if(cachedUserArray && cachedUserArray.local) {
 					openLocalProfileInPopup(cachedUserArray.local);
@@ -1030,7 +1020,7 @@ $('body').on('click','a', function(e) {
 					}
 			
 				// but always query the server also
-				getFromAPI('users/show.json?id=' + localNickname,function(data){
+				getFromAPI('users/show.json?id=' + linkNickname,function(data){
 					if(data) {
 						// update the popup if it's still open
 						if($('#popup-local-profile').length>0) {
