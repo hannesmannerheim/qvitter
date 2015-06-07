@@ -81,6 +81,10 @@ ul, li {
 	list-style: none outside none;
 	}
 
+#dynamic-styles {
+	display:none;
+	}
+
 .modal-close .icon,
 .chev-right,
 .close-right,
@@ -3506,8 +3510,10 @@ button.shorten:after {
 	margin-left:-20px;
     top: 2px;
     z-index:10000;
-    background-color:#fff;
 	}
+body > .loader {	
+    background-color:#fff;	
+    }
 #footer-spinner-container .loader,
 .queet-box-loading-cover .loader {
 	left: auto;
@@ -4402,7 +4408,7 @@ body.rtl #feed-header-inner h2  {
 		}
 
 	.topbar .global-nav:before {
-		background:none;
+		background:none !important;
 		}
 
 	#site-notice,

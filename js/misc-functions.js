@@ -705,7 +705,7 @@ function changeLinkColor(newLinkColor) {
 	var lighterColor08 = blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.8);
 	var lighterColor06 = blendRGBColors(hex2rgb(validHexColor),'rgb(255,255,255)',0.6)
 	
-	var headStyle = $('head').children('style');
+	var headStyle = $('#dynamic-styles').children('style');
 	var headStyleText = headStyle.text();
 	headStyleText = replaceFromStringEndToStringStart(headStyleText,'/*COLORSTART*/','/*COLOREND*/',validHexColor);
 	headStyleText = replaceFromStringEndToStringStart(headStyleText,'/*BACKGROUNDCOLORSTART*/','/*BACKGROUNDCOLOREND*/',validHexColor);

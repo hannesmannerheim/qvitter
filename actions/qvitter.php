@@ -262,111 +262,6 @@ class QvitterAction extends ApiAction
 						};
 					
 				</script>
-				<style>
-					a, a:visited, a:active,
-					ul.stats li:hover a,
-					ul.stats li:hover a strong,
-					#user-body a:hover div strong,
-					#user-body a:hover div div,
-					.permalink-link:hover,
-					.stream-item.expanded > .queet .stream-item-expand,
-					.stream-item-footer .with-icn .requeet-text a b:hover,
-					.queet-text span.attachment.more,
-					.stream-item-header .created-at a:hover,
-					.stream-item-header a.account-group:hover .name,
-					.queet:hover .stream-item-expand,
-					.show-full-conversation:hover,
-					#new-queets-bar,
-					.menu-container div,	
-					.cm-mention, .cm-tag, .cm-group, .cm-url, .cm-email,
-					div.syntax-middle span,
-					#user-body strong,
-					ul.stats,
-					.stream-item:not(.temp-post) ul.queet-actions li .icon:not(.is-mine):hover:before,
-					.show-full-conversation,
-					#user-body #user-queets:hover .label,
-					#user-body #user-groups:hover .label, 
-					#user-body #user-following:hover .label,
-					ul.stats a strong,
-					.queet-box-extras button,
-					#openid-login:hover:after {
-						color:/*COLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*COLOREND*/;
-						}			
-					#unseen-notifications,
-					.stream-item.notification .not-seen,
-					#top-compose,
-					#logo,
-					.queet-toolbar button,
-					#user-header,
-					.profile-header-inner,
-					.topbar,
-					.menu-container,
-					.member-button.member,
-					.external-follow-button.following,
-					.qvitter-follow-button.following,
-					.save-profile-button,
-					.crop-and-save-button,
-					.topbar .global-nav.show-logo:before,
-					.topbar .global-nav.pulse-logo:before {
-						background-color:/*BACKGROUNDCOLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*BACKGROUNDCOLOREND*/;
-						}	
-					.queet-box-syntax[contenteditable="true"]:focus {
-						border-color:/*BORDERCOLORSTART*/#999999/*BORDERCOLOREND*/;
-						}
-					#user-footer-inner,
-					.inline-reply-queetbox,
-					#popup-faq #faq-container p.indent {
-						background-color:/*LIGHTERBACKGROUNDCOLORSTART*/rgb(205,230,239)/*LIGHTERBACKGROUNDCOLOREND*/;
-						}
-					#user-footer-inner,
-					.queet-box,
-					.queet-box-syntax[contenteditable="true"],
-					.inline-reply-queetbox,
-					span.inline-reply-caret,
-				    .stream-item.expanded .stream-item.first-visible-after-parent,
-					#popup-faq #faq-container p.indent {
-						border-color:/*LIGHTERBORDERCOLORSTART*/rgb(155,206,224)/*LIGHTERBORDERCOLOREND*/;
-						}
-					span.inline-reply-caret .caret-inner {
-						border-bottom-color:/*LIGHTERBORDERBOTTOMCOLORSTART*/rgb(205,230,239)/*LIGHTERBORDERBOTTOMCOLOREND*/;
-						}
-						
-					.modal-close .icon,
-					.chev-right,
-					.close-right,
-					button.icon.nav-search,
-					.member-button .join-text i,
-					.external-member-button .join-text i,
-					.external-follow-button .follow-text i,
-					.qvitter-follow-button .follow-text i,
-					#logo,
-					.upload-cover-photo,
-					.upload-avatar,
-					.upload-background-image,
-					button.shorten i,
-					.reload-stream,
-					.topbar .global-nav:before,
-					.stream-item.notification.repeat .dogear, 
-					.stream-item.notification.like .dogear,
-					.ostatus-link,
-					.close-edit-profile-window {
-						background-image: url("<?php print QvitterPlugin::settings("sprite"); ?>");	
-						background-size: 500px 1329px;						
-						}
-					@media (max-width: 910px) {	
-						#search-query,
-						.menu-container a,
-						.menu-container a.current,
-						.stream-selection.friends-timeline:after,
-						.stream-selection.notifications:after,
-						.stream-selection.my-timeline:after,	
-						.stream-selection.public-timeline:after {	
-							background-image: url("<?php print QvitterPlugin::settings("sprite"); ?>");	
-							background-size: 500px 1329px;
-							}												
-						}
-												
-				</style>
 				<?php
 				
 	            // event for other plugins to use to add head elements to qvitter
@@ -570,7 +465,114 @@ class QvitterAction extends ApiAction
 						print '<script type="text/javascript">'.QvitterPlugin::settings('js').'</script>';
 					}				
 				
-				?>	
+				?>
+			<div id="dynamic-styles">
+				<style>
+					a, a:visited, a:active,
+					ul.stats li:hover a,
+					ul.stats li:hover a strong,
+					#user-body a:hover div strong,
+					#user-body a:hover div div,
+					.permalink-link:hover,
+					.stream-item.expanded > .queet .stream-item-expand,
+					.stream-item-footer .with-icn .requeet-text a b:hover,
+					.queet-text span.attachment.more,
+					.stream-item-header .created-at a:hover,
+					.stream-item-header a.account-group:hover .name,
+					.queet:hover .stream-item-expand,
+					.show-full-conversation:hover,
+					#new-queets-bar,
+					.menu-container div,	
+					.cm-mention, .cm-tag, .cm-group, .cm-url, .cm-email,
+					div.syntax-middle span,
+					#user-body strong,
+					ul.stats,
+					.stream-item:not(.temp-post) ul.queet-actions li .icon:not(.is-mine):hover:before,
+					.show-full-conversation,
+					#user-body #user-queets:hover .label,
+					#user-body #user-groups:hover .label, 
+					#user-body #user-following:hover .label,
+					ul.stats a strong,
+					.queet-box-extras button,
+					#openid-login:hover:after {
+						color:/*COLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*COLOREND*/;
+						}			
+					#unseen-notifications,
+					.stream-item.notification .not-seen,
+					#top-compose,
+					#logo,
+					.queet-toolbar button,
+					#user-header,
+					.profile-header-inner,
+					.topbar,
+					.menu-container,
+					.member-button.member,
+					.external-follow-button.following,
+					.qvitter-follow-button.following,
+					.save-profile-button,
+					.crop-and-save-button,
+					.topbar .global-nav.show-logo:before,
+					.topbar .global-nav.pulse-logo:before {
+						background-color:/*BACKGROUNDCOLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*BACKGROUNDCOLOREND*/;
+						}	
+					.queet-box-syntax[contenteditable="true"]:focus {
+						border-color:/*BORDERCOLORSTART*/#999999/*BORDERCOLOREND*/;
+						}
+					#user-footer-inner,
+					.inline-reply-queetbox,
+					#popup-faq #faq-container p.indent {
+						background-color:/*LIGHTERBACKGROUNDCOLORSTART*/rgb(205,230,239)/*LIGHTERBACKGROUNDCOLOREND*/;
+						}
+					#user-footer-inner,
+					.queet-box,
+					.queet-box-syntax[contenteditable="true"],
+					.inline-reply-queetbox,
+					span.inline-reply-caret,
+				    .stream-item.expanded .stream-item.first-visible-after-parent,
+					#popup-faq #faq-container p.indent {
+						border-color:/*LIGHTERBORDERCOLORSTART*/rgb(155,206,224)/*LIGHTERBORDERCOLOREND*/;
+						}
+					span.inline-reply-caret .caret-inner {
+						border-bottom-color:/*LIGHTERBORDERBOTTOMCOLORSTART*/rgb(205,230,239)/*LIGHTERBORDERBOTTOMCOLOREND*/;
+						}
+						
+					.modal-close .icon,
+					.chev-right,
+					.close-right,
+					button.icon.nav-search,
+					.member-button .join-text i,
+					.external-member-button .join-text i,
+					.external-follow-button .follow-text i,
+					.qvitter-follow-button .follow-text i,
+					#logo,
+					.upload-cover-photo,
+					.upload-avatar,
+					.upload-background-image,
+					button.shorten i,
+					.reload-stream,
+					.topbar .global-nav:before,
+					.stream-item.notification.repeat .dogear, 
+					.stream-item.notification.like .dogear,
+					.ostatus-link,
+					.close-edit-profile-window {
+						background-image: url("<?php print QvitterPlugin::settings("sprite"); ?>");	
+						background-size: 500px 1329px;						
+						}
+					@media (max-width: 910px) {	
+						#search-query,
+						.menu-container a,
+						.menu-container a.current,
+						.stream-selection.friends-timeline:after,
+						.stream-selection.notifications:after,
+						.stream-selection.my-timeline:after,	
+						.stream-selection.public-timeline:after {	
+							background-image: url("<?php print QvitterPlugin::settings("sprite"); ?>");	
+							background-size: 500px 1329px;
+							}												
+						}
+												
+				</style>
+			</div>
 			</body>
 		</html>
 
