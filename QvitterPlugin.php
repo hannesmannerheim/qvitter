@@ -127,7 +127,7 @@ class QvitterPlugin extends Plugin {
 			$qvitter_disabled_by_user = $scoped->getPref('qvitter', 'disable_qvitter', false);
 		}
 
-		$this->hijack_ui = (self::settings('enabledbydefault') && !$logged_in_user)
+		$this->hijack_ui = (self::settings('enabledbydefault') && !$scoped)
                             || (self::settings('enabledbydefault') && !$qvitter_disabled_by_user)
                             || (!self::settings('enabledbydefault') && $qvitter_enabled_by_user);
 
