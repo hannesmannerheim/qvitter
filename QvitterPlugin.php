@@ -38,7 +38,7 @@ const QVITTERDIR = __DIR__;
 
 class QvitterPlugin extends Plugin {
 
-	public function settings($setting)
+	static function settings($setting)
 	{
 	
  	/* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
