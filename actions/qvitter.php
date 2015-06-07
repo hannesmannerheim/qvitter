@@ -110,9 +110,6 @@ class QvitterAction extends ApiAction
 				<title><?php print $sitetitle; ?></title>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">		
-				<style>
-
-				</style>
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/css/qvitter.css')); ?>" />
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />		
 				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?><?php print QvitterPlugin::settings("favicon"); ?>">

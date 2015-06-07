@@ -577,8 +577,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		}			
 	else {
 		var h2FeedHeader = streamHeader;		
-		}									
-	
+		}				
 
 	// if we have a saved copy of this stream, show it immediately (but it is replaced when stream finishes to load later)
 	if(typeof window.oldStreams[window.currentStream] != "undefined") {
@@ -594,11 +593,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 
 		// also mark this stream as the current stream immediately, if a saved copy exists
 		addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);	
-		
-		// and change design immediately
-		changeDesign(window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)]);
 		}
-
 	// otherwise we fade out and wait for stream to load
 	else {
 		// fade out
@@ -608,6 +603,15 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 			$('#feed-header-inner h2').html(h2FeedHeader);
 			});	
 		}
+		
+	// change design immediately to either cached design or logged in user's
+	if(typeof window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)] != 'undefined') {
+		changeDesign(window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)]);
+		}
+	else {
+		changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});									
+		}
+		
 	
 	// for these streams we want a user array in the header to build a profile card 
 	var addUserArray = '';
@@ -626,9 +630,6 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		if(queet_data) {
 			// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
 			if(window.currentStream == stream) {
-				
-				// change design
-				changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
 					
 				// show group profile card if this is a group stream
 				if(stream.substring(0,26) == 'statusnet/groups/timeline/'
