@@ -358,7 +358,9 @@ function openExternalProfileInPopup(data) {
 	var noticeHtml = '';
 	if(typeof data.status != 'undefined') {
 		data.status.user = data;
-		var noticeHtml = buildQueetHtml(data.status);						
+		var $noticeHtmlObj = $('<div/>').append(buildQueetHtml(data.status));						
+		$noticeHtmlObj.find('.queet-thumbs').remove();
+		var noticeHtml = $noticeHtmlObj.outerHTML();			
 		}					
 	
 	popUpAction('popup-external-profile', data.screenNameWithServer,data.profileCard + noticeHtml,'<a class="go-to-external-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
@@ -381,7 +383,9 @@ function openLocalProfileInPopup(data) {
 	var noticeHtml = '';
 	if(typeof data.status != 'undefined') {
 		data.status.user = data;
-		var noticeHtml = buildQueetHtml(data.status);						
+		var $noticeHtmlObj = $('<div/>').append(buildQueetHtml(data.status));						
+		$noticeHtmlObj.find('.queet-thumbs').remove();
+		var noticeHtml = $noticeHtmlObj.outerHTML();
 		}					
 	
 	popUpAction('popup-local-profile', '@' + data.screen_name, data.profileCardHtml + '<div class="clearfix"></div>' + noticeHtml,'<a class="go-to-local-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
