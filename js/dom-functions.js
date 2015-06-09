@@ -1145,7 +1145,12 @@ function expand_queet(q,doScrolling) {
 					else if(attachment_title.indexOf('youtube.com/watch?v=') > -1 || attachment_title.indexOf('://youtu.be/') > -1) {
 						var youtubeId = attachment_title.replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
 						if(q.children('.queet').find('.expanded-content').children('.media').children('iframe[src="//www.youtube.com/embed/' + youtubeId + '"]').length < 1) { // not if already showed
-							q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="420" height="315" src="//www.youtube.com/embed/' + youtubeId + '" frameborder="0" allowfullscreen></iframe></div>');						
+							// hide video thumbnail if it's the only one
+							if(q.children('.queet').find('.queet-thumbs').children('.thumb-container').length < 2) {
+								q.children('.queet').find('.queet-thumbs').addClass('hide-thumbs');
+								}
+							// show video
+							q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="510" height="315" src="//www.youtube.com/embed/' + youtubeId + '" frameborder="0" allowfullscreen></iframe></div>');						
 							}
 						}
 					else {
@@ -1199,7 +1204,8 @@ function cleanUpAfterCollapseQueet(q) {
 	q.removeAttr('style');			
 	q.children('.queet').removeAttr('style');
 	q.children('.queet').find('.queet-thumbs.thumb-num-1').removeAttr('style');	
-	q.children('.queet').find('.queet-thumbs.thumb-num-1 .thumb-container').css('max-height','');		
+	q.children('.queet').find('.queet-thumbs.thumb-num-1 .thumb-container').css('max-height','');	
+	q.children('.queet').find('.queet-thumbs').removeClass('hide-thumbs');
 	}
 
 
