@@ -1013,6 +1013,8 @@ function expand_queet(q,doScrolling) {
 				// give stream item a height
 				q.css('height',q.height() + 'px');
 				q.children('.queet').find('.expanded-content').css('height',q.find('.expanded-content').height() + 'px');							
+				q.children('.queet').find('.queet-thumbs.thumb-num-1').css('max-height',q.find('.queet-thumbs.thumb-num-1').height() + 'px');
+				q.children('.queet').find('.queet-thumbs.thumb-num-1 .thumb-container').css('max-height',q.find('.queet-thumbs.thumb-num-1').height() + 'px');				
 				
 				q.children('div').not('.queet').children('a').css('opacity','0.5');
 				q.children('div').not('.queet').children().children().css('opacity','0.5');
@@ -1025,40 +1027,41 @@ function expand_queet(q,doScrolling) {
 					q.children('.queet').css('-o-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
 					q.children('.queet').css('-webkit-transition-duration',Math.round( collapseTime * 1000 * 10) / 10 + 's');
 					q.children('.queet').css('transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+					q.children('.queet').find('.expanded-content, .queet-thumbs.thumb-num-1, .queet-thumbs.thumb-num-1 .thumb-container').css('-moz-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+					q.children('.queet').find('.expanded-content, .queet-thumbs.thumb-num-1, .queet-thumbs.thumb-num-1 .thumb-container').css('-o-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
+					q.children('.queet').find('.expanded-content, .queet-thumbs.thumb-num-1, .queet-thumbs.thumb-num-1 .thumb-container').css('-webkit-transition-duration',Math.round( collapseTime * 1000 * 10) / 10 + 's');
+					q.children('.queet').find('.expanded-content, .queet-thumbs.thumb-num-1, .queet-thumbs.thumb-num-1 .thumb-container').css('transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
 					q.css('-moz-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
 					q.css('-o-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
 					q.css('-webkit-transition-duration',Math.round( collapseTime * 1000 * 10) / 10 + 's');
 					q.css('transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
-					q.find('.expanded-content').css('-moz-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
-					q.find('.expanded-content').css('-o-transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');
-					q.find('.expanded-content').css('-webkit-transition-duration',Math.round( collapseTime * 1000 * 10) / 10 + 's');
-					q.find('.expanded-content').css('transition-duration',Math.round( collapseTime / 1000 * 10) / 10 + 's');					
 
 					// set new heights and margins to animate to
-					var animateToHeight = q.children('.queet').outerHeight() - q.find('.inline-reply-queetbox').outerHeight() - q.children('.queet').find('.expanded-content').outerHeight() - 2;
+					var animateToHeight = q.children('.queet').outerHeight() - q.find('.inline-reply-queetbox').outerHeight() - q.children('.queet').find('.expanded-content').outerHeight() - Math.max(0,q.children('.queet').find('.queet-thumbs.thumb-num-1').outerHeight()-250) - 2;
 					if(animateToHeight < 73) { // no less than this
 						animateToHeight = 73;
 						}
 					q.css('height',animateToHeight + 'px');
 					q.children('.queet').css('margin-top', '-' + (q.children('.queet').offset().top - q.offset().top) + 'px');					
-					q.children('.queet').find('.expanded-content').css('height','0');					
-
+					q.children('.queet').find('.expanded-content').css('height','0');
+					q.children('.queet').find('.queet-thumbs.thumb-num-1, .queet-thumbs.thumb-num-1 .thumb-container').css('max-height','250px');
+					
+					if(doScrolling) {
+						setTimeout(function() {
+							backToMyScrollPos(q,qid,500,function(){
+								cleanUpAfterCollapseQueet(q);
+								});
+							}, collapseTime);
+						}
+					else {
+						setTimeout(function() {
+							cleanUpAfterCollapseQueet(q);		
+							}, collapseTime);					
+						}
+					
  					}, 50);		
  					
-				if(doScrolling) {
-					setTimeout(function() {
-						backToMyScrollPos(q,qid,500,function(){
-							setTimeout(function() {
-								cleanUpAfterCollapseQueet(q);
-								}, 250);													
-							});
-						}, collapseTime);
-					}
-				else {
-					setTimeout(function() {
-						cleanUpAfterCollapseQueet(q);		
-						}, collapseTime+250);					
-					}
+
    								
 				}    	    
 	    	}
@@ -1122,36 +1125,8 @@ function expand_queet(q,doScrolling) {
 
 				// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
 				if(typeof attachment_title != 'undefined') {
-					// images
-					if($.inArray(attachment_mimetype, ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml']) >= 0
-					|| $.inArray(attachment_title_extension, ['jpeg', 'gif', 'jpg','png','svg']) >= 0) {
-						if(q.children('.queet').find('.expanded-content').children('.media').children('a[href="' + attachment_title + '"]').length < 1) { // not if already showed
-							
-							// local attachment with a thumbnail
-							if(typeof $(this).find('img').attr('data-big-thumbnail') != 'undefined') {
-								var attachment_src = $(this).find('img').attr('data-big-thumbnail');
-								}
-							
-							// external "deep linked" images 
-							else {
-								var attachment_src = attachment_title;
-								}
-							
-							// don't show thumbnails for gifs
-							if(attachment_mimetype == 'image/gif') {
-								var attachment_src = attachment_title;
-								}
-
-							if(q.children('.queet').find('.expanded-content').children('.media').length > 0) {
-								q.children('.queet').find('.media').last().after('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_src + '" /></a></div>');								
-								}
-							else {
-								q.children('.queet').find('.expanded-content').prepend('<div class="media"><a href="' + attachment_title + '" target="_blank"><img src="' + attachment_src + '" /></a></div>');								
-								}
-							}
-						}
 					// videos
-					else if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >= 0) {
+					if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >= 0) {
 						if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
 
 							// local attachment with a thumbnail
@@ -1223,6 +1198,8 @@ function cleanUpAfterCollapseQueet(q) {
 	q.find('.show-full-conversation').remove();																					
 	q.removeAttr('style');			
 	q.children('.queet').removeAttr('style');
+	q.children('.queet').find('.queet-thumbs.thumb-num-1').removeAttr('style');	
+	q.children('.queet').find('.queet-thumbs.thumb-num-1 .thumb-container').css('max-height','');		
 	}
 
 
@@ -1293,28 +1270,37 @@ function replyFormHtml(q,qid) {
    ·   
    · · · · · · · · · · · · · */ 
 
-function popUpAction(popupId, heading, bodyHtml, footerHtml){
+function popUpAction(popupId, heading, bodyHtml, footerHtml, popUpWidth){
 	$('.modal-container').remove(); // remove any open popups
 	var allFooterHtml = '';
 	if(footerHtml) {
 		allFooterHtml = '<div class="modal-footer">' + footerHtml + '</div>';
 		}
 	$('body').prepend('<div id="' + popupId + '" class="modal-container"><div class="modal-draggable"><div class="modal-content"><button class="modal-close" type="button"><span class="icon"></span></button><div class="modal-header"><h3 class="modal-title">' + heading + '</h3></div><div class="modal-body">' + bodyHtml + '</div>' + allFooterHtml + '</div></div></div>');	
-	var this_modal_height = $('#' + popupId).children('.modal-draggable').height();
-	var this_modal_width = $('#' + popupId).children('.modal-draggable').width();
-	var popupPos = $('#' + popupId).children('.modal-draggable').offset().top - $(window).scrollTop();
+	var thisPopUp = $('#' + popupId).children('.modal-draggable');
+
+	if(typeof popUpWidth != 'undefined') {
+		thisPopUp.width(popUpWidth);
+		}
+	centerPopUp(thisPopUp);
+	}	
+function centerPopUp(thisPopUp) {
+	thisPopUp.css('margin-top','');
+	thisPopUp.css('margin-left','');	
+	var this_modal_height = thisPopUp.height();
+	var this_modal_width = thisPopUp.width();
+	var popupPos = thisPopUp.offset().top - $(window).scrollTop();
 	if((popupPos-(this_modal_height/2))<5) {
 		var marginTop = 5-popupPos;
 		}
 	else {
 		var marginTop = 0-this_modal_height/2;
 		}
-	$('#' + popupId).children('.modal-draggable').css('margin-top', marginTop + 'px');
-	$('#' + popupId).children('.modal-draggable').css('margin-left', '-' + (this_modal_width/2) + 'px');		
-	$('#' + popupId).children('.modal-draggable').draggable({ handle: ".modal-header" });
-	$('#' + popupId).children('.modal-header').disableSelection();
-	}	
-	
+	thisPopUp.css('margin-top', marginTop + 'px');
+	thisPopUp.css('margin-left', '-' + (this_modal_width/2) + 'px');		
+	thisPopUp.draggable({ handle: ".modal-header" });
+	thisPopUp.disableSelection();	
+	}
 	
 
 
@@ -1933,7 +1919,12 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 		
 	// image attachment thumbnails
 	var attachment_html = '';
+	var attachmentNum = 0;
 	if(typeof obj.attachments != "undefined") {
+		attachmentNum = obj.attachments.length;
+		if(attachmentNum>15){
+			attachmentNum = 'more-than-fifteen';
+			}
 		$.each(obj.attachments, function(){
 			if(this.id != null) {
 				var bigThumbW = 1000;
@@ -1945,24 +1936,30 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 					bigThumbH = window.siteMaxThumbnailSize;
 					}
 				
-				// if thumb_url is set, we use that
-				if(typeof this.thumb_url != 'undefined') {
-					var thumb_url = this.thumb_url;
-					}
-				else {
-					var thumb_url = window.siteAttachmentURLBase + this.id + '/thumbnail?w=200&h=200';					
+				// very long landscape images should not have background-size:cover
+				var noCoverClass='';
+				if(this.width/this.height > 2) {
+					noCoverClass=' no-cover';
 					}
 				
-				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-mime-type="' + this.mimetype + '" data-big-thumbnail="' + window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH + '" src="' + thumb_url + '"/></a>';
+				// if thumb_url is set, we use that
+				if(typeof this.thumb_url != 'undefined') {
+					var img_url = this.thumb_url;
+					}
+				else if(this.width > 1000) {
+					var img_url = window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH;
+					}
+				else {
+					var img_url = this.url;
+					}
+				
+				attachment_html = attachment_html + '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '"></a>';
 				}
 			else if (this.mimetype == 'image/svg+xml') {
-				attachment_html = attachment_html + '<a href="' + this.url + '"><img data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
+				attachment_html = attachment_html + '<a style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
 				}
 			});
 		}	
-	if(attachment_html.length>0) {
-		attachment_html = '<div class="attachments">' + attachment_html + '</div>';
-		}
 		
 	// requeets
 	var requeetHtml = '';
@@ -1992,7 +1989,6 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 						' + requeetedByMe + '>\
 							<div class="queet" id="' + idPrepend + 'q-' + obj.id + '">\
 								' + requeetHtml + '\
-								' + attachment_html + '\
 								' + ostatusHtml + '\
 								<div class="queet-content">\
 									<div class="stream-item-header">\
@@ -2007,6 +2003,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 										</small>\
 									</div>\
 									<div class="queet-text">' + $.trim(obj.statusnet_html) + '</div>\
+									<div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachment_html + '</div>\
 									<div class="stream-item-footer">\
 										' + queetActions + '\
 									</div>\

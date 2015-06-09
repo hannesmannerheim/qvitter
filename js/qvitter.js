@@ -1401,7 +1401,7 @@ $('body').on('click','#new-queets-bar',function(){
    · 
    ·   Expand and de-expand queets when clicking anywhere but on a few element types
    ·   
-   · · · · · · · · · · · · · */ 
+   · · · · · · · · · · · · · */
 
 $('body').on('click','.queet',function (event) {
 	if(!$(event.target).is('a')
@@ -1410,11 +1410,11 @@ $('body').on('click','.queet',function (event) {
 		&& !$(event.target).is('.cm-tag')
 		&& !$(event.target).is('.cm-group')
 		&& !$(event.target).is('.cm-url')						
-		&& !$(event.target).is('pre')		
+		&& !$(event.target).is('pre')
+		&& !$(event.target).is('img')		
 		&& !$(event.target).is('.name')
 		&& !$(event.target).is('.queet-box')
-		&& !$(event.target).is('.syntax-two')			
-		&& !$(event.target).is('img')				
+		&& !$(event.target).is('.syntax-two')						
 		&& !$(event.target).is('button')				
 		&& !$(event.target).is('.show-full-conversation')						
 		&& !$(event.target).is('span.mention')
@@ -1436,6 +1436,175 @@ $('body').on('click','.queet',function (event) {
 		}	
 	});
 	
+
+/* · 
+   · 
+   ·   Image popups
+   ·   
+   · · · · · · · · · · · · · */	
+
+$('body').on('click','.stream-item .queet img.attachment-thumb',function (event) {
+	event.preventDefault();
+	
+	// don't do anything if we are in the middle of collapsing
+	if($(this).closest('.stream-item').hasClass('collapsing')) {
+		// no action
+		}
+	// if the stream item isn't expanded, expand that
+	else if(!$(this).closest('.stream-item').hasClass('expanded')) {
+		expand_queet($(this).closest('.stream-item'));
+		}
+	// otherwise we open the popup
+	else {
+		var thisAttachmentThumbSrc = $(this).attr('src'); 
+		var parentStreamItem = $(this).closest('.stream-item');
+		var $parentStreamItemClone = $('<div/>').append(parentStreamItem.outerHTML());
+	
+		if(!parentStreamItem.hasClass('conversation')) {
+			$parentStreamItemClone.find('.stream-item.conversation').remove();			
+			}
+	
+		var $queetThumbsClone = $('<div/>').append($parentStreamItemClone.find('.queet-thumbs').outerHTML());	
+	
+		$parentStreamItemClone.find('.queet-thumbs, .expanded-content, .inline-reply-queetbox, .stream-item-footer').remove();
+		var footerHTML = $parentStreamItemClone.find('.queet').outerHTML();
+		$queetThumbsClone.find('img.attachment-thumb[src="' + thisAttachmentThumbSrc + '"]').parent().addClass('display-this-thumb');
+
+		var imgNum = parentStreamItem.find('.attachment-thumb').length;
+		if(imgNum > 1) {
+			$queetThumbsClone.find('.queet-thumbs').before('<div class="prev-thumb"></div>');
+			$queetThumbsClone.find('.queet-thumbs').after('<div class="next-thumb"></div>');			
+			}
+	
+		if(parentStreamItem.hasClass('expanded')) {
+
+
+			var calculatedDimensions = calculatePopUpAndImageDimensions($(this).attr('data-width'),$(this).attr('data-height'));
+			var $thisImgInQueetThumbsClone = $queetThumbsClone.find('img[src="' + $(this).attr('src') + '"]');
+				
+			// set dimensions
+			$thisImgInQueetThumbsClone.width(calculatedDimensions.displayImgWidth);
+			$thisImgInQueetThumbsClone.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
+		
+			// open popup
+			popUpAction('queet-thumb-popup', '', '' + $queetThumbsClone.outerHTML() + '', footerHTML, calculatedDimensions.popUpWidth);
+			disableOrEnableNavigationButtonsInImagePopup($('#queet-thumb-popup'));			
+			}
+		}
+	});
+	
+// popups can be max 900px wide, and should not be higher than the window, so we need to do some calculating 			
+function calculatePopUpAndImageDimensions(imgWidth, imgHeight) {
+
+		// e.g. svg's may not have dimensions set, in that case we just make them small			
+		if(typeof imgWidth == 'undefined' && typeof imgHeight == 'undefined')  {
+			return {popUpWidth: 540, displayImgWidth: 540};			
+			}
+
+		var thisImgWidth = parseInt(imgWidth,10);
+		var thisImgHeight = parseInt(imgHeight,10);	
+		var maxImageHeight = $(window).height() - 120; // 120 being a little more than a short queet in the footer	
+			
+		if(thisImgWidth < 540) {
+			var displayImgWidth = thisImgWidth;
+			var popUpWidth = 540;
+			if(thisImgHeight > maxImageHeight) {
+				displayImgWidth = Math.round(thisImgHeight/maxImageHeight*displayImgWidth);
+				}
+			}
+		else if(thisImgWidth < 900) {
+			var displayImgWidth = thisImgWidth;
+			if(thisImgHeight > maxImageHeight) {
+				displayImgWidth = Math.round(maxImageHeight/thisImgHeight*displayImgWidth);
+				if(displayImgWidth < 540) {
+					var popUpWidth = 540;					
+					}
+				else {
+					var popUpWidth = displayImgWidth;					
+					}
+				}
+			else {
+				var popUpWidth = displayImgWidth;
+				}
+			}
+		else {
+			var displayImgWidth = 900;
+			var displayImgHeight = 900/thisImgWidth*thisImgHeight;
+			if(displayImgHeight > maxImageHeight) {
+				displayImgWidth = Math.round(maxImageHeight*displayImgWidth/displayImgHeight);				
+				if(displayImgWidth < 540) {
+					var popUpWidth = 540;					
+					}
+				else if(displayImgWidth < 900) {
+					var popUpWidth = displayImgWidth;					
+					}
+				else {
+					var popUpWidth = 900;
+					}
+				}
+			else {
+				var popUpWidth = 900;
+				}	
+			}	
+	return {popUpWidth: popUpWidth, displayImgWidth: displayImgWidth};
+	}
+
+// switch to next image when clicking the image in the popup
+$('body').on('click','#queet-thumb-popup .attachment-thumb',function (event) {
+	event.preventDefault();
+	
+	var nextImage = $(this).parent().next().children('.attachment-thumb');
+	if(nextImage.length>0) {
+		// set dimensions of next image and the popup
+		var calculatedDimensions = calculatePopUpAndImageDimensions(nextImage.attr('data-width'),nextImage.attr('data-height'));
+		nextImage.width(calculatedDimensions.displayImgWidth);
+		nextImage.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
+		$('#queet-thumb-popup .modal-draggable').width(calculatedDimensions.popUpWidth);
+	
+		// switch image
+		$(this).parent().removeClass('display-this-thumb');
+		$(this).parent().next().addClass('display-this-thumb');
+		disableOrEnableNavigationButtonsInImagePopup($('#queet-thumb-popup'));	
+		centerPopUp($('#queet-thumb-popup .modal-draggable'));					
+		}
+					
+	});
+
+// navigation buttons in image popup
+$('body').on('click','#queet-thumb-popup .next-thumb',function (event) {
+	$(this).parent().find('.display-this-thumb').children('img').trigger('click');
+	});
+$('body').on('click','#queet-thumb-popup .prev-thumb',function (event) {
+	var prevImage = $(this).parent().find('.display-this-thumb').prev().children('img');
+	if(prevImage.length>0) {
+		// set dimensions of next image and the popup
+		var calculatedDimensions = calculatePopUpAndImageDimensions(prevImage.attr('data-width'),prevImage.attr('data-height'));
+		prevImage.width(calculatedDimensions.displayImgWidth);
+		prevImage.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
+		$('#queet-thumb-popup .modal-draggable').width(calculatedDimensions.popUpWidth);
+	
+		// switch image
+		$(this).parent().find('.display-this-thumb').removeClass('display-this-thumb');
+		prevImage.parent().addClass('display-this-thumb');	
+		disableOrEnableNavigationButtonsInImagePopup($('#queet-thumb-popup'));
+		centerPopUp($('#queet-thumb-popup .modal-draggable'));
+		}	
+	});
+
+function disableOrEnableNavigationButtonsInImagePopup(popUp) {
+	if(popUp.find('.display-this-thumb').prev().length < 1) {
+		popUp.find('.prev-thumb').addClass('disabled');
+		}
+	else {
+		popUp.find('.prev-thumb').removeClass('disabled');		
+		}
+	if(popUp.find('.display-this-thumb').next().length < 1) {
+		popUp.find('.next-thumb').addClass('disabled');
+		}
+	else {
+		popUp.find('.next-thumb').removeClass('disabled');		
+		}		
+	}
 	
 /* · 
    · 

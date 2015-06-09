@@ -419,19 +419,28 @@ class QvitterPlugin extends Plugin {
         if (!empty($attachments)) {
             foreach ($attachments as $attachment) {
 				if(is_object($attachment)) {                 
-                try {
-                    $enclosure_o = $attachment->getEnclosure();
-	                $thumb = $attachment->getThumbnail();
-	                $attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
-	                $attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
-                } catch (ServerException $e) {
-					$thumb = File_thumbnail::getKV('file_id', $attachment->id);
-					if ($thumb instanceof File_thumbnail) {
+					try {
+						$enclosure_o = $attachment->getEnclosure();
+						$thumb = $attachment->getThumbnail();
 						$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
-						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
-						} 
-                }
-            }
+						if($attachment->width > 1000) {
+							$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();							
+							}
+						$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
+						$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;	                
+					} catch (ServerException $e) {
+						$thumb = File_thumbnail::getKV('file_id', $attachment->id);
+						if ($thumb instanceof File_thumbnail) {
+							$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
+							if($attachment->width > 1000) {
+								$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();							
+								}	
+							$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
+							$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
+							$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;	                
+							} 
+					}
+            	}
             }
         }
 		
@@ -440,6 +449,8 @@ class QvitterPlugin extends Plugin {
             foreach ($twitter_status['attachments'] as &$attachment) {
                 if (!empty($attachment_url_to_id[$attachment['url']])) {
                     $attachment['id'] = $attachment_url_to_id[$attachment['url']]['id'];
+                    $attachment['width'] = $attachment_url_to_id[$attachment['url']]['width'];
+					$attachment['height'] = $attachment_url_to_id[$attachment['url']]['height'];                    
                     
                     // if the attachment is other than image, and we have a thumb (e.g. videos),
                     // we include the default thumbnail url
