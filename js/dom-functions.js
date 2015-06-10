@@ -1931,10 +1931,6 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	var attachment_html = '';
 	var attachmentNum = 0;
 	if(typeof obj.attachments != "undefined") {
-		attachmentNum = obj.attachments.length;
-		if(attachmentNum>15){
-			attachmentNum = 'more-than-fifteen';
-			}
 		$.each(obj.attachments, function(){
 			if(this.id != null) {
 				var bigThumbW = 1000;
@@ -1964,9 +1960,11 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 					}
 				
 				attachment_html = attachment_html + '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '"></a>';
+				attachmentNum++;
 				}
 			else if (this.mimetype == 'image/svg+xml') {
 				attachment_html = attachment_html + '<a style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
+				attachmentNum++;
 				}
 			});
 		}	
