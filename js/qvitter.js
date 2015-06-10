@@ -1476,10 +1476,9 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 			$queetThumbsClone.find('.queet-thumbs').after('<div class="next-thumb"></div>');			
 			}
 	
-		if(parentStreamItem.hasClass('expanded')) {
-
-
-			var calculatedDimensions = calculatePopUpAndImageDimensions($(this).attr('data-width'),$(this).attr('data-height'));
+		if(parentStreamItem.hasClass('expanded')) {	
+			
+			var calculatedDimensions = calculatePopUpAndImageDimensions($(this).attr('src'));
 			var $thisImgInQueetThumbsClone = $queetThumbsClone.find('img[src="' + $(this).attr('src') + '"]');
 				
 			// set dimensions
@@ -1494,7 +1493,15 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 	});
 	
 // popups can be max 900px wide, and should not be higher than the window, so we need to do some calculating 			
-function calculatePopUpAndImageDimensions(imgWidth, imgHeight) {
+function calculatePopUpAndImageDimensions(img_src) {
+
+		// trick to get width and height, we can't go with what gnusocial tells us, because
+		// gnusocial doesn't (always?) report width and height after proper orientation
+		$('body').prepend('<div id="img-dimension-check" style="opacity:0;"><img src="' + img_src + '" /></div>');
+		var imgWidth = $('#img-dimension-check img').width();
+		var imgHeight = $('#img-dimension-check img').height();	
+		$('#img-dimension-check').remove();
+
 
 		// e.g. svg's may not have dimensions set, in that case we just make them small			
 		if(typeof imgWidth == 'undefined' && typeof imgHeight == 'undefined')  {
@@ -1556,7 +1563,7 @@ $('body').on('click','#queet-thumb-popup .attachment-thumb',function (event) {
 	var nextImage = $(this).parent().next().children('.attachment-thumb');
 	if(nextImage.length>0) {
 		// set dimensions of next image and the popup
-		var calculatedDimensions = calculatePopUpAndImageDimensions(nextImage.attr('data-width'),nextImage.attr('data-height'));
+		var calculatedDimensions = calculatePopUpAndImageDimensions(nextImage.attr('src'));
 		nextImage.width(calculatedDimensions.displayImgWidth);
 		nextImage.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
 		$('#queet-thumb-popup .modal-draggable').width(calculatedDimensions.popUpWidth);
@@ -1578,7 +1585,7 @@ $('body').on('click','#queet-thumb-popup .prev-thumb',function (event) {
 	var prevImage = $(this).parent().find('.display-this-thumb').prev().children('img');
 	if(prevImage.length>0) {
 		// set dimensions of next image and the popup
-		var calculatedDimensions = calculatePopUpAndImageDimensions(prevImage.attr('data-width'),prevImage.attr('data-height'));
+		var calculatedDimensions = calculatePopUpAndImageDimensions(prevImage.attr('src'));
 		prevImage.width(calculatedDimensions.displayImgWidth);
 		prevImage.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
 		$('#queet-thumb-popup .modal-draggable').width(calculatedDimensions.popUpWidth);
