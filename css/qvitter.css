@@ -1663,6 +1663,9 @@ body.rtl .queet.rtl .expanded-content {
     margin-top:10px;
     position:relative;
     }
+.queet .queet-thumbs:empty {	
+	margin:0;
+	}    
 .queet .queet-thumbs.hide-thumbs {
 	display:none;
 	}
