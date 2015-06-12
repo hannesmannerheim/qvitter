@@ -432,9 +432,6 @@ class QvitterPlugin extends Plugin {
 						$thumb = File_thumbnail::getKV('file_id', $attachment->id);
 						if ($thumb instanceof File_thumbnail) {
 							$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
-							if($attachment->width > 1000) {
-								$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();							
-								}	
 							$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
 							$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
 							$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;	                
@@ -462,13 +459,11 @@ class QvitterPlugin extends Plugin {
         }		
         
 		// reply-to profile url
-		$twitter_status['in_reply_to_profileurl'] = null;
-        if ($notice->reply_to) {
-            $reply = Notice::getKV(intval($notice->reply_to));
-            if ($reply) {
-                $replier_profile = $reply->getProfile();
-				$twitter_status['in_reply_to_profileurl'] = $replier_profile->profileurl;
-			}
+        try {
+            $reply = $notice->getParent();
+			$twitter_status['in_reply_to_profileurl'] = $reply->getProfile()->getUrl();
+        } catch (ServerException $e) {
+		    $twitter_status['in_reply_to_profileurl'] = null;
         }
 
 
@@ -917,18 +912,15 @@ class QvitterPlugin extends Plugin {
  */
 class URLMapperOverwrite extends URLMapper
 {
-    function overwrite_variable($m, $path, $args, $paramPatterns, $newaction)
+    static function overwrite_variable($m, $path, $args, $paramPatterns, $newaction)
     {
     
         $m->connect($path, array('action' => $newaction), $paramPatterns);	
 		
-		$regex = URLMapper::makeRegex($path, $paramPatterns);
+		$regex = self::makeRegex($path, $paramPatterns);
 	
 		foreach($m->variables as $n=>$v)
 			if($v[1] == $regex) 
 				$m->variables[$n][0]['action'] = $newaction;
     }
 }
-
-
-?>
