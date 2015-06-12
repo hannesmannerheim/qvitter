@@ -1470,7 +1470,7 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 		var footerHTML = $parentStreamItemClone.find('.queet').outerHTML();
 		$queetThumbsClone.find('img.attachment-thumb[src="' + thisAttachmentThumbSrc + '"]').parent().addClass('display-this-thumb');
 
-		var imgNum = parentStreamItem.find('.attachment-thumb').length;
+		var imgNum = parentStreamItem.children('.queet').find('.attachment-thumb').length;
 		if(imgNum > 1) {
 			$queetThumbsClone.find('.queet-thumbs').before('<div class="prev-thumb"></div>');
 			$queetThumbsClone.find('.queet-thumbs').after('<div class="next-thumb"></div>');			
@@ -1516,7 +1516,7 @@ function calculatePopUpAndImageDimensions(img_src) {
 			var displayImgWidth = thisImgWidth;
 			var popUpWidth = 540;
 			if(thisImgHeight > maxImageHeight) {
-				displayImgWidth = Math.round(thisImgHeight/maxImageHeight*displayImgWidth);
+				displayImgWidth = Math.round(maxImageHeight/thisImgHeight*displayImgWidth);
 				}
 			}
 		else if(thisImgWidth < 900) {
