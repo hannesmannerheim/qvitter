@@ -912,12 +912,12 @@ class QvitterPlugin extends Plugin {
  */
 class URLMapperOverwrite extends URLMapper
 {
-    function overwrite_variable($m, $path, $args, $paramPatterns, $newaction)
+    static function overwrite_variable($m, $path, $args, $paramPatterns, $newaction)
     {
     
         $m->connect($path, array('action' => $newaction), $paramPatterns);	
 		
-		$regex = URLMapper::makeRegex($path, $paramPatterns);
+		$regex = self::makeRegex($path, $paramPatterns);
 	
 		foreach($m->variables as $n=>$v)
 			if($v[1] == $regex) 
