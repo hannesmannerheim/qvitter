@@ -462,13 +462,11 @@ class QvitterPlugin extends Plugin {
         }		
         
 		// reply-to profile url
-		$twitter_status['in_reply_to_profileurl'] = null;
-        if ($notice->reply_to) {
-            $reply = Notice::getKV(intval($notice->reply_to));
-            if ($reply) {
-                $replier_profile = $reply->getProfile();
-				$twitter_status['in_reply_to_profileurl'] = $replier_profile->profileurl;
-			}
+        try {
+            $reply = $notice->getParent();
+			$twitter_status['in_reply_to_profileurl'] = $reply->getProfile()->getUrl();
+        } catch (ServerException $e) {
+		    $twitter_status['in_reply_to_profileurl'] = null;
         }
 
 
