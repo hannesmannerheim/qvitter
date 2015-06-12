@@ -927,6 +927,3 @@ class URLMapperOverwrite extends URLMapper
 				$m->variables[$n][0]['action'] = $newaction;
     }
 }
-
-
-?>
