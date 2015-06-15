@@ -97,7 +97,7 @@
 	"signUpEmail": "Elektronikal adreso",
 	"signUpButtonText": "Registragar me aden {site-title}",
 	"welcomeHeading": "Bonvenez en {site-title}!",
-	"welcomeText": "Ni es <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Federo\" signifikas ke vu ne bezonas {site-title}-konto por posibligar sequar, esar sequata da, od interagar kun {site-title}-uzanti. Vu povas registragar en servilo de StatusNet o de GNU social od en irga servado fondita sur la protokolo <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">Ostatus</a>! Vu ne mem mustas juntar vu a servado – probez instalar l'aminda programo <a href=\"http://www.gnu.org/software/social/\">GNU social</a> en vua propra servilo! :)</div>federo</span> de mikroblogeri qua sucias l'etiko e la solidareso, e qua volas abandonar la centraligita kapitalista servadi.",
+	"welcomeText": "Ni es <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Federo\" signifikas ke vu ne bezonas {site-title}-konto por posibligar sequar, esar sequata da, od interagar kun {site-title}-uzanti. Vu povas registragar en servilo de StatusNet o de GNU social od en irga servado fondita sur la protokolo <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">Ostatus</a>! Vu ne mem mustas juntar vu a servado – probez instalar l'aminda programo <a href=\"http://www.gnu.org/software/social/\">GNU social</a> en vua propra servilo! :)</div>federo</span> de mikroblogeri qui sucias l'etiko e la solidareso, e qui volas abandonar la centraligita kapitalista servadi.",
 	"registerNickname": "Uzantonomo",
 	"registerHomepage": "Frontispico",
 	"registerBio": "Biografio",
