@@ -423,9 +423,7 @@ class QvitterPlugin extends Plugin {
 						$enclosure_o = $attachment->getEnclosure();
 						$thumb = $attachment->getThumbnail();
 						$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
-						if($attachment->width > 1000) {
-							$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();							
-							}
+						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();							
 						$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
 						$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;	                
 					} catch (ServerException $e) {
