@@ -1050,6 +1050,9 @@ $('body').on('click','a', function(e) {
 				}
 			else {
 				var groupName = $(this).text().toLowerCase();
+				if(groupName.substring(0,1) == '!') {
+					groupName = groupName.substring(1);
+					}
 				}
 			setNewCurrentStream('statusnet/groups/timeline/' + groupName + '.json',function(){},true);				
 			}	
