@@ -1468,8 +1468,30 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 	
 		$parentStreamItemClone.find('.queet-thumbs, .expanded-content, .inline-reply-queetbox, .stream-item-footer').remove();
 		var footerHTML = $parentStreamItemClone.find('.queet').outerHTML();
-		$queetThumbsClone.find('img.attachment-thumb[src="' + thisAttachmentThumbSrc + '"]').parent().addClass('display-this-thumb');
+		$thumbToDisplay = $queetThumbsClone.find('img.attachment-thumb[src="' + thisAttachmentThumbSrc + '"]');
+		$thumbToDisplay.parent().addClass('display-this-thumb');
 
+		// "play" all animated gifs and add youtube iframes to all youtube videos
+		$.each($queetThumbsClone.find('img.attachment-thumb'),function(){
+			if($(this).attr('data-mime-type') == 'image/gif'
+			&& $(this).parent().hasClass('play-button')) {
+				$(this).attr('src',$(this).attr('data-full-image-url'));
+				$(this).parent('.thumb-container').css('background-image','url(\'' + $(this).attr('data-full-image-url') + '\')');
+				}
+			else if($(this).parent().hasClass('youtube')){
+				
+				// autoplay a clicked video
+				var autoplayFlag = '';
+				if($(this).parent().hasClass('display-this-thumb')) {
+					autoplayFlag = '&autoplay=1';
+					}
+				
+				var youtubeId = $(this).attr('data-full-image-url').replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
+				$(this).parent().prepend('<iframe width="510" height="315" src="//www.youtube.com/embed/' + youtubeId + '?enablejsapi=1&version=3&playerapiid=ytplayer' + autoplayFlag + '" frameborder="0" allowscriptaccess="always" allowfullscreen></iframe>');
+				}			
+			});
+				
+		// navigation buttons
 		var imgNum = parentStreamItem.children('.queet').find('.attachment-thumb').length;
 		if(imgNum > 1) {
 			$queetThumbsClone.find('.queet-thumbs').before('<div class="prev-thumb"></div>');
@@ -1478,12 +1500,14 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 	
 		if(parentStreamItem.hasClass('expanded')) {	
 			
-			var calculatedDimensions = calculatePopUpAndImageDimensions($(this).attr('src'));
-			var $thisImgInQueetThumbsClone = $queetThumbsClone.find('img[src="' + $(this).attr('src') + '"]');
+			var calculatedDimensions = calculatePopUpAndImageDimensions($thumbToDisplay.attr('src'));
+			var $thisImgInQueetThumbsClone = $queetThumbsClone.find('img[src="' + $thumbToDisplay.attr('src') + '"]');
 				
 			// set dimensions
 			$thisImgInQueetThumbsClone.width(calculatedDimensions.displayImgWidth);
 			$thisImgInQueetThumbsClone.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
+			$thisImgInQueetThumbsClone.parent('.thumb-container').children('iframe').attr('width',calculatedDimensions.displayImgWidth);
+			$thisImgInQueetThumbsClone.parent('.thumb-container').children('iframe').attr('height',calculatedDimensions.displayImgHeight);			
 		
 			// open popup
 			popUpAction('queet-thumb-popup', '', '' + $queetThumbsClone.outerHTML() + '', footerHTML, calculatedDimensions.popUpWidth);
@@ -1562,11 +1586,22 @@ $('body').on('click','#queet-thumb-popup .attachment-thumb',function (event) {
 	
 	var nextImage = $(this).parent().next().children('.attachment-thumb');
 	if(nextImage.length>0) {
+		
+		// start and stop youtube videos, if any
+		$.each($(this).parent('.youtube').children('iframe'),function(){
+			this.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+			});
+		$.each(nextImage.parent('.youtube').children('iframe'),function(){
+			this.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+			});	
+	
 		// set dimensions of next image and the popup
 		var calculatedDimensions = calculatePopUpAndImageDimensions(nextImage.attr('src'));
-		nextImage.width(calculatedDimensions.displayImgWidth);
+		nextImage.width(calculatedDimensions.displayImgWidth);		
 		nextImage.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
-		$('#queet-thumb-popup .modal-draggable').width(calculatedDimensions.popUpWidth);
+		nextImage.parent('.thumb-container').children('iframe').attr('width',calculatedDimensions.displayImgWidth);
+		nextImage.parent('.thumb-container').children('iframe').attr('height',calculatedDimensions.displayImgHeight);					
+		$('#queet-thumb-popup .modal-draggable').width(calculatedDimensions.popUpWidth);		
 	
 		// switch image
 		$(this).parent().removeClass('display-this-thumb');
@@ -1584,10 +1619,21 @@ $('body').on('click','#queet-thumb-popup .next-thumb',function (event) {
 $('body').on('click','#queet-thumb-popup .prev-thumb',function (event) {
 	var prevImage = $(this).parent().find('.display-this-thumb').prev().children('img');
 	if(prevImage.length>0) {
+	
+		// start and stop youtube videos, if any
+		$.each($(this).parent().find('.display-this-thumb.youtube').children('iframe'),function(){
+			this.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+			});
+		$.each(prevImage.parent('.youtube').children('iframe'),function(){
+			this.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+			});
+	    
 		// set dimensions of next image and the popup
 		var calculatedDimensions = calculatePopUpAndImageDimensions(prevImage.attr('src'));
 		prevImage.width(calculatedDimensions.displayImgWidth);
 		prevImage.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
+		prevImage.parent('.thumb-container').children('iframe').attr('width',calculatedDimensions.displayImgWidth);
+		prevImage.parent('.thumb-container').children('iframe').attr('height',calculatedDimensions.displayImgHeight);							
 		$('#queet-thumb-popup .modal-draggable').width(calculatedDimensions.popUpWidth);
 	
 		// switch image
@@ -2341,7 +2387,8 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 				
 				// see if anyone we're following matches 
 				var suggestionsToShow = [];
-				var suggestionsUsernameCount = {};				
+				var suggestionsUsernameCount = {};
+				suggestionsUsernameCount[window.loggedIn.screen_name] = 1; // any suggestions with the same screen name as mine will get their server url added
 				$.each(window.following,function(){
 					var userregex = new RegExp(term);
 					if(this.username.toLowerCase().match(userregex) || this.name.toLowerCase().match(userregex)) {

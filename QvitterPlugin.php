@@ -422,18 +422,42 @@ class QvitterPlugin extends Plugin {
 					try {
 						$enclosure_o = $attachment->getEnclosure();
 						$thumb = $attachment->getThumbnail();
+										
 						$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
 						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();							
 						$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
 						$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;	                
+						
+						// animated gif?
+						if($attachment->mimetype == 'image/gif') {
+							$image = ImageFile::fromFileObject($attachment);
+							if($image->animated == 1) {
+								$attachment_url_to_id[$enclosure_o->url]['animated'] = true;
+							}
+							else {
+								$attachment_url_to_id[$enclosure_o->url]['animated'] = false;								
+							}
+						}
+						
 					} catch (ServerException $e) {
 						$thumb = File_thumbnail::getKV('file_id', $attachment->id);
 						if ($thumb instanceof File_thumbnail) {
 							$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
 							$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
 							$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
-							$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;	                
-							} 
+							$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;	
+							
+							// animated gif?
+							if($attachment->mimetype == 'image/gif') {
+								$image = ImageFile::fromFileObject($attachment);
+								if($image->animated == 1) {
+									$attachment_url_to_id[$enclosure_o->url]['animated'] = true;
+								}
+								else {
+									$attachment_url_to_id[$enclosure_o->url]['animated'] = false;								
+								}
+							}							                
+						} 
 					}
             	}
             }
@@ -445,13 +469,11 @@ class QvitterPlugin extends Plugin {
                 if (!empty($attachment_url_to_id[$attachment['url']])) {
                     $attachment['id'] = $attachment_url_to_id[$attachment['url']]['id'];
                     $attachment['width'] = $attachment_url_to_id[$attachment['url']]['width'];
-					$attachment['height'] = $attachment_url_to_id[$attachment['url']]['height'];                    
-                    
-                    // if the attachment is other than image, and we have a thumb (e.g. videos),
-                    // we include the default thumbnail url
-                    if(substr($attachment['mimetype'],0,5) != 'image') {
-                    	$attachment['thumb_url'] = $attachment_url_to_id[$attachment['url']]['thumb_url'];
-                   	}
+					$attachment['height'] = $attachment_url_to_id[$attachment['url']]['height'];				                   
+                   	$attachment['thumb_url'] = $attachment_url_to_id[$attachment['url']]['thumb_url'];
+                   	if(isset($attachment_url_to_id[$attachment['url']]['animated'])) {
+	                   	$attachment['animated'] = $attachment_url_to_id[$attachment['url']]['animated'];                   		
+                   		}
                 }
             }
         }		
@@ -554,7 +576,6 @@ class QvitterPlugin extends Plugin {
 
         return true;
     }   
-
     
 
     /**
@@ -591,6 +612,7 @@ class QvitterPlugin extends Plugin {
      * @return boolean hook flag
      */
     function onStartNoticeDistribute($notice) {
+
         assert($notice->id > 0);    // since we removed tests below
 
 		// don't add notifications for activity type notices
@@ -658,6 +680,7 @@ class QvitterPlugin extends Plugin {
 		
         return true;
     	}
+    
 
    /**
      * Delete any notifications tied to deleted notices and un-repeats

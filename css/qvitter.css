@@ -1693,7 +1693,13 @@ body.rtl .queet.rtl .expanded-content {
 	background-size:100% auto; 
 	}
 	
-.queet .thumb-container[href*="://www.youtube.com"]:before {
+.queet .queet-thumbs.thumb-num-1 .thumb-container.youtube {
+	height:250px;
+	}	
+	
+.stream-item:not(.expanded) .queet .queet-thumbs.thumb-num-1 .thumb-container.play-button:before,
+.queet .queet-thumbs:not(.thumb-num-1) .thumb-container.play-button:before,
+.modal-content .queet .thumb-container.play-button:before {
 	display:block;
 	position:absolute;
 	width:100%;
@@ -1706,12 +1712,12 @@ body.rtl .queet.rtl .expanded-content {
 	font-size:100px;
 	color:rgba(255,255,255,0.65);	
 	}
-.queet .thumb-container[href*="://www.youtube.com"] img {
+.queet .thumb-container.play-button img {
 	z-index:2;
 	position:relative;
 	}	
 	
-.queet .queet-thumbs .thumb-container.no-cover .attachment-thumb {
+.queet .queet-thumbs.thumb-num-1 .thumb-container.no-cover .attachment-thumb {
 	min-height:0;
 	}
 .queet .thumb-container:before {	
@@ -1864,6 +1870,14 @@ body.rtl .queet.rtl .expanded-content {
     max-height: 125px; 
     min-height: 125px;      
 	}
+.queet .queet-thumbs.thumb-num-6 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-7 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-8 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-9 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-10 .thumb-container.play-button:before{
+    line-height: 125px; 
+    font-size:70px;
+	}	
 .queet .queet-thumbs.thumb-num-11 .thumb-container,
 .queet .queet-thumbs.thumb-num-12 .thumb-container,
 .queet .queet-thumbs.thumb-num-13 .thumb-container,
@@ -1878,6 +1892,15 @@ body.rtl .queet.rtl .expanded-content {
 .queet .queet-thumbs.thumb-num-more-than-fifteen .attachment-thumb {
     max-height: 83px; 
     min-height: 83px;      
+	}	
+.queet .queet-thumbs.thumb-num-11 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-12 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-13 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-14 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-15 .thumb-container.play-button:before,
+.queet .queet-thumbs.thumb-num-more-than-fifteen .thumb-container.play-button:before {
+    line-height: 83px; 
+    font-size:50px;
 	}		
 
 .stream-item.collapsing > .queet .thumb-container {
@@ -4045,6 +4068,14 @@ body.rtl .modal-footer button {
 	margin: 0 auto;
     min-height: 0;
 	}
+#queet-thumb-popup .modal-body .thumb-container.youtube iframe {
+	position:absolute;
+	z-index:2;
+	}	
+#queet-thumb-popup .modal-body .thumb-container.youtube {
+	background-image:none !important;
+	z-index:1;	
+	}	
 #queet-thumb-popup .modal-body .thumb-container[href$=".svg"],
 #queet-thumb-popup .modal-body .thumb-container[href$=".png"] {
 	background-color:#fff;
@@ -4093,7 +4124,7 @@ body.rtl .modal-footer button {
 	}		
 #queet-thumb-popup .prev-thumb.disabled,
 #queet-thumb-popup .next-thumb.disabled {
-	color:#aaa;
+	color:rgba(255,255,255,0.2);
 	cursor:default;
 	}
 #queet-thumb-popup .prev-thumb:not(.disabled):hover:before,
