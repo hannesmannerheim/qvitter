@@ -763,13 +763,22 @@ function detectRTL(s) {
 		if(rtlDirCheck.test(RTLorLTR[i])) { RTLnum++; }
 		else { LTRnum++; }
 		} 
+
     // if there are more rtl chars than ltr
-    if(RTLnum > LTRnum) { $streamItem.children('.stream-item').children('.queet').addClass('rtl'); }
-    // if no chars (that we are interested, but body is set to rtl)
-    else if ($queetText.html().length==0 && $('body').hasClass('rtl')) {
+    // or if no chars (that we are interested, but body is set to rtl)
+    if(RTLnum > LTRnum
+    || ($queetText.html().length==0 && $('body').hasClass('rtl'))) {
     	$streamItem.children('.stream-item').children('.queet').addClass('rtl');
-    	}	    	    	    	
-	return $streamItem.html().replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">'); // hacky way to get @#! into mention tags to stop bidirection (css sets an @ with before content method)
+    	}
+    else {
+		// for ltr languages we move @, ! and # to inside
+    	$streamItem.find('.queet-text').find('.h-card.mention').prepend('@');
+    	$streamItem.find('.queet-text').find('.h-card.group').prepend('!');  
+    	$streamItem.find('.queet-text').find('a[rel="tag"]').prepend('#');    	  	    	
+    	}
+
+	// we remove @, ! and #, they are added as pseudo elements, or have been moved to the inside
+   	return $streamItem.html().replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">');    	    
 	}
 	
 	
