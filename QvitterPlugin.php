@@ -522,10 +522,16 @@ class QvitterPlugin extends Plugin {
     function insertNotification($to_profile_id, $from_profile_id, $ntype, $notice_id=false)
     {
 		
-		// no notifications from blocked profiles
 		$to_user = User::getKV('id', $to_profile_id);
-		$from_user = Profile::getKV($from_profile_id);
-		if ($to_user instanceof User && $to_user->hasBlocked($from_user)) {
+		$from_profile = Profile::getKV($from_profile_id);
+
+		// don't notify remote profiles
+		if (!$to_user instanceof User) {
+			return false;
+			}
+
+		// no notifications from blocked profiles
+		if ($to_user->hasBlocked($from_profile)) {
 			return false;
 			}
 		
@@ -548,6 +554,7 @@ class QvitterPlugin extends Plugin {
 
         return true;
     }   
+
     
 
     /**
@@ -630,25 +637,23 @@ class QvitterPlugin extends Plugin {
 				}
 			}
 
-			// check for mentions to insert in notifications
-			$mentions = common_find_mentions($notice->content, $notice);
+			// check for mentions to insert in notifications			
+			$mentions = $notice->getReplies();
 			$sender = Profile::getKV($notice->profile_id);        
 			$all_mentioned_user_ids = array();
-			foreach ($mentions as $mention) {
-				foreach ($mention['mentioned'] as $mentioned) {
-					
-					// no duplicate mentions
-					if(in_array($mentioned->id, $all_mentioned_user_ids)) {
-						continue;
-						}					
-					$all_mentioned_user_ids[] = $mentioned->id;
-				
-					// only notify if mentioned user is not already notified for reply
-					if($reply_notification_to != $mentioned->id) {
-						$this->insertNotification($mentioned->id, $notice->profile_id, 'mention', $notice->id);                	
-						}
+			foreach ($mentions as $mentioned) {					
+
+				// no duplicate mentions
+				if(in_array($mentioned, $all_mentioned_user_ids)) {
+					continue;
+					}					
+				$all_mentioned_user_ids[] = $mentioned;
+			
+				// only notify if mentioned user is not already notified for reply
+				if($reply_notification_to != $mentioned) {
+					$this->insertNotification($mentioned, $notice->profile_id, 'mention', $notice->id);                	
 					}
-				}		 			
+				}						 			
  			}
 		
         return true;
