@@ -2406,6 +2406,10 @@ ul.queet-actions li .icon.is-mine:before {
     width: 30px;
     outline:none;
 	}
+.queet.rtl .ostatus-link { 
+	right:auto;
+	left:0;
+	}
 .ostatus-link:hover {
 	background-position: 7px -212px;
 	opacity:1 !important;
