@@ -1139,54 +1139,55 @@ function expand_queet(q,doScrolling) {
 				}
 			
 			// show certain attachments in expanded content
-			$.each(q.data('attachments'), function() {
+			if(q.data('attachments') != 'undefined') {
+				$.each(q.data('attachments'), function() {
 				
-				var attachment_mimetype = this.mimetype;
-				var attachment_title = this.url;				
+					var attachment_mimetype = this.mimetype;
+					var attachment_title = this.url;				
 								
-				// filename extension
-				var attachment_title_extension = attachment_title.substr((~-attachment_title.lastIndexOf(".") >>> 0) + 2);
+					// filename extension
+					var attachment_title_extension = attachment_title.substr((~-attachment_title.lastIndexOf(".") >>> 0) + 2);
 
-				// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
-				if(typeof attachment_title != 'undefined') {
+					// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
+					if(typeof attachment_title != 'undefined') {
 					
-					// hack to make remote webm-movies load
-					if(attachment_title_extension == 'webm') {
-						attachment_mimetype = 'video/webm';
-						}
+						// hack to make remote webm-movies load
+						if(attachment_title_extension == 'webm') {
+							attachment_mimetype = 'video/webm';
+							}
 
-					// videos
-					if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
-						if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
+						// videos
+						if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
+							if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
 
-							// local attachment with a thumbnail
-							var attachment_poster = '';
-							if(typeof this.thumb_url != 'undefined') {
-								attachment_poster = ' poster="' + this.thumb_url + '"';
-								}
+								// local attachment with a thumbnail
+								var attachment_poster = '';
+								if(typeof this.thumb_url != 'undefined') {
+									attachment_poster = ' poster="' + this.thumb_url + '"';
+									}
 
-							if(q.children('.queet').find('.expanded-content').children('.media').length > 0) {
-								q.children('.queet').find('.media').last().after('<div class="media"><video class="u-video" controls="controls"' + attachment_poster + '><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');
-								}
-							else {
-								q.children('.queet').find('.expanded-content').prepend('<div class="media"><video class="u-video" controls="controls"' + attachment_poster + '><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');								
-								}
+								if(q.children('.queet').find('.expanded-content').children('.media').length > 0) {
+									q.children('.queet').find('.media').last().after('<div class="media"><video class="u-video" controls="controls"' + attachment_poster + '><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');
+									}
+								else {
+									q.children('.queet').find('.expanded-content').prepend('<div class="media"><video class="u-video" controls="controls"' + attachment_poster + '><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');								
+									}
+							}
 						}
-					}
-					else {
-						// other plugins, e.g. gotabulo, can check for other attachment file formats to expand
-						window.currentlyExpanding = {
-							"attachment_title":attachment_title,
-							"attachment_mimetype":attachment_mimetype,
-							"attachment_title_extension":attachment_title_extension,
-							"streamItem":q,
-							"thisAttachmentLink":$(this)													
-							};
-						$(document).trigger('qvitterExpandOtherAttachments');
+						else {
+							// other plugins, e.g. gotabulo, can check for other attachment file formats to expand
+							window.currentlyExpanding = {
+								"attachment_title":attachment_title,
+								"attachment_mimetype":attachment_mimetype,
+								"attachment_title_extension":attachment_title_extension,
+								"streamItem":q,
+								"thisAttachmentLink":$(this)													
+								};
+							$(document).trigger('qvitterExpandOtherAttachments');
+							}
 						}
-					}
-				});
-			
+					});		
+				}
 
 			// get and show favs and repeats
 			getFavsAndRequeetsForQueet(q, qid);	
@@ -1202,7 +1203,7 @@ function expand_queet(q,doScrolling) {
 				
 				// show inline reply form if logged in
 				if(typeof window.loggedIn.screen_name != 'undefined') {			
-					q.find('#q-' + qid).append(replyFormHtml(q,qid));	
+					q.children('.queet').append(replyFormHtml(q,qid));	
 					}
 							
 				}			
@@ -1272,9 +1273,10 @@ function replyFormHtml(q,qid) {
 	var more_reply_tos = '';
 	var more_reply_tos_text = '';	
 	$.each(q.children('.queet').find('.queet-text').find('.mention'),function(key,obj){
-		if($(obj).html() != user_screen_name && $(obj).html() != reply_to_screen_name && $(obj).html() != $('#user-screen-name').html()) {
-			more_reply_tos = more_reply_tos + '&nbsp;<a>@' + $(obj).html() + '</a>';
-			more_reply_tos_text = more_reply_tos_text + ' @' + $(obj).html();			
+		var thisMention = $(obj).html().replace('@','');
+		if(thisMention != user_screen_name && thisMention != reply_to_screen_name && thisMention != $('#user-screen-name').html()) {
+			more_reply_tos = more_reply_tos + '&nbsp;<a>@' + thisMention + '</a>';
+			more_reply_tos_text = more_reply_tos_text + ' @' + thisMention;			
 			}
 		});
 	
@@ -1409,13 +1411,13 @@ function showConversation(q, qid, data) {
 											
 					if(obj.source == 'activity') {
 						var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a>' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
+
+						// detect rtl
+						queetHtml = detectRTL(queetHtml);
 						}
 					else {
 						var queetHtml = buildQueetHtml(obj, obj.id, 'conversation hidden-conversation', false, true);
 						}						
-					
-					// detect rtl
-					queetHtml = detectRTL(queetHtml);						
 					
 					if(q.hasClass('expanded')) { // add queet to conversation only if still expanded
 					
