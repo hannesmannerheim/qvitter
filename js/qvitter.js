@@ -2410,7 +2410,7 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 				// show matches
 				$.each(suggestionsToShow,function(){
 					var serverHtml = '';
-					if(suggestionsUsernameCount[this.username]>1) {
+					if(suggestionsUsernameCount[this.username]>1 && this.url !== false) {
 						serverHtml = '@' + this.url;
 						}
 					queetBox.siblings('.mentions-suggestions').append('<div title="@' + this.username + serverHtml + '"><img height="24" width="24" src="' + this.avatar + '" /><strong>' + this.name + '</strong> @<span>' + this.username + serverHtml + '</span></div>')				

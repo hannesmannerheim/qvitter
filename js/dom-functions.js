@@ -1096,13 +1096,15 @@ function expand_queet(q,doScrolling) {
 				// get full html for queet, first try localstorage cache
 				localStorageObjectCache_GET('fullQueetHtml',qid,function(data){
 					if(data) {
-						q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">').replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
+						q.children('.queet').find('.queet-text').html(data);
+						q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
 						}
 					else {
 						getFromAPI("attachment/" + attachmentId + ".json",function(data){
 							if(data) {
 								localStorageObjectCache_STORE('fullQueetHtml',qid,data);
-								q.children('.queet').find('.queet-text').html($.trim(data.replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">').replace(/&#64;<span class="vcard">/gi,'<span class="vcard">').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">')));
+								q.children('.queet').find('.queet-text').html($.trim(data));
+								q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));								
 								}
 							});							
 						}
