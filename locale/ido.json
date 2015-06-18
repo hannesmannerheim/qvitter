@@ -27,8 +27,8 @@
 	"favoritedVerb": "Favorita",
 	"replyTo": "Respondar ad",
 	"requeetedBy": "Repetita da {requeeted-by}",
-	"favoriteNoun": "Favorito",
-	"favoritesNoun": "Favoriti",
+	"favoriteNoun": "Favorato",
+	"favoritesNoun": "Favorati",
 	"requeetNoun": "Repeto",
 	"requeetsNoun": "Repeti",
 	"newQueet": "nova mesajo",
@@ -98,7 +98,7 @@
 	"signUpEmail": "E-adreso",
 	"signUpButtonText": "Registragar me aden {site-title}",
 	"welcomeHeading": "Bonvenez en {site-title}!",
-	"welcomeText": "Ni es <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Federo\" signifikas ke konto en {site-title} ne es necesa por sequar, esar sequata da, od interagar kun uzanti di {site-title}. Vu povas registragar en servilo de GNU social od en irga servado fondita sur la protokolo <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">Ostatus</a>! Vu ne mem mustas juntar vu a servado: probez instalar l'aminda softwaro <a href=\"http://www.gnu.org/software/social/\">GNU social</a> en vua propra servilo! :)</div>federo</span> de mikroblogeri qui sucias etiko e solidareso, e qui volas abandonar la centraligita kapitalista servadi.",
+	"welcomeText": "Ni es <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Federo\" signifikas ke konto en {site-title} ne es necesa por sequar, esar sequata da, od interagar kun uzanti di {site-title}. Vu povas registragar en servilo di GNU social od en irga servado fondita sur la protokolo <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">Ostatus</a>! Vu ne mem mustas juntar vu a servado: probez instalar l'aminda softwaro <a href=\"http://www.gnu.org/software/social/\">GNU social</a> en vua propra servilo! :)</div>federo</span> de mikroblogeri qui sucias etiko e solidareso, e qui volas abandonar la centraligita kapitalista servadi.",
 	"registerNickname": "Uzantonomo",
 	"registerHomepage": "Frontispico",
 	"registerBio": "Biografio",
@@ -108,7 +108,7 @@
 	"otherServers": "Altre vu povas krear konto en altra servilo dil reto GNU social. <a href=\"http://federation.skilledtests.com/select_your_server.html\">Komparo</a>",
 	"editMyProfile": "Modifikar la profilo",
 	"notifications": "Avizi",
-	"xFavedYourQueet": "favoris vua mesajo",
+	"xFavedYourQueet": "favoras vua mesajo",
 	"xRepeatedYourQueet": "repetis vua mesajo",
 	"xStartedFollowingYou": "komencis sequar vu",
 	"followsYou": "sequas vu",
@@ -120,5 +120,5 @@
 	"ellipsisMore": "Plu multo",
 	"blockUser": "Blokusar {username}",
 	"goToOriginalNotice": "Irar al originala mesajo",
-	"clickToDrag":"Click to drag"
+	"clickToDrag":"Klikez por tranar"
 }
