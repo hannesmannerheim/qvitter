@@ -4508,13 +4508,11 @@ body.rtl #user-avatar {
 	left:auto;
 	right:12px;
 	}			
-body.rtl #user-name,
-body.rtl #user-profile-link a {
-	margin-right: 42px;
-	margin-left: 20px;
-	}
 body.rtl #user-container {
 	float: right;
+	}
+body.rtl #user-screen-name {
+	direction:ltr;
 	}
 body.rtl #feed {
 	float: left;
