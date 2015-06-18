@@ -119,5 +119,6 @@
 	"showTerms": "Vilkår for bruk",
 	"ellipsisMore": "Mer",
 	"blockUser": "Blokker {username}",
-	"goToOriginalNotice": "Gå til den opprinnelige queeten"
+	"goToOriginalNotice": "Gå til den opprinnelige queeten",
+	"clickToDrag":"Click to drag"
 }

@@ -119,5 +119,6 @@
 	"showTerms": "קרא את התנאים שלנו",
 	"ellipsisMore": "עוד",
 	"blockUser": "חסום את {username}",
-	"goToOriginalNotice": "עבור להודעה מקורית"
+	"goToOriginalNotice": "עבור להודעה מקורית",
+	"clickToDrag":"Click to drag"
 }

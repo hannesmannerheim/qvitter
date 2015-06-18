@@ -119,5 +119,6 @@
 	"showTerms": "Legu la uzkondiĉojn",
 	"ellipsisMore": "Pli",
 	"blockUser": "Bloki {username}",
-	"goToOriginalNotice": "Iri al origina pepo"
+	"goToOriginalNotice": "Iri al origina pepo",
+	"clickToDrag":"Click to drag"
 }

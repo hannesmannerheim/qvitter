@@ -119,5 +119,6 @@
 	"showTerms": "Leer los términos de uso",
 	"ellipsisMore": "Más",
 	"blockUser": "Bloquear {username}",
-	"goToOriginalNotice": "Ir al queet original"
+	"goToOriginalNotice": "Ir al queet original",
+	"clickToDrag":"Click to drag"
 }

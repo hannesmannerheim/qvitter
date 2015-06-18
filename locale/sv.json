@@ -119,5 +119,6 @@
 	"showTerms": "Läs våra användarvillkor",
 	"ellipsisMore": "Mer",
 	"blockUser": "Blockera {username}",
-	"goToOriginalNotice": "Gå till den ursprungliga queeten" 
+	"goToOriginalNotice": "Gå till den ursprungliga queeten",
+	"clickToDrag":"Klicka för att dra" 
 }

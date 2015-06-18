@@ -119,5 +119,6 @@
 	"showTerms": "{site-title} Nutzungsbedingungen",
 	"ellipsisMore": "More",
 	"blockUser": "Block {username}",
-	"goToOriginalNotice": "Go to original notice"
+	"goToOriginalNotice": "Go to original notice",
+	"clickToDrag":"Click to drag"
 }

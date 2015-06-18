@@ -119,5 +119,6 @@
 	"showTerms": "Ler os nosos términos de uso",
 	"ellipsisMore": "Máis",
 	"blockUser": "Bloquear a {username}",
-	"goToOriginalNotice": "Go to original notice"
+	"goToOriginalNotice": "Go to original notice",
+	"clickToDrag":"Click to drag"
 }

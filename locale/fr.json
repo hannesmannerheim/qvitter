@@ -119,5 +119,6 @@
 	"showTerms": "Consulter les conditions d'utilisation",
 	"ellipsisMore": "Plus",
 	"blockUser": "Bloquer {username}",
-	"goToOriginalNotice": "Aller vers l'avis d'origine"
+	"goToOriginalNotice": "Aller vers l'avis d'origine",
+	"clickToDrag":"Click to drag"
 }

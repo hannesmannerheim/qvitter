@@ -2902,6 +2902,9 @@ function coverPhotoAndAvatarSelectAndCrop(e, coverOrAvatar) {
 						$('#' + cropId).parent().css('margin-left','-' + (targetWidth/2) + 'px')
 						$('#' + cropId).parent().siblings('.profile-header-inner').children('div,input,a').css('display','none');
 						
+						// replace the hardcoded "click to drag" string
+						$('#' + cropId).siblings('.jwc_controls').children('span').html(window.sL.clickToDrag);
+						
 						window.jwc = $('#' + cropId).getjWindowCrop();		
 					
 						$('.save-profile-button').hide();

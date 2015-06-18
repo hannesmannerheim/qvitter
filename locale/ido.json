@@ -119,5 +119,6 @@
 	"showTerms": "Lektez nia uzo-kondicioni",
 	"ellipsisMore": "Plu multo",
 	"blockUser": "Blokusar {username}",
-	"goToOriginalNotice": "Irar al originala mesajo"
+	"goToOriginalNotice": "Irar al originala mesajo",
+	"clickToDrag":"Click to drag"
 }

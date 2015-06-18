@@ -119,5 +119,6 @@
 	"showTerms": "Llegeix les Condicions d'Ús",
 	"ellipsisMore": "Més",
 	"blockUser": "Bloca {username}",
-	"goToOriginalNotice": "Go to original notice"
+	"goToOriginalNotice": "Go to original notice",
+	"clickToDrag":"Click to drag"
 }
