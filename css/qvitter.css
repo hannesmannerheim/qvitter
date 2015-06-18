@@ -2298,6 +2298,9 @@ ul.queet-actions li .icon.is-mine:before {
 .modal-container .queet.rtl .account-group > .avatar {
 	right:0;
 	}	
+.modal-container .modal-body .stream-item .queet.rtl .account-group > .avatar {
+	right:12px;
+	}		
 .queet.rtl .stream-item-header {
 	direction: rtl;
 	text-align: right;
@@ -3607,6 +3610,7 @@ button.shorten:not(.disabled):active {
 	position:relative;
 	font-weight:normal;
 	opacity:0.8;
+	direction: ltr;
 	}
 .queet-box-extras button:hover {
 	opacity:1;	
