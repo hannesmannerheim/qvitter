@@ -333,11 +333,6 @@ $(window).load(function() {
 		window.selectedLanguage = 'en';
 		}	
 
-	// if this is a RTL-language, add rtl class to body
-	if(window.selectedLanguage == 'ar'
-	|| window.selectedLanguage == 'fa') {
-		$('body').addClass('rtl');
-		}
 				
 	// if we already have this version of this language in localstorage, we
 	// use that cached version. we do this because $.ajax doesn't respect caching, it seems
@@ -366,6 +361,11 @@ $(window).load(function() {
 // proceed to set language and login
 function proceedToSetLanguageAndLogin(data){
 	window.sL = data;
+
+	// if this is a RTL-language, add rtl class to body
+	if(window.sL.directionality == 'rtl') {
+		$('body').addClass('rtl');
+		}
 
 	window.siteTitle = $('head title').html(); // remember this for later use
 

@@ -242,17 +242,30 @@ class QvitterAction extends ApiAction
 					
 					// scan all files in the locale directory and create a json object with their change date added
 					$available_languages = array_diff(scandir(QVITTERDIR.'/locale'), array('..', '.'));
-					foreach($available_languages as $lan) {
+					foreach($available_languages as $lankey=>$lan) {
+
 						$lancode = substr($lan,0,strpos($lan,'.'));
-						print "\n".'						"'.$lancode.'": "'.$lan.'?changed='.date('YmdHis',filemtime(QVITTERDIR.'/locale/'.$lan)).'",';
-						
+											
 						// also make an array with all language names, to use for generating menu
 						$languagecodesandnames[$lancode]['english_name'] = Locale::getDisplayLanguage($lancode, 'en');
 						$languagecodesandnames[$lancode]['name'] = Locale::getDisplayLanguage($lancode, $lancode);
 						if(Locale::getDisplayRegion($lancode, $lancode)) {
 							$languagecodesandnames[$lancode]['name'] .= ' ('.Locale::getDisplayRegion($lancode, $lancode).')';							
 							}
-						if($lancode == 'es_ahorita') { $languagecodesandnames[$lancode]['name'] = 'español (ahorita)'; } // joke
+						
+						// ahorita meme only on quitter.es
+						if($lancode == 'es_ahorita') {
+							if($siterootdomain == 'quitter.es') {
+								$languagecodesandnames[$lancode]['name'] = 'español (ahorita)'; 
+								}
+							else {
+								unset($available_languages[$lankey]);
+								unset($languagecodesandnames[$lancode]);
+								continue;
+								}
+							}
+
+						print "\n".'						"'.$lancode.'": "'.$lan.'?changed='.date('YmdHis',filemtime(QVITTERDIR.'/locale/'.$lan)).'",';
 						}				
 						?>
 					

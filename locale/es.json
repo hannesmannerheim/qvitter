@@ -1,4 +1,5 @@
 {
+	"directionality":"ltr",
 	"languageName": "Español",
 	"loginUsername": "Nombre de usuario o correo electrónico",
 	"loginPassword": "Contraseña",
