@@ -500,12 +500,16 @@ class QvitterPlugin extends Plugin {
 				}
 			}
 			
-		if($notice->object_type == 'activity') {
+		if($notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
 			$twitter_status['is_activity'] = true;            					
 			}
 		else {
 			$twitter_status['is_activity'] = false;            					
-			}            								
+			}            
+			
+		if($notice->verb == 'qvitter-delete-notice') {
+			$twitter_status['qvitter_delete_notice'] = true;            					
+			}
 
         return true;
     }
@@ -701,12 +705,76 @@ class QvitterPlugin extends Plugin {
 		// notices
 		else {
 			$notif->notice_id = $notice->id;
-			}		
-
+			}			
+			
 		$notif->delete();			
+			
+		// outputs an activity notice that this notice was deleted
+        $profile = $notice->getProfile();
+        $rendered = sprintf(_m('<a href="%1$s">%2$s</a> deleted notice <a href="%3$s">{{%4$s}}</a>.'),
+                            $profile->getUrl(),
+                            $profile->getBestName(),
+                            $notice->getUrl(),
+                            $notice->uri);
+        $uri = TagURI::mint('delete-notice:%d:%d:%s',
+                            $notice->profile_id,
+                            $notice->id,
+                            common_date_iso8601(common_sql_now()));
+        $notice = Notice::saveNew($notice->profile_id,
+                                  $notice->uri,
+                                  ActivityPlugin::SOURCE,
+                                  array('rendered' => $rendered,
+                                        'urls' => array(),
+                                        'uri' => $uri,
+                                        'verb' => 'qvitter-delete-notice',
+                                        'object_type' => ActivityObject::ACTIVITY));				
+
         return true;
     }  
-    
+  
+
+
+   /**
+     * Checks for deleted remote notices and deleted the locally
+     * A local qvitter-delete-notice is outputted in the onNoticeDeleteRelated event above
+     *
+     * @return boolean hook flag
+     */
+     
+    public function onEndHandleFeedEntry($activity) {
+
+		if($activity->verb == 'qvitter-delete-notice') {
+
+			$deleter_profile_uri = $activity->actor->id;
+			$deleted_notice_uri = $activity->objects[0]->objects[0]->content;
+			$deleted_notice_uri = substr($deleted_notice_uri,strpos($deleted_notice_uri,'{{')+2);
+			$deleted_notice_uri = substr($deleted_notice_uri,0,strpos($deleted_notice_uri,'}}'));
+
+			$deleter_ostatus_profile = Ostatus_profile::getKV('uri', $deleter_profile_uri);
+
+			if(!$deleter_ostatus_profile instanceof Ostatus_profile) {
+				return true;
+				}
+
+			$deleter_profile = Profile::getKV('id', $deleter_ostatus_profile->profile_id);
+			$deleted_notice = Notice::getKV('uri', $deleted_notice_uri);
+			
+			if(!($deleter_profile instanceof Profile) || !($deleted_notice instanceof Notice)) {
+				return true;
+				}			
+			
+			if($deleter_profile->id != $deleted_notice->profile_id) {
+				return true;			
+				}							
+
+			$deleted_notice->delete();
+			}       
+		
+    	return true;
+    	}
+
+
+        
    /**
      * Add notification on subscription, remove on unsubscribe
      *

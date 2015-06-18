@@ -2298,7 +2298,7 @@ ul.queet-actions li .icon.is-mine:before {
 .modal-container .queet.rtl .account-group > .avatar {
 	right:0;
 	}	
-.modal-container .modal-body .stream-item .queet.rtl .account-group > .avatar {
+.modal-container .modal-body .queet.rtl .account-group > .avatar {
 	right:12px;
 	}		
 .queet.rtl .stream-item-header {

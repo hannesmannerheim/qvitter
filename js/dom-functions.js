@@ -1331,36 +1331,6 @@ function centerPopUp(thisPopUp) {
 	thisPopUp.disableSelection();	
 	}
 	
-
-
-/* · 
-   · 
-   ·  Gnu social don't use url as uri anymore, we need to handle both cases	
-   ·
-   · · · · · · · · · · · · · */ 	
-  
-function convertNewGNUSocialURItoURL(obj) {
-
-	if(typeof obj.uri == 'undefined') {
-		obj.uri = '';
-		}
-
-	if(obj.uri.substring(0,4) != 'http') {									
-		
-		// guess the url if we only have the non-url uri
-		if(typeof obj.url == 'undefined') {							
-			var httpOrHttps = obj.user.statusnet_profile_url.substring(0,obj.user.statusnet_profile_url.indexOf('://'));
-			obj.uri = httpOrHttps + '://' + obj.uri.substring(4,obj.uri.indexOf(',')) + '/notice/' + obj.uri.substring(obj.uri.indexOf('noticeId=')+9,obj.uri.indexOf(':objectType'));
-			}
-		
-		// if an url record is present, use that
-		else {
-			obj.uri = obj.url;
-			}
-		}
-	return obj;
-	}
-	
 	
 	
 /* · 
@@ -1579,6 +1549,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				}
 			}				
 
+
 		// if this is the notifications feed, but not if it is a reply
 		if(window.currentStream.substring(0,35) == 'qvitter/statuses/notifications.json'
 		&& !isReply) {					
@@ -1607,13 +1578,11 @@ function addToFeed(feed, after, extraClasses, isReply) {
 								
 				if(obj.ntype == 'like') {	
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
-					obj.notice = convertNewGNUSocialURItoURL(obj.notice);
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like"><div class="queet"><div class="dogear"></div>' + ostatusHtml + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '"></span><img class="avatar" src="' + obj.from_profile.profile_image_url + '" /><strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">' + obj.from_profile.name + '</strong></a> ' + window.sL.xFavedYourQueet + '<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">' + notificationTime + '</small></div><div class="small-grey-notice"><a href="' + obj.notice.uri + '">' + noticeTime + '</a>: ' + $.trim(obj.notice.statusnet_html) + '</div></div></div></div>';
+					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like"><div class="queet"><div class="dogear"></div>' + ostatusHtml + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '"></span><img class="avatar" src="' + obj.from_profile.profile_image_url + '" /><strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">' + obj.from_profile.name + '</strong></a> ' + window.sL.xFavedYourQueet + '<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">' + notificationTime + '</small></div><div class="small-grey-notice"><a href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">' + noticeTime + '</a>: ' + $.trim(obj.notice.statusnet_html) + '</div></div></div></div>';
 					}
 				else if(obj.ntype == 'repeat') {	
-					obj.notice = convertNewGNUSocialURItoURL(obj.notice);
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat"><div class="queet"><div class="queet-content"><div class="dogear"></div>' + ostatusHtml + '<div class="stream-item-header"><a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '"><img class="avatar" src="' + obj.from_profile.profile_image_url + '" /><strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">' + obj.from_profile.name + '</strong></a> ' + window.sL.xRepeatedYourQueet + '<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">' + notificationTime + '</small></div><div class="small-grey-notice"><a href="' + obj.notice.uri + '">' + noticeTime + '</a>: ' + $.trim(obj.notice.statusnet_html) + '</div></div></div></div>';
+					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat"><div class="queet"><div class="queet-content"><div class="dogear"></div>' + ostatusHtml + '<div class="stream-item-header"><a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '"><img class="avatar" src="' + obj.from_profile.profile_image_url + '" /><strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">' + obj.from_profile.name + '</strong></a> ' + window.sL.xRepeatedYourQueet + '<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">' + notificationTime + '</small></div><div class="small-grey-notice"><a href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">' + noticeTime + '</a>: ' + $.trim(obj.notice.statusnet_html) + '</div></div></div></div>';
 					}
 				else if(obj.ntype == 'mention') {	
 					var notificationHtml = buildQueetHtml(obj.notice, obj.id, extraClassesThisRun + ' notification mention');
@@ -1779,6 +1748,18 @@ function addToFeed(feed, after, extraClasses, isReply) {
 		// ordinary tweet
 		else {
 			
+			// if this is a special qvitter-delete-notice activity notice it means we try to hide
+			// the deleted notice from our stream
+			if(typeof obj.qvitter_delete_notice != 'undefined' && obj.qvitter_delete_notice == true) {	
+				var streamItemToHide = $('.stream-item[data-uri="' + obj.text + '"]');
+				streamItemToHide.animate({opacity:'0.2'},1000,'linear',function(){
+					$(this).css('height',$(this).height() + 'px');
+					$(this).animate({height:'0px'},500,'linear',function(){
+						$(this).remove();
+						});
+					});
+				}			
+
 			// don't show any notices with object_type "activity"
 			if(typeof obj.is_activity != 'undefined' && obj.is_activity === true) {
 				return true;
@@ -1790,7 +1771,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				// activity get special design
 				if(obj.source == 'activity') {
 					var queetTime = parseTwitterDate(obj.created_at);															
-					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item activity ' + extraClassesThisRun + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + obj.uri + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
+					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item activity ' + extraClassesThisRun + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
 
 					// detect rtl
 					queetHtml = detectRTL(queetHtml);	
@@ -2015,7 +1996,6 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 		requeetHtml = '<div class="context" id="requeet-' + requeeted_by.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetedByHtml) + '</span></span></div>';
 		}
 	
-	obj = convertNewGNUSocialURItoURL(obj);		
 
 	// external
 	var ostatusHtml = '';
@@ -2026,6 +2006,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	var queetTime = parseTwitterDate(obj.created_at);															
 	var queetHtml = '<div \
 						id="' + idPrepend + 'stream-item-' + obj.id + '" \
+						data-uri="' + obj.uri + '" \
 						class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" \
 						data-attachments=\'' + JSON.stringify(obj.attachments) + '\'\
 						data-source="' + escape(obj.source) + '" \
