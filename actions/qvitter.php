@@ -235,7 +235,7 @@ class QvitterAction extends ApiAction
 					window.siteEmail = '<?php print common_config('site', 'email'); ?>';										
 					window.siteLicenseTitle = '<?php print common_config('license', 'title'); ?>';
 					window.siteLicenseURL = '<?php print common_config('license', 'url'); ?>';
-					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;	
+					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;
 					
 					// available language files and their last update time
 					window.availableLanguages = {<?php
@@ -245,12 +245,23 @@ class QvitterAction extends ApiAction
 					foreach($available_languages as $lankey=>$lan) {
 
 						$lancode = substr($lan,0,strpos($lan,'.'));
-											
+						
+						// for the paranthesis containing language region to work with rtl in ltr enviroment and vice versa, we add a
+						// special rtl or ltr html char after the paranthesis
+						// this list is incomplete, but if any rtl language gets a regional translation, it will probably be arabic
+						$rtl_or_ltr_special_char = '&lrm;';
+						$base_lancode = substr($lancode,0,strpos($lancode,'_'));
+						if($base_lancode == 'ar'
+						|| $base_lancode == 'fa'												
+						|| $base_lancode == 'he') {
+							$rtl_or_ltr_special_char = '&rlm;';							
+							}
+									
 						// also make an array with all language names, to use for generating menu
 						$languagecodesandnames[$lancode]['english_name'] = Locale::getDisplayLanguage($lancode, 'en');
 						$languagecodesandnames[$lancode]['name'] = Locale::getDisplayLanguage($lancode, $lancode);
 						if(Locale::getDisplayRegion($lancode, $lancode)) {
-							$languagecodesandnames[$lancode]['name'] .= ' ('.Locale::getDisplayRegion($lancode, $lancode).')';							
+							$languagecodesandnames[$lancode]['name'] .= ' ('.Locale::getDisplayRegion($lancode, $lancode).')'.$rtl_or_ltr_special_char;							
 							}
 						
 						// ahorita meme only on quitter.es
