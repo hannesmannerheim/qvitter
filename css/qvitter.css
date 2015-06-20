@@ -677,7 +677,8 @@ body.rtl .front-welcome-text {
 .front-signup {
 	margin-top:123px;
     height: auto;
-    padding-bottom: 53px;    		
+    padding-bottom: 12px;    		
+    text-align:right;
 	}
 
 .front-signup input,
@@ -968,6 +969,7 @@ button#submit-login:hover {
     position: relative;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
     font-family: "Helvetica Neue",Arial,sans-serif;
+    text-align:left;
 	}
 .front-signup h2 strong {
     color: #333333;
@@ -975,15 +977,6 @@ button#submit-login:hover {
 	}
 
 .front-signup .signup-btn {
-	font-family: "Helvetica Neue",Arial,sans-serif;	
-	border-radius: 4px 4px 4px 4px;	
-	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);   
-    color: #333333;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 13px;
-    font-weight: bold;
-    line-height: 18px;
 	background-color: #FD9A0F;
 	background: -moz-linear-gradient(top, rgba(254,233,79,1) 0px, rgba(253,154,15,1) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0px,rgba(254,233,79,1)), color-stop(100%,rgba(253,154,15,1)));
@@ -991,15 +984,23 @@ button#submit-login:hover {
 	background: -o-linear-gradient(top, rgba(254,233,79,1) 0px,rgba(253,154,15,1) 100%);
 	background: -ms-linear-gradient(top, rgba(254,233,79,1) 0px,rgba(253,154,15,1) 100%);
 	background: linear-gradient(to bottom, rgba(254,233,79,1) 0px,rgba(253,154,15,1) 100%);
-    border: 1px solid #FFAA22;
-    bottom: 12px;
-    box-shadow: 0 1px 0 #FFFFFF;
-    height: 30px;
-    margin: 0;
+    border: 1px solid #ffaa22;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 #ffffff;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Helvetica Neue",Arial,sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 18px;
+    margin: 8px 0 0 24px;
+    min-height: 30px;
     padding-left: 12px;
     padding-right: 12px;
-    position: absolute;
-    right: 12px;		
+    position: relative;
+    right: 12px;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);	
 	}
 .front-signup .signup-btn:hover, .front-signup .signup-btn:focus {
     background-color: #FD9512;
@@ -1074,6 +1075,7 @@ button#submit-login:hover {
 	padding:10px;
 	text-shadow:1px 1px 3px rgba(0, 0, 0, 0.6);
 	color:rgba(255,255,255,0.8);
+    text-align:left;
 	}
 
 #page-container {
