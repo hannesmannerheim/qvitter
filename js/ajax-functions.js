@@ -397,19 +397,16 @@ function getFavsAndRequeetsForQueet(q,qid) {
 		type: "GET", 
 		dataType: 'json', 
 		success: function(data) { 
+
 			if(data.favs.length > 0 || data.repeats.length > 0) {
-
 				localStorageObjectCache_STORE('favsAndRequeets',qid, data); // cache response
-
-				if(q.hasClass('expanded') && !q.hasClass('collapsing')) {
-					showFavsAndRequeetsInQueet(q,data);
-					}						
 				}
 			else {
 				// remove from cache and DOM if all favs and repeats are deleted
 				localStorageObjectCache_STORE('favsAndRequeets',qid, false);
-				q.children('.queet').find('.stats').remove();
 				}
+
+			showFavsAndRequeetsInQueet(q,data);				
 			}, 
 		error: function(data) { 
 			remove_spinner();

@@ -1742,15 +1742,25 @@ $('body').on('click','.action-ellipsis-container .delete-queet',function(e){
 
 $('body').on('click','.action-rt-container .icon:not(.is-mine)',function(){
 	var this_stream_item = $(this).closest('.stream-item');
+	var this_queet = this_stream_item.children('.queet');
 	var this_action = $(this).closest('li'); 
 	
 	// requeet
 	if(!this_action.children('.with-icn').hasClass('done')) {	
+
+		// update the repeat count immediately
+		var newRqNum = parseInt(this_queet.find('.action-rq-num').html(),10)+1;
+		this_queet.find('.action-rq-num').html(newRqNum);
+		this_queet.find('.action-rq-num').attr('data-rq-num',newRqNum);	
+
 		this_action.children('.with-icn').addClass('done');
 		this_stream_item.addClass('requeeted');				
 		
 		// requeet animation
-		this_action.children('.with-icn').children('.sm-rt').addClass('rotate');				
+		this_action.children('.with-icn').children('.sm-rt').addClass('rotate');		
+		
+		// remove the fav and rq cache for this queet, to avoid number flickering 
+		localStorageObjectCache_STORE('favsAndRequeets',this_stream_item.attr('data-quitter-id'), false);				
 
 		// post requeet
 		postActionToAPI('statuses/retweet/' + this_stream_item.attr('data-quitter-id') + '.json', function(data) {
@@ -1795,7 +1805,8 @@ $('body').on('click','.action-rt-container .icon:not(.is-mine)',function(){
    · · · · · · · · · · · · · */ 
 
 $('body').on('click','.action-fav-container',function(){
-	var this_stream_item = $(this).parent().parent().parent().parent().parent();
+	var this_stream_item = $(this).closest('.stream-item');
+	var this_queet = this_stream_item.children('.queet');
 
 	// don't do anything if this is a queet being posted 
 	if(this_stream_item.hasClass('temp-post')) {
@@ -1806,12 +1817,20 @@ $('body').on('click','.action-fav-container',function(){
 
 	// fav
 	if(!this_action.children('.with-icn').hasClass('done')) {	
+	
+		// update the fav count immediately
+		var newFavNum = parseInt(this_queet.find('.action-fav-num').html(),10)+1;
+		this_queet.find('.action-fav-num').html(newFavNum);
+		this_queet.find('.action-fav-num').attr('data-fav-num',newFavNum);	
 
 		this_action.children('.with-icn').addClass('done');
-		this_stream_item.addClass('favorited');						
+		this_stream_item.addClass('favorited');				
 
 		// fav animation
 		this_action.children('.with-icn').children('.sm-fav').addClass('pulse');
+		
+		// remove the fav and rq cache for this queet, to avoid number flickering 
+		localStorageObjectCache_STORE('favsAndRequeets',this_stream_item.attr('data-quitter-id'), false);		
 
 		// post fav	
 		postActionToAPI('favorites/create/' + this_stream_item.attr('data-quitter-id') + '.json', function(data) {
@@ -1833,16 +1852,23 @@ $('body').on('click','.action-fav-container',function(){
 		}
 	// unfav
 	else  {
-		display_spinner();	
+	
+		// update the fav count immediately
+		var newFavNum = Math.max(0, parseInt(this_queet.find('.action-fav-num').html(),10)-1);
+		this_queet.find('.action-fav-num').html(newFavNum);
+		this_queet.find('.action-fav-num').attr('data-fav-num',newFavNum);	
+	
 		this_action.children('.with-icn').removeClass('done');
 		this_action.find('.with-icn b').html(window.sL.favoriteVerb);		
 		this_stream_item.removeClass('favorited');						
+
+		// remove the fav and rq cache for this queet, to avoid number flickering 
+		localStorageObjectCache_STORE('favsAndRequeets',this_stream_item.attr('data-quitter-id'), false);
 
 		// post unfav
 		postActionToAPI('favorites/destroy/' + this_stream_item.attr('data-quitter-id') + '.json', function(data) {
 			if(data) {
 				// success
-				remove_spinner();
 				getFavsAndRequeetsForQueet(this_stream_item, this_stream_item.attr('data-quitter-id'));				
 
 				// mark all instances of this notice as non-favorited
@@ -1851,7 +1877,6 @@ $('body').on('click','.action-fav-container',function(){
 				}
 			else {
 				// error
-				remove_spinner();
 				this_action.children('.with-icn').addClass('done');
 				this_action.find('.with-icn b').html(window.sL.favoritedVerb);		
 				this_stream_item.addClass('favorited');				

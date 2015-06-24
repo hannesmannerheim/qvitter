@@ -2158,11 +2158,12 @@ ul.queet-actions {
     display: block;
     font-family: "Helvetica Neue",Arial,sans-serif;
     font-size: 12px;
-    line-height: 18px;
+    line-height: 26px;
     list-style: outside none none;
 	margin: 5px 0 0;
     padding: 0;
     position: relative;
+    height:26px;
 	}
 .queet.rtl ul.queet-actions {
 	right:auto;
@@ -2173,7 +2174,10 @@ ul.queet-actions {
 
 
 ul.queet-actions a {
-	color:#ddd;
+	color: #ddd;
+    display: block;
+    height: 26px;
+    line-height: 26px;
 	}
 
 .queet:hover ul.queet-actions > li > a {
@@ -2186,22 +2190,24 @@ ul.queet-actions a {
 	display: block;
 	}
 ul.queet-actions li {
-	display:inline;
+	display: inline-block;
+	height: 26px;
+    line-height: 26px;
 	}
 ul.queet-actions li .icon {
-    background-repeat: no-repeat;
+	background-repeat: no-repeat;
     display: inline-block;
-    vertical-align: text-top; 
-    height: 25px;     
-    line-height:25px;
-    width:25px;
-    text-align:center;
-    margin-right:31px;      
-    font-size:17px;
+    font-size: 17px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+	margin-right:7px;    
 	}	
+ul.queet-actions li:not(:first-child) .icon {
+	margin-left:26px;
+	}
 .queet.rtl ul.queet-actions li .icon {
-    margin-right:0;      	
-    margin-left:31px;          
+    margin-right:0;      	 
 	}
 ul.queet-actions li.action-rt-container .with-icn.done .icon:before {
 	color: #609928;
@@ -2220,15 +2226,41 @@ ul.queet-actions li.action-fav-container .with-icn.done .icon:before {
 	}			
 
 
+ul.queet-actions li.action-rq-num,
+ul.queet-actions li.action-fav-num {
+	color: rgba(0, 0, 0, 0.45);
+    display: inline-block;
+    font-family: "Helvetica Neue",Arial,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    height: 26px;
+    line-height: 32px;
+    vertical-align: top;
+	}
+.stream-item.expanded:not(.collapsing) > .queet ul.queet-actions li.action-rq-num,
+.stream-item.expanded:not(.collapsing) > .queet ul.queet-actions li.action-fav-num,
+ul.queet-actions li.action-rq-num[data-rq-num="0"],
+ul.queet-actions li.action-fav-num[data-fav-num="0"] {
+	display:none;
+	}
+
+.stream-item.requeeted > .queet ul.queet-actions li.action-rq-num {
+	color:#609928;
+	}
+.stream-item.favorited > .queet ul.queet-actions li.action-fav-num {
+	color:#ffac33;
+	}	
+
 ul.queet-actions li .icon:before {	
-	font-family:FontAwesome;
-	font-size:inherit;
-	color:rgba(0,0,0,0.15);
-    height: 25px;     
-    line-height:25px;
-    width:25px;
-    text-align:center;
-	display:block;    
+	color: rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    font-family: FontAwesome;
+    font-size: inherit;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    vertical-align:text-top;
+    width:21px;
 	}
 .stream-item.temp-post ul.queet-actions li .icon:before {
 	color:rgba(0,0,0,0.05);
@@ -2244,7 +2276,7 @@ ul.queet-actions li .icon.sm-fav.pulse:before {
 	}
 @keyframes starpulse {
     0%   {font-size: 17px;}
-    50%  {font-size: 25px;}
+    50%  {font-size: 22px;}
     100% {font-size: 17px;}
 	} 
 
@@ -2281,7 +2313,6 @@ ul.queet-actions li .icon.sm-fav:before {
 ul.queet-actions li .icon.sm-ellipsis:before {
 	content: "\f141";
 	font-size: 22px;
-    line-height: 28px;	
     }	            
 ul.queet-actions li .icon.is-mine:before {
 	opacity:0.4;

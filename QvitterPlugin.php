@@ -486,8 +486,18 @@ class QvitterPlugin extends Plugin {
 		    $twitter_status['in_reply_to_profileurl'] = null;
         }
 
-
-        		     	
+		// fave number
+		$faves = Fave::byNotice($notice);
+		$favenum = count($faves);
+		$twitter_status['fave_num'] = $favenum;
+		
+		// repeat number
+		$repeats = $notice->repeatStream();
+        $repeatnum=0;
+        while ($repeats->fetch()) {
+        	$repeatnum++;
+        	}
+		$twitter_status['repeat_num'] = $repeatnum;		
         
         // some more metadata about notice
 		if($notice->is_local == '1') {

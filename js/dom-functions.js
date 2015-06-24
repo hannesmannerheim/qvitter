@@ -49,14 +49,31 @@
    	
 function showFavsAndRequeetsInQueet(q,data) {
 
+	// set the non-expanded fav- and rq-count
+	q.children('.queet').find('.action-fav-num').html(data.favs.length);
+	q.children('.queet').find('.action-fav-num').attr('data-fav-num',data.favs.length);	
+	q.children('.queet').find('.action-rq-num').html(data.repeats.length);
+	q.children('.queet').find('.action-rq-num').attr('data-rq-num',data.repeats.length);		
+
+	// don't proceed if queet is not expanded
+	if(!q.hasClass('expanded') || q.hasClass('collapsing')) {
+		return;
+		}
+	
+	// don't proceed and remove expanded stats if all favs and repeats are removed 
+	if(data.favs.length < 1 && data.repeats.length < 1) {
+		q.children('.queet').find('.stats').remove();
+		return;
+		}			
+
 	// remove any existing stats container and add a new empty one
 	if(q.children('.queet').find('ul.stats').length > 0) {
 		q.children('.queet').find('ul.stats').remove();
 		}
 		
 	q.children('.queet').find('.queet-stats-container').prepend('<ul class="stats"><li class="avatar-row"></li></ul>');					
-	
-	// add favs
+
+	// set the expanded fav-count number			
 	if(data.favs.length > 0) {
 		
 		if(data.favs.length == 1) {
@@ -65,13 +82,13 @@ function showFavsAndRequeetsInQueet(q,data) {
 		else if(data.favs.length > 1) {
 			var favLabel = window.sL.favoritesNoun;
 			}
-			
+
 		if(q.children('.queet').find('.fav-count').length>0) {
 			q.children('.queet').find('.fav-count').children('strong').html(data.favs.length);
 			}			
 		else {
 			q.children('.queet').find('li.avatar-row').before('<li class="fav-count"><a>' + favLabel + ' </a><strong>' + data.favs.length + '</strong></li>');						
-			}
+			}	
 		}
 		
 	// add repeats
@@ -1910,7 +1927,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	// actions only for logged in users
 	var queetActions = '';
 	if(typeof window.loggedIn.screen_name != 'undefined') {			
-		queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li>' + requeetHtml + '<li class="action-fav-container">' + favoriteHtml + '</li><li class="action-ellipsis-container"><a class="with-icn"><span class="icon sm-ellipsis" title="' + window.sL.ellipsisMore + '"></span></a></li></ul>';
+		queetActions = '<ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li>' + requeetHtml + '<li class="action-rq-num" data-rq-num="' + obj.repeat_num + '">' + obj.repeat_num + '</li><li class="action-fav-container">' + favoriteHtml + '</li><li class="action-fav-num" data-fav-num="' + obj.fave_num + '">' + obj.fave_num + '</li><li class="action-ellipsis-container"><a class="with-icn"><span class="icon sm-ellipsis" title="' + window.sL.ellipsisMore + '"></span></a></li></ul>';
 		}
 		
 	// reply-to html					
