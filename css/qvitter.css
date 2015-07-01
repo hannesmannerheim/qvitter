@@ -1551,6 +1551,7 @@ background-repeat: no-repeat;
 	}
 .stream-item.expanded.selected-by-keyboard::before {
 	height:100%;
+	border-radius: 9px;
 	}
 
 .show-full-conversation {

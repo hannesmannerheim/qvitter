@@ -510,7 +510,11 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 	$(window).scrollTop(0);
 	$('body').addClass('androidFix').scrollTop(0).removeClass('androidFix');
 
-	$('#feed-body').removeAttr('data-search-page-number'); // null any searches
+    // blur any selected links
+    $('a').blur();
+
+    // null any searches
+	$('#feed-body').removeAttr('data-search-page-number');
 
 	// remember the most recent stream selection in global var
 	window.currentStream = stream;
