@@ -2473,10 +2473,12 @@ $('body').on('keydown','.queet-box-syntax',function (e) {
 
 $('body').keyup(function (e) {
 
-	// only if queetbox is blurred
-	if($('.queet-box-syntax[contenteditable="true"]').length == 0) {
+	// only if queetbox is blurred, and we're not typing in any input, and we're logged in
+	if($('.queet-box-syntax[contenteditable="true"]').length == 0
+	&& $(":focus").length == 0
+	&& window.loggedIn !== false) {
 
-		// shortcuts menu on ?
+		// shortcuts documentation on '?'
 		if(e.shiftKey && e.which == 171) {
 			$('#shortcuts-link').click();
 			}
