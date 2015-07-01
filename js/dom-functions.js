@@ -1348,7 +1348,6 @@ function centerPopUp(thisPopUp) {
 	thisPopUp.css('margin-top', marginTop + 'px');
 	thisPopUp.css('margin-left', '-' + (this_modal_width/2) + 'px');
 	thisPopUp.draggable({ handle: ".modal-header" });
-	thisPopUp.disableSelection();
 	}
 
 
