@@ -120,5 +120,6 @@
 	"ellipsisMore": "Pli",
 	"blockUser": "Bloki {username}",
 	"goToOriginalNotice": "Iri al origina pepo",
-	"clickToDrag":"Click to drag"
+	"clickToDrag":"Click to drag",
+	"keyboardShortcuts":"Keyboard shortcuts"
 }

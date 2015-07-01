@@ -120,5 +120,6 @@
 	"ellipsisMore": "Mer",
 	"blockUser": "Blokker {username}",
 	"goToOriginalNotice": "Gå til den opprinnelige queeten",
-	"clickToDrag":"Click to drag"
+	"clickToDrag":"Click to drag",
+	"keyboardShortcuts":"Keyboard shortcuts"
 }

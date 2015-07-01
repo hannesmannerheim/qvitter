@@ -120,5 +120,6 @@
 	"ellipsisMore": "עוד",
 	"blockUser": "חסום את {username}",
 	"goToOriginalNotice": "עבור להודעה מקורית",
-	"clickToDrag":"לחץ כדי לגרור"
+	"clickToDrag":"לחץ כדי לגרור",
+	"keyboardShortcuts":"Keyboard shortcuts"
 }

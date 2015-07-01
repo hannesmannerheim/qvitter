@@ -120,5 +120,6 @@
 	"ellipsisMore": "Plu multo",
 	"blockUser": "Blokusar {username}",
 	"goToOriginalNotice": "Irar al originala mesajo",
-	"clickToDrag":"Klikez por tranar"
+	"clickToDrag":"Klikez por tranar",
+	"keyboardShortcuts":"Keyboard shortcuts"
 }

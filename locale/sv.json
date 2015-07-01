@@ -120,5 +120,6 @@
 	"ellipsisMore": "Mer",
 	"blockUser": "Blockera {username}",
 	"goToOriginalNotice": "Gå till den ursprungliga queeten",
-	"clickToDrag":"Klicka och dra för att flytta" 
+	"clickToDrag":"Klicka och dra för att flytta",
+	"keyboardShortcuts":"Kortkommandon" 
 }

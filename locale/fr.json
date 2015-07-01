@@ -120,5 +120,6 @@
 	"ellipsisMore": "Plus",
 	"blockUser": "Bloquer {username}",
 	"goToOriginalNotice": "Aller vers l'avis d'origine",
-	"clickToDrag":"Click to drag"
+	"clickToDrag":"Click to drag",
+	"keyboardShortcuts":"Keyboard shortcuts"
 }
