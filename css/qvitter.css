@@ -1673,6 +1673,16 @@ body.rtl .queet.rtl .expanded-content {
 	color:#999999;
 	}
 
+/* only show activity notices if they are conversation starters
+   we never need to see these, but sometimes someone replies to
+   an activity notice, and then it can be good to know what the
+   user is replying to... */
+#feed-body > .stream-item.activity {
+	display:none;
+	}
+.stream-item > .stream-item.activity:first-child {
+	display:block;
+	}
 
 .queet .queet-thumbs {
     -webkit-transition: max-height 0s linear;

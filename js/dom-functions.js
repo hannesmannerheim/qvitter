@@ -1769,19 +1769,16 @@ function addToFeed(feed, after, extraClasses, isReply) {
 
 			// if this is a special qvitter-delete-notice activity notice it means we try to hide
 			// the deleted notice from our stream
+            // the uri is in the obj.text var, between the double curly brackets
 			if(typeof obj.qvitter_delete_notice != 'undefined' && obj.qvitter_delete_notice == true) {
-				var streamItemToHide = $('.stream-item[data-uri="' + obj.text + '"]');
+				var uriToHide = obj.text.substring(obj.text.indexOf('{{')+2,obj.text.indexOf('}}'));
+                var streamItemToHide = $('.stream-item[data-uri="' + uriToHide + '"]');
 				streamItemToHide.animate({opacity:'0.2'},1000,'linear',function(){
 					$(this).css('height',$(this).height() + 'px');
 					$(this).animate({height:'0px'},500,'linear',function(){
 						$(this).remove();
 						});
 					});
-				}
-
-			// don't show any notices with object_type "activity"
-			if(typeof obj.is_activity != 'undefined' && obj.is_activity === true) {
-				return true;
 				}
 
 			// only if not already exist
