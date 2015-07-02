@@ -1037,6 +1037,7 @@ button#submit-login:hover {
 .modal-body .front-signup #signup-terms-container {
 	padding: 0 20px 20px;
 	font-size:12px;
+	text-align: left;
 	}
 
 .modal-body .front-signup .signup-input-container {

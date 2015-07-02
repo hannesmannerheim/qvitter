@@ -415,6 +415,45 @@ function searchForUserDataToCache(obj) {
 	}
 
 
+/* ·
+   ·
+   ·  Appends a user to the array containing the mentions suggestions to show when typing a notice
+   ·
+   · · · · · · · · · */
+
+function appendUserToMentionsSuggestionsArray(user) {
+
+	var userAlreadyExist = false;
+	$.each(window.following, function(){
+		if(user.id == this.id) {
+			userAlreadyExist = true;
+			}
+		});
+
+	if(!userAlreadyExist) {
+
+		// in the window.following array, we use "false" as url if it's a user from this instance
+		if(user.is_local) {
+			var url = false;
+			}
+		else {
+			var url = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(user.statusnet_profile_url,user.screen_name);
+			}
+
+		var userToAdd = Object();
+		userToAdd.avatar = user.profile_image_url;
+		userToAdd.id = user.id;
+		userToAdd.name = user.name;
+		userToAdd.url = url;
+		userToAdd.username = user.screen_name;
+
+		window.following.push(userToAdd);
+		}
+
+	}
+
+
+
 
 /* ·
    ·

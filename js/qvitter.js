@@ -706,7 +706,7 @@ $('body').on('click','.external-member-button',function(event){
 
 /* ·
    ·
-   ·   When clicking an external follow button
+   ·   When clicking a follow button
    ·
    · · · · · · · · · · · · · */
 
@@ -756,6 +756,7 @@ $('body').on('click','.qvitter-follow-button',function(event){
 					if(data.following) {
 						$(this_element).addClass('following');
 						$('#user-following strong').html(parseInt($('#user-following strong').html(),10)+1);
+						appendUserToMentionsSuggestionsArray(data);
 						}
 					else {
 						$(this_element).removeClass('following');
