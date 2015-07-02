@@ -319,14 +319,13 @@ $(window).load(function() {
 		var selectedForUser = window.loggedIn.id;
 		}
 
-	localStorageObjectCache_GET('selectedLanguage',selectedForUser, function(data){
-		if(data) {
-			window.selectedLanguage = data;
-			}
-		else {
-			window.selectedLanguage = browserLang;
-			}
-		});
+	var cacheData = localStorageObjectCache_GET('selectedLanguage',selectedForUser);
+	if(cacheData) {
+		window.selectedLanguage = cacheData;
+		}
+	else {
+		window.selectedLanguage = browserLang;
+		}
 
 	// check that this language is available, otherwise use english
 	if(typeof window.availableLanguages[window.selectedLanguage] == 'undefined') {
@@ -336,26 +335,24 @@ $(window).load(function() {
 
 	// if we already have this version of this language in localstorage, we
 	// use that cached version. we do this because $.ajax doesn't respect caching, it seems
-	localStorageObjectCache_GET('languageData',window.availableLanguages[window.selectedLanguage], function(data){
-		if(data) {
-			proceedToSetLanguageAndLogin(data);
-			}
-		else {
-			$.ajax({
-				dataType: "json",
-				url: window.fullUrlToThisQvitterApp + 'locale/' + window.availableLanguages[window.selectedLanguage],
-				error: function(data){console.log(data)},
-				success: function(data) {
+	var cacheData = localStorageObjectCache_GET('languageData',window.availableLanguages[window.selectedLanguage]);
+	if(cacheData) {
+		proceedToSetLanguageAndLogin(cacheData);
+		}
+	else {
+		$.ajax({
+			dataType: "json",
+			url: window.fullUrlToThisQvitterApp + 'locale/' + window.availableLanguages[window.selectedLanguage],
+			error: function(data){console.log(data)},
+			success: function(data) {
 
-					// store this response in localstorage
-					localStorageObjectCache_STORE('languageData',window.availableLanguages[window.selectedLanguage], data);
+				// store this response in localstorage
+				localStorageObjectCache_STORE('languageData',window.availableLanguages[window.selectedLanguage], data);
 
-					proceedToSetLanguageAndLogin(data);
-					}
-				});
-			}
-		});
-
+				proceedToSetLanguageAndLogin(data);
+				}
+			});
+		}
 	});
 
 // proceed to set language and login
@@ -497,7 +494,6 @@ function doLogin(streamToSet) {
 			$('#user-header').css('background-image','url(\'' + window.loggedIn.cover_photo + '\')');
 			}
 
-
 		// get all users i'm following for autosuggestion
 		window.following = new Array();
 		getFromAPI('qvitter/allfollowing/' + window.loggedIn.screen_name + '.json',function(data){
@@ -514,6 +510,20 @@ function doLogin(streamToSet) {
 					window.following[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
 					i++;
 					});
+
+				cacheSyntaxHighlighting(); // do this now not to stall slow computers
+
+				// we might have cached text for the queet box
+				// (we need to get the mentions suggestions and cache the syntax highlighting before doing this)
+				var cachedQueetBoxData = localStorageObjectCache_GET('queetBoxInput','queet-box');
+				var cachedQueetBoxDataText = $('<div/>').html(cachedQueetBoxData).text();
+			    if(cachedQueetBoxData) {
+					queetBox = $('#queet-box');
+		            queetBox.click();
+		            queetBox.html(cachedQueetBoxData);
+		            setSelectionRange(queetBox[0], cachedQueetBoxDataText.length, cachedQueetBoxDataText.length);
+		            queetBox.trigger('input');
+					}
 				}
 			});
 
@@ -536,7 +546,6 @@ function doLogin(streamToSet) {
 			$('#top-compose').fadeIn('slow');
 			$('input#nickname').blur();
 			remove_spinner();
-			cacheSyntaxHighlighting(); // do this now after everything is loaded, to not stall slow computers
 			},true);
 
 	}
@@ -2442,6 +2451,25 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 		else {
 			queetBox.siblings('.mentions-suggestions').empty();
 			}
+		}
+	});
+
+/* ·
+   ·
+   ·   Store unposted queets in cache, if the user accidentally reloads the page or something
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('keyup', 'div.queet-box-syntax', function(e) {
+	// remove from cache if empty, or same as default text
+	if($.trim($(this).text()) == ''
+	|| $.trim($(this).text()) == window.sL.compose
+	|| $.trim($(this).text()) == $.trim(decodeURIComponent($(this).attr('data-start-text')))
+	|| $.trim($(this).text()) == $.trim(decodeURIComponent($(this).attr('data-replies-text')))) {
+		localStorageObjectCache_STORE('queetBoxInput',$(this).attr('id'),false);
+		}
+	else {
+		localStorageObjectCache_STORE('queetBoxInput',$(this).attr('id'),$(this).html());
 		}
 	});
 

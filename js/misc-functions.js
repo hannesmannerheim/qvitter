@@ -53,8 +53,8 @@ function localStorageObjectCache_STORE(name, unique_id, object) {
 
 	if(localStorageIsEnabled()) {
 
-		if(object.length < 1) {
-			// an empty object means we remove this entry
+		if(object === false || object.length < 1) {
+			// false or an empty object means we remove this entry
 			if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
 				delete localStorage[name + '-' + unique_id];
 				}
@@ -127,11 +127,10 @@ function removeOldestLocalStorageEntries(callback) {
    ·
    ·   @param name: the name of this type of object
    ·   @param unique_id: some unique_id – the key in localStorage will be name-unique_id
-   ·   @param callback: callback function, returns false if not found
    ·
    · · · · · · · · · */
 
-function localStorageObjectCache_GET(name, unique_id, callback) {
+function localStorageObjectCache_GET(name, unique_id) {
 
 	if(localStorageIsEnabled()) {
 		if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
@@ -139,18 +138,18 @@ function localStorageObjectCache_GET(name, unique_id, callback) {
 			if(typeof parsedObject.modified == 'undefined' || parsedObject.modified === null) {
 				// invalid or old localstorage object found, check the whole localstorage!
 				checkLocalStorage();
-				callback(false);
+				return false;
 				}
 			else {
-				callback(parsedObject.data);
+				return parsedObject.data;
 				}
 			}
 		else {
-			callback(false);
+			return false;
 			}
 		}
 	else {
-		callback(false);
+		return false;
 		}
 	}
 
@@ -185,7 +184,8 @@ function checkLocalStorage() {
 				'favsAndRequeets',
 				'languageData',
 				'fullQueetHtml',
-				'selectedLanguage'
+				'selectedLanguage',
+				'queetBoxInput'
 				];
 			var thisDataType = k.substring(0,k.indexOf('-'));
 			if($.inArray(thisDataType, validDataTypes) == -1 || k.indexOf('-') == -1) {
@@ -1073,15 +1073,14 @@ function updateHistoryLocalStorage() {
 
 function loadHistoryFromLocalStorage() {
 	if(localStorageIsEnabled()) {
-		localStorageObjectCache_GET('browsingHistory', window.loggedIn.screen_name,function(data){
-			if(data) {
-				$('#history-container').css('display','block');
-				$('#history-container').html('');
-				$.each(data, function(key,obj) {
-					$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right"></i></a>');
-					});
-				}
-			});
+		var cacheData = localStorageObjectCache_GET('browsingHistory', window.loggedIn.screen_name);
+		if(cacheData) {
+			$('#history-container').css('display','block');
+			$('#history-container').html('');
+			$.each(cacheData, function(key,obj) {
+				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right"></i></a>');
+				});
+			}
 		updateHistoryLocalStorage();
 		}
 	}

@@ -1114,21 +1114,20 @@ function expand_queet(q,doScrolling) {
 				var attachmentId = q.children('.queet').find('span.attachment.more').attr('data-attachment-id');
 
 				// get full html for queet, first try localstorage cache
-				localStorageObjectCache_GET('fullQueetHtml',qid,function(data){
-					if(data) {
-						q.children('.queet').find('.queet-text').html(data);
-						q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
-						}
-					else {
-						getFromAPI("attachment/" + attachmentId + ".json",function(data){
-							if(data) {
-								localStorageObjectCache_STORE('fullQueetHtml',qid,data);
-								q.children('.queet').find('.queet-text').html($.trim(data));
-								q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
-								}
-							});
-						}
-					});
+				var cacheData = localStorageObjectCache_GET('fullQueetHtml',qid);
+				if(cacheData) {
+					q.children('.queet').find('.queet-text').html(cacheData);
+					q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
+					}
+				else {
+					getFromAPI("attachment/" + attachmentId + ".json",function(data){
+						if(data) {
+							localStorageObjectCache_STORE('fullQueetHtml',qid,data);
+							q.children('.queet').find('.queet-text').html($.trim(data));
+							q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
+							}
+						});
+					}
 				}
 
 			// add expanded container
@@ -1226,8 +1225,18 @@ function expand_queet(q,doScrolling) {
 				// show inline reply form if logged in
 				if(typeof window.loggedIn.screen_name != 'undefined') {
 					q.children('.queet').append(replyFormHtml(q,qid));
-					}
 
+                    // if we have cached text, expand the reply form and add that
+                    var queetBox = q.children('.queet').find('.queet-box');
+                    var cachedText = decodeURIComponent(queetBox.attr('data-cached-text'));
+                    var cachedTextText = $('<div/>').html(cachedText).text();
+                    if(cachedText != 'undefined') {
+                        queetBox.click();
+                        queetBox.html(cachedText);
+                        setSelectionRange(queetBox[0], cachedTextText.length, cachedTextText.length);
+                        queetBox.trigger('input');
+                        }
+                    }
 				}
 			}
 		}
@@ -1277,7 +1286,14 @@ function queetBoxHtml() {
    · · · · · · · · · */
 
 function replyFormHtml(q,qid) {
-	// get all @:s
+
+    // if we have cached text in localstorage
+	var data = localStorageObjectCache_GET('queetBoxInput','queet-box-' + qid);
+    if(data) {
+        var cachedText = encodeURIComponent(data);
+		}
+
+    // get all @:s
 	var user_screen_name = q.children('.queet').find('.screen-name').html().substring(1);
 	var user_screen_name_html = '<a>@' + user_screen_name + '</a>';
 	var user_screen_name_text = '@' + user_screen_name;
@@ -1302,9 +1318,12 @@ function replyFormHtml(q,qid) {
 			}
 		});
 
-	var startText = encodeURIComponent(window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br>');
-	var repliesText = encodeURIComponent(user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '&nbsp;');
-	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box queet-box-syntax" id="queet-box-' + qid + '" data-start-text="' + startText + '" data-replies-text="' + repliesText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button class="upload-image"></button><button class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';
+	var startText = window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br>';
+    var repliesText = user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '&nbsp;';
+
+	startText = encodeURIComponent(startText);
+	repliesText = encodeURIComponent(repliesText);
+	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box queet-box-syntax" id="queet-box-' + qid + '" data-start-text="' + startText + '" data-replies-text="' + repliesText + '" data-cached-text="' + cachedText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button class="upload-image"></button><button class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';
 	}
 
 
@@ -1363,12 +1382,10 @@ function centerPopUp(thisPopUp) {
 function getConversation(q, qid) {
 
 	// check if we have a conversation for this notice cached in localstorage
-	localStorageObjectCache_GET('conversation',q.attr('data-conversation-id'), function(data){
-		if(data) {
-			showConversation(q, qid, data);
-			}
-		});
-
+	var cacheData = localStorageObjectCache_GET('conversation',q.attr('data-conversation-id'));
+	if(cacheData) {
+		showConversation(q, qid, cacheData);
+		}
 	// always get most recent conversation from server
 	getFromAPI('statusnet/conversation/' + q.attr('data-conversation-id') + '.json?count=100', function(data){ if(data) {
 
@@ -1873,11 +1890,10 @@ function addToFeed(feed, after, extraClasses, isReply) {
 function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isConversation) {
 
 	// if we have the full html for a truncated notice cached in localstorage, we use that
-	localStorageObjectCache_GET('fullQueetHtml',obj.id,function(data){
-		if(data) {
-			obj.statusnet_html = data;
-			}
-		});
+	var cacheData = localStorageObjectCache_GET('fullQueetHtml',obj.id);
+	if(cacheData) {
+		obj.statusnet_html = cacheData;
+		}
 
 	// we don't want to print 'null' in in_reply_to_screen_name-attribute, someone might have that username!
 	var in_reply_to_screen_name = '';

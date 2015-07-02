@@ -387,11 +387,10 @@ function unRequeet(this_stream_item, this_action, my_rq_id) {
 function getFavsAndRequeetsForQueet(q,qid) {
 
 	// get immediately from localstorage cache
-	localStorageObjectCache_GET('favsAndRequeets',qid,function(data){
-		if(data) {
-			showFavsAndRequeetsInQueet(q, data);
-			}
-		});
+	var cacheData = localStorageObjectCache_GET('favsAndRequeets',qid);
+	if(cacheData) {
+		showFavsAndRequeetsInQueet(q, cacheData);
+		}
 
 	$.ajax({ url: window.apiRoot + "qvitter/favs_and_repeats/" + qid + ".json?t=" + timeNow(),
 		type: "GET",
