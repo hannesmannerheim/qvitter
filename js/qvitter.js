@@ -453,6 +453,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('#invite-link').html(window.sL.inviteAFriend);
 	$('#classic-link').html('Classic ' + window.siteTitle);
 	$('#edit-profile-header-link').html(window.sL.editMyProfile);
+	$('#mini-edit-profile-button').attr('title',window.sL.editMyProfile);
 
 	// show site body now
 	$('#user-container').css('display','block');
