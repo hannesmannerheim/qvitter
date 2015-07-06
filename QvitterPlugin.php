@@ -39,6 +39,7 @@ const QVITTERDIR = __DIR__;
 class QvitterPlugin extends Plugin {
 
     protected $hijack_ui = true;
+    protected $qvitter_hide_replies = false;
 
 	static function settings($setting)
 	{
@@ -118,13 +119,14 @@ class QvitterPlugin extends Plugin {
 
     public function initialize()
     {
-		// check if we should reroute UI to qvitter
+		// check if we should reroute UI to qvitter, and which home-stream the user wants (hide-replies or normal)
 		$scoped = Profile::current();
 		$qvitter_enabled_by_user = false;
 		$qvitter_disabled_by_user = false;
 		if ($scoped instanceof Profile) {
 			$qvitter_enabled_by_user = $scoped->getPref('qvitter', 'enable_qvitter', false);
 			$qvitter_disabled_by_user = $scoped->getPref('qvitter', 'disable_qvitter', false);
+            $this->qvitter_hide_replies = $scoped->getPref('qvitter', 'hide_replies', false);
 		}
 
 		$this->hijack_ui = (self::settings('enabledbydefault') && !$scoped)
@@ -186,11 +188,19 @@ class QvitterPlugin extends Plugin {
         $m->connect('main/qlogin',
                     array('action' => 'qvitterlogin'));
 
+
         if ($this->hijack_ui) {
 			$m->connect('', array('action' => 'qvitter'));
 			$m->connect('main/all', array('action' => 'qvitter'));
 			$m->connect('search/notice', array('action' => 'qvitter'));
 
+            // if the user wants the twitter style home stream with hidden replies to non-friends
+            if ($this->qvitter_hide_replies) {
+			URLMapperOverwrite::overwrite_variable($m, 'api/statuses/friends_timeline.:format',
+									array('action' => 'ApiTimelineFriends'),
+									array('format' => '(xml|json|rss|atom|as)'),
+									'ApiTimelineFriendsHiddenReplies');
+                }
 
 			URLMapperOverwrite::overwrite_variable($m, ':nickname',
 									array('action' => 'showstream'),
@@ -353,7 +363,7 @@ class QvitterPlugin extends Plugin {
                           // TRANS: Poll plugin menu item on user settings page.
                           _m('MENU', 'Qvitter'),
                           // TRANS: Poll plugin tooltip for user settings menu item.
-                          _m('Enable/Disable Qvitter UI'),
+                          _m('Qvitter Settings'),
                           $action_name === 'qvittersettings');
 
         return true;

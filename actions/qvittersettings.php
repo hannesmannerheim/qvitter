@@ -1,6 +1,6 @@
 <?php
- 
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+
+ /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
@@ -15,7 +15,7 @@
   ·                                   o> \\\\_\                                 ·
   ·                                 \\)   \____)                                ·
   ·                                                                             ·
-  ·                                                                             ·    
+  ·                                                                             ·
   ·                                                                             ·
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
@@ -31,7 +31,7 @@
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
-  ·                                                                             · 
+  ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 if (!defined('STATUSNET') && !defined('LACONICA')) {
@@ -60,7 +60,7 @@ class QvitterSettingsAction extends SettingsAction
     function getInstructions()
     {
         // TRANS: Page instructions.
-        return _m('Enable or disable Qvitter UI');
+        return _m('Qvitter Settings');
     }
 
     /**
@@ -74,19 +74,26 @@ class QvitterSettingsAction extends SettingsAction
 
 		if(QvitterPlugin::settings('enabledbydefault')) {
 			try {
-				$prefs = Profile_prefs::getData($user->getProfile(), 'qvitter', 'disable_qvitter');
+				$disable_enable_prefs = Profile_prefs::getData($user->getProfile(), 'qvitter', 'disable_qvitter');
 			} catch (NoResultException $e) {
-				$prefs = false;
+				$disable_enable_prefs = false;
 			}
 		} else {
 			try {
-				$prefs = Profile_prefs::getData($user->getProfile(), 'qvitter', 'enable_qvitter');
+				$disable_enable_prefs = Profile_prefs::getData($user->getProfile(), 'qvitter', 'enable_qvitter');
 			} catch (NoResultException $e) {
-				$prefs = false;
-			}			
-		}	
+				$disable_enable_prefs = false;
+			}
+		}
 
-        $form = new QvitterPrefsForm($this, $prefs);
+
+		try {
+			$hide_replies_prefs = Profile_prefs::getData($user->getProfile(), 'qvitter', 'hide_replies');
+		} catch (NoResultException $e) {
+			$hide_replies_prefs = false;
+		}
+
+        $form = new QvitterPrefsForm($this, $disable_enable_prefs, $hide_replies_prefs);
 
         $form->show();
     }
@@ -104,11 +111,13 @@ class QvitterSettingsAction extends SettingsAction
         $user = common_current_user();
 
 		if(QvitterPlugin::settings('enabledbydefault')) {
-			Profile_prefs::setData($user->getProfile(), 'qvitter', 'disable_qvitter', $this->boolean('disable_qvitter'));			
+			Profile_prefs::setData($user->getProfile(), 'qvitter', 'disable_qvitter', $this->boolean('disable_qvitter'));
 			}
 		else {
-			Profile_prefs::setData($user->getProfile(), 'qvitter', 'enable_qvitter', $this->boolean('enable_qvitter'));			
+			Profile_prefs::setData($user->getProfile(), 'qvitter', 'enable_qvitter', $this->boolean('enable_qvitter'));
 			}
+
+        Profile_prefs::setData($user->getProfile(), 'qvitter', 'hide_replies', $this->boolean('hide_replies'));
 
         // TRANS: Confirmation shown when user profile settings are saved.
         $this->showForm(_('Settings saved.'), true);
@@ -119,12 +128,14 @@ class QvitterSettingsAction extends SettingsAction
 
 class QvitterPrefsForm extends Form
 {
-    var $prefs;
+    var $disable_enable_prefs;
+    var $hide_replies_prefs;
 
-    function __construct($out, $prefs)
+    function __construct($out, $disable_enable_prefs, $hide_replies_prefs)
     {
         parent::__construct($out);
-        $this->prefs = $prefs;
+        $this->disable_enable_prefs = $disable_enable_prefs;
+        $this->hide_replies_prefs = $hide_replies_prefs;
     }
 
     /**
@@ -138,21 +149,31 @@ class QvitterPrefsForm extends Form
 
     function formData()
     {
-       
+
 		if(QvitterPlugin::settings('enabledbydefault')) {
 			$enabledisable = 'disable_qvitter';
 			$enabledisablelabel = _('Disable Qvitter');
 		} else {
 			$enabledisable = 'enable_qvitter';
-			$enabledisablelabel = _('Enable Qvitter');		
-		}       
-       
+			$enabledisablelabel = _('Enable Qvitter');
+		}
+
         $this->elementStart('fieldset');
         $this->elementStart('ul', 'form_data');
         $this->elementStart('li');
         $this->checkbox($enabledisable,
                         $enabledisablelabel,
-                        (!empty($this->prefs)));
+                        (!empty($this->disable_enable_prefs)));
+        $this->elementEnd('li');
+        $this->elementEnd('ul');
+        $this->elementEnd('fieldset');
+
+        $this->elementStart('fieldset');
+        $this->elementStart('ul', 'form_data');
+        $this->elementStart('li');
+        $this->checkbox('hide_replies',
+                        _('Hide replies to people I\'m not following'),
+                        (!empty($this->hide_replies_prefs)));
         $this->elementEnd('li');
         $this->elementEnd('ul');
         $this->elementEnd('fieldset');
