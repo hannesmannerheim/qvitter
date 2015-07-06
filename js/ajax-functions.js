@@ -149,17 +149,20 @@ function getFromAPI(stream, actionOnSuccess) {
 
 			// profile card from user array, also cache it
 			if(request.getResponseHeader('Qvitter-User-Array') !== null) {
-				var qvitterUserArrayHeader = request.getResponseHeader('Qvitter-User-Array');
 
-				// quitter.se fix
-				if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
-				console.log(qvitterUserArrayHeader);
-					qvitterUserArrayHeader = qvitterUserArrayHeader.replace(new RegExp('http:\\\\/\\\\/' + window.siteRootDomain, 'g'), 'https:\/\/' + window.siteRootDomain);
-					}
+                // while waiting for this data user might have changed stream, so only proceed if current stream still is this one
+                if(window.currentStream == stream.replace('&withuserarray=1','')) {
+                    var qvitterUserArrayHeader = request.getResponseHeader('Qvitter-User-Array');
 
-				var userArray = iterateRecursiveReplaceHtmlSpecialChars($.parseJSON(qvitterUserArrayHeader));
-				userArrayCacheStore(userArray);
-				addProfileCardToDOM(buildProfileCard(userArray));
+    				// quitter.se fix
+    				if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
+    					qvitterUserArrayHeader = qvitterUserArrayHeader.replace(new RegExp('http:\\\\/\\\\/' + window.siteRootDomain, 'g'), 'https:\/\/' + window.siteRootDomain);
+    					}
+
+    				var userArray = iterateRecursiveReplaceHtmlSpecialChars($.parseJSON(qvitterUserArrayHeader));
+    				userArrayCacheStore(userArray);
+    				addProfileCardToDOM(buildProfileCard(userArray));
+                    }
 				}
 
 			data = convertEmptyObjectToEmptyArray(data);
