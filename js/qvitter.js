@@ -2533,7 +2533,7 @@ $('body').keyup(function (e) {
 	&& window.loggedIn !== false) {
 
 		// shortcuts documentation on '?'
-		if(e.shiftKey && e.which == 171) {
+		if(e.shiftKey && (e.which == 171 || e.which == 191)) {
 			$('#shortcuts-link').click();
 			}
 
