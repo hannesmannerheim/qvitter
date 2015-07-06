@@ -1802,7 +1802,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 			if($('#q-' + obj.id).length == 0) {
 
 				// activity get special design
-				if(obj.source == 'activity') {
+				if(obj.source == 'activity' || obj.is_activity === true) {
 					var queetTime = parseTwitterDate(obj.created_at);
 					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item activity ' + extraClassesThisRun + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
 
