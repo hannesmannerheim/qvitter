@@ -120,6 +120,7 @@
 	"ellipsisMore": "עוד",
 	"blockUser": "חסום את {username}",
 	"goToOriginalNotice": "עבור להודעה מקורית",
+	"goToTheUsersRemoteProfile": "Go to the user's remote profile",
 	"clickToDrag":"לחץ כדי לגרור",
 	"keyboardShortcuts":"Keyboard shortcuts"
 }

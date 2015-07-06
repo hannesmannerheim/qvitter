@@ -120,6 +120,7 @@
 	"ellipsisMore": "Mer",
 	"blockUser": "Blockera {username}",
 	"goToOriginalNotice": "Gå till den ursprungliga queeten",
+	"goToTheUsersRemoteProfile": "Visa användarens profil på servern där hen bor",
 	"clickToDrag":"Klicka och dra för att flytta",
-	"keyboardShortcuts":"Kortkommandon" 
+	"keyboardShortcuts":"Kortkommandon"
 }

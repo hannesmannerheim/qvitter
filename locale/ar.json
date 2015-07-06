@@ -120,6 +120,7 @@
 	"ellipsisMore": "More",
 	"blockUser": "Block {username}",
 	"goToOriginalNotice": "Go to original notice",
+	"goToUsersProfileOnRemoteServer": "Go to the user's remote profile",
 	"clickToDrag":"Click to drag",
 	"keyboardShortcuts":"Keyboard shortcuts"
 }

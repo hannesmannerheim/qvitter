@@ -1662,7 +1662,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				// external
 				var ostatusHtml = '';
 				if(obj.is_local === false) {
-					ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.statusnet_profile_url + '"></a>';
+					ostatusHtml = '<a target="_blank" title="' + window.sL.goToTheUsersRemoteProfile + '" class="ostatus-link" href="' + obj.statusnet_profile_url + '"></a>';
 					}
 
 				// rtl or not

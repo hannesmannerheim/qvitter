@@ -120,6 +120,7 @@
 	"ellipsisMore": "Más",
 	"blockUser": "Bloquear {username}",
 	"goToOriginalNotice": "Ir al queet original",
+	"goToTheUsersRemoteProfile": "Go to the user's remote profile",
 	"clickToDrag":"Click to drag",
 	"keyboardShortcuts":"Keyboard shortcuts"
 }
