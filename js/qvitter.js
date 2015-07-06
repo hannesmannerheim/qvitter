@@ -298,40 +298,62 @@ $('body').on('click','#signup-terms-header',function(){
 $('#submit-login').removeAttr('disabled'); // might be remebered by browser...
 $(window).load(function() {
 
-	// set language, from local storage, else browser language, else english (english also if no localstorage availible)
+	// set language, from local storage, else browser language
 	var browserLang = navigator.language || navigator.userLanguage;
-	if(browserLang.substring(0,5).toLowerCase() == 'zh-cn') {
-		browserLang = 'zh_cn';
-		}
-	else if(browserLang.substring(0,5).toLowerCase() == 'zh-tw') {
-		browserLang = 'zh_tw';
-		}
-	else {
-		browserLang =  browserLang.substring(0,2);
-		}
 
-	window.selectedLanguage = 'en';
+	// browsers report e.g. sv-SE but we want it in the format "sv" or "sv_se"
+	browserLang = browserLang.replace('-','_').toLowerCase();
 
+	// if we're logged out, we see if there's a saved language in localstorage
 	if(window.loggedIn === false) {
-		var selectedForUser = 'logged_out';
+		var cacheDataLoggedOut = localStorageObjectCache_GET('selectedLanguage','logged_out');
+		if(cacheDataLoggedOut) {
+			window.selectedLanguage = cacheDataLoggedOut;
+			}
+		else {
+			window.selectedLanguage = browserLang;
+			}
 		}
+	// if we're logged in, we check
+	// 1) check if the logged in user has selected a language
+	// 2) check if there a selected language for logged_out users (i.e. the user selected the language before logging in)
+	// 3) go with the browser language
 	else {
-		var selectedForUser = window.loggedIn.id;
+		var cacheDataLoggedOut = localStorageObjectCache_GET('selectedLanguage','logged_out');
+		var cacheDataLoggedIn = localStorageObjectCache_GET('selectedLanguage',window.loggedIn.id);
+		if(cacheDataLoggedIn) {
+			window.selectedLanguage = cacheDataLoggedIn;
+			}
+		else if(cacheDataLoggedOut) {
+			window.selectedLanguage = cacheDataLoggedOut;
+			}
+		else {
+			window.selectedLanguage = browserLang;
+			}
 		}
 
-	var cacheData = localStorageObjectCache_GET('selectedLanguage',selectedForUser);
-	if(cacheData) {
-		window.selectedLanguage = cacheData;
-		}
-	else {
-		window.selectedLanguage = browserLang;
-		}
-
-	// check that this language is available, otherwise use english
+	// check that the language is available,
 	if(typeof window.availableLanguages[window.selectedLanguage] == 'undefined') {
-		window.selectedLanguage = 'en';
+		// if not there might be a base language, e.g. "sv" instead of "sv_se"
+		if(typeof window.availableLanguages[window.selectedLanguage.substring(0,2)] != 'undefined') {
+			window.selectedLanguage = window.selectedLanguage.substring(0,2);
+			}
+		else {
+			// there's also a chance there no base language, but a similar country specific language that we can use (rather than english)
+			var similarLanguageFound = false;
+			$.each(window.availableLanguages, function(lanCode,lanData){
+				if(lanCode.substring(0,2) == window.selectedLanguage.substring(0,2)) {
+					window.selectedLanguage = lanCode;
+					similarLanguageFound = true;
+					return false;
+					}
+				});
+			// if we can't find a similar language, go with english
+			if(similarLanguageFound === false) {
+				window.selectedLanguage = 'en';
+				}
+			}
 		}
-
 
 	// if we already have this version of this language in localstorage, we
 	// use that cached version. we do this because $.ajax doesn't respect caching, it seems
