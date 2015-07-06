@@ -2079,6 +2079,9 @@ $('body').on('click', '.queet-toolbar button',function () {
 			// remove temp queet
 			$('#' + tempPostId).remove();
 
+			// clear queetbox input cache
+			localStorageObjectCache_STORE('queetBoxInput',queetBox.attr('id'),false);
+
 			// queet count
 			$('#user-queets strong').html(parseInt($('#user-queets strong').html(),10)+1);
 
