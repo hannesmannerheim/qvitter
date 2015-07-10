@@ -130,15 +130,15 @@ class QvitterPlugin extends Plugin {
 		}
 
         // reroute to qvitter if we're logged out and qvitter is enabled by default
-        if($this->settings('enabledbydefault') === true && is_null($scoped)) {
+        if(static::settings('enabledbydefault') === true && is_null($scoped)) {
             $this->hijack_ui = true;
         }
         // if we're logged in and qvitter is enabled by default, reroute if the user has not disabled qvitter
-        elseif($this->settings('enabledbydefault') === true && $qvitter_disabled_by_user == 0){
+        elseif(static::settings('enabledbydefault') === true && $qvitter_disabled_by_user == 0){
             $this->hijack_ui = true;
         }
         // if we're logged in, and qvitter is _not_ enabled by default, reroute if the user enabled qvitter
-        elseif($this->settings('enabledbydefault') === false && $qvitter_enabled_by_user == 1) {
+        elseif(static::settings('enabledbydefault') === false && $qvitter_enabled_by_user == 1) {
             $this->hijack_ui = true;
         }
 
