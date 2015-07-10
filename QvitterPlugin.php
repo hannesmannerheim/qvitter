@@ -38,7 +38,7 @@ const QVITTERDIR = __DIR__;
 
 class QvitterPlugin extends Plugin {
 
-    protected $hijack_ui = true;
+    protected $hijack_ui = false;
     protected $qvitter_hide_replies = false;
 
 	static function settings($setting)
@@ -140,10 +140,6 @@ class QvitterPlugin extends Plugin {
         // if we're logged in, and qvitter is _not_ enabled by default, reroute if the user enabled qvitter
         elseif(self::settings('enabledbydefault') === false && $qvitter_enabled_by_user == 1) {
             $this->hijack_ui = true;
-        }
-        // otherwise we do not reroute
-        else {
-            $this->hijack_ui = false;
         }
 
         // show qvitter link in the admin panel
