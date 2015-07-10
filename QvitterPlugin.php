@@ -51,7 +51,7 @@ class QvitterPlugin extends Plugin {
          · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 		// THESE SETTINGS CAN BE OVERRIDDEN IN CONFIG.PHP
-		// e.g. $config['site']['qvitter']['enabledbydefault'] = 'false';
+		// e.g. $config['site']['qvitter']['enabledbydefault'] = false;
 
 		// ENABLED BY DEFAULT (true/false)
 		$settings['enabledbydefault'] = true;
