@@ -1426,17 +1426,23 @@ function shortenUrlsInBox(shortenButton) {
 
 		display_spinner();
 
-		$.ajax({ url: window.urlShortenerAPIURL + '?format=jsonp&action=shorturl&signature=' + window.urlShortenerSignature + '&url=' + encodeURIComponent(url), type: "GET", dataType: "jsonp", success: function(data) {
+		$.ajax({ url: window.urlShortenerAPIURL + '?format=jsonp&action=shorturl&signature=' + window.urlShortenerSignature + '&url=' + encodeURIComponent(url), type: "GET", dataType: "jsonp",
+			success: function(data) {
 
-			if(typeof data.shorturl != 'undefined') {
+				if(typeof data.shorturl != 'undefined') {
 
-				shortenButton.closest('.queet-toolbar').siblings('.upload-image-container').children('img[data-shorturl="' + data.url.url + '"]').attr('data-shorturl',data.shorturl);
-				shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace($('<div/>').text(data.url.url).html(), data.shorturl));
-				shortenButton.parent().parent().siblings('.queet-box-syntax').trigger('keyup');
-				shortenButton.addClass('disabled'); // make sure the button is disabled right after
+					shortenButton.closest('.queet-toolbar').siblings('.upload-image-container').children('img[data-shorturl="' + data.url.url + '"]').attr('data-shorturl',data.shorturl);
+					shortenButton.parent().parent().siblings('.queet-box-syntax').html(shortenButton.parent().parent().siblings('.queet-box-syntax').html().replace($('<div/>').text(data.url.url).html(), data.shorturl));
+					shortenButton.parent().parent().siblings('.queet-box-syntax').trigger('keyup');
+					shortenButton.addClass('disabled'); // make sure the button is disabled right after
+					}
+				remove_spinner();
+				},
+			error: function(data) {
+				console.log(data);
+				remove_spinner();
 				}
-			remove_spinner();
-			}});
+			});
 		});
 }
 
