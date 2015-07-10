@@ -130,7 +130,7 @@ class QvitterPlugin extends Plugin {
 		}
 
         // reroute to qvitter if we're logged out and qvitter is enabled by default
-        if(self::settings('enabledbydefault') === true && !$scoped) {
+        if(self::settings('enabledbydefault') === true && is_null($scoped)) {
             $this->hijack_ui = true;
         }
         // if we're logged in and qvitter is enabled by default, reroute if the user has not disabled qvitter
@@ -280,11 +280,8 @@ class QvitterPlugin extends Plugin {
 			}
 
 
-
-
 		// add user arrays for some urls, to use to build profile cards
 		// this way we don't have to request this in a separate http request
-
 		if(isset($_GET['withuserarray'])) switch (getPath($_REQUEST)) {
 		case 'api/statuses/followers.json':
 		case 'api/statuses/friends.json':
