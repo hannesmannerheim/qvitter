@@ -204,7 +204,7 @@ class QvitterPlugin extends Plugin {
 			$m->connect('search/notice', array('action' => 'qvitter'));
 
             // if the user wants the twitter style home stream with hidden replies to non-friends
-            if ($this->qvitter_hide_replies === true) {
+            if ($this->qvitter_hide_replies == 1) {
 			URLMapperOverwrite::overwrite_variable($m, 'api/statuses/friends_timeline.:format',
 									array('action' => 'ApiTimelineFriends'),
 									array('format' => '(xml|json|rss|atom|as)'),
