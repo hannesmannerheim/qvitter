@@ -41,6 +41,8 @@ class QvitterPlugin extends Plugin {
     protected $hijack_ui = false;
     protected $qvitter_hide_replies = false;
 
+    public $handleDeletedNotices = true;
+
 	static function settings($setting)
 	{
 
@@ -719,6 +721,9 @@ class QvitterPlugin extends Plugin {
      */
     public function onNoticeDeleteRelated($notice)
     {
+        if (!$this->handleDeletedNotices) {
+            return true;
+        }
 
 		$notif = new QvitterNotification();
 
@@ -772,7 +777,7 @@ class QvitterPlugin extends Plugin {
 
     public function onEndHandleFeedEntry($activity) {
 
-		if($activity->verb == 'qvitter-delete-notice') {
+		if($activity->verb == 'qvitter-delete-notice' && $this->handleDeletedNotices) {
 
 			$deleter_profile_uri = $activity->actor->id;
 			$deleted_notice_uri = $activity->objects[0]->objects[0]->content;
