@@ -2556,16 +2556,17 @@ $('body').keyup(function (e) {
 
 			// next queet on 'j'
 			if(e.which == 74) {
-
 				selectedQueet.removeClass('selected-by-keyboard');
-				selectedQueet.next('.visible').addClass('selected-by-keyboard');
-				scrollToQueet(selectedQueet.next());
+				var next = selectedQueet.nextAll('.visible').not('.activity').first();
+				next.addClass('selected-by-keyboard');
+				scrollToQueet(next);
 				}
 			// prev queet on 'k'
 			else if(e.which == 75) {
 				selectedQueet.removeClass('selected-by-keyboard');
-				selectedQueet.prev('.visible').addClass('selected-by-keyboard');
-				scrollToQueet(selectedQueet.prev());
+				var prev = selectedQueet.prevAll('.visible').not('.activity').first();
+				prev.addClass('selected-by-keyboard');
+				scrollToQueet(prev);
 				}
 			// fav queet on 'f'
 			else if(e.which == 70) {
