@@ -124,14 +124,14 @@ class QvitterPlugin extends Plugin {
 		$qvitter_enabled_by_user = false;
 		$qvitter_disabled_by_user = false;
 		if ($scoped instanceof Profile) {
-			$qvitter_enabled_by_user = $scoped->getPref('qvitter', 'enable_qvitter', false);
-			$qvitter_disabled_by_user = $scoped->getPref('qvitter', 'disable_qvitter', false);
+			$qvitter_enabled_by_user = (int)$scoped->getPref('qvitter', 'enable_qvitter', false);
+			$qvitter_disabled_by_user = (int)$scoped->getPref('qvitter', 'disable_qvitter', false);
             $this->qvitter_hide_replies = $scoped->getPref('qvitter', 'hide_replies', false);
 		}
 
 		$this->hijack_ui = (self::settings('enabledbydefault') && !$scoped)
-                            || (self::settings('enabledbydefault') && !$qvitter_disabled_by_user)
-                            || (!self::settings('enabledbydefault') && $qvitter_enabled_by_user);
+                            || (self::settings('enabledbydefault') && $qvitter_disabled_by_user == 0)
+                            || (!self::settings('enabledbydefault') && $qvitter_enabled_by_user == 1);
 
         // show qvitter link in the admin panel
         common_config_append('admin', 'panels', 'qvitteradm');
