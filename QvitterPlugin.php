@@ -119,29 +119,6 @@ class QvitterPlugin extends Plugin {
 
     public function initialize()
     {
-		// check if we should reroute UI to qvitter, and which home-stream the user wants (hide-replies or normal)
-		$scoped = Profile::current();
-		$qvitter_enabled_by_user = 0;
-		$qvitter_disabled_by_user = 0;
-		if ($scoped instanceof Profile) {
-			$qvitter_enabled_by_user = (int)$scoped->getPref('qvitter', 'enable_qvitter', false);
-			$qvitter_disabled_by_user = (int)$scoped->getPref('qvitter', 'disable_qvitter', false);
-            $this->qvitter_hide_replies = $scoped->getPref('qvitter', 'hide_replies', false);
-		}
-
-        // reroute to qvitter if we're logged out and qvitter is enabled by default
-        if(static::settings('enabledbydefault') === true && is_null($scoped)) {
-            $this->hijack_ui = true;
-        }
-        // if we're logged in and qvitter is enabled by default, reroute if the user has not disabled qvitter
-        elseif(static::settings('enabledbydefault') === true && $qvitter_disabled_by_user == 0){
-            $this->hijack_ui = true;
-        }
-        // if we're logged in, and qvitter is _not_ enabled by default, reroute if the user enabled qvitter
-        elseif(static::settings('enabledbydefault') === false && $qvitter_enabled_by_user == 1) {
-            $this->hijack_ui = true;
-        }
-
         // show qvitter link in the admin panel
         common_config_append('admin', 'panels', 'qvitteradm');
     }
@@ -196,6 +173,30 @@ class QvitterPlugin extends Plugin {
                     array('action' => 'qvitteradminsettings'));
         $m->connect('main/qlogin',
                     array('action' => 'qvitterlogin'));
+
+
+		// check if we should reroute UI to qvitter, and which home-stream the user wants (hide-replies or normal)
+		$scoped = Profile::current();
+		$qvitter_enabled_by_user = 0;
+		$qvitter_disabled_by_user = 0;
+		if ($scoped instanceof Profile) {
+			$qvitter_enabled_by_user = (int)$scoped->getPref('qvitter', 'enable_qvitter', false);
+			$qvitter_disabled_by_user = (int)$scoped->getPref('qvitter', 'disable_qvitter', false);
+            $this->qvitter_hide_replies = $scoped->getPref('qvitter', 'hide_replies', false);
+		}
+
+        // reroute to qvitter if we're logged out and qvitter is enabled by default
+        if(static::settings('enabledbydefault') === true && is_null($scoped)) {
+            $this->hijack_ui = true;
+        }
+        // if we're logged in and qvitter is enabled by default, reroute if the user has not disabled qvitter
+        elseif(static::settings('enabledbydefault') === true && $qvitter_disabled_by_user == 0){
+            $this->hijack_ui = true;
+        }
+        // if we're logged in, and qvitter is _not_ enabled by default, reroute if the user enabled qvitter
+        elseif(static::settings('enabledbydefault') === false && $qvitter_enabled_by_user == 1) {
+            $this->hijack_ui = true;
+        }
 
 
         if ($this->hijack_ui === true) {
