@@ -94,6 +94,9 @@ class QvitterPlugin extends Plugin {
 		// IP ADDRESSES BLOCKED FROM REGISTRATION
 		$settings['blocked_ips'] = array();
 
+        // LINKIFY DOMAINS WITHOUT PROTOCOL AS DEFAULT
+        $settings['linkify_bare_domains'] = true;
+
 
 		 /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
 		  ·                                                                   ·
@@ -108,6 +111,9 @@ class QvitterPlugin extends Plugin {
 		foreach($configphpsettings as $configphpsetting=>$value) {
 			$settings[$configphpsetting] = $value;
 		}
+
+        // set linkify setting
+        common_config_set('linkify', 'bare_domains', $settings['linkify_bare_domains']);
 
 		if(isset($settings[$setting])) {
 			return $settings[$setting];
