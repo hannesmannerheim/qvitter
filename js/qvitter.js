@@ -1970,7 +1970,10 @@ $('body').on('click','.action-reply-container',function(){
 
 $('body').on('click','#top-compose',function(){
 	popUpAction('popup-compose', window.sL.compose,queetBoxHtml(),false);
-	$('#popup-compose').find('.queet-box').width($('#popup-compose').find('.inline-reply-queetbox').width()-20);
+	var queetBoxWidth = $('#popup-compose').find('.inline-reply-queetbox').width()-20;
+	$('#popup-compose').find('.queet-box-syntax').width(queetBoxWidth);
+	$('#popup-compose').find('.syntax-middle').width(queetBoxWidth);
+	$('#popup-compose').find('.syntax-two').width(queetBoxWidth);
 	$('#popup-compose').find('.queet-box').trigger('click');
 	});
 
