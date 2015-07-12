@@ -744,26 +744,38 @@ class QvitterPlugin extends Plugin {
 
 		// outputs an activity notice that this notice was deleted
         $profile = $notice->getProfile();
-        $rendered = sprintf(_m('<a href="%1$s">%2$s</a> deleted notice <a href="%3$s">{{%4$s}}</a>.'),
-                            $profile->getUrl(),
-                            $profile->getBestName(),
-                            $notice->getUrl(),
-                            $notice->uri);
-        $text = sprintf(_m('%1$s deleted notice {{%2$s}}.'),
-                            $profile->getBestName(),
-                            $notice->uri);
-        $uri = TagURI::mint('delete-notice:%d:%d:%s',
-                            $notice->profile_id,
-                            $notice->id,
-                            common_date_iso8601(common_sql_now()));
-        $notice = Notice::saveNew($notice->profile_id,
-                                  $text,
-                                  ActivityPlugin::SOURCE,
-                                  array('rendered' => $rendered,
-                                        'urls' => array(),
-                                        'uri' => $uri,
-                                        'verb' => 'qvitter-delete-notice',
-                                        'object_type' => ActivityObject::ACTIVITY));
+
+        // don't delete if this is a user is being deleted
+        // because that creates an infinite loop of deleting and creating notices...
+        $user_is_deleted = false;
+        $user = User::getKV('id',$profile->id);
+        if($user instanceof User && $user->hasRole(Profile_role::DELETED)) {
+            $user_is_deleted = true;
+        }
+
+        if(!$user_is_deleted) {
+            $rendered = sprintf(_m('<a href="%1$s">%2$s</a> deleted notice <a href="%3$s">{{%4$s}}</a>.'),
+                                $profile->getUrl(),
+                                $profile->getBestName(),
+                                $notice->getUrl(),
+                                $notice->uri);
+            $text = sprintf(_m('%1$s deleted notice {{%2$s}}.'),
+                                $profile->getBestName(),
+                                $notice->uri);
+            $uri = TagURI::mint('delete-notice:%d:%d:%s',
+                                $notice->profile_id,
+                                $notice->id,
+                                common_date_iso8601(common_sql_now()));
+            $notice = Notice::saveNew($notice->profile_id,
+                                      $text,
+                                      ActivityPlugin::SOURCE,
+                                      array('rendered' => $rendered,
+                                            'urls' => array(),
+                                            'uri' => $uri,
+                                            'verb' => 'qvitter-delete-notice',
+                                            'object_type' => ActivityObject::ACTIVITY));
+        }
+
 
         return true;
     }
