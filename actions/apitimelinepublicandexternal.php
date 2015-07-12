@@ -65,7 +65,7 @@ class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
      * @return boolean success flag
      *
      */
-    function prepare($args)
+    protected function prepare(array $args=array())
     {
         parent::prepare($args);
 
@@ -79,13 +79,11 @@ class ApiTimelinePublicAndExternalAction extends ApiPrivateAuthAction
      *
      * Just show the notices
      *
-     * @param array $args $_REQUEST data (unused)
-     *
      * @return void
      */
-    function handle($args)
+    protected function handle()
     {
-        parent::handle($args);
+        parent::handle();
         $this->showTimeline();
     }
 
