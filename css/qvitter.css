@@ -420,9 +420,9 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
 .action-ellipsis-container .dropdown-menu {
     display: block;
     float: right;
-    left: -6px;
-    top: 24px;
-    right:auto;
+    left: 17px;
+    right: auto;
+    top: 28px;
 	}
 .action-ellipsis-container .dropdown-menu,
 .action-ellipsis-container .dropdown-menu li:not(.dropdown-caret),
