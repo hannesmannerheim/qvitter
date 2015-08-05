@@ -40,6 +40,10 @@
 	font-style: normal;
 	}
 
+* {
+	font-family:"Helvetica Neue",Arial,sans-serif;
+	}
+
 html {
     overflow-y: scroll;
 	}
@@ -70,7 +74,6 @@ body {
 	color: #333333;
     font-size: 14px;
     line-height: 18px;
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	}
 a, a:visited, a:active {
 	text-decoration:none;
@@ -219,7 +222,6 @@ button.shorten i,
 	text-align: left;
 	}
 button.icon.nav-search {
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	border: 0 none;
     background-repeat: no-repeat;
     display: inline-block;
@@ -233,7 +235,6 @@ button.icon.nav-search {
     cursor:pointer;
 	}
 button.icon.nav-search span {
-	font-family: "Helvetica Neue",Arial,sans-serif;
     border: 0 none;
     clip: rect(0px, 0px, 0px, 0px);
     height: 1px;
@@ -493,7 +494,6 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     text-align: left;
     text-shadow: 0 1px 2px #000000;
 	display:none;
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	}
 
 .front-welcome-text {
@@ -507,7 +507,6 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     text-align: left;
     text-shadow: 0 1px 2px #fff;
 	display:none;
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	background-color:rgba(255,255,255,0.8);
 	position:relative;
 	border-radius:3px;
@@ -798,7 +797,6 @@ table.password-signin {
 	}
 
 button#submit-login {
-	font-family: "Helvetica Neue",Arial,​sans-serif;
 	font-size: 13px;
 	font-weight: 700;
 	color: #FFFFFF;
@@ -968,7 +966,6 @@ button#submit-login:hover {
     padding: 10px 12px;
     position: relative;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
-    font-family: "Helvetica Neue",Arial,sans-serif;
     text-align:left;
 	}
 .front-signup h2 strong {
@@ -990,7 +987,6 @@ button#submit-login:hover {
     color: #333333;
     cursor: pointer;
     display: inline-block;
-    font-family: "Helvetica Neue",Arial,sans-serif;
     font-size: 13px;
     font-weight: bold;
     line-height: 18px;
@@ -1245,11 +1241,9 @@ body.rtl #footer-spinner-container {
     padding-right:10px;
     font-size: 13px;
     line-height: 20px;
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	}
 
 #settings-container input {
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	font-size: 13px;
     line-height: 20px;
 	background-color: #FFFFFF;
@@ -1277,7 +1271,6 @@ body.rtl #footer-spinner-container {
 
 #feed {
 	display:none;
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 14px;
 	color: #333333;
 	line-height: 18px;
@@ -1290,7 +1283,6 @@ body.rtl #footer-spinner-container {
 	}
 
 #feed-header {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 14px;
 	color: #333333;
 	line-height: 18px;
@@ -1319,7 +1311,6 @@ body.rtl #footer-spinner-container {
 	}
 #feed-header-inner {
 	position:relative;
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 14px;
 	color: #333333;
 	line-height: 18px;
@@ -1339,7 +1330,6 @@ body.rtl #footer-spinner-container {
 	}
 
 #feed-header-inner h2 {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
@@ -1407,7 +1397,6 @@ body.rtl #footer-spinner-container {
 	}
 
 .stream-item {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 14px;
 	color: #333333;
 	line-height: 18px;
@@ -1558,7 +1547,6 @@ background-repeat: no-repeat;
 .show-full-conversation {
     bottom: 3px;
     color: #777;
-    font-family: "Helvetica Neue",Arial,sans-serif;
     font-size: 12px;
     line-height: 12px;
     position: absolute;
@@ -1568,7 +1556,6 @@ background-repeat: no-repeat;
 	text-decoration:underline;
 	}
 .queet {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 14px;
 	color: #333333;
 	line-height: 18px;
@@ -2074,7 +2061,6 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	}
 
 .stream-item-header .name {
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	font-size: 14px;
 	font-weight: 700;
 	color: #333333;
@@ -2084,7 +2070,6 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 .stream-item-header .reply-to,
 .stream-item-header .in-groups,
 .stream-item-header .h-card {
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	font-size: 13px;
 	color: #999999;
 	line-height: 18px;
@@ -2104,12 +2089,10 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	}
 .stream-item-header .created-at {
 	color: #BBBBBB;
-    font-family: "Helvetica Neue",Arial,sans-serif;
     font-size: 13px;
     line-height: 18px;
 	}
 .stream-item-header .created-at a {
-	font-family:"Helvetica Neue",Arial,sans-serif;
 	font-size: 13px;
 	color: #999999;
 	text-decoration: none;
@@ -2123,7 +2106,6 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	}
 
 .queet-text {
-	font-family:"Helvetica Neue",Arial,sans-serif;
 	font-size: 14px;
 	color: #333333;
 	line-height: 18px;
@@ -2184,7 +2166,6 @@ body.rtl .stream-item.user .queet-content .stream-item-header {
 ul.queet-actions {
 	bottom: 0;
     display: block;
-    font-family: "Helvetica Neue",Arial,sans-serif;
     font-size: 12px;
     line-height: 26px;
     list-style: outside none none;
@@ -2258,7 +2239,6 @@ ul.queet-actions li.action-rq-num,
 ul.queet-actions li.action-fav-num {
 	color: rgba(0, 0, 0, 0.45);
     display: inline-block;
-    font-family: "Helvetica Neue",Arial,sans-serif;
     font-size: 12px;
     font-weight: bold;
     height: 26px;
@@ -2516,7 +2496,6 @@ ul.queet-actions li .icon.is-mine:before {
 	}
 
 ul.stats {
-	font-family: "Helvetica Neue",Arial,sans-serif;
     font-size: 18px;
     font-weight: 500;
     line-height: 20px;
@@ -2776,7 +2755,6 @@ span.inline-reply-caret .caret-inner {
     font-size: 12px;
     text-shadow: 0 1px 0 #FFFFFF;
     line-height: 16px;
-    font-family: "Helvetica Neue",Arial,sans-serif;
     color: #333333;
     font-size: 14px;
     line-height: 18px;
@@ -2795,7 +2773,6 @@ span.inline-reply-caret .caret-inner {
 	}
 #user-name,
 #user-screen-name {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 14px;
 	font-weight: 700;
 	color: #fff;
@@ -2843,7 +2820,6 @@ span.inline-reply-caret .caret-inner {
 	}
 
 #user-profile-link a {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 11px;
 	color: #999999;
 	line-height: 16px;
@@ -2864,7 +2840,6 @@ span.inline-reply-caret .caret-inner {
     border-radius: 4px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
     color: #ff00ae;
-    font-family: "Helvetica Neue",​Arial,​sans-serif;
     font-size: 12px;
     height: 40px;
     line-height: 16px;
@@ -2884,7 +2859,6 @@ span.inline-reply-caret .caret-inner {
 #user-body {
 	background-color: #fff;
     color: #333333;
-    font-family: "Helvetica Neue",​Arial,​sans-serif;
     font-size: 12px;
     line-height: 16px;
     list-style: outside none none;
@@ -2923,7 +2897,6 @@ body.rtl #user-body {
 #user-body #user-groups .label,
 #user-body #user-following .label {
     color: #999999;
-    font-family: "Helvetica Neue",​Arial,​sans-serif;
     font-size: 10px;
     letter-spacing:0.2px;
     line-height: 16px;
@@ -2939,7 +2912,6 @@ body.rtl #user-body {
 	}
 
 #user-body strong {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 18px;
 	font-weight:500;
 	text-transform: uppercase;
@@ -2955,7 +2927,6 @@ body.rtl #user-body {
 	}
 
 #user-footer {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 12px;
 	color: #333333;
 	line-height: 12px;
@@ -2989,7 +2960,6 @@ body.rtl #user-body {
 	}
 
 .queet-box {
-	font-family: "Helvetica Neue",​Arial,​sans-serif;
 	font-size: 13px;
 	color: #AAAAAA;
 	line-height: 18px;
@@ -3037,7 +3007,6 @@ body.rtl #user-body {
 .queet-box-syntax[contenteditable="true"],
 .syntax-two,
 .syntax-middle {
-	font-family: "Helvetica Neue",Arial,​sans-serif;
 	font-size: 13px;
 	color: #333333;
 	line-height: 18px;
@@ -3219,7 +3188,6 @@ body.rtl .queet-box-extras {
     }
 
 .queet-toolbar button {
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	font-size: 13px;
 	font-weight: 700;
 	color: #FFFFFF;
@@ -3480,7 +3448,6 @@ div.clearfix {
 .save-profile-button,
 .abort-edit-profile-button,
 .crop-and-save-button {
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	font-size: 13px;
 	font-weight: 700;
 	color: #333;
@@ -3561,7 +3528,6 @@ button.shorten:not(.disabled):active {
 .abort-edit-profile-button .button-text,
 .crop-and-save-button .button-text {
 	display:none;
-    font-family: "Helvetica Neue",Arial,sans-serif;
     min-width: 70px;
     text-align: center;
 	}
@@ -4007,7 +3973,6 @@ body.rtl .modal-footer div.right {
 	background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(221,221,221,1) 100%);
 	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(221,221,221,1) 100%);
     background-repeat: repeat-x;
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	font-weight:700;
 	margin-left: 10px;
 	}
@@ -4286,7 +4251,6 @@ body.rtl .edit-profile-container .profile-card {
 	border:0 none;
 	text-align:center;
 	width:84%;
-	font-family: "Helvetica Neue",Arial,sans-serif;
 	}
 .profile-header-inner input:focus,
 .profile-header-inner textarea:focus {
@@ -4824,7 +4788,6 @@ body.rtl #feed-header-inner h2  {
 		box-shadow: none;
 		color: #444444;
 		display: block;
-		font-family: "Helvetica Neue",Arial,sans-serif;
 		font-size: 12px;
 		height: 52px;
 		line-height: 1;
