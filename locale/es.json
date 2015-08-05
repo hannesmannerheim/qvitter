@@ -122,5 +122,6 @@
 	"goToOriginalNotice": "Ir al queet original",
 	"goToTheUsersRemoteProfile": "Ir al perfil del usuario",
 	"clickToDrag":"Click para arrastrar",
-	"keyboardShortcuts":"Atajos de teclado"
+	"keyboardShortcuts":"Atajos de teclado",
+	"classicInterface":"Classic {site-title}"
 }

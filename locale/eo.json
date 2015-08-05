@@ -122,5 +122,6 @@
 	"goToOriginalNotice": "Iri al origina pepo",
 	"goToTheUsersRemoteProfile": "Go to the user's remote profile",
 	"clickToDrag":"Click to drag",
-	"keyboardShortcuts":"Keyboard shortcuts"
+	"keyboardShortcuts":"Keyboard shortcuts",
+	"classicInterface":"Classic {site-title}"
 }

@@ -122,5 +122,6 @@
 	"goToOriginalNotice": "Gå till den ursprungliga queeten",
 	"goToTheUsersRemoteProfile": "Visa användarens profil på servern där hen bor",
 	"clickToDrag":"Klicka och dra för att flytta",
-	"keyboardShortcuts":"Kortkommandon"
+	"keyboardShortcuts":"Kortkommandon",
+	"classicInterface":"Byt till GNU socials standardgränssnitt"
 }

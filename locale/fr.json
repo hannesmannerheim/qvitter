@@ -122,5 +122,6 @@
 	"goToOriginalNotice": "Aller vers l'avis d'origine",
 	"goToTheUsersRemoteProfile": "Go to the user's remote profile",
 	"clickToDrag":"Click to drag",
-	"keyboardShortcuts":"Keyboard shortcuts"
+	"keyboardShortcuts":"Keyboard shortcuts",
+	"classicInterface":"{site-title} Classique"
 }

@@ -122,5 +122,6 @@
 	"goToOriginalNotice": "עבור להודעה מקורית",
 	"goToTheUsersRemoteProfile": "עבור לפרופיל מרוחק של משתמש",
 	"clickToDrag":"לחץ כדי לגרור",
-	"keyboardShortcuts":"קיצורי מקלדת"
+	"keyboardShortcuts":"קיצורי מקלדת",
+	"classicInterface":"Classic {site-title}"
 }

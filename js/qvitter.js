@@ -451,7 +451,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('#faq-link').html(window.sL.FAQ);
 	$('#shortcuts-link').html(window.sL.keyboardShortcuts);
 	$('#invite-link').html(window.sL.inviteAFriend);
-	$('#classic-link').html('Classic ' + window.siteTitle);
+	$('#classic-link').html(window.sL.classicInterface);
 	$('#edit-profile-header-link').html(window.sL.editMyProfile);
 	$('#mini-edit-profile-button').attr('title',window.sL.editMyProfile);
 
