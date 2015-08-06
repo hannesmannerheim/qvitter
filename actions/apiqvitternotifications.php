@@ -1,5 +1,5 @@
 <?php
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+ /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
@@ -14,7 +14,7 @@
   ·                                   o> \\\\_\                                 ·
   ·                                 \\)   \____)                                ·
   ·                                                                             ·
-  ·                                                                             ·    
+  ·                                                                             ·
   ·                                                                             ·
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
@@ -30,7 +30,7 @@
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
-  ·                                                                             · 
+  ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 if (!defined('STATUSNET')) {
@@ -82,7 +82,7 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
      */
     function showTimeline()
     {
-        $notice = null;        
+        $notice = null;
 
         $notifications_populated = array();
 
@@ -93,7 +93,13 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
                 if($notification->notice_id === null) {
                     continue;
                 } else {
-                    $notice = self::twitterSimpleStatusArray(Notice::getKV($notification->notice_id));
+                    $notice_object = Notice::getKV($notification->notice_id);
+                    if($notice_object instanceof Notice) {
+                        $notice = self::twitterSimpleStatusArray($notice_object);
+                    } else {
+                        continue;
+                    }
+
                 }
             }
 
@@ -134,17 +140,17 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
         $notices = array();
 
         $profile = ($this->auth_user) ? $this->auth_user->getProfile() : null;
-		
+
 		if(!$profile instanceof Profile) {
 			return false;
 			}
-		
+
         $stream = new NotificationStream($profile);
 
         $notifications = $stream->getNotifications(($this->page - 1) * $this->count,
                                       $this->count,
                                       $this->since_id,
-                                      $this->max_id);                        
+                                      $this->max_id);
 
         $notifications = $notifications->fetchAll();
 
@@ -205,5 +211,5 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
 
         return null;
     }
-      
+
 }
