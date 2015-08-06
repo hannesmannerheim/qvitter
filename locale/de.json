@@ -123,5 +123,6 @@
 	"goToTheUsersRemoteProfile": "Go to the user's remote profile",
 	"clickToDrag":"Click to drag",
 	"keyboardShortcuts":"Keyboard shortcuts",
-	"classicInterface":"Classic {site-title}"
+	"classicInterface":"Classic {site-title}",
+	"accessibilityToggleLink":"Nutzer von Screenreadern klicken bitte hier, um zur klassischen Version von {site-title} zu gelangen."
 }

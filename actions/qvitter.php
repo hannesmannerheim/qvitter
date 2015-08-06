@@ -291,6 +291,14 @@ class QvitterAction extends ApiAction
 				?>
 			</head>
 			<body style="background-color:<?php print QvitterPlugin::settings("defaultbackgroundcolor"); ?>">
+                <?php
+
+                // add an accessibility toggle link to switch to standard UI, if we're logged in
+                if($logged_in_user) {
+                    print '<a id="accessibility-toggle-link" href="#"></a>';
+                    }
+
+                ?>
 				<input id="upload-image-input" class="upload-image-input" type="file" name="upload-image-input" accept="image/*">
 				<div class="topbar">
 					<a href="<?php print $instanceurl; ?>"><div id="logo"></div></a>

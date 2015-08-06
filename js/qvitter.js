@@ -454,6 +454,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('#classic-link').html(window.sL.classicInterface);
 	$('#edit-profile-header-link').html(window.sL.editMyProfile);
 	$('#mini-edit-profile-button').attr('title',window.sL.editMyProfile);
+	$('#accessibility-toggle-link').html(window.sL.accessibilityToggleLink);
 
 	// show site body now
 	$('#user-container').css('display','block');
@@ -625,7 +626,7 @@ $('#faq-link').click(function(){
    ·
    · · · · · · · · · · · · · */
 
-$('#classic-link').click(function(){
+$('#classic-link, #accessibility-toggle-link').click(function(){
 	getFromAPI('qvitter/toggle_qvitter.json',function(data){
 		if(data.success === true) {
 			window.location.href = window.siteInstanceURL + window.loggedIn.screen_name + '/all';

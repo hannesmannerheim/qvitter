@@ -123,5 +123,6 @@
 	"goToTheUsersRemoteProfile": "Visa användarens profil på servern där hen bor",
 	"clickToDrag":"Klicka och dra för att flytta",
 	"keyboardShortcuts":"Kortkommandon",
-	"classicInterface":"Byt till GNU socials standardgränssnitt"
+	"classicInterface":"Byt till GNU socials standardgränssnitt",
+	"accessibilityToggleLink":"För bättre tillgänglighet, följ den här länken för att byta till GNU socials standardgränssnitt"
 }

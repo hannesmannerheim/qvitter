@@ -111,6 +111,16 @@ button.shorten i,
 	background-size: 500px 1329px;
 	}
 
+#accessibility-toggle-link {
+	height:0;
+	width:0;
+	opacity:0;
+	display:block;
+	position:absolute;
+	margin:0;
+	padding:0;
+}
+
 #logo {
 	width:89px;
 	height:34px;
