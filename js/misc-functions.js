@@ -834,7 +834,7 @@ function detectRTL(s) {
 		// for ltr languages we move @, ! and # to inside
     	$streamItem.find('.queet-text').find('.h-card.mention').prepend('@');
     	$streamItem.find('.queet-text').find('.h-card.group').prepend('!');
-    	$streamItem.find('.queet-text').find('.vcard .fn.nickname').prepend('@'); // very old style
+    	$streamItem.find('.queet-text').find('.vcard .fn.nickname:not(.group)').prepend('@'); // very old style
       $streamItem.find('.queet-text').find('.vcard .nickname.mention:not(.fn)').prepend('@'); // old style
     	$streamItem.find('.queet-text').find('.vcard .nickname.group').prepend('!'); // old style
     	$streamItem.find('.queet-text').find('a[rel="tag"]').prepend('#');
