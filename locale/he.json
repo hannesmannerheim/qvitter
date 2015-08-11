@@ -123,6 +123,6 @@
 	"goToTheUsersRemoteProfile": "עבור לפרופיל מרוחק של משתמש",
 	"clickToDrag":"לחץ כדי לגרור",
 	"keyboardShortcuts":"קיצורי מקלדת",
-	"classicInterface":"Classic {site-title}",
-	"accessibilityToggleLink":"For better accessibility, click this link to switch to the classic interface"
+	"classicInterface":"קלאסי {site-title}",
+	"accessibilityToggleLink":"לצורך נגישות טובה יותר, לחץ על קישור זה כדי להחליף לממשק הקלאסי"
 }
