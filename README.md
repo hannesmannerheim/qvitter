@@ -49,7 +49,7 @@ $config['site']['qvitter']['blocked_ips'] = array();
 $config['thumbnail']['maxsize'] = 3000; // recommended setting to get more high-res image previews
 ````
 
-The settings should be self-explanatory. In doubt, as in the !qvitter-group on quitter.se, or email h@nnesmannerhe.im
+The settings should be self-explanatory. In doubt, ask in the !qvitter group on quitter.se, or email h@nnesmannerhe.im
 
 
 Notes
