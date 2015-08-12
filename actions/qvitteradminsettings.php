@@ -1,6 +1,6 @@
 <?php
- 
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+
+ /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
@@ -15,7 +15,7 @@
   ·                                   o> \\\\_\                                 ·
   ·                                 \\)   \____)                                ·
   ·                                                                             ·
-  ·                                                                             ·    
+  ·                                                                             ·
   ·                                                                             ·
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
@@ -31,7 +31,7 @@
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
-  ·                                                                             · 
+  ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 if (!defined('STATUSNET') && !defined('LACONICA')) {
@@ -85,15 +85,19 @@ class QvitterAdminSettingsAction extends AdminPanelAction
     function saveSettings()
     {
         $qvitterNotice = $this->trimmed('qvitter-notice');
+        $qvitterNoticeLoggedOut = $this->trimmed('qvitter-notice-logged-out');
 
         // assert(all values are valid);
         // This throws an exception on validation errors
 
         $this->validate($qvitterNotice);
+        $this->validate($qvitterNoticeLoggedOut);
 
         $config = new Config();
 
         $result = Config::save('site', 'qvitternotice', $qvitterNotice);
+        $result = Config::save('site', 'qvitternoticeloggedout', $qvitterNoticeLoggedOut);
+
 
         if (!$result) {
             // TRANS: Server error displayed when saving a sidebar notice was impossible.
@@ -176,6 +180,21 @@ class QvitterNoticeAdminPanelForm extends AdminForm
             common_config('site', 'qvitternotice'),
             // TRANS: Tooltip for sidebar notice text field in admin panel.
             _('Qvitter\'s sidebar notice text (255 characters maximum; HTML allowed)')
+        );
+        $this->out->elementEnd('li');
+
+        $this->out->elementEnd('ul');
+
+        $this->out->elementStart('ul', 'form_data');
+
+        $this->out->elementStart('li');
+        $this->out->textarea(
+            'qvitter-notice-logged-out',
+            // TRANS: Label for sidebar notice text field in admin panel.
+            _('Qvitter sidebar notice text (logged out)'),
+            common_config('site', 'qvitternoticeloggedout'),
+            // TRANS: Tooltip for sidebar notice text field in admin panel.
+            _('Qvitter\'s sidebar notice text, when logged out (255 characters maximum; HTML allowed)')
         );
         $this->out->elementEnd('li');
 

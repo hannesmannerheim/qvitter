@@ -1085,6 +1085,13 @@ button#submit-login:hover {
     text-align:left;
 	}
 
+#qvitter-notice-logged-out {
+	position: absolute;
+	bottom:-240px;
+	height:150px;
+	width:290px;
+}
+
 #page-container {
 	width:890px;
 	padding:17px 14px 0 14px;

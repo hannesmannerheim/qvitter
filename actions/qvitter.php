@@ -419,6 +419,7 @@ class QvitterAction extends ApiAction
 							<div class="signup-input-container"><input placeholder="" type="password" name="user[user_password]" class="text-input" id="signup-user-password"></div>
 							<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
 							<div id="other-servers-link"></div>
+                            <div id="qvitter-notice-logged-out"><?php print common_config('site', 'qvitternoticeloggedout'); ?></div>
 						</div><?php } ?>
 						<div id="user-header">
 							<div id="mini-edit-profile-button"></div>
