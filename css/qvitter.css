@@ -3943,6 +3943,7 @@ background:rgba(0,0,0,0.2);
 .modal-body .inline-reply-queetbox {
 	padding-left:12px;
 	margin-top: -1px;
+	overflow: hidden;
 	}
 body.rtl .modal-body .inline-reply-queetbox {
 	direction:rtl;
