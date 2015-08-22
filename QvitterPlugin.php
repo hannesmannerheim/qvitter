@@ -529,7 +529,11 @@ class QvitterPlugin extends Plugin {
 		else {
 			$twitter_status['is_local'] = false;
 			if($notice->object_type != 'activity') {
-				$twitter_status['external_url'] = $notice->getUrl(true);
+                try {
+                    $twitter_status['external_url'] = $notice->getUrl(true);
+                } catch (InvalidUrlException $e) {
+        		    common_debug('Qvitter: No URL available for external notice: id='.$notice->id);
+                }
 				}
 			}
 
