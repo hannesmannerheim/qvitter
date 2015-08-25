@@ -1,11 +1,11 @@
 <?php
 
  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ·                                                                             · 
+  ·                                                                             ·
   ·  Everybody I'm following and all groups I'm member of                       ·
-  ·  (to use for auto-suggestions)                                              · 
-  ·                                                                             ·         
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
+  ·  (to use for auto-suggestions)                                              ·
+  ·                                                                             ·
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
@@ -19,9 +19,9 @@
   ·                                 (____/                                      ·
   ·                                          (o<                                ·
   ·                                   o> \\\\_\                                 ·
-  ·                                 \\)   \____)                                ·   
+  ·                                 \\)   \____)                                ·
   ·                                                                             ·
-  ·                                                                             ·  
+  ·                                                                             ·
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
   ·  the Free Software Foundation,  either version three of the License or (at  ·
@@ -36,7 +36,7 @@
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
-  ·                                                                             · 
+  ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 
@@ -48,6 +48,7 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 
     var $profiles = null;
   	var $users_stripped = null;
+    var $groups_stripped = null;
 
     /**
      * Take arguments for running
@@ -71,16 +72,16 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
         }
 
         $this->profiles = $this->getProfiles();
+        $this->groups = $this->getGroups();
 
-		
-		// only keep id, name, nickname and avatar URL
+
+		// profiles: only keep id, name, nickname and avatar URL
 		foreach($this->profiles as $p) {
 			try {
-				$avatar = Avatar::byProfile($p, AVATAR_STREAM_SIZE);
-				$avatar = $avatar->url;
+				$avatar = Avatar::urlByProfile($p, AVATAR_STREAM_SIZE);
 			} catch (Exception $e) {
 				$avatar = false;
-			}			
+			}
 			$this_user = array($p->fullname,$p->nickname,$avatar);
 			if(!$p->isLocal()) {
 				$this_user[3] = $p->getUrl();
@@ -89,6 +90,20 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 				$this_user[3] = false;
 				}
 			$this->users_stripped[$p->id] = $this_user;
+			}
+
+		// groups: only keep id, name, nickname, avatar and local aliases
+		foreach($this->groups as $user_group) {
+			$p = $user_group->getProfile();
+            $avatar = $user_group->stream_logo;
+			$this_group = array($p->fullname,$p->nickname,$avatar);
+			if(!$user_group->isLocal()) {
+				$this_group[3] = $p->getUrl();
+				}
+			else {
+				$this_group[3] = false;
+				}
+			$this->groups_stripped[$p->id] = $this_group;
 			}
 
         return true;
@@ -104,13 +119,13 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
     protected function handle()
     {
         parent::handle();
-    
+
 
         $this->initDocument('json');
-        $this->showJsonObjects($this->users_stripped);
+        $this->showJsonObjects(array('users'=>$this->users_stripped,'groups'=>$this->groups_stripped));
         $this->endDocument('json');
     }
-    
+
     /**
      * Get profiles
      *
@@ -123,16 +138,10 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 
         $subs = null;
 
-        if (isset($this->tag)) {
-            $subs = $this->target->getTaggedSubscriptions(
-                $this->tag, $offset, $limit
-            );
-        } else {
-            $subs = $this->target->getSubscribed(
-                $offset,
-                $limit
-            );
-        }
+        $subs = $this->target->getSubscribed(
+            $offset,
+            $limit
+        );
 
         $profiles = array();
 
@@ -142,5 +151,29 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 
         return $profiles;
     }
+
+    /**
+     * Get groups
+     *
+     * @return array groups
+     */
+    function getGroups()
+    {
+        $groups = array();
+
+        $group = $this->target->getGroups(
+            ($this->page - 1) * $this->count,
+            $this->count,
+            $this->since_id,
+            $this->max_id
+        );
+
+        while ($group->fetch()) {
+            $groups[] = clone($group);
+        }
+
+        return $groups;
+    }
+
 
 }

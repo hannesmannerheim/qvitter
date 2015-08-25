@@ -446,9 +446,9 @@ function groupProfileCard(groupAlias) {
 
 		data.nickname = data.nickname || '';
 		data.fullname = data.fullname || '';
-		data.stream_logo = data.stream_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-stream.png';
-		data.homepage_logo = data.homepage_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-profile.png';
-		data.original_logo = data.original_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-profile.png';
+		data.stream_logo = data.stream_logo || window.defaultAvatarStreamSize;
+		data.homepage_logo = data.homepage_logo || window.defaultAvatarProfileSize;
+		data.original_logo = data.original_logo || window.defaultAvatarProfileSize;
 		data.description = data.description || '';
 		data.homepage = data.homepage || '';
 		data.url = data.url || '';
@@ -1718,7 +1718,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 			if($('#stream-item-' + obj.id).length == 0) {
 
 				obj.description = obj.description || '';
-				obj.stream_logo = obj.stream_logo || window.fullUrlToThisQvitterApp + 'img/default-avatar-profile.png';
+				obj.stream_logo = obj.stream_logo || window.defaultAvatarStreamSize;
 
 				// rtl or not
 				var rtlOrNot = '';
@@ -1733,7 +1733,6 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					}
 				var memberButton = '';
 				if(typeof window.loggedIn.screen_name != 'undefined') {
-					console.log(obj);
 					var memberButton = '<div class="user-actions"><button data-group-id="' + obj.id + '" type="button" class="member-button ' + memberClass + '"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinGroup + '</span><span class="button-text ismember-text">' + window.sL.isMemberOfGroup + '</span><span class="button-text leave-text">' + window.sL.leaveGroup + '</span></button></div>';
 					}
 				var groupAvatar = obj.stream_logo;

@@ -1563,7 +1563,7 @@ background-repeat: no-repeat;
 	}
 .stream-item.expanded:not(.conversation) + .stream-item:not(.conversation)::before {
 	border-top-left-radius: 9px;
-	border-top-right-radius: 9px;	
+	border-top-right-radius: 9px;
 	}
 .stream-item.expanded.selected-by-keyboard::before {
 	height:100%;
@@ -1577,6 +1577,7 @@ background-repeat: no-repeat;
     line-height: 12px;
     position: absolute;
     right: 0;
+	z-index: 100;
 	}
 .show-full-conversation:hover {
 	text-decoration:underline;

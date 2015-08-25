@@ -179,6 +179,10 @@ class QvitterPlugin extends Plugin {
                     array('action' => 'qvitteradminsettings'));
         $m->connect('main/qlogin',
                     array('action' => 'qvitterlogin'));
+		URLMapperOverwrite::overwrite_variable($m, 'api/statuses/update.:format',
+								array('action' => 'ApiStatusesUpdate'),
+								array('format' => '(xml|json)'),
+								'ApiQvitterStatusesUpdate');
 
 
 		// check if we should reroute UI to qvitter, and which home-stream the user wants (hide-replies or normal)
@@ -915,6 +919,42 @@ class QvitterPlugin extends Plugin {
 
         return true;
     }
+
+   /**
+     * Correct group mentions
+     *
+     * We get the correct group ids in a $_POST var called "post_to_groups", formatted as a string with ids separated by colon, e.g. 4:5
+     *
+     * @return boolean hook flag
+     */
+    public function onEndFindMentions($sender, $text, &$mentions) {
+
+        // get the correct group profiles
+        if(isset($_POST['post_to_groups'])) {
+            $correct_group_mentions = explode(':',$_POST['post_to_groups']);
+            foreach($correct_group_mentions as $group_id) {
+                $correct_group_mentions_profiles[] = Profile::getKV('id',$group_id);
+                }
+
+            // loop through the groups guessed by gnu social's common_find_mentions() and correct them
+            foreach($mentions as $mention_array_id=>$mention) {
+                foreach($correct_group_mentions_profiles as $correct_group_array_id=>$correct_group_profile) {
+                    if($mention['mentioned'][0]->nickname == $correct_group_profile->nickname
+                    && !isset($mentions[$mention_array_id]['corrected'])) {
+                        $mentions[$mention_array_id]['mentioned'][0] = $correct_group_profile;
+                        $user_group = User_group::getKV('profile_id',$correct_group_profile->id);
+                        $mentions[$mention_array_id]['url'] = $user_group->permalink();
+                        $mentions[$mention_array_id]['title'] = $user_group->getFancyName();
+                        $mentions[$mention_array_id]['corrected'] = true;
+                        // now we've used this
+                        unset($correct_group_mentions_profiles[$correct_group_array_id]);
+                        }
+                    }
+                }
+            }
+
+        return true;
+        }
 
 
 

@@ -533,10 +533,14 @@ function doLogin(streamToSet) {
 
 		// get all users i'm following for autosuggestion
 		window.following = new Array();
+		window.groupMemberships = new Array();
+		window.groupNicknamesAndLocalAliases = new Array();
+
 		getFromAPI('qvitter/allfollowing/' + window.loggedIn.screen_name + '.json',function(data){
-			if(data) {
+
+			if(data.users) {
 				var i=0;
-				$.each(data,function(k,v){
+				$.each(data.users,function(k,v){
 					if(v[2] === false) { var avatar = window.defaultAvatarStreamSize; }
 					else { 	var avatar = v[2]; }
 					if(v[3]) {
@@ -547,20 +551,39 @@ function doLogin(streamToSet) {
 					window.following[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
 					i++;
 					});
+				}
 
-				cacheSyntaxHighlighting(); // do this now not to stall slow computers
+			if(data.groups) {
+				var i=0;
+				$.each(data.groups,function(k,v){
+					if(v[2] === false || v[2] === null) { var avatar = window.defaultAvatarStreamSize; }
+					else { 	var avatar = v[2]; }
+					if(v[3]) {
+						// extract server base url
+						v[3] = v[3].substring(v[3].indexOf('://')+3);
+						v[3] = v[3].substring(0, v[3].indexOf('/'));
+						}
+					v[0] = v[0] || v[1]; // if name is null we go with username there too
+					window.groupMemberships[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
+					window.groupNicknamesAndLocalAliases[i] = v[1];
+					i++;
+					});
+				}
 
-				// we might have cached text for the queet box
-				// (we need to get the mentions suggestions and cache the syntax highlighting before doing this)
-				var cachedQueetBoxData = localStorageObjectCache_GET('queetBoxInput','queet-box');
-				var cachedQueetBoxDataText = $('<div/>').html(cachedQueetBoxData).text();
-			    if(cachedQueetBoxData) {
-					queetBox = $('#queet-box');
-		            queetBox.click();
-		            queetBox.html(cachedQueetBoxData);
-		            setSelectionRange(queetBox[0], cachedQueetBoxDataText.length, cachedQueetBoxDataText.length);
-		            queetBox.trigger('input');
-					}
+			// do this now not to stall slow computers, also we know of group memberships to highlight now
+			cacheSyntaxHighlighting();
+			cacheSyntaxHighlightingGroups();
+
+			// we might have cached text for the queet box
+			// (we need to get the mentions suggestions and cache the syntax highlighting before doing this)
+			var cachedQueetBoxData = localStorageObjectCache_GET('queetBoxInput','queet-box');
+			var cachedQueetBoxDataText = $('<div/>').html(cachedQueetBoxData).text();
+		    if(cachedQueetBoxData) {
+				queetBox = $('#queet-box');
+	            queetBox.click();
+	            queetBox.html(cachedQueetBoxData);
+	            setSelectionRange(queetBox[0], cachedQueetBoxDataText.length, cachedQueetBoxDataText.length);
+	            queetBox.trigger('input');
 				}
 			});
 
@@ -1195,9 +1218,9 @@ $('body').on('click','a', function(e) {
 
 				data.nickname = data.nickname || '';
 				data.fullname = data.fullname || '';
-				data.stream_logo = data.stream_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-stream.png';
-				data.homepage_logo = data.homepage_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-profile.png';
-				data.original_logo = data.original_logo || 'http://quitter.se/theme/quitter-theme2/default-avatar-profile.png';
+				data.stream_logo = data.stream_logo || window.defaultAvatarStreamSize;
+				data.homepage_logo = data.homepage_logo || window.defaultAvatarProfileSize;
+				data.original_logo = data.original_logo || window.defaultAvatarProfileSize;
 				data.description = data.description || '';
 				data.homepage = data.homepage || '';
 				data.url = data.url || '';
@@ -2104,6 +2127,19 @@ $('body').on('click', '.queet-toolbar button',function () {
 			popUpAction('popup-sending', '',queetHtml.replace('class="stream-item conversation','class="stream-item'),false);
 			}
 
+		// maybe post queet in groups
+		var postToGroups = '';
+		var postToGropsArray = new Array();
+		$.each(queetBox.siblings('.post-to-group'),function(){
+			postToGropsArray.push($(this).data('group-id'));
+			});
+		if(postToGropsArray.length > 0) {
+			postToGroups = postToGropsArray.join(':');
+			}
+
+		// remove any post-to-group-divs
+		queetBox.siblings('.post-to-group').remove();
+
 		// remove any replying-to classes
 		$('.stream-item').removeClass('replying-to');
 
@@ -2114,7 +2150,7 @@ $('body').on('click', '.queet-toolbar button',function () {
 		setTimeout('checkForNewQueets()', 1000);
 
 		// post queet
-		postQueetToAPI(queetText, in_reply_to_status_id, function(data){ if(data) {
+		postQueetToAPI(queetText, in_reply_to_status_id, postToGroups, function(data){ if(data) {
 
 			// show real queet
 			var new_queet = Array();
@@ -2228,6 +2264,11 @@ $('body').on('mousedown','.syntax-two',function () {
 	$(this).addClass('clicked');
 	});
 $('body').on('blur','.queet-box-syntax',function (e) {
+
+	// empty the mention suggestions on blur, timeout because we want to capture clicks in .mentions-suggestions
+	setTimeout(function(){
+		$(this).siblings('.mentions-suggestions').empty();
+		},10);
 
 	// don't collapse if a toolbar button has been clicked
 	var clickedToolbarButtons = $(this).siblings('.queet-toolbar').find('button.clicked');
@@ -2408,13 +2449,31 @@ $('body').on('keydown', '.queet-box-syntax', function(e) {
 	});
 
 function useSelectedMention(queetBox){
+
 	// use selected
 	if(queetBox.siblings('.mentions-suggestions').children('div.selected').length > 0) {
-		var username = queetBox.siblings('.mentions-suggestions').children('div.selected').children('span').html();
+		var selectedSuggestion = queetBox.siblings('.mentions-suggestions').children('div.selected');
 		}
 	// if none selected, take top suggestion
 	else {
-		var username = queetBox.siblings('.mentions-suggestions').children('div').first().children('span').html();
+		var selectedSuggestion = queetBox.siblings('.mentions-suggestions').children('div').first();
+		}
+
+	var username = selectedSuggestion.children('span').html();
+	var name = selectedSuggestion.children('strong').html();
+
+	// if this is a group, we remember its id, the user might be member of multiple groups with the same username
+	if(selectedSuggestion.hasClass('group-suggestion')) {
+		var groupId = selectedSuggestion.data('group-id');
+		if(queetBox.siblings('.post-to-group[data-group-id="' + groupId + '"]').length < 1) {
+			if(queetBox.siblings('.post-to-group').length>0) {
+				var addAfter = queetBox.siblings('.post-to-group').last();
+				}
+			else {
+				var addAfter = queetBox;
+				}
+			addAfter.after('<div class="post-to-group" data-group-username="' + username + '" data-group-id="' + groupId + '">' + name + '</div>');
+			}
 		}
 
 	// replace the halfwritten username with the one we want
@@ -2428,7 +2487,18 @@ function useSelectedMention(queetBox){
 	queetBox.trigger('input'); // avoid some flickering
 	}
 
-// check for mentions
+// check for removed group mentions
+$('body').on('keyup', 'div.queet-box-syntax', function(e) {
+	var groupMentions = $(this).siblings('.post-to-group');
+	var queetBoxContent = $(this).text();
+	$.each(groupMentions,function(){
+		if(queetBoxContent.indexOf('!' + $(this).data('group-username')) == -1) {
+			$(this).remove();
+			}
+		});
+	});
+
+// check for user mentions
 window.lastMention = new Object();
 $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 
@@ -2455,7 +2525,7 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 				}
 			if((contents.lastIndexOf('@')+match[0].length) == cursorPos) {
 
-				queetBox.siblings('.mentions-suggestions').empty();
+				queetBox.siblings('.mentions-suggestions').children('.user-suggestion').remove();
 				queetBox.siblings('.mentions-suggestions').css('top',(queetBox.height()+20) + 'px');
 				var term = match[0].substring(match[0].lastIndexOf('@')+1, match[0].length).toLowerCase();
 				window.lastMention.mentionPos = mentionPos;
@@ -2487,17 +2557,90 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 					if(suggestionsUsernameCount[this.username]>1 && this.url !== false) {
 						serverHtml = '@' + this.url;
 						}
-					queetBox.siblings('.mentions-suggestions').append('<div title="@' + this.username + serverHtml + '"><img height="24" width="24" src="' + this.avatar + '" /><strong>' + this.name + '</strong> @<span>' + this.username + serverHtml + '</span></div>')
+					queetBox.siblings('.mentions-suggestions').append('<div class="user-suggestion" title="@' + this.username + serverHtml + '"><img height="24" width="24" src="' + this.avatar + '" /><strong>' + this.name + '</strong> @<span>' + this.username + serverHtml + '</span></div>')
 					});
 
 				}
 			else {
-				queetBox.siblings('.mentions-suggestions').empty();
+				queetBox.siblings('.mentions-suggestions').children('.user-suggestion').remove();
 				}
 
 			}
 		else {
-			queetBox.siblings('.mentions-suggestions').empty();
+			queetBox.siblings('.mentions-suggestions').children('.user-suggestion').remove();
+			}
+		}
+	});
+
+
+// check for group mentions
+$('body').on('keyup', 'div.queet-box-syntax', function(e) {
+
+	var queetBox = $(this);
+	var cursorPosArray = getSelectionInElement(queetBox[0]);
+	var cursorPos = cursorPosArray[0];
+
+	// add space before linebreaks (to separate mentions in beginning of new lines when .text():ing later)
+	if(e.keyCode == '13') {
+		e.preventDefault();
+		var range = createRangeFromCharacterIndices(queetBox[0], cursorPos, cursorPos);
+		range.insertNode(document.createTextNode(" \n"));
+		}
+	else if(e.keyCode != '40' && e.keyCode != '38' && e.keyCode != '13' && e.keyCode != '9') {
+		var contents = queetBox.text().substring(0,cursorPos);
+		var mentionPos = contents.lastIndexOf('!');
+		var check_contents = contents.substring(mentionPos - 1, cursorPos);
+		var regex = /(^|\s|\.|\n)(!)[a-zA-Z0-9]+/;
+		var match = check_contents.match(regex);
+		if (contents.indexOf('!') >= 0 && match) {
+
+			if(contents.lastIndexOf('!') > 1) {
+				match[0] = match[0].substring(1,match[0].length);
+				}
+			if((contents.lastIndexOf('!')+match[0].length) == cursorPos) {
+
+				queetBox.siblings('.mentions-suggestions').children('.group-suggestion').remove();
+				queetBox.siblings('.mentions-suggestions').css('top',(queetBox.height()+20) + 'px');
+				var term = match[0].substring(match[0].lastIndexOf('!')+1, match[0].length).toLowerCase();
+				window.lastMention.mentionPos = mentionPos;
+				window.lastMention.cursorPos = cursorPos;
+
+
+				// see if any group we're member of matches
+				var suggestionsToShow = [];
+				var suggestionsUsernameCount = {};
+				$.each(window.groupMemberships,function(){
+					var userregex = new RegExp(term);
+					if(this.username.toLowerCase().match(userregex) || this.name.toLowerCase().match(userregex)) {
+						suggestionsToShow.push({id:this.id, avatar:this.avatar, name:this.name, username:this.username,url:this.url});
+
+						// count the usernames to see if we need to show the server for any of them
+						if(typeof suggestionsUsernameCount[this.username] != 'undefined') {
+							suggestionsUsernameCount[this.username] = suggestionsUsernameCount[this.username] + 1;
+							}
+						else {
+							suggestionsUsernameCount[this.username] = 1;
+							}
+						}
+					});
+
+				// show matches
+				$.each(suggestionsToShow,function(){
+					var serverHtml = '';
+					if(suggestionsUsernameCount[this.username]>1 && this.url !== false) {
+						serverHtml =  this.url + '/group/';
+						}
+					queetBox.siblings('.mentions-suggestions').append('<div class="group-suggestion" title="' + serverHtml + this.username + '" data-group-id="' + this.id + '"><img height="24" width="24" src="' + this.avatar + '" /><strong>' + this.name + '</strong> !<span>' + this.username + '</span></div>')
+					});
+
+				}
+			else {
+				queetBox.siblings('.mentions-suggestions').children('.group-suggestion').remove();
+				}
+
+			}
+		else {
+			queetBox.siblings('.mentions-suggestions').children('.group-suggestion').remove();
 			}
 		}
 	});

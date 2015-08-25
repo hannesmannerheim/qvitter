@@ -293,17 +293,19 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
    ·
    ·   @param queetText_txt: the text to post
    ·   @param in_reply_to_status_id: the local id for the queet to reply to
+   ·   @param postToGroups: post the queet in these groups, string of ids separated by colon expected, e.g. 5:2:4
    ·   @param actionOnSuccess: callback function, false on error, data on success
    ·
    · · · · · · · · · · · · · */
 
-function postQueetToAPI(queetText_txt, in_reply_to_status_id, actionOnSuccess) {
+function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, actionOnSuccess) {
 	$.ajax({ url: window.apiRoot + 'statuses/update.json?t=' + timeNow(),
 		type: "POST",
 		data: {
 			status: queetText_txt,
 			source: 'Qvitter',
-			in_reply_to_status_id: in_reply_to_status_id
+			in_reply_to_status_id: in_reply_to_status_id,
+			post_to_groups: postToGroups
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
