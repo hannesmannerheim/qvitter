@@ -1556,6 +1556,15 @@ background-repeat: no-repeat;
     width: 100%;
 	opacity:0.7;
 	}
+.stream-item.next-expanded.selected-by-keyboard::before {
+	border-bottom-left-radius: 9px;
+	border-bottom-right-radius: 9px;
+	height: 100%;
+	}
+.stream-item.expanded:not(.conversation) + .stream-item:not(.conversation)::before {
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;	
+	}
 .stream-item.expanded.selected-by-keyboard::before {
 	height:100%;
 	border-radius: 9px;
