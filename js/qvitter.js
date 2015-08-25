@@ -872,11 +872,29 @@ $('body').on('click','.member-button',function(event){
 					$(this_element).addClass('member');
 					$('.profile-card .member-stats strong').html(parseInt($('.profile-card .member-stats strong').html(),10)+1);
 					$('#user-groups strong').html(parseInt($('#user-groups strong').html(),10)+1);
+					// add group to mention suggestion array
+					if(data.homepage_logo === null) {
+						data.homepage_logo = window.defaultAvatarStreamSize;
+						}
+					var groupmembershipObject = { avatar:data.homepage_logo, id:data.id, name:data.fullname, url:data.url, username:data.nickname };
+					window.groupMemberships.push(groupmembershipObject);
 					}
 				else if(data.member === false) {
 					$(this_element).removeClass('member');
 					$('.profile-card .member-stats strong').html(parseInt($('.profile-card .member-stats strong').html(),10)-1);
 					$('#user-groups strong').html(parseInt($('#user-groups strong').html(),10)-1);
+
+					// remove group from mention suggestion array, if it's there
+					var groupToRemove = false;
+					$.each(window.groupMemberships,function(k,v) {
+						if(v.id == data.id) {
+							groupToRemove = k;
+							}
+						});
+					if(groupToRemove) {
+						console.log('remove at' + groupToRemove);
+						window.groupMemberships.splice(groupToRemove,1);
+						}
 					}
 				}
 			});

@@ -3979,7 +3979,7 @@ background:rgba(0,0,0,0.2);
 .modal-body .inline-reply-queetbox {
 	padding-left:12px;
 	margin-top: -1px;
-	overflow: hidden;
+	/* don't use overflow hidden here! mentions-suggestions will be cut then */
 	}
 body.rtl .modal-body .inline-reply-queetbox {
 	direction:rtl;

@@ -933,21 +933,21 @@ class QvitterPlugin extends Plugin {
         if(isset($_POST['post_to_groups'])) {
             $correct_group_mentions = explode(':',$_POST['post_to_groups']);
             foreach($correct_group_mentions as $group_id) {
-                $correct_group_mentions_profiles[] = Profile::getKV('id',$group_id);
+                $correct_groups[] = User_group::getKV('id',$group_id);
                 }
 
             // loop through the groups guessed by gnu social's common_find_mentions() and correct them
             foreach($mentions as $mention_array_id=>$mention) {
-                foreach($correct_group_mentions_profiles as $correct_group_array_id=>$correct_group_profile) {
-                    if($mention['mentioned'][0]->nickname == $correct_group_profile->nickname
+                foreach($correct_groups as $correct_groups_array_id=>$correct_group) {
+                    if($mention['mentioned'][0]->nickname == $correct_group->nickname
                     && !isset($mentions[$mention_array_id]['corrected'])) {
-                        $mentions[$mention_array_id]['mentioned'][0] = $correct_group_profile;
-                        $user_group = User_group::getKV('profile_id',$correct_group_profile->id);
-                        $mentions[$mention_array_id]['url'] = $user_group->permalink();
-                        $mentions[$mention_array_id]['title'] = $user_group->getFancyName();
+                        $user_group_profile = Profile::getKV('id',$correct_group->profile_id);
+                        $mentions[$mention_array_id]['mentioned'][0] = $user_group_profile;
+                        $mentions[$mention_array_id]['url'] = $correct_group->permalink();
+                        $mentions[$mention_array_id]['title'] = $correct_group->getFancyName();
                         $mentions[$mention_array_id]['corrected'] = true;
                         // now we've used this
-                        unset($correct_group_mentions_profiles[$correct_group_array_id]);
+                        unset($correct_groups[$correct_groups_array_id]);
                         }
                     }
                 }

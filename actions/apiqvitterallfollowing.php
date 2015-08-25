@@ -103,7 +103,7 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 			else {
 				$this_group[3] = false;
 				}
-			$this->groups_stripped[$p->id] = $this_group;
+			$this->groups_stripped[$user_group->id] = $this_group;
 			}
 
         return true;

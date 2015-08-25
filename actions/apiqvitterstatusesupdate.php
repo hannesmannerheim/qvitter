@@ -283,11 +283,7 @@ class ApiQvitterStatusesUpdateAction extends ApiAuthAction
 			// groups
 			$group_ids = Array();
 			if(strlen($this->post_to_groups)>0) {
-				$groups_profile_ids = explode(':',$this->post_to_groups);
-				foreach($groups_profile_ids as $group_profile_id) {
-					$user_group = User_group::getKV('profile_id',$group_profile_id);
-					$group_ids[] = $user_group->id;
-					}
+				$group_ids = explode(':',$this->post_to_groups);
 				}
 
             $options = array('reply_to' => $reply_to, 'groups' => $group_ids);
