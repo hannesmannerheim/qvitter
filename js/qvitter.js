@@ -2490,9 +2490,13 @@ function useSelectedMention(queetBox){
 // check for removed group mentions
 $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 	var groupMentions = $(this).siblings('.post-to-group');
-	var queetBoxContent = $(this).text();
+	var queetBoxGroups = $(this).siblings('.syntax-middle').find('.group');
+	var queetBoxGroupsString = '';
+	$.each(queetBoxGroups,function(){
+		queetBoxGroupsString = queetBoxGroupsString + $(this).html() + ':';
+		});
 	$.each(groupMentions,function(){
-		if(queetBoxContent.indexOf('!' + $(this).data('group-username')) == -1) {
+		if(queetBoxGroupsString.indexOf('!' + $(this).data('group-username') + ':') == -1) {
 			$(this).remove();
 			}
 		});
