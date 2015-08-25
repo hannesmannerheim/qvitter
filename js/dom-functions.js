@@ -770,7 +770,7 @@ function convertStreamToPath(stream) {
 		return screenName + '/all';
 		}
 	else if(stream == 'statuses/public_timeline.json')	{
-		return '';
+		return 'main/public';
 		}
 	else if(stream == 'statuses/public_and_external_timeline.json')	{
 		return 'main/all';
@@ -832,6 +832,11 @@ function getStreamFromUrl() {
 	// main/all, i.e. full network
 	if (loc == '/main/all') {
 		streamToSet = 'statuses/public_and_external_timeline.json';
+		}
+
+	// main/public, i.e. site's public timeline, new gnu social style
+	else if (loc == '/main/public') {
+		streamToSet = 'statuses/public_timeline.json';
 		}
 
 	// {domain}/{screen_name} or {domain}/{screen_name}/

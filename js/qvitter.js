@@ -987,6 +987,11 @@ $('body').on('click','a', function(e) {
 			e.preventDefault();
 			setNewCurrentStream('statuses/public_timeline.json',function(){},true);
 			}
+		// site root new gnu social style
+		else if($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'') == '/main/public') {
+			e.preventDefault();
+			setNewCurrentStream('statuses/public_timeline.json',function(){},true);
+			}
 		// whole network feed
 		else if($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'') == '/main/all') {
 			e.preventDefault();

@@ -301,7 +301,18 @@ class QvitterAction extends ApiAction
                 ?>
 				<input id="upload-image-input" class="upload-image-input" type="file" name="upload-image-input" accept="image/*">
 				<div class="topbar">
-					<a href="<?php print $instanceurl; ?>"><div id="logo"></div></a>
+					<a href="<?php
+
+                        // if we're logged in, the logo links to the home stream
+                        // if logged out it links to the site's public stream
+                        if($logged_in_user) {
+                            print $instanceurl.$logged_in_user_nickname.'/all';
+                            }
+                        else {
+                            print $instanceurl.'main/public';
+                        }
+
+                    ?>"><div id="logo"></div></a>
 					<a id="settingslink">
 						<div class="dropdown-toggle">
 							<div class="nav-session"></div>
@@ -457,7 +468,7 @@ class QvitterAction extends ApiAction
 							<a class="stream-selection mentions" data-stream-header="" data-stream-name="statuses/mentions.json"><i class="chev-right"></i></a>
 							<a class="stream-selection my-timeline" data-stream-header="@statuses/user_timeline.json" data-stream-name="statuses/user_timeline.json"><i class="chev-right"></i></a>
 							<a class="stream-selection favorites" data-stream-header="" data-stream-name="favorites.json"><i class="chev-right"></i></a>
-							<a href="<?php print $instanceurl ?>" class="stream-selection public-timeline" data-stream-header="" data-stream-name="statuses/public_timeline.json"><i class="chev-right"></i></a>
+							<a href="<?php print $instanceurl ?>main/public" class="stream-selection public-timeline" data-stream-header="" data-stream-name="statuses/public_timeline.json"><i class="chev-right"></i></a>
 							<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline" data-stream-header="" data-stream-name="statuses/public_and_external_timeline.json"><i class="chev-right"></i></a>
 						</div>
 						<div class="menu-container" id="history-container"></div>

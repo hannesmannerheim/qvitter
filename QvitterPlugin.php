@@ -208,6 +208,7 @@ class QvitterPlugin extends Plugin {
         if ($this->hijack_ui === true) {
 			$m->connect('', array('action' => 'qvitter'));
 			$m->connect('main/all', array('action' => 'qvitter'));
+            $m->connect('main/public', array('action' => 'qvitter'));
 			$m->connect('search/notice', array('action' => 'qvitter'));
 
             // if the user wants the twitter style home stream with hidden replies to non-friends
