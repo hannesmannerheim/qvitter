@@ -2773,6 +2773,32 @@ span.inline-reply-caret .caret-inner {
     left: 13px;
 	}
 
+.post-to-group {
+	background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 13px;
+    line-height: 20px;
+    margin: 0 0 7px;
+    padding: 3px 8px 3px 27px;
+    text-shadow: none;
+    width: 100%;
+	position: relative;
+	}
+.post-to-group::before {
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	width:10px;
+	height:26px;
+	font-family: 'FontAwesome';
+	content:"\f0c0";
+	line-height:26px;
+	padding-left:7px;
+	}
+
 #user-header {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;

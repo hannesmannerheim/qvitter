@@ -428,7 +428,7 @@ class QvitterPlugin extends Plugin {
 		$notice_groups = $notice->getGroups();
 		$group_addressees = false;
 		foreach($notice_groups as $g) {
-			$group_addressees = array('nickname'=>$g->nickname,'url'=>$g->mainpage);
+			$group_addressees[] = array('nickname'=>$g->nickname,'url'=>$g->mainpage);
 			}
 		$twitter_status['statusnet_in_groups'] = $group_addressees;
 
@@ -542,7 +542,7 @@ class QvitterPlugin extends Plugin {
 				}
 			}
 
-		if($notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
+		if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
 			$twitter_status['is_activity'] = true;
 			}
 		else {
@@ -662,7 +662,7 @@ class QvitterPlugin extends Plugin {
         assert($notice->id > 0);    // since we removed tests below
 
 		// don't add notifications for activity type notices
-		if($notice->object_type == 'activity') {
+				if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
 			return true;
 			}
 

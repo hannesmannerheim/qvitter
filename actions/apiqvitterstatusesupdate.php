@@ -246,12 +246,17 @@ class ApiQvitterStatusesUpdateAction extends ApiAuthAction
             }
 
             $upload = null;
+
             try {
                 $upload = MediaFile::fromUpload('media', $this->scoped);
-                $this->status .= ' ' . $upload->shortUrl();
-                /* Do not call shortenlinks until the whole notice has been build */
             } catch (NoUploadedMediaException $e) {
                 // There was no uploaded media for us today.
+            }
+
+            if (isset($upload)) {
+                $this->status .= ' ' . $upload->shortUrl();
+
+                /* Do not call shortenlinks until the whole notice has been build */
             }
 
            	// in Qvitter we shorten _before_ posting, so disble shortening here

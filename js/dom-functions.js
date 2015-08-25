@@ -1968,7 +1968,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	var in_groups_html = '';
 	if(typeof obj.statusnet_in_groups != 'undefined' && obj.statusnet_in_groups !== false && typeof obj.statusnet_in_groups === 'object') {
 		$.each(obj.statusnet_in_groups,function(){
-			in_groups_html = '<span class="in-groups"><a class="h-card group" href="' + obj.statusnet_in_groups.url + '">!' + obj.statusnet_in_groups.nickname + '</a></span>';
+			in_groups_html = in_groups_html + ' <span class="in-groups"><a class="h-card group" href="' + this.url + '">!' + this.nickname + '</a></span>';
 			});
 		}
 

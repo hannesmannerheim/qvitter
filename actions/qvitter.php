@@ -538,7 +538,8 @@ class QvitterAction extends ApiAction
 					#user-body #user-following:hover .label,
 					ul.stats a strong,
 					.queet-box-extras button,
-					#openid-login:hover:after {
+					#openid-login:hover:after,
+                    .post-to-group {
 						color:/*COLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*COLOREND*/;
 						}
 					#unseen-notifications,
@@ -574,7 +575,8 @@ class QvitterAction extends ApiAction
 					.inline-reply-queetbox,
 					span.inline-reply-caret,
 				    .stream-item.expanded .stream-item.first-visible-after-parent,
-					#popup-faq #faq-container p.indent {
+					#popup-faq #faq-container p.indent,
+                    .post-to-group {
 						border-color:/*LIGHTERBORDERCOLORSTART*/rgb(155,206,224)/*LIGHTERBORDERCOLOREND*/;
 						}
 					span.inline-reply-caret .caret-inner {
