@@ -827,7 +827,16 @@ function getStreamFromUrl() {
 	var loc = window.location.href.replace('http://','').replace('https://','').replace(window.siteRootDomain,'');
 
 	// default/fallback
-	var streamToSet = 'statuses/public_timeline.json';
+	if(window.loggedIn) {
+		var streamToSet = 'statuses/friends_timeline.json';
+		}
+	else if(window.siteLocalOnlyDefaultPath) {
+		var streamToSet = 'statuses/public_timeline.json';
+		}
+	else {
+		var streamToSet = 'statuses/public_and_external_timeline.json';
+		}
+
 
 	// main/all, i.e. full network
 	if (loc == '/main/all') {

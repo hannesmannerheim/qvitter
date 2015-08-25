@@ -677,7 +677,8 @@ function isValidHexColor(maybeValidHexColor) {
 function changeDesign(obj) {
 
 	// if we're logged out and this is the front page, we use the default design
-	if(!window.loggedIn && window.currentStream == 'statuses/public_timeline.json') {
+	if(!window.loggedIn &&
+	(window.currentStream == 'statuses/public_timeline.json' || window.currentStream == 'statuses/public_and_external_timeline.json')) {
 		obj.backgroundimage = window.fullUrlToThisQvitterApp + window.siteBackground;
 		obj.backgroundcolor = window.defaultBackgroundColor;
 		obj.linkcolor = window.defaultLinkColor;
