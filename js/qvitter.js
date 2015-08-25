@@ -128,6 +128,19 @@ $('body').on('mouseleave','#what-is-federation',function(){
 
 /* ·
    ·
+   ·   Scroll to top when clicking top bar
+   ·
+   · · · · · · · · · · · · · */
+$('body').on('click','.global-nav',function(e) {
+	if($(e.target).is('.global-nav')) {
+		$('html').scrollTop(0);
+		}
+	});
+
+
+
+/* ·
+   ·
    ·   Register
    ·
    · · · · · · · · · · · · · */
