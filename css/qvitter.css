@@ -1152,6 +1152,7 @@ body.rtl #footer-spinner-container {
     margin-bottom: 10px;
     overflow:hidden;
     opacity:0;
+	position: relative;
 	}
 .menu-container a:first-child {
 	border-top-left-radius: 6px;
@@ -1186,6 +1187,40 @@ body.rtl #footer-spinner-container {
     top: 9px;
     width: 12px;
     }
+#bookmark-container a:hover .chev-right {
+	background-position:-20px -508px;
+	}
+#bookmark-container a:hover .chev-right:hover {
+	background-position:-40px -508px;
+	}
+
+#history-container {
+	margin-bottom:0;
+	}
+
+#history-container.menu-container a .chev-right {
+	background: 0 none;
+    height: 32px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 32px;
+	}
+#history-container.menu-container a .chev-right::before {
+	content: '\f097';
+	color: #aaa;
+    display: block;
+    font-family: "fontAwesome";
+    font-size: 14px;
+    font-style: normal;
+	font-weight: normal;
+    line-height: 34px;
+    text-align: center;
+    width: 32px;
+	}
+#history-container.menu-container a .chev-right:hover::before {
+	color: #888;
+	}
 .menu-container a:hover {
 	background-color:#fff;
 	}
@@ -1209,6 +1244,22 @@ body.rtl #footer-spinner-container {
 	}
 #history-container a:hover .chev-right:hover {
 	background-position:-40px -508px;
+	}
+
+#clear-history {
+	color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
+    margin-bottom: 10px;
+    padding-right: 5px;
+    text-align: right;
+    text-shadow: none;
+	cursor:pointer;
+	}
+#clear-history:hover {
+	color: rgba(255, 255, 255, 0.8);
+	}
+#history-container:empty ~ #clear-history {
+	display:none;
 	}
 
 .menu-container a.notifications {
@@ -1237,6 +1288,52 @@ body.rtl #footer-spinner-container {
 
 #history-container {
 	display:none;
+	}
+
+#bookmark-container:empty {
+	display:none;
+	}
+
+.tooltip {
+	width: auto;
+	max-width: 300px;
+	line-height: 20px;
+	padding:5px 10px;
+	font-size:12px;
+	background-color: #333;
+	color: #eee;
+	z-index: 10000;
+	position:absolute;
+	display:block;
+	font-style: normal;
+	text-shadow: none;
+	border-radius: 3px;
+	opacity:0;
+	transition-property: opacity;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in;
+    transition-delay: 0.3s;
+	}
+.tooltip-caret {
+	z-index: 10000;
+	display:block;
+	content:' ';
+	position:absolute;
+	width:0;
+	height:0;
+	border:5px solid #333;
+	border-top:0 none;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	opacity:0;
+	transition-property: opacity;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in;
+    transition-delay: 0.3s;
+	}
+.tooltip-caret.bottom {
+	border-top:5px solid #333;
+	border-bottom:0 none;
 	}
 
 #settings-container {

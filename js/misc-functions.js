@@ -1055,6 +1055,48 @@ function convertAttachmentMoreHref() {
 
 
 
+
+/* ·
+   ·
+   ·   Saves the user's bookmarks to the server
+   ·
+   · · · · · · · · · · · · · */
+
+function saveAllBookmarks() {
+	var i=0;
+	var bookmarkContainer = new Object();
+	$.each($('#bookmark-container .stream-selection'), function(key,obj) {
+		bookmarkContainer[i] = new Object();
+		bookmarkContainer[i].dataStreamHref = $(obj).attr('href');
+		bookmarkContainer[i].dataStreamHeader = $(obj).attr('data-stream-header');
+		i++;
+		});
+
+	postUpdateBookmarks(bookmarkContainer);
+
+	$('#bookmark-container').sortable({delay: 100});
+	$('#bookmark-container').disableSelection();
+	}
+
+
+/* ·
+   ·
+   ·   Append all bookmarks to the bookmark container
+   ·
+   · · · · · · · · · · · · · */
+
+function appendAllBookmarks(bookmarkContainer) {
+	if(bookmarkContainer) {
+		$('#bookmark-container').html('');
+		$.each(bookmarkContainer, function(key,obj) {
+			$('#bookmark-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipRemoveBookmark + '"></i></a>');
+			});
+		}
+	$('#bookmark-container').sortable({delay: 100});
+	$('#bookmark-container').disableSelection();
+	}
+
+
 /* ·
    ·
    ·   Updates the browsing history local storage
@@ -1078,8 +1120,6 @@ function updateHistoryLocalStorage() {
 		else {
 			$('#history-container').css('display','block');
 			}
-		$('#history-container').sortable({delay: 100});
-		$('#history-container').disableSelection();
 		}
 	}
 
@@ -1097,7 +1137,7 @@ function loadHistoryFromLocalStorage() {
 			$('#history-container').css('display','block');
 			$('#history-container').html('');
 			$.each(cacheData, function(key,obj) {
-				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right"></i></a>');
+				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
 				});
 			}
 		updateHistoryLocalStorage();

@@ -147,7 +147,9 @@ class QvitterPlugin extends Plugin {
 		$m->connect('api/statuses/public_and_external_timeline.:format',
 					array('action' => 'ApiTimelinePublicAndExternal',
 						  'format' => '(xml|json|rss|atom|as)'));
-		$m->connect('api/qvitter/update_link_color.json',
+        $m->connect('api/qvitter/update_bookmarks.json',
+					array('action' => 'ApiQvitterUpdateBookmarks'));
+        $m->connect('api/qvitter/update_link_color.json',
 					array('action' => 'apiqvitterupdatelinkcolor'));
 		$m->connect('api/qvitter/update_background_color.json',
 					array('action' => 'apiqvitterupdatebackgroundcolor'));

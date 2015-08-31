@@ -124,5 +124,12 @@
 	"clickToDrag":"Klicka och dra för att flytta",
 	"keyboardShortcuts":"Kortkommandon",
 	"classicInterface":"Byt till GNU socials standardgränssnitt",
-	"accessibilityToggleLink":"För bättre tillgänglighet, följ den här länken för att byta till GNU socials standardgränssnitt"
+	"accessibilityToggleLink":"För bättre tillgänglighet, följ den här länken för att byta till GNU socials standardgränssnitt",
+	"tooltipBookmarkStream":"Bokmärk det här flödet",
+	"tooltipTopMenu":"Meny och inställningar",
+	"tooltipAttachImage":"Bifoga en bild",
+	"tooltipShortenUrls":"Förkorta alla URL:er",
+	"tooltipReloadStream":"Ladda om flödet",
+	"tooltipRemoveBookmark":"Ta bort det här bokmärket",
+	"clearHistory":"Rensa surfhistoriken"
 }

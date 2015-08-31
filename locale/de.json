@@ -124,5 +124,12 @@
 	"clickToDrag":"Click to drag",
 	"keyboardShortcuts":"Keyboard shortcuts",
 	"classicInterface":"Classic {site-title}",
-	"accessibilityToggleLink":"Nutzer von Screenreadern klicken bitte hier, um zur klassischen Version von {site-title} zu gelangen."
+	"accessibilityToggleLink":"Nutzer von Screenreadern klicken bitte hier, um zur klassischen Version von {site-title} zu gelangen.",
+	"tooltipBookmarkStream":"Add this stream to your bookmarks",
+	"tooltipTopMenu":"Menu and settings",
+	"tooltipAttachImage":"Attach an image",
+	"tooltipShortenUrls":"Shorten all URLs in the Queet",
+	"tooltipReloadStream":"Refresh this stream",
+	"tooltipRemoveBookmark":"Remove this bookmark",
+	"clearHistory":"Clear browsing history"
 }

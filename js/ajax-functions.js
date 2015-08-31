@@ -182,6 +182,29 @@ function getFromAPI(stream, actionOnSuccess) {
 	}
 
 
+/* ·
+   ·
+   ·   Update the bookmarks
+   ·
+   ·   @param newBookmarks: the new bookmarks object to save
+   ·
+   · · · · · · · · · · · · · */
+
+function postUpdateBookmarks(newBookmarks) {
+	var bookmarksString = JSON.stringify(newBookmarks);
+	$.ajax({ url: window.apiRoot + 'qvitter/update_bookmarks.json?t=' + timeNow(),
+		type: "POST",
+		data: {
+			bookmarks: bookmarksString
+			},
+		dataType:"json",
+		error: function(data){ console.log('error updating bookmarks'); },
+		success: function(data) {
+			// console.log('bookmarks updated successfully');
+			}
+		});
+	}
+
 
 /* ·
    ·

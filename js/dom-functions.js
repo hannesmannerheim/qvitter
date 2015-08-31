@@ -700,8 +700,13 @@ function addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName)
 	if($('.stream-selection[data-stream-header="' + streamHeader + '"]').length==0
 	&& streamHeader != '@' + window.loggedIn.screen_name
 	&& typeof window.loggedIn.screen_name != 'undefined') {
-		$('#history-container').append('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + window.siteInstanceURL + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="chev-right"></i></a>');
+		$('#history-container').prepend('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + window.siteInstanceURL + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
 		updateHistoryLocalStorage();
+		// max 10 in history container
+		var historyNum = $('#history-container').children('.stream-selection').length;
+		if(historyNum > 10) {
+			$('#history-container').children('.stream-selection').slice(-(historyNum-10)).remove();
+			}
 		}
 
 
@@ -1284,7 +1289,7 @@ function cleanUpAfterCollapseQueet(q) {
 
 function queetBoxHtml() {
 	var startText = encodeURIComponent(window.sL.compose);
-	return '<div class="inline-reply-queetbox"><div class="queet-box queet-box-syntax" data-start-text="' + startText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button class="upload-image"></button><button class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';
+	return '<div class="inline-reply-queetbox"><div class="queet-box queet-box-syntax" data-start-text="' + startText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button data-tooltip="' + window.sL.tooltipAttachImage + '" class="upload-image"></button><button data-tooltip="' + window.sL.tooltipShortenUrls + '" class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';
 	}
 
 
@@ -1337,7 +1342,7 @@ function replyFormHtml(q,qid) {
 
 	startText = encodeURIComponent(startText);
 	repliesText = encodeURIComponent(repliesText);
-	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box queet-box-syntax" id="queet-box-' + qid + '" data-start-text="' + startText + '" data-replies-text="' + repliesText + '" data-cached-text="' + cachedText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button class="upload-image"></button><button class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';
+	return '<div class="inline-reply-queetbox"><span class="inline-reply-caret"><span class="caret-inner"></span></span><img class="reply-avatar" src="' + $('#user-avatar').attr('src') + '" /><div class="queet-box queet-box-syntax" id="queet-box-' + qid + '" data-start-text="' + startText + '" data-replies-text="' + repliesText + '" data-cached-text="' + cachedText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button data-tooltip="' + window.sL.tooltipAttachImage + '" class="upload-image"></button><button data-tooltip="' + window.sL.tooltipShortenUrls + '" class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';
 	}
 
 
@@ -1622,7 +1627,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				// external
 				var ostatusHtml = '';
 				if(obj.from_profile.is_local === false) {
-					ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.from_profile.statusnet_profile_url + '"></a>';
+					ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.from_profile.statusnet_profile_url + '"></a>';
 					}
 
 
@@ -2045,7 +2050,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	// external
 	var ostatusHtml = '';
 	if(obj.is_local === false) {
-		ostatusHtml = '<a target="_blank" title="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
+		ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
 		}
 
 	var queetTime = parseTwitterDate(obj.created_at);

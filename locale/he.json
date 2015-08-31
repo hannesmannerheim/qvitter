@@ -124,5 +124,12 @@
 	"clickToDrag":"לחץ כדי לגרור",
 	"keyboardShortcuts":"קיצורי מקלדת",
 	"classicInterface":"קלאסי {site-title}",
-	"accessibilityToggleLink":"לצורך נגישות טובה יותר, לחץ על קישור זה כדי להחליף לממשק הקלאסי"
+	"accessibilityToggleLink":"לצורך נגישות טובה יותר, לחץ על קישור זה כדי להחליף לממשק הקלאסי",
+	"tooltipBookmarkStream":"Add this stream to your bookmarks",
+	"tooltipTopMenu":"Menu and settings",
+	"tooltipAttachImage":"Attach an image",
+	"tooltipShortenUrls":"Shorten all URLs in the Queet",
+	"tooltipReloadStream":"Refresh this stream",
+	"tooltipRemoveBookmark":"Remove this bookmark",
+	"clearHistory":"Clear browsing history"
 }

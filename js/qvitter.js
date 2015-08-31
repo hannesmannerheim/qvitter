@@ -65,6 +65,7 @@ window.onpopstate = function(event) {
    ·   welcome text expand and collapse
    ·
    · · · · · · · · · · · · · */
+
 $('body').on('click','.show-full-welcome-text, .front-welcome-text:not(.expanded) sup',function(){
 	$('.front-welcome-text').toggleClass('expanded');
 	if($('.front-welcome-text').hasClass('expanded')) {
@@ -83,6 +84,98 @@ $('body').on('click','.welcome-text-register-link',function(){
 	var scrollTo = $('#user-container').offset().top;
 	$('html, body').animate({ scrollTop: scrollTo}, 300, 'linear');
 	});
+
+
+
+/* ·
+   ·
+   ·   Check for tooltips to display
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on({
+    mouseover: function (e) {
+		removeAllTooltips();
+
+		// convert title to tooltip
+		if($(e.target).is('[title]')) {
+			$(e.target).attr('data-tooltip',$(e.target).attr('title'));
+			$(e.target).removeAttr('title');
+			}
+
+		// show tooltips
+		if($(e.target).is('[data-tooltip]')) {
+			var tooltip = $(e.target).attr('data-tooltip');
+			$('body').prepend('<div class="tooltip-caret"></div><div class="tooltip">' + tooltip + '</div>');
+			var tooltipWidth = $('.tooltip').outerWidth();
+			var tooltipHeight = $('.tooltip').outerHeight();
+			var windowWidth = $(window).width();
+			var windowScrollPosY = $(window).scrollTop();
+			var targetPosX = $(e.target).offset().left;
+			var targetPosY = $(e.target).offset().top;
+			var targetHeight = $(e.target).outerHeight();
+			var targetWidth = $(e.target).outerWidth();
+
+			// too little space on top of element, show tooltip at bottom
+			if((targetPosY-windowScrollPosY-tooltipHeight-10) < 0) {
+				var tooltipCaretPosX = targetPosX+targetWidth/2-5;
+				var tooltipCaretPosY = targetPosY+targetHeight+2;
+
+				// caret always directly under element
+				$('.tooltip-caret').css('left',tooltipCaretPosX + 'px');
+				$('.tooltip-caret').css('top',tooltipCaretPosY + 'px');
+				$('.tooltip-caret').addClass('top');
+
+				// tooltip itself might bleed over the window edges, and need moving
+				var tooltipPosX = targetPosX+targetWidth/2-tooltipWidth/2;
+				var tooltipPosY = targetPosY+targetHeight+7;
+				if((tooltipPosX+tooltipWidth)>windowWidth) {
+					tooltipPosX = windowWidth-tooltipWidth-5;
+					}
+				if(tooltipPosX < 5) {
+					tooltipPosX = 5;
+					}
+				$('.tooltip').css('left',tooltipPosX + 'px');
+				$('.tooltip').css('top',tooltipPosY + 'px');
+				}
+			// tooltip at top
+			else {
+				var tooltipCaretPosX = targetPosX+targetWidth/2-5;
+				var tooltipCaretPosY = targetPosY-7;
+
+				// caret always directly on top of element
+				$('.tooltip-caret').css('left',tooltipCaretPosX + 'px');
+				$('.tooltip-caret').css('top',tooltipCaretPosY + 'px');
+				$('.tooltip-caret').addClass('bottom');
+
+				// tooltip itself might bleed over the window edges, and need moving
+				var tooltipPosX = targetPosX+targetWidth/2-tooltipWidth/2;
+				var tooltipPosY = targetPosY-7-tooltipHeight;
+				if((tooltipPosX+tooltipWidth)>windowWidth) {
+					tooltipPosX = windowWidth-tooltipWidth-5;
+					}
+				if(tooltipPosX < 5) {
+					tooltipPosX = 5;
+					}
+				$('.tooltip').css('left',tooltipPosX + 'px');
+				$('.tooltip').css('top',tooltipPosY + 'px');
+
+				}
+
+			// fade in
+			$('.tooltip').css('opacity','1');
+			$('.tooltip-caret').css('opacity','1');
+			}
+    },
+    mouseleave: function (e) {
+		removeAllTooltips();
+    }
+});
+
+// removes all tooltips
+function removeAllTooltips() {
+	$('.tooltip,.tooltip-caret').remove();
+	}
 
 
 
@@ -466,8 +559,14 @@ function proceedToSetLanguageAndLogin(data){
 	$('#invite-link').html(window.sL.inviteAFriend);
 	$('#classic-link').html(window.sL.classicInterface);
 	$('#edit-profile-header-link').html(window.sL.editMyProfile);
-	$('#mini-edit-profile-button').attr('title',window.sL.editMyProfile);
+	$('#mini-edit-profile-button').attr('data-tooltip',window.sL.editMyProfile);
 	$('#accessibility-toggle-link').html(window.sL.accessibilityToggleLink);
+	$('#settingslink .nav-session').attr('data-tooltip',window.sL.tooltipTopMenu);
+	$('#top-compose').attr('data-tooltip',window.sL.compose);
+	$('button.upload-image').attr('data-tooltip',window.sL.tooltipAttachImage);
+	$('button.shorten').attr('data-tooltip',window.sL.tooltipShortenUrls);
+	$('.reload-stream').attr('data-tooltip',window.sL.tooltipReloadStream);
+	$('#clear-history').html(window.sL.clearHistory);
 
 	// show site body now
 	$('#user-container').css('display','block');
@@ -514,7 +613,7 @@ function doLogin(streamToSet) {
 		$('#qvitter-notice').show();
 		$('#user-avatar').attr('src', window.loggedIn.profile_image_url_profile_size);
 		$('#settingslink .nav-session').css('background-image', 'url(\'' + window.loggedIn.profile_image_url_profile_size + '\')');
-		$('#user-header').attr('title', window.sL.viewMyProfilePage);
+		$('#user-screen-name, #user-avatar, #user-name').attr('data-tooltip', window.sL.viewMyProfilePage);
 		$('#user-name').append(window.loggedIn.name);
 		$('#user-screen-name').append(window.loggedIn.screen_name);
 		$('#user-queets strong').html(window.loggedIn.statuses_count);
@@ -589,6 +688,9 @@ function doLogin(streamToSet) {
 
 		// load history
 		loadHistoryFromLocalStorage();
+
+		// show bookmarks
+		appendAllBookmarks(window.allBookmarks);
 
 		// set stream
 		window.currentStream = ''; // always reload stream on login
@@ -737,6 +839,7 @@ $('.language-link').click(function(){
    · · · · · · · · · · · · · */
 
 $('#settingslink').click(function(){
+	removeAllTooltips();
 	if(!$('.quitter-settings').hasClass('dropped')) { $('.quitter-settings').addClass('dropped'); }
 	else { $('.quitter-settings').removeClass('dropped'); }
 	});
@@ -1015,7 +1118,7 @@ $('body').on('click','a', function(e) {
 		return;
 		}
 
-	// don't hijack and don't follow link if this is the x remove users from history, prevent link but don't set a new currentstream
+	// don't hijack and don't follow link if this is the bookmark stream icon, prevent link but don't set a new currentstream
 	if($(e.target).is('i.chev-right')) {
 		e.preventDefault();
 		return;
@@ -1320,25 +1423,58 @@ $('body').on('click','.sm-ellipsis',function(){
 
 /* ·
    ·
-   ·   When user clicks the x to remove a menu history item
+   ·   When user clicks the bookmark icon to bookmark
    ·
    · · · · · · · · · · · · · */
 
 $('body').on('click','#history-container .chev-right',function(event){
-	$(this).parent('.stream-selection').remove();
-	updateHistoryLocalStorage();
+	var thisStreamLink = $(this).parent('.stream-selection');
+	thisStreamLink.slideUp(300,function(){
+		$('#bookmark-container').append(thisStreamLink.outerHTML());
+		$('#bookmark-container').children().last().children('.chev-right').attr('data-tooltip',window.sL.tooltipRemoveBookmark);
+		$('#bookmark-container').children().last().fadeIn(300,function(){
+			thisStreamLink.remove();
+			updateHistoryLocalStorage();
+			saveAllBookmarks();
+			});
+		});
 	});
 
 
 /* ·
    ·
-   ·   When sorting the history menu
+   ·   When user clicks the x to remove a bookmark
    ·
    · · · · · · · · · · · · · */
 
-$('#history-container').on("sortupdate", function() {
+$('body').on('click','#bookmark-container .chev-right',function(event){
+	$(this).parent('.stream-selection').remove();
+	saveAllBookmarks();
+	});
+
+
+/* ·
+   ·
+   ·   When sorting the bookmark menu
+   ·
+   · · · · · · · · · · · · · */
+
+$('#bookmark-container').on("sortupdate", function() {
+	saveAllBookmarks();
+	});
+
+
+/* ·
+   ·
+   ·   When clearing the browsing history
+   ·
+   · · · · · · · · · · · · · */
+
+$('#clear-history').on('click', function() {
+	$('#history-container').empty();
 	updateHistoryLocalStorage();
 	});
+
 
 
 

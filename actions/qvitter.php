@@ -238,6 +238,19 @@ class QvitterAction extends ApiAction
 					window.siteLicenseURL = '<?php print common_config('license', 'url'); ?>';
 					window.customTermsOfUse = <?php print json_encode(QvitterPlugin::settings("customtermsofuse")); ?>;
                     window.siteLocalOnlyDefaultPath = <?php print (common_config('public', 'localonly') ? 'true' : 'false'); ?>;
+                    <?php
+
+                        // bookmarks
+                        if($logged_in_user) {
+                            $bookmarks = Profile_prefs::getConfigData(Profile::current(), 'qvitter', 'bookmarks');
+                            if($bookmarks) {
+                                print 'window.allBookmarks = '.$bookmarks.';';
+                                }
+                            else {
+                                print 'window.allBookmarks = false;';
+                                }
+                            }
+                    ?>
 
 					// available language files and their last update time
 					window.availableLanguages = {<?php
@@ -473,7 +486,9 @@ class QvitterAction extends ApiAction
 							<a href="<?php print $instanceurl ?>main/public" class="stream-selection public-timeline" data-stream-header="" data-stream-name="statuses/public_timeline.json"><i class="chev-right"></i></a>
 							<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline" data-stream-header="" data-stream-name="statuses/public_and_external_timeline.json"><i class="chev-right"></i></a>
 						</div>
-						<div class="menu-container" id="history-container"></div>
+						<div class="menu-container" id="bookmark-container"></div>
+                        <div class="menu-container" id="history-container"></div>
+                        <div id="clear-history"></div>
 						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div>
 					</div>
 					<div id="feed">
