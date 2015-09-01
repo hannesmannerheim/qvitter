@@ -5202,7 +5202,8 @@ body.rtl #feed-header-inner h2  {
 		display:none;
 		}
 
-	#history-container {
+	#history-container,
+	#bookmark-container {
 		display:none !important;
 		}
 	.menu-container {
