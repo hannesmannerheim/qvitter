@@ -1312,7 +1312,7 @@ body.rtl #footer-spinner-container {
 	transition-property: opacity;
     transition-duration: 0.1s;
     transition-timing-function: ease-in;
-    transition-delay: 0.3s;
+    transition-delay: 0.6s;
 	}
 .tooltip-caret {
 	z-index: 10000;
@@ -1329,7 +1329,7 @@ body.rtl #footer-spinner-container {
 	transition-property: opacity;
     transition-duration: 0.1s;
     transition-timing-function: ease-in;
-    transition-delay: 0.3s;
+    transition-delay: 0.6s;
 	}
 .tooltip-caret.bottom {
 	border-top:5px solid #333;

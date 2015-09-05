@@ -332,7 +332,10 @@ function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, acti
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
-		success: function(data) { actionOnSuccess(data);}
+		success: function(data) {
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			actionOnSuccess(data);
+			}
 		});
 	}
 

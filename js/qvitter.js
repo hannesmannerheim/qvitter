@@ -43,6 +43,9 @@ window.oldStreams = new Object();
 // check our localStorage and make sure it's correct
 checkLocalStorage();
 
+// don't let users inject html/scripts into their own user data... not that it matters, it is only displayed to themselves, but just to be 200% safe
+window.loggedIn = iterateRecursiveReplaceHtmlSpecialChars(window.loggedIn);
+
 
 /* ·
    ·
