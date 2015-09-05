@@ -1437,6 +1437,10 @@ function showConversation(q, qid, data) {
 					var queetTime = parseTwitterDate(obj.created_at);
 
 					if(obj.source == 'activity') {
+
+						// because we had an xss issue, the obj.statusnet_html of qvitter-deleted-activity-notices can contain unwanted html, so we escape..
+						obj.statusnet_html = replaceHtmlSpecialChars(obj.statusnet_html);
+
 						var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a>' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
 
 						// detect rtl
@@ -1821,6 +1825,10 @@ function addToFeed(feed, after, extraClasses, isReply) {
 
 				// activity get special design
 				if(obj.source == 'activity' || obj.is_activity === true) {
+
+					// because we had an xss issue, the obj.statusnet_html of qvitter-deleted-activity-notices can contain unwanted html, so we escape..
+					obj.statusnet_html = replaceHtmlSpecialChars(obj.statusnet_html);
+
 					var queetTime = parseTwitterDate(obj.created_at);
 					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item activity ' + extraClassesThisRun + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
 

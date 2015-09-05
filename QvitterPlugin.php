@@ -766,10 +766,10 @@ class QvitterPlugin extends Plugin {
 
         if(!$user_is_deleted) {
             $rendered = sprintf(_m('<a href="%1$s">%2$s</a> deleted notice <a href="%3$s">{{%4$s}}</a>.'),
-                                $profile->getUrl(),
-                                $profile->getBestName(),
-                                $notice->getUrl(),
-                                $notice->uri);
+                                htmlspecialchars($profile->getUrl()),
+                                htmlspecialchars($profile->getBestName()),
+                                htmlspecialchars($notice->getUrl()),
+                                htmlspecialchars($notice->uri));
             $text = sprintf(_m('%1$s deleted notice {{%2$s}}.'),
                                 $profile->getBestName(),
                                 $notice->uri);
