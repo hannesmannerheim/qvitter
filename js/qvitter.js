@@ -102,7 +102,8 @@ $('body').on({
 
 		// convert title to tooltip
 		if($(e.target).is('[title]')) {
-			$(e.target).attr('data-tooltip',$(e.target).attr('title'));
+			var titleAttribute = replaceHtmlSpecialChars($(e.target).attr('title')); // can contain malicious code
+			$(e.target).attr('data-tooltip',titleAttribute);
 			$(e.target).removeAttr('title');
 			}
 
@@ -1415,6 +1416,7 @@ $('body').on('click','.sm-ellipsis',function(){
 				<li class="dropdown-caret left"><span class="caret-outer"></span><span class="caret-inner"></span></li>\
 				' + blockHtml + '\
 				' + deleteHtml + '\
+				<li><a class="hierarchical-view">Hierarchical view [alpha]</a></li>\
 			</ul>\
 			');
 		}
