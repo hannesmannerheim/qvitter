@@ -1416,7 +1416,6 @@ $('body').on('click','.sm-ellipsis',function(){
 				<li class="dropdown-caret left"><span class="caret-outer"></span><span class="caret-inner"></span></li>\
 				' + blockHtml + '\
 				' + deleteHtml + '\
-				<li><a class="hierarchical-view">Hierarchical view [alpha]</a></li>\
 			</ul>\
 			');
 		}
