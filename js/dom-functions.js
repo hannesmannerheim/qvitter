@@ -2034,7 +2034,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 					}
 				// large images get large thumbnail
 				else if(this.width > 1000) {
-					var img_url = window.siteAttachmentURLBase + this.id + '/thumbnail?w=' + bigThumbW + '&h=' + bigThumbH;
+					var img_url = this.large_thumb_url;
 					}
 				// no thumbnails for small images
 				else {

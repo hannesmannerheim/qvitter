@@ -97,6 +97,11 @@ class QvitterPlugin extends Plugin {
         // LINKIFY DOMAINS WITHOUT PROTOCOL AS DEFAULT
         $settings['linkify_bare_domains'] = true;
 
+        // CACHE REMOTE ATTACHMENT LOCALLY
+        // This will make image attachments from remote instances appear in the
+        // timeline just like local image attachments, but will require more disk space
+        $settings['cache_remote_attachments'] = false;
+
 
 		 /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
 		  ·                                                                   ·
@@ -452,9 +457,17 @@ class QvitterPlugin extends Plugin {
 					try {
 						$enclosure_o = $attachment->getEnclosure();
 						$thumb = $attachment->getThumbnail();
-
+						$large_thumb = $attachment->getThumbnail(1000,3000,false);
+                        if(method_exists('File_thumbnail','url')) {
+                            $thumb_url = File_thumbnail::url($thumb->filename);
+                            $large_thumb_url = File_thumbnail::url($large_thumb->filename);
+                        } else {
+                            $thumb_url = $thumb->getUrl();
+                            $large_thumb_url = $large_thumb->getUrl();
+                        }
 						$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
-						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
+						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb_url;
+                        $attachment_url_to_id[$enclosure_o->url]['large_thumb_url'] = $large_thumb_url;
 						$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
 						$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;
 
@@ -472,8 +485,10 @@ class QvitterPlugin extends Plugin {
 					} catch (ServerException $e) {
 						$thumb = File_thumbnail::getKV('file_id', $attachment->id);
 						if ($thumb instanceof File_thumbnail) {
+                            $thumb_url = $thumb->getUrl();
 							$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
-							$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb->getUrl();
+							$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb_url;
+                            $attachment_url_to_id[$enclosure_o->url]['large_thumb_url'] = $thumb_url;
 							$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
 							$attachment_url_to_id[$enclosure_o->url]['height'] = $attachment->height;
 
@@ -501,6 +516,7 @@ class QvitterPlugin extends Plugin {
                     $attachment['width'] = $attachment_url_to_id[$attachment['url']]['width'];
 					$attachment['height'] = $attachment_url_to_id[$attachment['url']]['height'];
                    	$attachment['thumb_url'] = $attachment_url_to_id[$attachment['url']]['thumb_url'];
+                    $attachment['large_thumb_url'] = $attachment_url_to_id[$attachment['url']]['large_thumb_url'];
                    	if(isset($attachment_url_to_id[$attachment['url']]['animated'])) {
 	                   	$attachment['animated'] = $attachment_url_to_id[$attachment['url']]['animated'];
                    		}
@@ -829,8 +845,84 @@ class QvitterPlugin extends Plugin {
 			$deleted_notice->delete();
 			}
 
+        return true;
+    }
+
+
+   /**
+     *  Maybe cache remote attachments
+     *
+     * @return boolean hook flag
+     */
+
+    public function onEndHandleFeedEntryWithProfile($activity,$ostatus_profile, $notice) {
+
+        if(self::settings('cache_remote_attachments') && count($activity->enclosures)>0) {
+
+            foreach($activity->enclosures as $enclosure) {
+
+                // only proceed if this enclosure exists in a title-attribute in the content-field,
+                // that's how we know it's probably an image attachment
+                $enclosure_in_title_attr_pos = strpos($activity->content,'title="'.$enclosure.'"');
+                if($enclosure_in_title_attr_pos) {
+                    $link_text_start = strpos($activity->content,'>',$enclosure_in_title_attr_pos)+1;
+                    $link_text_end = strpos($activity->content,'</a>',$enclosure_in_title_attr_pos);
+                    $link_text = substr($activity->content,$link_text_start,$link_text_end-$link_text_start);
+
+                    $extension = pathinfo(parse_url($enclosure, PHP_URL_PATH),PATHINFO_EXTENSION);
+                    if(count($link_text)>0 && ($extension == 'png' || $extension == 'jpg' || $extension == 'gif' || $extension == 'jpeg')) {
+
+                        // First we download the file to memory and test whether it's actually an image file
+                        $client = new HTTPClient();
+                        $response = $client->get($enclosure);
+                        if (!$response->isOk()) {
+                            common_debug(sprintf(_m('Could not GET URL %s.'), $enclosure), $response->getStatus());
+                        }
+                        $imgData = $response->getBody();
+
+                        $info = @getimagesizefromstring($imgData);
+                        if ($info === false || !$info[0] || !$info[1]) {
+                            common_debug(sprintf('The remote file was not a valid image file, URL: %s', $enclosure));
+                        }
+
+                        $filehash = hash('sha256', $imgData);
+
+                        $file = new File();
+                        $file->filehash = strtolower($filehash);
+
+                        // file already exist
+                        if ($file->find(true)) {
+                            $filename = $file->filename;
+                            $mimetype = $file->mimetype;
+
+                        // file doesn't exist
+                        } else {
+
+                            $mimetype = $info['mime'];
+                            $filename = strtolower($filehash) . '.' . File::guessMimeExtension($mimetype);
+                            $filepath = File::path($filename);
+
+                            if (!file_exists($filepath) && file_put_contents($filepath, $imgData) === false) {
+                                common_debug(sprintf('Could not write downloaded file to disk, URL: %s', $enclosure));
+                            } else {
+                                $profile = Profile::getKV('uri',$activity->actor->id);
+                                $mediafile = new MediaFile($profile, $filename, $mimetype, $filehash);
+                                $mediafile->attachToNotice($notice);
+
+                                $file_redir = new File_redirection;
+                                $file_redir->urlhash = File::hashurl($link_text);
+                                $file_redir->url = $link_text;
+                                $file_redir->file_id = $mediafile->fileRecord->id;
+                                $result = $file_redir->insert();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     	return true;
-    	}
+    }
 
 
 
@@ -966,6 +1058,11 @@ class QvitterPlugin extends Plugin {
      * @return boolean hook flag
      */
     public function onEndSetApiUser($user) {
+
+        // cleanup sessions, to allow for simultaneous http-requests,
+        // e.g. if posting a notice takes a very long time
+        Session::cleanup();
+
         if (!$user instanceof User) {
             return true;
         }
