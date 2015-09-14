@@ -217,6 +217,73 @@ function checkLocalStorage() {
 	}
 
 
+
+/* ·
+   ·
+   ·  Align tooltips to the hoovered element
+   ·
+   · · · · · · · · · */
+
+function alignTooltipToHooveredElement(tooltipElement,tooltipCaret,hoovered) {
+	var tooltipWidth = tooltipElement.outerWidth();
+	var tooltipHeight = tooltipElement.outerHeight();
+	var windowWidth = $(window).width();
+	var windowScrollPosY = $(window).scrollTop();
+	var targetPosX = hoovered.offset().left;
+	var targetPosY = hoovered.offset().top;
+	var targetHeight = hoovered.outerHeight();
+	var targetWidth = hoovered.outerWidth();
+
+	// too little space on top of element, show tooltip at bottom
+	if((targetPosY-windowScrollPosY-tooltipHeight-10) < 0) {
+		var tooltipCaretPosX = targetPosX+targetWidth/2-5;
+		var tooltipCaretPosY = targetPosY+targetHeight+2;
+
+		// caret always directly under element
+		tooltipCaret.css('left',tooltipCaretPosX + 'px');
+		tooltipCaret.css('top',tooltipCaretPosY + 'px');
+		tooltipCaret.addClass('top');
+
+		// tooltip itself might bleed over the window edges, and need moving
+		var tooltipPosX = targetPosX+targetWidth/2-tooltipWidth/2;
+		var tooltipPosY = targetPosY+targetHeight+7;
+		if((tooltipPosX+tooltipWidth)>windowWidth) {
+			tooltipPosX = windowWidth-tooltipWidth-5;
+			}
+		if(tooltipPosX < 5) {
+			tooltipPosX = 5;
+			}
+		tooltipElement.css('left',tooltipPosX + 'px');
+		tooltipElement.css('top',tooltipPosY + 'px');
+		}
+	// tooltip at top
+	else {
+		var tooltipCaretPosX = targetPosX+targetWidth/2-5;
+		var tooltipCaretPosY = targetPosY-7;
+
+		// caret always directly on top of element
+		tooltipCaret.css('left',tooltipCaretPosX + 'px');
+		tooltipCaret.css('top',tooltipCaretPosY + 'px');
+		tooltipCaret.addClass('bottom');
+
+		// tooltip itself might bleed over the window edges, and need moving
+		var tooltipPosX = targetPosX+targetWidth/2-tooltipWidth/2;
+		var tooltipPosY = targetPosY-7-tooltipHeight;
+		if((tooltipPosX+tooltipWidth)>windowWidth) {
+			tooltipPosX = windowWidth-tooltipWidth-5;
+			}
+		if(tooltipPosX < 5) {
+			tooltipPosX = 5;
+			}
+		tooltipElement.css('left',tooltipPosX + 'px');
+		tooltipElement.css('top',tooltipPosY + 'px');
+
+		}
+	}
+
+
+
+
 /* ·
    ·
    ·  Cache the unicode compatible regexps for the syntax highlighting

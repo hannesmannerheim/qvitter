@@ -109,62 +109,14 @@ $('body').on({
 
 		// show tooltips
 		if($(e.target).is('[data-tooltip]')) {
-			var tooltip = $(e.target).attr('data-tooltip');
-			$('body').prepend('<div class="tooltip-caret"></div><div class="tooltip">' + tooltip + '</div>');
-			var tooltipWidth = $('.tooltip').outerWidth();
-			var tooltipHeight = $('.tooltip').outerHeight();
-			var windowWidth = $(window).width();
-			var windowScrollPosY = $(window).scrollTop();
-			var targetPosX = $(e.target).offset().left;
-			var targetPosY = $(e.target).offset().top;
-			var targetHeight = $(e.target).outerHeight();
-			var targetWidth = $(e.target).outerWidth();
+			var tooltip_text = $(e.target).attr('data-tooltip');
+			var tooltipElement = $('<div class="tooltip">' + tooltip_text + '</div>');
+			var tooltipCaret = $('<div class="tooltip-caret"></div>');
+			$('body').prepend(tooltipElement);
+			$('body').prepend(tooltipCaret);
 
-			// too little space on top of element, show tooltip at bottom
-			if((targetPosY-windowScrollPosY-tooltipHeight-10) < 0) {
-				var tooltipCaretPosX = targetPosX+targetWidth/2-5;
-				var tooltipCaretPosY = targetPosY+targetHeight+2;
-
-				// caret always directly under element
-				$('.tooltip-caret').css('left',tooltipCaretPosX + 'px');
-				$('.tooltip-caret').css('top',tooltipCaretPosY + 'px');
-				$('.tooltip-caret').addClass('top');
-
-				// tooltip itself might bleed over the window edges, and need moving
-				var tooltipPosX = targetPosX+targetWidth/2-tooltipWidth/2;
-				var tooltipPosY = targetPosY+targetHeight+7;
-				if((tooltipPosX+tooltipWidth)>windowWidth) {
-					tooltipPosX = windowWidth-tooltipWidth-5;
-					}
-				if(tooltipPosX < 5) {
-					tooltipPosX = 5;
-					}
-				$('.tooltip').css('left',tooltipPosX + 'px');
-				$('.tooltip').css('top',tooltipPosY + 'px');
-				}
-			// tooltip at top
-			else {
-				var tooltipCaretPosX = targetPosX+targetWidth/2-5;
-				var tooltipCaretPosY = targetPosY-7;
-
-				// caret always directly on top of element
-				$('.tooltip-caret').css('left',tooltipCaretPosX + 'px');
-				$('.tooltip-caret').css('top',tooltipCaretPosY + 'px');
-				$('.tooltip-caret').addClass('bottom');
-
-				// tooltip itself might bleed over the window edges, and need moving
-				var tooltipPosX = targetPosX+targetWidth/2-tooltipWidth/2;
-				var tooltipPosY = targetPosY-7-tooltipHeight;
-				if((tooltipPosX+tooltipWidth)>windowWidth) {
-					tooltipPosX = windowWidth-tooltipWidth-5;
-					}
-				if(tooltipPosX < 5) {
-					tooltipPosX = 5;
-					}
-				$('.tooltip').css('left',tooltipPosX + 'px');
-				$('.tooltip').css('top',tooltipPosY + 'px');
-
-				}
+			// align tooltip to the hoovered element
+			alignTooltipToHooveredElement(tooltipElement,tooltipCaret,$(e.target));
 
 			// fade in
 			$('.tooltip').css('opacity','1');
