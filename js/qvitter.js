@@ -176,6 +176,11 @@ $('body').on({
     }
 });
 
+// tooltips should be removed very easily, e.g. when any of these events happen
+$('body').on("touchstart scroll click dblclick mousedown mouseup submit keydown keypress keyup", function(e){
+	removeAllTooltips();
+});
+
 // removes all tooltips
 function removeAllTooltips() {
 	$('.tooltip,.tooltip-caret').remove();
@@ -1112,11 +1117,6 @@ $('body').on('click','a', function(e) {
 		return;
 		}
 
-	// don't hijack if this is an external link that has been clicked but failed that time
-	if($(this).hasClass('external-profile-clicked')) {
-		return;
-		}
-
 	// don't hijack if this is an anchor link in the faq
 	if($(this).closest('.modal-container').attr('id') == 'popup-faq' && $(this).attr('href').indexOf('#') > -1) {
 		return;
@@ -1131,11 +1131,6 @@ $('body').on('click','a', function(e) {
 	// don't hijack links with donthijack attribute
 	if(!!$(this).attr('donthijack') || $(this).attr('donthijack') == '') {
 		return;
-		}
-
-	// if we're clicking something in a profile card popup, close it!
-	if($(this).closest('#popup-local-profile, #popup-external-profile').length>0) {
-		$('.modal-container').remove();
 		}
 
 	// all links opens in new tab
@@ -1196,43 +1191,7 @@ $('body').on('click','a', function(e) {
 
 			e.preventDefault();
 
-			// logged in user
-			if($(this).parent().attr('id') == 'user-profile-link'
-			|| linkNickname == window.loggedIn.screen_name) {
-				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name,function(){},true);
-				}
-			// when in local profile popups
-			else if($(this).closest('#popup-local-profile').length>0) {
-				setNewCurrentStream('statuses/user_timeline.json?screen_name=' + linkNickname,function(){},true);
-				}
-			// any local user, not in popups –> open popup
-			else {
-
-				$(this).addClass('local-profile-clicked');
-
-				popUpAction('popup-local-profile', '','<div id="popup-local-profile-spinner" style="height:300px;"></div>',false);
-				display_spinner('#popup-local-profile-spinner');
-
-				var cachedUserArray = userArrayCacheGetByProfileUrlAndNickname($(this).attr('href'), linkNickname);
-
-				if(cachedUserArray && cachedUserArray.local) {
-					openLocalProfileInPopup(cachedUserArray.local);
-					remove_spinner();
-					$('.local-profile-clicked').removeClass('local-profile-clicked');
-					}
-
-				// but always query the server also
-				getFromAPI('users/show.json?id=' + linkNickname,function(data){
-					if(data) {
-						// update the popup if it's still open
-						if($('#popup-local-profile').length>0) {
-							openLocalProfileInPopup(data);
-							remove_spinner();
-							$('.local-profile-clicked').removeClass('local-profile-clicked');
-							}
-						}
-					});
-				}
+			setNewCurrentStream('statuses/user_timeline.json?screen_name=' + linkNickname,function(){},true);
 			}
 		// tags
 		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/tag/')>-1) {
@@ -1275,109 +1234,6 @@ $('body').on('click','a', function(e) {
 				if($(this).closest('.modal-container').attr('id') != 'edit-profile-popup') { // no popup if we're editing our profile
 					popUpAction('popup-profile-picture', $('.profile-card-inner .screen-name').html(),'<img style="width:100%;display:block;" src="' + $(this).attr('href') + '" />',false);
 					}
-			}
-
-		// external profiles
-		else if (($(this).children('span.mention').length>0 // if it's a mention
-				 || $(this).hasClass('h-card mention') // if it's a newer gnusocial group mention
-				 || ($(this).hasClass('account-group') && $(this).attr('href').indexOf('/group/')==-1) // or if this is queet stream item header but not a group
-		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')==-1)) // or if it's a activity notice but not a group link
-		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in
-			e.preventDefault();
-			$(this).addClass('external-profile-clicked');
-
-			popUpAction('popup-external-profile', '','<div id="popup-external-profile-spinner" style="height:300px;"></div>',false);
-			display_spinner('#popup-external-profile-spinner');
-
-			// try getting from cache, to display immediately
-			if($(this).hasClass('account-group')) {
-				var externalNickname = $(this).children('.screen-name').text();
-				}
-			else {
-				var externalNickname = $(this).text();
-				}
-			if(externalNickname.substring(0,1) == '@') {
-				externalNickname = externalNickname.substring(1);
-				}
-			var cachedUserArray = userArrayCacheGetByProfileUrlAndNickname($(this).attr('href'), externalNickname);
-
-			if(cachedUserArray && cachedUserArray.external) {
-				openExternalProfileInPopup(cachedUserArray);
-				remove_spinner();
-				$('.external-profile-clicked').removeClass('external-profile-clicked');
-				}
-
-			// but always query the server also
-			getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent($(this).attr('href')),function(data){
-
-				if(data && data.external !== null) {
-
-					// update the popup if it's still open
-					if($('#popup-external-profile').length>0) {
-						openExternalProfileInPopup(data);
-						remove_spinner();
-						}
-
-					$('.external-profile-clicked').removeClass('external-profile-clicked');
-					}
-				// if external lookup failed, and we don't have a cached profile card, trigger click again.
-				// it will not be hijacked since we don't remove the external-profile-clicked class here
-				else if($('#popup-external-profile-spinner').length > 0){
-					$('.modal-container').remove();
-					$('.external-profile-clicked')[0].click();
-					$('.external-profile-clicked').removeClass('external-profile-clicked');
-					}
-
-				});
-			}
-
-		// external groups
-		else if (($(this).children('span.group').length>0 // if it's a group mention
-				 || $(this).hasClass('h-card group') // if it's a newer gnusocial group mention
-				 || ($(this).hasClass('account-group') && $(this).attr('href').indexOf('/group/')>-1) // or if this is group stream item header
-		         || ($(this).closest('.stream-item').hasClass('activity') && $(this).attr('href').indexOf('/group/')>-1)) // or if it's a activity notice
-		         && typeof window.loggedIn.screen_name != 'undefined') { // if logged in
-			e.preventDefault();
-			display_spinner();
-			getFromAPI('statusnet/groups/show.json?id=foo&uri=' + encodeURIComponent($(this).attr('href')), function(data){ if(data){
-
-				data.nickname = data.nickname || '';
-				data.fullname = data.fullname || '';
-				data.stream_logo = data.stream_logo || window.defaultAvatarStreamSize;
-				data.homepage_logo = data.homepage_logo || window.defaultAvatarProfileSize;
-				data.original_logo = data.original_logo || window.defaultAvatarProfileSize;
-				data.description = data.description || '';
-				data.homepage = data.homepage || '';
-				data.url = data.url || '';
-				data.member_count = data.member_count || 0;
-				data.admin_count = data.admin_count || 0;
-
-				// show user actions if logged in
-				var memberClass = '';
-				if(data.member) {
-					memberClass = 'member';
-					}
-
-				var groupRoot = data.url.substring(0,data.url.indexOf('/group/'));
-				var groupServer = groupRoot.replace('http://','').replace('https://','');
-
-				var memberButton = '<div class="user-actions"><button data-group-id="' + data.id + '" type="button" class="member-button ' + memberClass + '"><span class="button-text join-text"><i class="join"></i>' + window.sL.joinGroup + '</span><span class="button-text ismember-text">' + window.sL.isMemberOfGroup + '</span><span class="button-text leave-text">' + window.sL.leaveGroup + '</span></button></div>';
-
-				// get local member avatars
-				getFromAPI('statusnet/groups/membership.json?id=' + data.id, function(user_data){ if(user_data){
-					var avatars = '';
-					var i=0;
-					$.each(user_data,function(k,v){
-						if(i<7) {
-							avatars = avatars + '<img class="avatar size30" src="' + v.profile_image_url + '" />';
-							}
-						i++;
-						});
-					var profileCard = '<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.original_logo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture"><img src="' + data.homepage_logo + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.fullname + '<span></span></h1><h2 class="username"><span class="screen-name"><a target="_blank" href="' + groupRoot + '/group/' + data.nickname + '">!' + data.nickname + '@' + groupServer + '</a></span></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"></span><span class="url"><a href="' + data.homepage + '">' + data.homepage.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a target="_blank" href="' + groupRoot + '/group/' + data.nickname + '/members" class="member-stats">' + avatars + '</a></li></ul>' + memberButton + '<div class="clearfix"></div></div></div>';
-					popUpAction('popup-external-group-profile', '!' + data.nickname + '@' + groupServer,profileCard,false);
-					remove_spinner();
-					}});
-				}});
 			}
 		}
 	});

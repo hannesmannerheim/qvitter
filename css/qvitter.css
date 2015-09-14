@@ -1313,6 +1313,7 @@ body.rtl #footer-spinner-container {
     transition-duration: 0.1s;
     transition-timing-function: ease-in;
     transition-delay: 0.6s;
+	word-break: break-all;
 	}
 .tooltip-caret {
 	z-index: 10000;
@@ -2153,36 +2154,6 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 .modal-container .modal-footer .queet > .context .with-icn .badge-requeeted {
     left: 32px;
     }
-
-
-
-#popup-external-profile .profile-card,
-#popup-external-profile .profile-card .profile-banner-footer,
-#popup-local-profile .profile-card,
-#popup-local-profile .profile-card .profile-banner-footer {
-	border-radius:0;
-	}
-#popup-external-profile ul.queet-actions,
-#popup-local-profile ul.queet-actions {
-	display:none;
-	}
-#popup-external-profile .queet,
-#popup-external-profile .queet-content,
-#popup-external-profile .queet-text
-#popup-local-profile .queet,
-#popup-local-profile .queet-content,
-#popup-local-profile .queet-text {
-	cursor:auto;
-	border-bottom:0 none;
-	}
-#popup-external-profile .stream-item .stream-item-header .name:before,
-#popup-local-profile .stream-item .stream-item-header .name:before {
-	left:10px;
-	}
-#popup-external-profile .go-to-external-profile,
-#popup-local-profile .go-to-local-profile {
-	font-weight:bold;
-	}
 
 .stream-item-header .name {
 	font-size: 14px;
@@ -3853,12 +3824,6 @@ button.shorten:after {
     margin: 0;
     position: relative;
     top: 20px;
-	}
-
-#popup-external-profile-spinner .loader,
-#popup-local-profile-spinner .loader {
-	position:absolute;
-	top:150px;
 	}
 
 .reload-stream {

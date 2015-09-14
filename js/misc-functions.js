@@ -260,6 +260,7 @@ function cacheSyntaxHighlightingGroups() {
    · · · · · · · · · */
 
 window.userArrayCache = new Object();
+window.convertUriToUserArrayCacheKey = new Object();
 
 function userArrayCacheStore(data) {
 
@@ -278,8 +279,8 @@ function userArrayCacheStore(data) {
 		}
 	// we can also get either local...
 	else if(typeof data.local != 'undefined' && typeof data.local.statusnet_profile_url != 'undefined' ) {
-		var instanceUrlWithoutProtocol = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.local.statusnet_profile_url, data.external.screen_name);
-		var key = instanceUrlWithoutProtocol + '/' + data.external.screen_name;
+		var instanceUrlWithoutProtocol = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.local.statusnet_profile_url, data.local.screen_name);
+		var key = instanceUrlWithoutProtocol + '/' + data.local.screen_name;
 		data.external = false;
 		var dataToStore = data;
 		}
@@ -324,9 +325,15 @@ function userArrayCacheStore(data) {
 				}
 
 			window.userArrayCache[key].local = dataToStore.local;
+
+			// easy conversion between URI and the key we're using in window.userArrayCache
+			window.convertUriToUserArrayCacheKey[dataToStore.local.ostatus_uri] = key;
 			}
 		if(dataToStore.external) {
 			window.userArrayCache[key].external = dataToStore.external;
+
+			// easy conversion between URI and the key we're using in window.userArrayCache
+			window.convertUriToUserArrayCacheKey[dataToStore.external.ostatus_uri] = key;
 			}
 		}
 	}

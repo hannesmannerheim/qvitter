@@ -361,60 +361,6 @@ function addProfileCardToDOM(data) {
 
 /* ·
    ·
-   ·   Open external profile card in popup
-   ·
-   ·   @param data: an object with a user array
-   ·
-   · · · · · · · · · */
-
-function openExternalProfileInPopup(data) {
-
-	var data = buildExternalProfileCard(data);
-
-	// preview latest notice
-	var noticeHtml = '';
-	if(typeof data.status != 'undefined') {
-		data.status.user = data;
-		if(data.status.source != 'activity' && data.status.is_activity !== true) { // no acitivy notices in preview
-			var $noticeHtmlObj = $('<div/>').append(buildQueetHtml(data.status));
-			$noticeHtmlObj.find('.queet-thumbs').remove();
-			var noticeHtml = $noticeHtmlObj.outerHTML();
-			}
-		}
-
-	popUpAction('popup-external-profile', data.screenNameWithServer,data.profileCard + noticeHtml,'<a class="go-to-external-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
-	}
-
-
-/* ·
-   ·
-   ·   Open local profile card in popup
-   ·
-   ·   @param data: an object with a user array
-   ·
-   · · · · · · · · · */
-
-function openLocalProfileInPopup(data) {
-
-	var data = buildProfileCard(data);
-
-	// preview latest notice
-	var noticeHtml = '';
-	if(typeof data.status != 'undefined') {
-		data.status.user = data;
-		if(data.status.source != 'activity' && data.status.is_activity !== true) { // no acitivy notices in preview
-			var $noticeHtmlObj = $('<div/>').append(buildQueetHtml(data.status));
-			$noticeHtmlObj.find('.queet-thumbs').remove();
-			var noticeHtml = $noticeHtmlObj.outerHTML();
-			}
-		}
-
-	popUpAction('popup-local-profile', '@' + data.screen_name, data.profileCardHtml + '<div class="clearfix"></div>' + noticeHtml,'<a class="go-to-local-profile" href="' + data.statusnet_profile_url + '">' + window.sL.goToExternalProfile + '</a>');
-	}
-
-
-/* ·
-   ·
    ·   Adds a profile card before feed element, with data from the first object in the included object
    ·
    ·   @param data: an object with one or more queet objects

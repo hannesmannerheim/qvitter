@@ -587,7 +587,6 @@ class QvitterPlugin extends Plugin {
         $twitter_user['cover_photo'] = Profile_prefs::getConfigData($profile, 'qvitter', 'cover_photo');
         $twitter_user['background_image'] = Profile_prefs::getConfigData($profile, 'qvitter', 'background_image');
 
-
 		// follows me?
 		if ($scoped) {
 				$twitter_user['follows_you'] = $profile->isSubscribed($scoped);
@@ -596,6 +595,19 @@ class QvitterPlugin extends Plugin {
 		// local user?
 		$twitter_user['is_local'] = $profile->isLocal();
 
+
+        // ostatus uri
+        if($twitter_user['is_local']) {
+            $user = $profile->getUser();
+            if($user instanceof User) {
+                $twitter_user['ostatus_uri'] = $user->uri;
+            }
+        } else {
+            $ostatus_profile = Ostatus_profile::getKV('profile_id',$profile->id);
+            if($ostatus_profile instanceof Ostatus_profile) {
+                $twitter_user['ostatus_uri'] = $ostatus_profile->uri;
+            }
+        }
 
         return true;
     }
