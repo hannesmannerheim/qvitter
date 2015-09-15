@@ -298,7 +298,7 @@ function buildExternalProfileCard(data) {
 	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl;
 	var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
 
-	data.profileCard = '\
+	data.profileCardHtml = '\
 		<div class="profile-card">\
 			<div class="profile-header-inner" style="background-image:url(\'' + cover_photo + '\')">\
 				<div class="profile-header-inner-overlay"></div>\
@@ -556,7 +556,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 
 	// if we have a saved copy of this stream, show it immediately (but it is replaced when stream finishes to load later)
 	if(typeof window.oldStreams[window.currentStream] != "undefined") {
-		$('.profile-card').remove();
+		$('.profile-card,.hoover-card,.hoover-card-caret').remove();
 		$('#feed').remove();
 		$('#user-container').after(window.oldStreams[window.currentStream]);
 		$('.profile-card').css('display','none');
@@ -574,7 +574,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		// fade out
 		$('#feed,.profile-card').animate({opacity:'0'},150,function(){
 			// when fade out finishes, remove any profile cards and set new header
-			$('.profile-card').remove();
+			$('.profile-card,.hoover-card,.hoover-card-caret').remove();
 			$('#feed-header-inner h2').html(h2FeedHeader);
 			});
 		}
@@ -1587,11 +1587,61 @@ function addToFeed(feed, after, extraClasses, isReply) {
 
 				if(obj.ntype == 'like') {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like"><div class="queet"><div class="dogear"></div>' + ostatusHtml + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '"></span><img class="avatar" src="' + obj.from_profile.profile_image_url + '" /><strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">' + obj.from_profile.name + '</strong></a> ' + window.sL.xFavedYourQueet + '<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">' + notificationTime + '</small></div><div class="small-grey-notice"><a href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">' + noticeTime + '</a>: ' + $.trim(obj.notice.statusnet_html) + '</div></div></div></div>';
+					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like">\
+												<div class="queet">\
+													<div class="dogear"></div>\
+													' + ostatusHtml + '\
+													<div class="queet-content">\
+														<div class="stream-item-header">\
+															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '">\
+																<img class="avatar" src="' + obj.from_profile.profile_image_url + '" />\
+																<strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">\
+																	' + obj.from_profile.name + '\
+																</strong>\
+															</a> \
+															' + window.sL.xFavedYourQueet + '\
+															<small class="created-at" data-created-at="' + obj.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.created_at) + '">\
+																' + notificationTime + '\
+															</small>\
+														</div>\
+														<div class="small-grey-notice">\
+															<a data-tooltip="' + parseTwitterLongDate(obj.notice.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">\
+																' + noticeTime + '\
+															</a>: \
+															' + $.trim(obj.notice.statusnet_html) + '\
+														</div>\
+													</div>\
+												</div>\
+											</div>';
 					}
 				else if(obj.ntype == 'repeat') {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat"><div class="queet"><div class="queet-content"><div class="dogear"></div>' + ostatusHtml + '<div class="stream-item-header"><a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '"><img class="avatar" src="' + obj.from_profile.profile_image_url + '" /><strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">' + obj.from_profile.name + '</strong></a> ' + window.sL.xRepeatedYourQueet + '<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">' + notificationTime + '</small></div><div class="small-grey-notice"><a href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">' + noticeTime + '</a>: ' + $.trim(obj.notice.statusnet_html) + '</div></div></div></div>';
+					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat">\
+												<div class="queet">\
+													<div class="queet-content">\
+														<div class="dogear"></div>\
+														' + ostatusHtml + '\
+														<div class="stream-item-header">\
+															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '">\
+																<img class="avatar" src="' + obj.from_profile.profile_image_url + '" />\
+																<strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">\
+																	' + obj.from_profile.name + '\
+																</strong>\
+															</a> \
+															' + window.sL.xRepeatedYourQueet + '\
+															<small class="created-at" data-created-at="' + obj.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.created_at) + '">\
+																' + notificationTime + '\
+															</small>\
+														</div>\
+														<div class="small-grey-notice">\
+															<a data-tooltip="' + parseTwitterLongDate(obj.notice.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">\
+																' + noticeTime + '\
+															</a>: \
+															' + $.trim(obj.notice.statusnet_html) + '\
+														</div>\
+													</div>\
+												</div>\
+											</div>';
 					}
 				else if(obj.ntype == 'mention') {
 					var notificationHtml = buildQueetHtml(obj.notice, obj.id, extraClassesThisRun + ' notification mention');
@@ -2036,7 +2086,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 										</a>\
 										<i class="addressees">' + reply_to_html + in_groups_html + '</i>\
 										<small class="created-at" data-created-at="' + obj.created_at + '">\
-											<a href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a>\
+											<a data-tooltip="' + parseTwitterLongDate(obj.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a>\
 										</small>\
 									</div>\
 									<div class="queet-text">' + $.trim(obj.statusnet_html) + '</div>\

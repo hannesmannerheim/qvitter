@@ -328,6 +328,7 @@ function cacheSyntaxHighlightingGroups() {
 
 window.userArrayCache = new Object();
 window.convertUriToUserArrayCacheKey = new Object();
+window.convertStatusnetProfileUrlToUserArrayCacheKey = new Object();
 
 function userArrayCacheStore(data) {
 
@@ -393,19 +394,24 @@ function userArrayCacheStore(data) {
 
 			window.userArrayCache[key].local = dataToStore.local;
 
-			// easy conversion between URI and the key we're using in window.userArrayCache
+			// easy conversion between URI and statusnet_profile_url and the key we're using in window.userArrayCache
 			window.convertUriToUserArrayCacheKey[dataToStore.local.ostatus_uri] = key;
+			window.convertStatusnetProfileUrlToUserArrayCacheKey[dataToStore.local.statusnet_profile_url] = key;
 			}
 		if(dataToStore.external) {
 			window.userArrayCache[key].external = dataToStore.external;
 
 			// easy conversion between URI and the key we're using in window.userArrayCache
 			window.convertUriToUserArrayCacheKey[dataToStore.external.ostatus_uri] = key;
+			window.convertStatusnetProfileUrlToUserArrayCacheKey[dataToStore.external.statusnet_profile_url] = key;
 			}
 		}
 	}
 
 function userArrayCacheGetByLocalNickname(localNickname) {
+	if(localNickname.substring(0,1) == '@') {
+		localNickname = localNickname.substring(1);
+		}
 	if(typeof window.userArrayCache[window.siteRootDomain + '/' + localNickname] != 'undefined') {
 		return window.userArrayCache[window.siteRootDomain + '/' + localNickname];
 		}
@@ -415,12 +421,28 @@ function userArrayCacheGetByLocalNickname(localNickname) {
 	}
 
 function userArrayCacheGetByProfileUrlAndNickname(profileUrl, nickname) {
-	var guessedInstanceUrl = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(profileUrl, nickname);
-	if(typeof window.userArrayCache[guessedInstanceUrl + '/' + nickname] == 'undefined') {
-		return false;
+	if(nickname.substring(0,1) == '@') {
+		nickname = nickname.substring(1);
 		}
+	// the url might match a known profile uri
+	if(typeof window.convertUriToUserArrayCacheKey[profileUrl] != 'undefined') {
+		if(typeof window.userArrayCache[window.convertUriToUserArrayCacheKey[profileUrl]] != 'undefined') {
+			return window.userArrayCache[window.convertUriToUserArrayCacheKey[profileUrl]];
+			}
+		}
+	// or the href attribute might match a known statusnet_profile_url
+	else if(typeof window.convertStatusnetProfileUrlToUserArrayCacheKey[profileUrl] != 'undefined') {
+		if(typeof window.userArrayCache[window.convertStatusnetProfileUrlToUserArrayCacheKey[profileUrl]] != 'undefined') {
+			return window.userArrayCache[window.convertStatusnetProfileUrlToUserArrayCacheKey[profileUrl]];
+			}
+		}
+	// or we try to guess the instance url, and see if we have a match in our cache
+	else if(typeof window.userArrayCache[guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(profileUrl, nickname) + '/' + nickname] != 'undefined') {
+		return window.userArrayCache[guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(profileUrl, nickname) + '/' + nickname];
+		}
+	// we couldn't find any cached user array
 	else {
-		return window.userArrayCache[guessedInstanceUrl + '/' + nickname];
+		return false;
 		}
 	}
 
@@ -1035,32 +1057,6 @@ function convertEmptyObjectToEmptyArray(data) {
 		return data;
 		}
 
-	}
-
-
-
-
-/* ·
-   ·
-   ·   Return all URL:s in a string
-   ·
-   ·   @param string: the string to search
-   ·
-   ·   @return an array with the found urls
-   ·
-   · · · · · · · · · · */
-
-function findUrls(text) {
-    var source = (text || '').toString();
-    var urlArray = [];
-    var url;
-    var matchArray;
-    var regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
-    while( (matchArray = regexToken.exec( source )) !== null ) {
-        var token = matchArray[0];
-        urlArray.push( token );
-	    }
-    return urlArray;
 	}
 
 

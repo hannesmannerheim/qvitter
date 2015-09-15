@@ -1337,6 +1337,50 @@ body.rtl #footer-spinner-container {
 	border-bottom:0 none;
 	}
 
+.hoover-card {
+	width: auto;
+	max-width: 290px;
+	line-height: 20px;
+	padding:3px 3px;
+	font-size:12px;
+	background-color: #fff;
+	color: #eee;
+	z-index: 10000;
+	position:absolute;
+	display:block;
+	font-style: normal;
+	text-shadow: none;
+	border-radius: 7px;
+	opacity:0;
+	transition: opacity 0.1s ease-in 0;
+	word-break: break-all;
+	box-shadow: 0 0 10px rgba(0,0,0,0.4);
+	}
+.hoover-card-caret {
+	z-index: 10001;
+	opacity:0;
+	display:block;
+	content:' ';
+	position:absolute;
+	width:0;
+	height:0;
+	border:5px solid #fff;
+	border-top:0 none;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	transition: opacity 0.1s ease-in 0;
+	}
+.hoover-card-caret.bottom {
+	border-top:5px solid #fff;
+	border-bottom:0 none;
+	}
+
+.hoover-card .profile-card {
+	width:290px;
+	margin-bottom:0;
+	border:0 none;
+	}
+
 #settings-container {
 	padding:10px 10px 150px 10px;
 	}

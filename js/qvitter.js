@@ -107,10 +107,10 @@ $('body').on({
 			$(e.target).removeAttr('title');
 			}
 
-		// show tooltips
+		// regular tooltips
 		if($(e.target).is('[data-tooltip]')) {
-			var tooltip_text = $(e.target).attr('data-tooltip');
-			var tooltipElement = $('<div class="tooltip">' + tooltip_text + '</div>');
+			tooltip_data = $(e.target).attr('data-tooltip');
+			var tooltipElement = $('<div class="tooltip">' + tooltip_data + '</div>');
 			var tooltipCaret = $('<div class="tooltip-caret"></div>');
 			$('body').prepend(tooltipElement);
 			$('body').prepend(tooltipCaret);
@@ -119,8 +119,8 @@ $('body').on({
 			alignTooltipToHooveredElement(tooltipElement,tooltipCaret,$(e.target));
 
 			// fade in
-			$('.tooltip').css('opacity','1');
-			$('.tooltip-caret').css('opacity','1');
+			tooltipElement.css('opacity','1');
+			tooltipCaret.css('opacity','1');
 			}
     },
     mouseleave: function (e) {
@@ -137,6 +137,190 @@ $('body').on("touchstart scroll click dblclick mousedown mouseup submit keydown 
 function removeAllTooltips() {
 	$('.tooltip,.tooltip-caret').remove();
 	}
+
+
+/* ·
+   ·
+   ·   Check for profile hoovercards to display
+   ·
+   · · · · · · · · · · · · · */
+
+window.userArrayLastRetrieved = new Object();
+$('body').on('mouseover',function (e) {
+	var timeNow = new Date().getTime();
+	removeAllHooverCards(e,timeNow);
+	var hooverCardData = false;
+	var userArray = false;
+	var hrefAttr = false;
+	var possibleNickname = false;
+
+	// closest a-element with a href
+	if($(e.target).is('[href]')) {
+		var targetElement = $(e.target);
+		}
+	else if($(e.target).closest('a').length>0) {
+		if($(e.target).closest('a').is('[href]')) {
+			var targetElement = $(e.target).closest('a');
+			}
+		else {
+			var targetElement = $(e.target);
+			}
+		}
+	else {
+		var targetElement = $(e.target);
+		}
+
+	// get href-attribute
+	if(targetElement.is('[href]')) {
+		hrefAttr = targetElement.attr('href');
+		}
+
+	// guess what element close by could be a nickname
+	if($(e.target).is('[href]')) {
+		possibleNickname = $(e.target).text();
+		}
+	else if($(e.target).closest('a').length>0 && $(e.target).closest('a').is('[href]')) {
+		if($(e.target).siblings('.screen-name').length>0) { // the screen name can be in a sibling if we're lucky
+			possibleNickname = $(e.target).siblings('.screen-name').text();
+			}
+		else {
+			possibleNickname = $(e.target).text();
+			}
+		}
+
+	// see if we have it in cache, otherwise query server
+	getUserArrayData(hrefAttr,possibleNickname,function(userArray){
+
+		// bad data
+		if(typeof userArray.local == 'undefined') {
+			return;
+			}
+
+		// build card from either the local or external data, depending on what we got
+		if (userArray.local.is_local == true) {
+			var profileCard = buildProfileCard(userArray.local);
+			}
+		else if(userArray.local.is_local == false && (typeof userArray.external == 'undefined' || userArray.external === false)) {
+			var profileCard = buildProfileCard(userArray.local);
+			}
+		else if (userArray.local.is_local == false && typeof userArray.external != 'undefined' && userArray.external !== false) {
+			var profileCard = buildExternalProfileCard(userArray);
+			}
+		else {
+			console.log('could not build profile card...');
+			return;
+			}
+
+		var hooverCardElement = $('<div id="hoover-card-' + timeNow + '" class="hoover-card" data-card-created="' + timeNow + '">' + profileCard.profileCardHtml + '</div>');
+		var hooverCardCaret = $('<div id="hoover-card-caret-' + timeNow + '" class="hoover-card-caret"></div>');
+
+		targetElement.attr('data-awaiting-hoover-card',timeNow);
+
+		// let user hoover for 600ms before showing the card
+		setTimeout(function(){
+			// make sure user is still hoovering the same link and that that the link awaits the same hoover card
+			// (user can have flickered on and off the link triggering two or more hoover cards to in setTimeout delay)
+			if(targetElement.is(":hover") && parseInt(targetElement.attr('data-awaiting-hoover-card'),10) == timeNow) {
+				if($('.hoover-card').length == 0) {	// no card if there already is one open
+					$('body').prepend(hooverCardElement);
+					$('body').prepend(hooverCardCaret);
+					targetElement.attr('data-hoover-card-active',timeNow);
+
+					// if the user array has not been retrieved from the server for the last 60 seconds,
+					// we query it for the lastest data
+					if((typeof window.userArrayLastRetrieved[userArray.local.id] == 'undefined') || (timeNow - window.userArrayLastRetrieved[userArray.local.id]) > 60000) {
+						window.userArrayLastRetrieved[userArray.local.id] = timeNow;
+
+						// local users
+						if(userArray.local.is_local === true) {
+							getFromAPI('users/show.json?id=' + userArray.local.screen_name, function(data){
+								if(data) {
+									var newProfileCard = buildProfileCard(data);
+									hooverCardElement.html(newProfileCard.profileCardHtml);
+									alignTooltipToHooveredElement(hooverCardElement,hooverCardCaret,targetElement);
+									}
+								});
+							}
+
+						// external users
+						else if(userArray.local.is_local === false) {
+							getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent(userArray.local.statusnet_profile_url),function(data){
+								if(data && data.external !== null) {
+									var newProfileCard = buildExternalProfileCard(data);
+									hooverCardElement.html(newProfileCard.profileCardHtml);
+									alignTooltipToHooveredElement(hooverCardElement,hooverCardCaret,targetElement);
+									}
+								});
+							}
+						}
+
+					// hide tooltips
+					$('.tooltip,.tooltip-caret').remove();
+
+					// align hoover card to the hoovered element
+					alignTooltipToHooveredElement(hooverCardElement,hooverCardCaret,targetElement);
+
+					// fade in
+					hooverCardElement.css('opacity','1');
+					hooverCardCaret.css('opacity','1');
+					}
+				}
+			},600);
+		});
+	});
+
+// get user array from cache (or from server – TODO!!)
+function getUserArrayData(maybeProfileUrl,maybeNickname,callback) {
+	if(maybeProfileUrl && maybeNickname) {
+		userArray = userArrayCacheGetByProfileUrlAndNickname(maybeProfileUrl, maybeNickname);
+
+		// no cached user array found
+		if(!userArray) {
+
+			// see if we have reason to believe that maybeProfileUrl really is a profile url
+
+			// query server for that
+
+			}
+		// from cache
+		else {
+			callback(userArray);
+			}
+		}
+	}
+
+// hoover cards should be removed very easily, e.g. when any of these events happen
+$('body').on("mouseleave touchstart scroll click dblclick mousedown mouseup submit keydown keypress keyup", function(e){
+	var timeNow = new Date().getTime();
+	removeAllHooverCards(e,timeNow);
+});
+
+// removes all hover cards
+function removeAllHooverCards(event,priorTo) {
+	// don't remove hovercards until after 100ms, so user have time to move the cursor to it (which gives it the dont-remove-card class)
+	setTimeout(function(){
+		$.each($('.hoover-card'),function(){
+			// don't remove card if it was created after removeAllHooverCards() was called
+			if($(this).data('card-created') < priorTo) {
+				// don't remove it if we're hoovering it right now!
+				if(!$(this).hasClass('dont-remove-card')) {
+					$('[data-hoover-card-active="' + $(this).data('card-created') + '"]').removeAttr('data-hoover-card-active');
+					$('#hoover-card-caret-' + $(this).data('card-created')).remove();
+					$(this).remove();
+					}
+				}
+			});
+		},100);
+	}
+
+// if we're hoovering a hoover card, give it a class, so we don't remove it
+$('body').on('mouseover','.hoover-card', function(e) {
+	$(this).addClass('dont-remove-card');
+	});
+$('body').on('mouseleave','.hoover-card', function(e) {
+	$(this).removeClass('dont-remove-card');
+	});
+
 
 
 
@@ -1400,8 +1584,8 @@ function checkForNewQueets() {
 			}
 
 		// if we have hidden items, show new-queets-bar
-		if($('#feed-body').find('.stream-item.hidden').length > 0) {
-			var new_queets_num = $('#feed-body').find('.stream-item.hidden').length;
+		var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.activity)').length;
+		if(new_queets_num > 0) {
 
 			// if this is notifications page, update site title with hidden notification count
 			if(window.currentStream == 'qvitter/statuses/notifications.json') {
@@ -2799,7 +2983,7 @@ $('body').on('click','.show-full-conversation',function(){
    ·
    · · · · · · · · · · · · · */
 
-$('body').on('click','.edit-profile-button',function(){
+$('body').on('click','#page-container > .profile-card .edit-profile-button',function(){
 	if(!$(this).hasClass('disabled')) {
 		$(this).addClass('disabled');
 		$('html').scrollTop(0);
@@ -2815,6 +2999,7 @@ $('body').on('click','.edit-profile-button',function(){
 				if(data.cover_photo !== false) {
 					coverPhotoHtml = 'background-image:url(\'' + data.cover_photo + '\')';
 					}
+				$('.hoover-card,.hoover-card-caret').remove();
 				$('#edit-profile-popup').prepend('\
 					<div class="edit-profile-container">\
 			  			<div class="upload-background-image"></div>\
@@ -3385,13 +3570,13 @@ function uploadImage(e, thisUploadButton) {
    ·
    · · · · · · · · · · · · · */
 
-$('body').on('click','#mini-edit-profile-button, #edit-profile-header-link',function(){
+$('body').on('click','#mini-edit-profile-button, #edit-profile-header-link, .hoover-card .edit-profile-button',function(){
 	if(window.currentStream == 'statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name)	{
-		$('.edit-profile-button').trigger('click');
+		$('#page-container > .profile-card .edit-profile-button').trigger('click');
 		}
 	else {
 		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name, function(){
-			$('.edit-profile-button').trigger('click');
+			$('#page-container > .profile-card .edit-profile-button').trigger('click');
 			},true);
 		}
 	});

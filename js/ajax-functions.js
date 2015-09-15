@@ -166,9 +166,7 @@ function getFromAPI(stream, actionOnSuccess) {
 				}
 
 			data = convertEmptyObjectToEmptyArray(data);
-
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
-
 			searchForUserDataToCache(data);
 
 			actionOnSuccess(data);
@@ -282,7 +280,12 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false,this_element); console.log(data); },
-		success: function(data) { actionOnSuccess(data,this_element);}
+		success: function(data) {
+			data = convertEmptyObjectToEmptyArray(data);
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			searchForUserDataToCache(data);
+			actionOnSuccess(data,this_element);
+			}
 		});
 	}
 
@@ -305,7 +308,12 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false,this_element); console.log(data); },
-		success: function(data) { actionOnSuccess(data,this_element);}
+		success: function(data) {
+			data = convertEmptyObjectToEmptyArray(data);
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			searchForUserDataToCache(data);
+			actionOnSuccess(data,this_element);
+			}
 		});
 	}
 
@@ -333,7 +341,9 @@ function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, acti
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
 		success: function(data) {
+			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			searchForUserDataToCache(data);
 			actionOnSuccess(data);
 			}
 		});
@@ -360,9 +370,9 @@ function postActionToAPI(action, actionOnSuccess) {
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
 		success: function(data) {
-
 			data = convertEmptyObjectToEmptyArray(data);
-
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			searchForUserDataToCache(data);
 			actionOnSuccess(data);
 			}
 		});
@@ -427,6 +437,8 @@ function getFavsAndRequeetsForQueet(q,qid) {
 		type: "GET",
 		dataType: 'json',
 		success: function(data) {
+
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 
 			if(data.favs.length > 0 || data.repeats.length > 0) {
 				localStorageObjectCache_STORE('favsAndRequeets',qid, data); // cache response
