@@ -383,6 +383,10 @@ function userArrayCacheStore(data) {
 	// store
 	if(typeof window.userArrayCache[key] == 'undefined') {
 		window.userArrayCache[key] = dataToStore;
+
+		// easy conversion between URI and statusnet_profile_url and the key we're using in window.userArrayCache
+		window.convertUriToUserArrayCacheKey[dataToStore.local.ostatus_uri] = key;
+		window.convertStatusnetProfileUrlToUserArrayCacheKey[dataToStore.local.statusnet_profile_url] = key;
 		}
 	else {
 		if(dataToStore.local) {

@@ -189,7 +189,7 @@ $('body').on('mouseover',function (e) {
 		}
 
 	// see if we have it in cache, otherwise query server
-	getUserArrayData(hrefAttr,possibleNickname,function(userArray){
+	getUserArrayData(hrefAttr, possibleNickname, timeNow, function(userArray, timeOut){
 
 		// bad data
 		if(typeof userArray.local == 'undefined') {
@@ -265,26 +265,63 @@ $('body').on('mouseover',function (e) {
 					hooverCardCaret.css('opacity','1');
 					}
 				}
-			},600);
+			},timeOut);
 		});
 	});
 
 // get user array from cache (or from server – TODO!!)
-function getUserArrayData(maybeProfileUrl,maybeNickname,callback) {
+function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,callback) {
 	if(maybeProfileUrl && maybeNickname) {
+
 		userArray = userArrayCacheGetByProfileUrlAndNickname(maybeProfileUrl, maybeNickname);
 
-		// no cached user array found
+		// no cached user array found, query server if this seems to be a profile url
 		if(!userArray) {
 
-			// see if we have reason to believe that maybeProfileUrl really is a profile url
+			var routedUrl = URLtoStreamRouter(maybeProfileUrl);
 
-			// query server for that
+			// likely an uncached local profile
+			if(routedUrl && routedUrl.name == 'profile') {
 
+				var nicknameOrId = routedUrl.nickname;
+				if(!nicknameOrId) {
+					nicknameOrId = routedUrl.id;
+					}
+				// don't query too often for the same user
+				if(typeof window.userArrayLastRetrieved[nicknameOrId] == 'undefined' || (timeNow - window.userArrayLastRetrieved[nicknameOrId]) > 60000) {
+					window.userArrayLastRetrieved[nicknameOrId] = timeNow;
+					// query server and cache user data (done automatically in getFromAPI)
+					getFromAPI('users/show.json?id=' + nicknameOrId, function(data){
+						if(data) {
+							userArray = {local:data};
+
+							// we want hoover cards to appear _at least_ 600ms after hoover
+							// we could just set the timeout to 0 and let the card appear
+							// whenever it's loaded, but this will not feel good if we're
+							// on a crazy fast server. so we calculate the diff time and makes
+							// sure the total delay is at least 600ms
+							var timeAfterServerQuery = new Date().getTime();
+							var queryTime = timeAfterServerQuery-timeNow;
+							if(queryTime<600) {
+								var timeOut = 600-queryTime;
+								}
+							else {
+								var timeOut = 0;
+								}
+
+							// continue to display the hoover card
+							callback(userArray,timeOut);
+							}
+						});
+					}
+				}
 			}
 		// from cache
 		else {
-			callback(userArray);
+			// continue to display the hoover card
+			// 600ms before cards appear feels pretty good
+			// but this can be tweaked if cards appear to fast/slow
+			callback(userArray,600);
 			}
 		}
 	}

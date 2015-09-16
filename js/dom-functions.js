@@ -222,10 +222,10 @@ function buildProfileCard(data) {
 			</div>\
 			<div class="profile-banner-footer">\
 				<ul class="stats">\
-					<li><a class="tweet-stats">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li>\
-					<li><a class="following-stats">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li>\
-					<li><a class="follower-stats">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
-					<li><a class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li>\
+					<li class="tweet-num"><a class="tweet-stats">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li>\
+					<li class="following-num"><a class="following-stats">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li>\
+					<li class="follower-num"><a class="follower-stats">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
+					<li class="groups-num"><a class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
 				<div class="clearfix"></div>\
@@ -304,13 +304,14 @@ function buildExternalProfileCard(data) {
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a>\
 				<div class="profile-card-inner">\
-					<h1 class="fullname">' + data.name + '<span></span></h1>\
-					<h2 class="username">\
-						<span class="screen-name">\
-							<a target="_blank" href="' + data.statusnet_profile_url + '">' + data.screenNameWithServer + '</a>\
-						</span>\
-						' + follows_you + '\
-					</h2>\
+					<a target="_blank" href="' + data.statusnet_profile_url + '">\
+						<h1 class="fullname">' + data.name + '<span></span></h1>\
+						<h2 class="username">\
+							<span class="screen-name">' + data.screenNameWithServer + '</span>\
+							<span class="ostatus-link" data-tooltip="' + window.sL.goToTheUsersRemoteProfile + '">' + window.sL.goToTheUsersRemoteProfile + '</span>\
+							' + follows_you + '\
+						</h2>\
+					</a>\
 					<div class="bio-container"><p>' + data.description + '</p></div>\
 					<p class="location-and-url">\
 						<span class="location">' + data.location + '</span>\
@@ -323,9 +324,9 @@ function buildExternalProfileCard(data) {
 			</div>\
 			<div class="profile-banner-footer">\
 				<ul class="stats">\
-					<li><a target="_blank" href="' + data.statusnet_profile_url + '">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li>\
-					<li><a target="_blank" href="' + data.statusnet_profile_url + '/subscriptions">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li>\
-					<li><a target="_blank" href="' + data.statusnet_profile_url + '/subscribers">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
+					<li class="tweet-num"><a class="tweet-stats" target="_blank" href="' + data.statusnet_profile_url + '">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li>\
+					<li class="following-num"><a class="following-stats" target="_blank" href="' + data.statusnet_profile_url + '/subscriptions">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li>\
+					<li class="follower-num"><a class="follower-stats" target="_blank" href="' + data.statusnet_profile_url + '/subscribers">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
 				<div class="clearfix"></div>\
@@ -772,186 +773,267 @@ function setUrlFromStream(stream) {
 
 /* ·
    ·
-   ·   Get stream from location bar
+   ·   Local URL to stream router
    ·
-   ·   @param stream: the stream, e.g. 'public_timeline.json'
+   ·   @param url: any URL
+   ·
+   · · · · · · · · · */
+function URLtoStreamRouter(url) {
+
+	// structure of the returned object
+	var streamObject = new Object();
+	streamObject.nickname = false;
+	streamObject.id = false;
+	streamObject.stream = false;
+	streamObject.name = false;
+
+	// we don't expect protocol to matter
+	url = removeProtocolFromUrl(url);
+
+	// remove anchor tags
+	if(url.indexOf('#')>-1) {
+		url = url.substring(0,url.indexOf('#'));
+		}
+
+	// not a local URL
+	if(url != window.siteRootDomain && url.indexOf(window.siteRootDomain + '/') != 0) {
+		console.log('not a local url: ' + url);
+		return false;
+		}
+
+	// remove server
+	var path = url.substring(window.siteRootDomain.length);
+
+	// remove starting slash
+	if(path.indexOf('/') == 0) {
+		path = path.substring(1);
+		}
+
+	// remove ending slash
+	if(path.length>0 && path.lastIndexOf('/') == (path.length-1)) {
+		path = path.substring(0,path.length-1);
+		}
+
+	// front page
+	if(path.length == 0) {
+		if(window.siteLocalOnlyDefaultPath) {
+			streamObject.stream = 'statuses/public_timeline.json';
+			streamObject.name = 'public timeline';
+			return streamObject;
+			}
+		else {
+			streamObject.stream = 'statuses/public_and_external_timeline.json';
+			streamObject.name = 'public and external timeline';
+			return streamObject;
+			}
+		}
+
+	// main/all, i.e. full network
+	if(path == 'main/all') {
+		streamObject.stream = 'statuses/public_and_external_timeline.json';
+		streamObject.name = 'public and external timeline';
+		return streamObject;
+		}
+
+	// main/public, i.e. site's public timeline, new gnu social style
+	if(path == 'main/public') {
+		streamObject.stream = 'statuses/public_timeline.json';
+		streamObject.name = 'public timeline';
+		return streamObject;
+		}
+
+	// groups directory, qvitter can't handle that yet
+	if(path == 'groups') {
+		streamObject.name = 'group directory';
+		return streamObject;
+		}
+
+	// search/notice?q={urlencoded search terms}
+	if(path.indexOf('search/notice?q=') == 0) {
+		var searchQuery = replaceHtmlSpecialChars(loc.replace('/search/notice?q=',''));
+		if(searchQuery.length>0) {
+			streamToSet.id = searchQuery;
+			streamToSet.stream = 'search.json?q=' + searchToStream;
+			streamObject.name = 'search';
+			return streamObject;
+			}
+		}
+
+	// {screen_name}
+	if(/^[a-zA-Z0-9]+$/.test(path)) {
+		streamObject.nickname = path;
+		streamObject.stream = 'statuses/user_timeline.json?screen_name=' + streamObject.nickname;
+		streamObject.name = 'profile';
+		return streamObject;
+		}
+
+	var pathSplit = path.split('/');
+
+	// tag/{tag}
+	if(pathSplit.length == 2 && pathSplit[0] == 'tag') {
+		streamObject.id = pathSplit[1];
+		streamObject.stream = 'statusnet/tags/timeline/' + streamObject.id + '.json';
+		streamObject.name = 'tag stream';
+		return streamObject;
+		}
+
+	// notice/{id}
+	if(pathSplit.length == 2 && pathSplit[0] == 'notice' && /^[0-9]+$/.test(pathSplit[1])) {
+		streamObject.id = pathSplit[1];
+		streamObject.stream = 'statuses/show/' + streamObject.id + '.json';
+		streamObject.name = 'notice';
+		return streamObject;
+		}
+
+	// user/{id}
+	if(pathSplit.length == 2 && pathSplit[0] == 'user' && /^[0-9]+$/.test(pathSplit[1])) {
+		streamObject.id = pathSplit[1];
+		streamObject.stream = 'statuses/user_timeline.json?id=' + streamObject.id;
+		streamObject.name = 'profile';
+		return streamObject;
+		}
+
+	// group/{group_nickname}
+	if(pathSplit.length == 2 && pathSplit[0] == 'group' && /^[a-zA-Z0-9]+$/.test(pathSplit[1])) {
+		streamObject.nickname = pathSplit[1];
+		streamObject.stream = 'statusnet/groups/timeline/' + streamObject.nickname + '.json';
+		streamObject.name = 'group notice stream';
+		return streamObject;
+		}
+
+	// group/{group_nickname}/members
+	if(pathSplit.length == 3 && pathSplit[0] == 'group' && /^[a-zA-Z0-9]+$/.test(pathSplit[1]) && pathSplit[2] == 'members') {
+		streamObject.nickname = pathSplit[1];
+		streamObject.stream = 'statusnet/groups/membership/' + streamObject.nickname + '.json?count=20';
+		streamObject.name = 'group member list';
+		return streamObject;
+		}
+
+	// group/{group_nickname}/admins
+	if(pathSplit.length == 3 && pathSplit[0] == 'group' && /^[a-zA-Z0-9]+$/.test(pathSplit[1]) && pathSplit[2] == 'admins') {
+		streamObject.nickname = pathSplit[1];
+		streamObject.stream = 'statusnet/groups/admins/' + streamObject.nickname + '.json?count=20';
+		streamObject.name = 'group admin list';
+		return streamObject;
+		}
+
+	// {screen_name}/all
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'all') {
+		streamObject.nickname = pathSplit[0];
+		if(window.loggedIn.screen_name == streamObject.nickname) {
+			streamObject.stream = 'statuses/friends_timeline.json';
+			}
+		else {
+			streamObject.stream = 'statuses/friends_timeline.json?screen_name=' + streamObject.nickname;
+			}
+		streamObject.name = 'friends timeline';
+		return streamObject;
+		}
+
+	// {screen_name}/replies
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'replies') {
+		streamObject.nickname = pathSplit[0];
+		if(window.loggedIn.screen_name == streamObject.nickname) {
+			streamObject.stream = 'statuses/mentions.json';
+			}
+		else {
+			streamObject.stream = 'statuses/mentions.json?screen_name=' + streamObject.nickname;
+			}
+		streamObject.name = 'mentions';
+		return streamObject;
+		}
+
+	// {screen_name}/notifications
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'notifications') {
+		streamObject.nickname = pathSplit[0];
+		// only accessible to the logged in user
+		if(window.loggedIn.screen_name == streamObject.nickname) {
+			streamObject.stream = 'qvitter/statuses/notifications.json';
+			}
+		streamObject.name = 'notifications';
+		return streamObject;
+		}
+
+	// {screen_name}/favorites
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'favorites') {
+		streamObject.nickname = pathSplit[0];
+		if(window.loggedIn.screen_name == streamObject.nickname) {
+			streamObject.stream = 'favorites.json';
+			}
+		else {
+			streamObject.stream = 'favorites.json?screen_name=' + streamObject.nickname;
+			}
+		streamObject.name = 'favorites';
+		return streamObject;
+		}
+
+	// {screen_name}/subscribers
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'subscribers') {
+		streamObject.nickname = pathSplit[0];
+		if(window.loggedIn.screen_name == streamObject.nickname) {
+			streamObject.stream = 'statuses/followers.json?count=20';
+			}
+		else {
+			streamObject.stream = 'statuses/followers.json?count=20&screen_name=' + streamObject.nickname;
+			}
+		streamObject.name = 'subscribers';
+		return streamObject;
+		}
+
+	// {screen_name}/subscriptions
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'subscriptions') {
+		streamObject.nickname = pathSplit[0];
+		if(window.loggedIn.screen_name == streamObject.nickname) {
+			streamObject.stream = 'statuses/friends.json?count=20';
+			}
+		else {
+			streamObject.stream = 'statuses/friends.json?count=20&screen_name=' + streamObject.nickname;
+			}
+		streamObject.name = 'subscriptions';
+		return streamObject;
+		}
+
+	// {screen_name}/groups
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'groups') {
+		streamObject.nickname = pathSplit[0];
+		if(window.loggedIn.screen_name == streamObject.nickname) {
+			streamObject.stream = 'statusnet/groups/list.json?count=10';
+			}
+		else {
+			streamObject.stream = 'statusnet/groups/list.json?count=10&screen_name=' + streamObject.nickname;
+			}
+		streamObject.name = 'user group list';
+		return streamObject;
+		}
+	}
+
+
+
+
+/* ·
+   ·
+   ·   Get stream from location bar
    ·
    · · · · · · · · · */
 
 function getStreamFromUrl() {
-	var loc = window.location.href.replace('http://','').replace('https://','').replace(window.siteRootDomain,'');
 
-	// default/fallback
-	if(window.loggedIn) {
-		var streamToSet = 'statuses/friends_timeline.json';
+	var streamObject = URLtoStreamRouter(window.location.href);
+
+	if(streamObject.stream) {
+		return streamObject.stream;
+		}
+	// fallback to friends timeline or public timeline if URLtoStreamRouter can't find a stream
+	else if(window.loggedIn) {
+		return 'statuses/friends_timeline.json';
 		}
 	else if(window.siteLocalOnlyDefaultPath) {
-		var streamToSet = 'statuses/public_timeline.json';
+		return 'statuses/public_timeline.json';
 		}
 	else {
-		var streamToSet = 'statuses/public_and_external_timeline.json';
+		return 'statuses/public_and_external_timeline.json';
 		}
 
-
-	// main/all, i.e. full network
-	if (loc == '/main/all') {
-		streamToSet = 'statuses/public_and_external_timeline.json';
-		}
-
-	// main/public, i.e. site's public timeline, new gnu social style
-	else if (loc == '/main/public') {
-		streamToSet = 'statuses/public_timeline.json';
-		}
-
-	// {domain}/{screen_name} or {domain}/{screen_name}/
-	else if ((/^[a-zA-Z0-9]+$/.test(loc.substring(0, loc.length - 1).replace('/','')))) {
-		var userToStream = loc.replace('/','').replace('/','');
-		if(userToStream.length>0) {
-			streamToSet = 'statuses/user_timeline.json?screen_name=' + userToStream;
-			}
-		}
-
-	// {domain}/{screen_name}/all
-	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/all','')))) {
-		var userToStream = loc.replace('/','').replace('/all','');
-		if(userToStream.length>0) {
-			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'statuses/friends_timeline.json';
-				}
-			else {
-				streamToSet = 'statuses/friends_timeline.json?screen_name=' + userToStream;
-				}
-			}
-		}
-
-	// {domain}/{screen_name}/replies
-	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/replies','')))) {
-		var userToStream = loc.replace('/','').replace('/replies','');
-		if(userToStream.length>0) {
-			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'statuses/mentions.json';
-				}
-			else {
-				streamToSet = 'statuses/mentions.json?screen_name=' + userToStream;
-				}
-			}
-		}
-
-	// {domain}/{screen_name}/notifications
-	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/notifications','')))) {
-		var userToStream = loc.replace('/','').replace('/notifications','');
-		if(userToStream.length>0) {
-			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'qvitter/statuses/notifications.json';
-				}
-			else {
-				// not allowed for others than logged in user
-				window.location.replace(window.siteInstanceURL);
-				}
-			}
-		}
-
-
-	// {domain}/{screen_name}/favorites
-	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/favorites','')))) {
-		var userToStream = loc.replace('/','').replace('/favorites','');
-		if(userToStream.length>0) {
-			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'favorites.json';
-				}
-			else {
-				streamToSet = 'favorites.json?screen_name=' + userToStream;
-				}
-			}
-		}
-
-	// {domain}/{screen_name}/subscribers
-	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/subscribers','')))) {
-		var userToStream = loc.replace('/','').replace('/subscribers','');
-		if(userToStream.length>0) {
-			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'statuses/followers.json?count=20';
-				}
-			else {
-				streamToSet = 'statuses/followers.json?count=20&screen_name=' + userToStream;
-				}
-			}
-		}
-
-	// {domain}/{screen_name}/subscriptions
-	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/subscriptions','')))) {
-		var userToStream = loc.replace('/','').replace('/subscriptions','');
-		if(userToStream.length>0) {
-			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'statuses/friends.json?count=20';
-				}
-			else {
-				streamToSet = 'statuses/friends.json?count=20&screen_name=' + userToStream;
-				}
-			}
-		}
-
-	// {domain}/{screen_name}/groups
-	else if ((/^[a-zA-Z0-9]+$/.test(loc.replace('/','').replace('/groups','')))) {
-		var userToStream = loc.replace('/','').replace('/groups','');
-		if(userToStream.length>0) {
-			if(window.loggedIn.screen_name == userToStream) {
-				streamToSet = 'statusnet/groups/list.json?count=10';
-				}
-			else {
-				streamToSet = 'statusnet/groups/list.json?count=10&screen_name=' + userToStream;
-				}
-			}
-		}
-
-	// {domain}/tag/{tag}
-	else if (loc.indexOf('/tag/')>-1) {
-		var tagToStream = loc.replace('/tag/','');
-		if(tagToStream.length>0) {
-			streamToSet = 'statusnet/tags/timeline/' + tagToStream + '.json';
-			}
-		}
-
-	// {domain}/notice/{notide_id}
-	else if (loc.indexOf('/notice/')>-1) {
-		var noticeToStream = loc.replace('/notice/','');
-		if(noticeToStream.length>0) {
-			streamToSet = 'statuses/show/' + noticeToStream + '.json';
-			}
-		}
-
-
-	// {domain}/group/{group}/members, {domain}/group/{group}/admins or {domain}/group/{group}
-	else if (loc.indexOf('/group/')>-1) {
-
-		if(loc.indexOf('/members')>-1) {
-			var groupToStream = loc.replace('/group/','').replace('/members','');
-			if(groupToStream.length>0) {
-				streamToSet = 'statusnet/groups/membership/' + groupToStream + '.json?count=20';
-				}
-			}
-		else if(loc.indexOf('/admins')>-1) {
-			var groupToStream = loc.replace('/group/','').replace('/admins','');
-			if(groupToStream.length>0) {
-				streamToSet = 'statusnet/groups/admins/' + groupToStream + '.json?count=20';
-				}
-			}
-		else {
-			var groupToStream = loc.replace('/group/','');
-			if(groupToStream.length>0) {
-				streamToSet = 'statusnet/groups/timeline/' + groupToStream + '.json';
-				}
-			}
-		}
-
-	// {domain}/search/notice?q={urlencoded searh terms}
-	else if (loc.indexOf('/search/notice?q=')>-1) {
-		var searchToStream = replaceHtmlSpecialChars(loc.replace('/search/notice?q=',''));
-		if(searchToStream.length>0) {
-			streamToSet = 'search.json?q=' + searchToStream;
-			}
-		}
-	return streamToSet;
 	}
 
 

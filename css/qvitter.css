@@ -1345,7 +1345,7 @@ body.rtl #footer-spinner-container {
 	font-size:12px;
 	background-color: #fff;
 	color: #eee;
-	z-index: 10000;
+	z-index: 9998;
 	position:absolute;
 	display:block;
 	font-style: normal;
@@ -1357,7 +1357,7 @@ body.rtl #footer-spinner-container {
 	box-shadow: 0 0 10px rgba(0,0,0,0.4);
 	}
 .hoover-card-caret {
-	z-index: 10001;
+	z-index: 9999;
 	opacity:0;
 	display:block;
 	content:' ';
@@ -1373,12 +1373,6 @@ body.rtl #footer-spinner-container {
 .hoover-card-caret.bottom {
 	border-top:5px solid #fff;
 	border-bottom:0 none;
-	}
-
-.hoover-card .profile-card {
-	width:290px;
-	margin-bottom:0;
-	border:0 none;
 	}
 
 #settings-container {
@@ -2200,23 +2194,36 @@ body.rtl .view-more-container-bottom { direction:rtl; }
     }
 
 .stream-item-header .name {
-	font-size: 14px;
-	font-weight: 700;
 	color: #333333;
-	line-height: 18px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 18px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
 	}
 .stream-item-header .screen-name,
 .stream-item-header .reply-to,
 .stream-item-header .in-groups,
 .stream-item-header .h-card {
-	font-size: 13px;
 	color: #999999;
-	line-height: 18px;
-	direction: ltr;
-	font-style:normal;
+    direction: ltr;
+    display: inline-block;
+    font-size: 13px;
+    font-style: normal;
+    height: 18px;
+    line-height: 18px;
+    vertical-align: top;
 	}
 .stream-item-header .h-card:hover {
 	text-decoration:underline;
+	}
+.stream-item-header .addressees {
+	display: inline-block;
+	vertical-align: top;
 	}
 .stream-item-header .addressees span:first-child:before {
 	content: "\f105";
@@ -2565,6 +2572,14 @@ ul.queet-actions li .icon.is-mine:before {
 	color:#999;
 	font-weight:normal;
 	}
+.queet > .context .with-icn .requeet-text a b {
+	display: inline-block;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+	}
 .queet > .context .with-icn .requeet-text a:hover b {
 	text-decoration:underline;
 	color:#555;
@@ -2672,6 +2687,14 @@ ul.stats li {
 .profile-card ul.stats li {
 	padding-top: 7px;
 	}
+.hoover-card .profile-card ul.stats li {
+	padding-top: 6px;
+	min-width:70px;
+	}
+.hoover-card .profile-card ul.stats li.follower-num,
+.hoover-card .profile-card ul.stats li.groups-num {
+	display:none;
+	}
 .queet.rtl ul.stats li {
 	float:right;
 	}
@@ -2685,6 +2708,9 @@ ul.stats a {
     line-height: 18px;
     font-weight: normal;
 	}
+.hoover-card ul.stats a {
+	font-size: 9px;
+	}
 .queet.rtl ul.stats a{
     border-right: 1px solid #E8E8E8;
     border-left: 0 none;
@@ -2695,6 +2721,9 @@ ul.stats a strong {
 	font-weight:500;
 	line-height: 16px;
     display: block;
+	}
+.hoover-card ul.stats a strong {
+	font-size: 17px;
 	}
 
 ul.stats .avatar-row {
@@ -2949,6 +2978,11 @@ span.inline-reply-caret .caret-inner {
     position: relative;
     z-index: 200;
     margin-top:8px;
+	overflow:hidden;
+	height:16px;
+	text-overflow: ellipsis;
+	max-width: 260px;
+	white-space:nowrap;
 	}
 #user-screen-name {
 	font-weight:normal;
@@ -3432,6 +3466,13 @@ div.nav-session {
     position: relative;
     width: 588px;
 	}
+
+.hoover-card .profile-card {
+	width:290px;
+	margin-bottom:0;
+	border:0 none;
+	}
+
 .modal-body .profile-card {
 	margin-right:-1px;
 	margin-top:-5px;
@@ -3454,6 +3495,13 @@ div.nav-session {
 	-o-background-size: cover;
 	background-size: cover;
 	}
+.hoover-card .profile-header-inner {
+	height: 200px;
+	}
+.profile-header-inner a:hover {
+	text-decoration: underline;
+	color:#fff;
+	}
 .profile-header-inner .profile-header-inner-overlay {
 	background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65)));
@@ -3465,6 +3513,9 @@ div.nav-session {
     position: absolute;
     top: 60px;
     width: 100%;
+	}
+.hoover-card .profile-header-inner .profile-header-inner-overlay {
+	height: 140px;
 	}
 .profile-header-inner .profile-picture {
     outline: 0 none;
@@ -3479,12 +3530,27 @@ div.nav-session {
     width: 73px;
     z-index: 5;
 	}
+
+.hoover-card .profile-header-inner .profile-picture {
+    border: 2px solid #ffffff;
+    border-radius: 4px;
+    height: 40px;
+    overflow: hidden;
+    width: 40px;
+	}
+
 .profile-header-inner .profile-picture img {
     height: 73px;
     width: 73px;
     border-radius: 3px 3px 3px 3px;
     float: none;
 	}
+.hoover-card .profile-header-inner .profile-picture img {
+	border-radius: 3px;
+    height: 40px;
+    width: 40px;
+	}
+
 .profile-header-inner .profile-card-inner {
     text-align: center;
     line-height: 16px;
@@ -3499,13 +3565,23 @@ div.nav-session {
 	font-weight: bold;
 	line-height: 1;
     margin: 0 auto 2px auto;
-    color: #FFFFFF;
+    color: #fff;
     font-size: 24px;
     white-space: nowrap;
     padding:0;
-    height:24px;
+    height:28px;
     line-height:24px;
 	display:block;
+	overflow: hidden;
+	max-width:100%;
+	text-overflow: ellipsis;
+	}
+.hoover-card .profile-card-inner .fullname {
+	font-size: 14px;
+    font-weight: 700;
+    height: 26px;
+    line-height: 16px;
+	margin:0;
 	}
 .profile-header-inner .profile-card-inner h1.fullname span {
     font-size: 24px;
@@ -3520,6 +3596,28 @@ div.nav-session {
     line-height: 24px;
     margin-bottom: 1px;
     text-rendering: optimizelegibility;
+	overflow: hidden;
+	max-width:100%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	}
+.hoover-card .profile-header-inner .profile-card-inner h2.username {
+	font-size: 14px;
+	line-height:18px;
+	margin-bottom: 4px;
+	}
+
+.profile-header-inner .profile-card-inner h2.username .ostatus-link {
+	background-position: 7px -240px;
+    font-size: 0;
+    opacity: 0.9 !important;
+    overflow: hidden;
+    right: -22px;
+    text-shadow: none;
+    top: -74px;
+	}
+.profile-header-inner .profile-card-inner h2.username .ostatus-link:hover {
+	background-position: 7px -210px;
 	}
 
 .profile-header-inner .profile-card-inner h2.username .follows-you {
@@ -3534,6 +3632,14 @@ div.nav-session {
 	margin-left:7px;
 	text-transform:uppercase;
 	}
+.hoover-card .profile-header-inner .profile-card-inner h2.username .follows-you {
+	background-color: rgba(0, 0, 0, 0.5);
+    bottom: -36px;
+    display: block;
+    font-size: 10px;
+    position: absolute;
+    right: -13px;
+	}
 
 .profile-header-inner .profile-card-inner h2.username a {
 	color:#fff;
@@ -3545,8 +3651,19 @@ div.nav-session {
     font-size: 14px;
 	}
 .profile-header-inner .profile-card-inner .bio-container p {
-	color: #FFFFFF;
-	margin:0;
+	color: #fff;
+    line-height: 18px;
+    margin: 0;
+    max-height: 54px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	}
+.hoover-card .profile-header-inner .profile-card-inner .bio-container p {
+	font-size: 12px;
+    letter-spacing: 0.2px;
+    line-height: 15px;
+    height: 15px;
+    white-space: nowrap;
 	}
 .profile-header-inner .profile-card-inner .location-and-url,
 .profile-header-inner .profile-card-inner .location-and-url input {
@@ -3555,6 +3672,22 @@ div.nav-session {
 	line-height: 18px;
 	margin:0;
 	}
+.hoover-card .profile-header-inner .profile-card-inner .location-and-url,
+.hoover-card .profile-header-inner .profile-card-inner .location-and-url input {
+	font-size: 12px;
+    letter-spacing: 0.2px;
+    line-height: 15px;
+	}
+
+.profile-header-inner .profile-card-inner .location-and-url span {
+	vertical-align: top;
+	display:inline-block;
+	overflow: hidden;
+	max-width:46%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	}
+
 .profile-header-inner .profile-card-inner .location-and-url span.divider {
 	padding: 0 2px;
 	}
@@ -3580,6 +3713,9 @@ div.nav-session {
     min-height: 52px;
     position: relative;
 	}
+.hoover-card .profile-banner-footer {
+	min-height: 47px;
+	}
 .profile-banner-footer ul.stats {
     border-bottom: 0 none;
     border-top: 0 none;
@@ -3589,8 +3725,14 @@ div.nav-session {
 .profile-banner-footer ul.stats li a {
 	padding: 0 15px 8px 12px;
 	}
+.hoover-card .profile-banner-footer ul.stats li a {
+	padding-bottom: 5px;
+	}
 .profile-banner-footer ul.stats li:first-child a {
     padding-left: 12px;
+	}
+.hoover-card .profile-banner-footer ul.stats li:first-child a {
+    padding-left: 6px;
 	}
 .profile-banner-footer ul.stats li a strong {
 	}
@@ -3599,6 +3741,10 @@ div.nav-session {
 	position:relative;
 	float: right;
 	margin: 10px;
+	}
+.hoover-card .profile-card .user-actions {
+	margin-right: 5px;
+	margin-bottom: 5px;
 	}
 div.clearfix {
 	clear:both;
