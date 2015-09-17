@@ -220,19 +220,19 @@ function checkLocalStorage() {
 
 /* ·
    ·
-   ·  Align tooltips to the hoovered element
+   ·  Align tooltips to the hovered element
    ·
    · · · · · · · · · */
 
-function alignTooltipToHooveredElement(tooltipElement,tooltipCaret,hoovered) {
+function alignTooltipTohoveredElement(tooltipElement,tooltipCaret,hovered) {
 	var tooltipWidth = tooltipElement.outerWidth();
 	var tooltipHeight = tooltipElement.outerHeight();
 	var windowWidth = $(window).width();
 	var windowScrollPosY = $(window).scrollTop();
-	var targetPosX = hoovered.offset().left;
-	var targetPosY = hoovered.offset().top;
-	var targetHeight = hoovered.outerHeight();
-	var targetWidth = hoovered.outerWidth();
+	var targetPosX = hovered.offset().left;
+	var targetPosY = hovered.offset().top;
+	var targetHeight = hovered.outerHeight();
+	var targetWidth = hovered.outerWidth();
 
 	// too little space on top of element, show tooltip at bottom
 	if((targetPosY-windowScrollPosY-tooltipHeight-10) < 0) {
@@ -448,6 +448,19 @@ function userArrayCacheGetByProfileUrlAndNickname(profileUrl, nickname) {
 	else {
 		return false;
 		}
+	}
+
+function userArrayCacheGetUserNicknameById(id) {
+
+	var possibleUserURI = window.siteInstanceURL + 'user/' + id;
+	var key = window.convertUriToUserArrayCacheKey[possibleUserURI];
+
+	if(typeof key != 'undefined') {
+		if(typeof window.userArrayCache[key] != 'undefined') {
+			return window.userArrayCache[key].local.screen_name;
+			}
+		}
+	return false;
 	}
 
 
@@ -1142,7 +1155,7 @@ function saveAllBookmarks() {
 	$.each($('#bookmark-container .stream-selection'), function(key,obj) {
 		bookmarkContainer[i] = new Object();
 		bookmarkContainer[i].dataStreamHref = $(obj).attr('href');
-		bookmarkContainer[i].dataStreamHeader = $(obj).attr('data-stream-header');
+		bookmarkContainer[i].dataStreamHeader = $(obj).html();
 		i++;
 		});
 
@@ -1163,7 +1176,7 @@ function appendAllBookmarks(bookmarkContainer) {
 	if(bookmarkContainer) {
 		$('#bookmark-container').html('');
 		$.each(bookmarkContainer, function(key,obj) {
-			$('#bookmark-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipRemoveBookmark + '"></i></a>');
+			$('#bookmark-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipRemoveBookmark + '"></i></a>');
 			});
 		}
 	$('#bookmark-container').sortable({delay: 100});
@@ -1184,7 +1197,7 @@ function updateHistoryLocalStorage() {
 		$.each($('#history-container .stream-selection'), function(key,obj) {
 			historyContainer[i] = new Object();
 			historyContainer[i].dataStreamHref = $(obj).attr('href');
-			historyContainer[i].dataStreamHeader = $(obj).attr('data-stream-header');
+			historyContainer[i].dataStreamHeader = $(obj).html();
 			i++;
 			});
 		localStorageObjectCache_STORE('browsingHistory', window.loggedIn.screen_name,historyContainer);
@@ -1211,7 +1224,7 @@ function loadHistoryFromLocalStorage() {
 			$('#history-container').css('display','block');
 			$('#history-container').html('');
 			$.each(cacheData, function(key,obj) {
-				$('#history-container').append('<a class="stream-selection" data-stream-header="' + obj.dataStreamHeader + '" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
+				$('#history-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
 				});
 			}
 		updateHistoryLocalStorage();

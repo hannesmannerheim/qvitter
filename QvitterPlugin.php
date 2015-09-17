@@ -66,7 +66,7 @@ class QvitterPlugin extends Plugin {
 		$settings['favicon'] = 'img/favicon.ico?v=5';
 
 		// DEFAULT SPRITE
-		$settings['sprite'] = Plugin::staticPath('Qvitter', '').'img/sprite.png?v=40';
+		$settings['sprite'] = Plugin::staticPath('Qvitter', '').'img/sprite.png?v=41';
 
 		// DEFAULT LINK COLOR
 		$settings['defaultlinkcolor'] = '#0084B4';
@@ -307,22 +307,29 @@ class QvitterPlugin extends Plugin {
 		case 'api/statuses/user_timeline.json':
 
 			// add logged in user's user array
-			if (common_logged_in() && !isset($_GET['screen_name'])) {
+			if (common_logged_in() && !isset($_GET['screen_name']) && !isset($_GET['id'])) {
 				$profilecurrent = Profile::current();
 				header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($profilecurrent)));
 				}
 
 			// add screen_name's user array
-			elseif(isset($_GET['screen_name'])){
-				$screen_name_user = User::getKV('nickname', $_GET['screen_name']);
-				if($screen_name_user instanceof User) {
+			elseif(isset($_GET['screen_name']) || isset($_GET['id'])){
+
+                if(isset($_GET['screen_name'])) {
+                    $user = User::getKV('nickname', $_GET['screen_name']);
+                    }
+                elseif(isset($_GET['id'])) {
+                    $user = User::getKV('id', $_GET['id']);
+                    }
+
+                if($user instanceof User) {
 					if (common_logged_in()) {
 						$profilecurrent = Profile::current();
 						$currentuser = $profilecurrent->getUser();
-						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($screen_name_user->getProfile(),$currentuser)));
+						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($user->getProfile(),$currentuser)));
 						}
 					else {
-						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($screen_name_user->getProfile())));
+						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($user->getProfile())));
 						}
 					}
 				}

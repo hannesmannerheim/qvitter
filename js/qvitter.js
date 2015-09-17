@@ -56,9 +56,9 @@ window.loggedIn = iterateRecursiveReplaceHtmlSpecialChars(window.loggedIn);
 window.onpopstate = function(event) {
 	if(event && event.state) {
 		display_spinner();
-		setNewCurrentStream(event.state.strm,function(){
+		setNewCurrentStream(pathToStreamRouter(event.state.strm),false,function(){
 			remove_spinner();
-			},false);
+			});
 		}
 	}
 
@@ -115,8 +115,8 @@ $('body').on({
 			$('body').prepend(tooltipElement);
 			$('body').prepend(tooltipCaret);
 
-			// align tooltip to the hoovered element
-			alignTooltipToHooveredElement(tooltipElement,tooltipCaret,$(e.target));
+			// align tooltip to the hovered element
+			alignTooltipTohoveredElement(tooltipElement,tooltipCaret,$(e.target));
 
 			// fade in
 			tooltipElement.css('opacity','1');
@@ -141,15 +141,22 @@ function removeAllTooltips() {
 
 /* ·
    ·
-   ·   Check for profile hoovercards to display
+   ·   Check for profile hovercards to display
    ·
    · · · · · · · · · · · · · */
 
 window.userArrayLastRetrieved = new Object();
 $('body').on('mouseover',function (e) {
+
+	// no hovercards on these elements
+	if($(e.target).is('#user-queets') || $(e.target).closest('a').is('#user-queets')
+	|| $(e.target).is('.tweet-stats') || $(e.target).closest('a').is('.tweet-stats')) {
+		return true;
+		}
+
 	var timeNow = new Date().getTime();
-	removeAllHooverCards(e,timeNow);
-	var hooverCardData = false;
+	removeAllhoverCards(e,timeNow);
+	var hoverCardData = false;
 	var userArray = false;
 	var hrefAttr = false;
 	var possibleNickname = false;
@@ -211,20 +218,20 @@ $('body').on('mouseover',function (e) {
 			return;
 			}
 
-		var hooverCardElement = $('<div id="hoover-card-' + timeNow + '" class="hoover-card" data-card-created="' + timeNow + '">' + profileCard.profileCardHtml + '</div>');
-		var hooverCardCaret = $('<div id="hoover-card-caret-' + timeNow + '" class="hoover-card-caret"></div>');
+		var hoverCardElement = $('<div id="hover-card-' + timeNow + '" class="hover-card" data-card-created="' + timeNow + '">' + profileCard.profileCardHtml + '</div>');
+		var hoverCardCaret = $('<div id="hover-card-caret-' + timeNow + '" class="hover-card-caret"></div>');
 
-		targetElement.attr('data-awaiting-hoover-card',timeNow);
+		targetElement.attr('data-awaiting-hover-card',timeNow);
 
-		// let user hoover for 600ms before showing the card
+		// let user hover for 600ms before showing the card
 		setTimeout(function(){
-			// make sure user is still hoovering the same link and that that the link awaits the same hoover card
-			// (user can have flickered on and off the link triggering two or more hoover cards to in setTimeout delay)
-			if(targetElement.is(":hover") && parseInt(targetElement.attr('data-awaiting-hoover-card'),10) == timeNow) {
-				if($('.hoover-card').length == 0) {	// no card if there already is one open
-					$('body').prepend(hooverCardElement);
-					$('body').prepend(hooverCardCaret);
-					targetElement.attr('data-hoover-card-active',timeNow);
+			// make sure user is still hovering the same link and that that the link awaits the same hover card
+			// (user can have flickered on and off the link triggering two or more hover cards to in setTimeout delay)
+			if(targetElement.is(":hover") && parseInt(targetElement.attr('data-awaiting-hover-card'),10) == timeNow) {
+				if($('.hover-card').length == 0) {	// no card if there already is one open
+					$('body').prepend(hoverCardElement);
+					$('body').prepend(hoverCardCaret);
+					targetElement.attr('data-hover-card-active',timeNow);
 
 					// if the user array has not been retrieved from the server for the last 60 seconds,
 					// we query it for the lastest data
@@ -236,8 +243,8 @@ $('body').on('mouseover',function (e) {
 							getFromAPI('users/show.json?id=' + userArray.local.screen_name, function(data){
 								if(data) {
 									var newProfileCard = buildProfileCard(data);
-									hooverCardElement.html(newProfileCard.profileCardHtml);
-									alignTooltipToHooveredElement(hooverCardElement,hooverCardCaret,targetElement);
+									hoverCardElement.html(newProfileCard.profileCardHtml);
+									alignTooltipTohoveredElement(hoverCardElement,hoverCardCaret,targetElement);
 									}
 								});
 							}
@@ -247,8 +254,8 @@ $('body').on('mouseover',function (e) {
 							getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent(userArray.local.statusnet_profile_url),function(data){
 								if(data && data.external !== null) {
 									var newProfileCard = buildExternalProfileCard(data);
-									hooverCardElement.html(newProfileCard.profileCardHtml);
-									alignTooltipToHooveredElement(hooverCardElement,hooverCardCaret,targetElement);
+									hoverCardElement.html(newProfileCard.profileCardHtml);
+									alignTooltipTohoveredElement(hoverCardElement,hoverCardCaret,targetElement);
 									}
 								});
 							}
@@ -257,12 +264,12 @@ $('body').on('mouseover',function (e) {
 					// hide tooltips
 					$('.tooltip,.tooltip-caret').remove();
 
-					// align hoover card to the hoovered element
-					alignTooltipToHooveredElement(hooverCardElement,hooverCardCaret,targetElement);
+					// align hover card to the hovered element
+					alignTooltipTohoveredElement(hoverCardElement,hoverCardCaret,targetElement);
 
 					// fade in
-					hooverCardElement.css('opacity','1');
-					hooverCardCaret.css('opacity','1');
+					hoverCardElement.css('opacity','1');
+					hoverCardCaret.css('opacity','1');
 					}
 				}
 			},timeOut);
@@ -295,7 +302,7 @@ function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,callback) {
 						if(data) {
 							userArray = {local:data};
 
-							// we want hoover cards to appear _at least_ 600ms after hoover
+							// we want hover cards to appear _at least_ 600ms after hover
 							// we could just set the timeout to 0 and let the card appear
 							// whenever it's loaded, but this will not feel good if we're
 							// on a crazy fast server. so we calculate the diff time and makes
@@ -309,7 +316,7 @@ function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,callback) {
 								var timeOut = 0;
 								}
 
-							// continue to display the hoover card
+							// continue to display the hover card
 							callback(userArray,timeOut);
 							}
 						});
@@ -318,7 +325,7 @@ function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,callback) {
 			}
 		// from cache
 		else {
-			// continue to display the hoover card
+			// continue to display the hover card
 			// 600ms before cards appear feels pretty good
 			// but this can be tweaked if cards appear to fast/slow
 			callback(userArray,600);
@@ -326,23 +333,23 @@ function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,callback) {
 		}
 	}
 
-// hoover cards should be removed very easily, e.g. when any of these events happen
+// hover cards should be removed very easily, e.g. when any of these events happen
 $('body').on("mouseleave touchstart scroll click dblclick mousedown mouseup submit keydown keypress keyup", function(e){
 	var timeNow = new Date().getTime();
-	removeAllHooverCards(e,timeNow);
+	removeAllhoverCards(e,timeNow);
 });
 
 // removes all hover cards
-function removeAllHooverCards(event,priorTo) {
+function removeAllhoverCards(event,priorTo) {
 	// don't remove hovercards until after 100ms, so user have time to move the cursor to it (which gives it the dont-remove-card class)
 	setTimeout(function(){
-		$.each($('.hoover-card'),function(){
-			// don't remove card if it was created after removeAllHooverCards() was called
+		$.each($('.hover-card'),function(){
+			// don't remove card if it was created after removeAllhoverCards() was called
 			if($(this).data('card-created') < priorTo) {
-				// don't remove it if we're hoovering it right now!
+				// don't remove it if we're hovering it right now!
 				if(!$(this).hasClass('dont-remove-card')) {
-					$('[data-hoover-card-active="' + $(this).data('card-created') + '"]').removeAttr('data-hoover-card-active');
-					$('#hoover-card-caret-' + $(this).data('card-created')).remove();
+					$('[data-hover-card-active="' + $(this).data('card-created') + '"]').removeAttr('data-hover-card-active');
+					$('#hover-card-caret-' + $(this).data('card-created')).remove();
 					$(this).remove();
 					}
 				}
@@ -350,11 +357,11 @@ function removeAllHooverCards(event,priorTo) {
 		},100);
 	}
 
-// if we're hoovering a hoover card, give it a class, so we don't remove it
-$('body').on('mouseover','.hoover-card', function(e) {
+// if we're hovering a hover card, give it a class, so we don't remove it
+$('body').on('mouseover','.hover-card', function(e) {
 	$(this).addClass('dont-remove-card');
 	});
-$('body').on('mouseleave','.hoover-card', function(e) {
+$('body').on('mouseleave','.hover-card', function(e) {
 	$(this).removeClass('dont-remove-card');
 	});
 
@@ -700,6 +707,7 @@ function proceedToSetLanguageAndLogin(data){
 			$('.front-welcome-text').append(window.sL.welcomeText);
 			}
 		}
+
 	$('#nickname').attr('placeholder',window.sL.loginUsername);
 	$('#password').attr('placeholder',window.sL.loginPassword);
 	$('button#submit-login').html(window.sL.loginSignIn);
@@ -723,18 +731,12 @@ function proceedToSetLanguageAndLogin(data){
 	$('#other-servers-link').html(window.sL.otherServers);
 	$('.language-dropdown .dropdown-toggle small').html(window.sL.languageSelected);
 	$('.language-dropdown .current-language').html(window.sL.languageName);
-	$('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').prepend(window.sL.timeline);
-	$('.stream-selection[data-stream-name="statuses/friends_timeline.json"]').attr('data-stream-header',window.sL.timeline);
-	$('.stream-selection[data-stream-name="statuses/mentions.json"]').prepend(window.sL.mentions);
-	$('.stream-selection[data-stream-name="statuses/mentions.json"]').attr('data-stream-header',window.sL.mentions);
-	$('.stream-selection[data-stream-name="qvitter/statuses/notifications.json"]').prepend(window.sL.notifications);
-	$('.stream-selection[data-stream-name="qvitter/statuses/notifications.json"]').attr('data-stream-header',window.sL.notifications);
-	$('.stream-selection[data-stream-name="favorites.json"]').prepend(window.sL.favoritesNoun);
-	$('.stream-selection[data-stream-name="favorites.json"]').attr('data-stream-header',window.sL.favoritesNoun);
-	$('.stream-selection[data-stream-name="statuses/public_timeline.json"]').prepend(window.sL.publicTimeline);
-	$('.stream-selection[data-stream-name="statuses/public_timeline.json"]').attr('data-stream-header',window.sL.publicTimeline);
-	$('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json"]').prepend(window.sL.publicAndExtTimeline);
-	$('.stream-selection[data-stream-name="statuses/public_and_external_timeline.json"]').attr('data-stream-header',window.sL.publicAndExtTimeline);
+	$('.stream-selection.friends-timeline').prepend(window.sL.timeline);
+	$('.stream-selection.mentions').prepend(window.sL.mentions);
+	$('.stream-selection.notifications').prepend(window.sL.notifications);
+	$('.stream-selection.favorites').prepend(window.sL.favoritesNoun);
+	$('.stream-selection.public-timeline').prepend(window.sL.publicTimeline);
+	$('.stream-selection.public-and-external-timeline').prepend(window.sL.publicAndExtTimeline)
 	$('#search-query').attr('placeholder',window.sL.searchVerb);
 	$('#faq-link').html(window.sL.FAQ);
 	$('#shortcuts-link').html(window.sL.keyboardShortcuts);
@@ -750,6 +752,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('.reload-stream').attr('data-tooltip',window.sL.tooltipReloadStream);
 	$('#clear-history').html(window.sL.clearHistory);
 
+
 	// show site body now
 	$('#user-container').css('display','block');
 	$('#feed').css('display','block');
@@ -761,10 +764,10 @@ function proceedToSetLanguageAndLogin(data){
 	else {
 		display_spinner();
 		window.currentStream = ''; // force reload stream
-		setNewCurrentStream(getStreamFromUrl(),function(){
+		setNewCurrentStream(getStreamFromUrl(),true,function(){
 			logoutWithoutReload(false);
 			remove_spinner();
-			},true);
+			});
 		}
 	}
 
@@ -784,7 +787,7 @@ $('#form_login').submit(function(e) {
 		}
 	});
 
-function doLogin(streamToSet) {
+function doLogin(streamObjectToSet) {
 	$('#submit-login').attr('disabled','disabled');
 	$('#submit-login').focus(); // prevents submit on enter to close alert-popup on wrong credentials
 	display_spinner();
@@ -807,6 +810,9 @@ function doLogin(streamToSet) {
 		$('.stream-selection.notifications').attr('href', window.loggedIn.statusnet_profile_url + '/notifications');
 		$('.stream-selection.my-timeline').attr('href', window.loggedIn.statusnet_profile_url);
 		$('.stream-selection.favorites').attr('href', window.loggedIn.statusnet_profile_url + '/favorites');
+		$('#user-queets').attr('href',window.loggedIn.statusnet_profile_url);
+		$('#user-following').attr('href',window.loggedIn.statusnet_profile_url + '/subscriptions');
+		$('#user-groups').attr('href',window.loggedIn.statusnet_profile_url + '/groups');
 		window.myUserID = window.loggedIn.id;
 		if(window.loggedIn.cover_photo !== false) {
 			$('#user-header').css('background-image','url(\'' + window.loggedIn.cover_photo + '\')');
@@ -876,7 +882,7 @@ function doLogin(streamToSet) {
 
 		// set stream
 		window.currentStream = ''; // always reload stream on login
-		setNewCurrentStream(streamToSet,function(){
+		setNewCurrentStream(streamObjectToSet,true,function(){
 			$('.language-dropdown').css('display','none');
 			$('#user-header').animate({opacity:'1'},800);
 			$('#user-body').animate({opacity:'1'},800);
@@ -890,7 +896,7 @@ function doLogin(streamToSet) {
 			$('#top-compose').fadeIn('slow');
 			$('input#nickname').blur();
 			remove_spinner();
-			},true);
+			});
 
 	}
 
@@ -1189,75 +1195,18 @@ $('body').on('click','.member-button',function(event){
 
 /* ·
    ·
-   ·   Select a stream when the logged in user clicks their own queets, followers etc
+   ·   Go to profile page when clicking the small user header in left column
    ·
    · · · · · · · · · · · · · */
 
-$('#user-header, #user-queets, #user-following, #user-followers, #user-groups').on('click',function(e){
-
+$('#user-header').on('click',function(e){
 	// not if we're clicking the mini-edit-profile-button
 	if($(e.target).is('#mini-edit-profile-button')) {
 		return;
 		}
-
-	if($(this).attr('id') == 'user-header' || $(this).attr('id') == 'user-queets') {
-		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name,function(){},true);
-		}
-	else if($(this).attr('id') == 'user-following') {
-		setNewCurrentStream('statuses/friends.json?count=20',function(){},true);
-		}
-	else if($(this).attr('id') == 'user-followers') {
-		setNewCurrentStream('statuses/followers.json?count=20',function(){},true);
-		}
-	else if($(this).attr('id') == 'user-groups') {
-		setNewCurrentStream('statusnet/groups/list.json?count=10',function(){},true);
-		}
+	setNewCurrentStream(pathToStreamRouter(window.loggedIn.screen_name),true);
 	});
 
-
-/* ·
-   ·
-   ·   Select a stream when clicking on queets, followers etc in a profile card or feed header
-   ·
-   · · · · · · · · · · · · · */
-
-$('body').on('click','.profile-banner-footer .stats li a, .queet-stream',function(){
-	var screenName = $('.profile-card-inner .screen-name').html().substring(1);
-	if($(this).hasClass('tweet-stats')) {
-		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + screenName,function(){},true);
-		}
-	else if($(this).hasClass('following-stats')) {
-		setNewCurrentStream('statuses/friends.json?count=20&screen_name=' + screenName,function(){},true);
-		}
-	else if($(this).hasClass('follower-stats')) {
-		setNewCurrentStream('statuses/followers.json?count=20&screen_name=' + screenName,function(){},true);
-		}
-	else if($(this).hasClass('groups-stats')) {
-		setNewCurrentStream('statusnet/groups/list.json?count=10&screen_name=' + screenName,function(){},true);
-		}
-	else if($(this).hasClass('queets')) {
-		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + screenName,function(){},true);
-		}
-	else if($(this).hasClass('mentions')) {
-		setNewCurrentStream('statuses/mentions.json?screen_name=' + screenName,function(){},true);
-		}
-	else if($(this).hasClass('favorites')) {
-		setNewCurrentStream('favorites.json?screen_name=' + screenName,function(){},true);
-		}
-	else if($(this).hasClass('following')) {
-		setNewCurrentStream('statuses/friends.json?count=20',function(){},true);
-		}
-	else if($(this).hasClass('followers')) {
-		setNewCurrentStream('statuses/followers.json?count=20',function(){},true);
-		}
-	else if($(this).hasClass('member-stats')) {
-		setNewCurrentStream('statusnet/groups/membership/' + screenName + '.json?count=20',function(){},true);
-		}
-	else if($(this).hasClass('admin-stats')) {
-		setNewCurrentStream('statusnet/groups/admins/' + screenName + '.json?count=20',function(){},true);
-		}
-
-	});
 
 
 /* ·
@@ -1269,8 +1218,8 @@ $('body').on('click','.profile-banner-footer .stats li a, .queet-stream',functio
 $('#search-query').on('keyup',function(e) { if(e.keyCode==13) { showSearchStream(); }}); // on enter in input field
 $('button.icon.nav-search').on('click',function(e) { showSearchStream();});	// on click on magnifying glass
 function showSearchStream() {
-	streamName = 'search.json?q=' + encodeURIComponent(replaceHtmlSpecialChars($('#search-query').val()));
-	setNewCurrentStream(streamName,function(){},true);
+	var path = 'search/notice?q=' + encodeURIComponent(replaceHtmlSpecialChars($('#search-query').val()));
+	setNewCurrentStream(pathToStreamRouter(path),true);
 	}
 
 
@@ -1309,104 +1258,50 @@ $('body').on('click','a', function(e) {
 	// all links opens in new tab
 	$(this).attr('target','_blank');
 
-	if(typeof $(this).attr('href') != 'undefined') {
+	// only proceed if we really have a href attribute
+	if(typeof $(this).attr('href') == 'undefined') {
+		return;
+		}
 
-		// site root
-		if($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'') == '/') {
+	// profile picture
+	if ($(this).hasClass('profile-picture')) {
+		e.preventDefault();
+			if($(this).closest('.modal-container').attr('id') != 'edit-profile-popup') { // no popup if we're editing our profile
+				popUpAction('popup-profile-picture', $('.profile-card-inner .screen-name').html(),'<img style="width:100%;display:block;" src="' + $(this).attr('href') + '" />',false);
+				}
+		}
+	// hijack link if we find a matching link that qvitter can handle
+	else {
+		var streamObject = URLtoStreamRouter($(this).attr('href'));
+		if(streamObject && streamObject.stream) {
 			e.preventDefault();
-			setNewCurrentStream('statuses/public_timeline.json',function(){},true);
-			}
-		// site root new gnu social style
-		else if($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'') == '/main/public') {
-			e.preventDefault();
-			setNewCurrentStream('statuses/public_timeline.json',function(){},true);
-			}
-		// whole network feed
-		else if($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'') == '/main/all') {
-			e.preventDefault();
-			setNewCurrentStream('statuses/public_and_external_timeline.json',function(){},true);
-			}
-		// logged in users streams
-		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/all') {
-			e.preventDefault();
-			setNewCurrentStream('statuses/friends_timeline.json',function(){},true);
-			}
-		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/replies') {
-			e.preventDefault();
-			setNewCurrentStream('statuses/mentions.json',function(){},true);
-			}
-		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/notifications') {
-			e.preventDefault();
-			setNewCurrentStream('qvitter/statuses/notifications.json',function(){},true);
-			}
-		else if ($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/' + window.loggedIn.screen_name,'') == '/favorites') {
-			e.preventDefault();
-			setNewCurrentStream('favorites.json',function(){},true);
-			}
-		// profiles
-		else if ((/^[a-zA-Z0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','')))
-		|| (/^[0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/user/','')))) {
 
-			if($(this).attr('href').indexOf('/user/') > -1) {
-				var linkNickname = $(this).text().toLowerCase();
-				if(linkNickname.substring(0,1) == '@') {
-					linkNickname = linkNickname.substring(1);
+			// if this is a user/{id} type link
+			if(streamObject.name == 'profile by id') {
+
+				// see if we have the nickname in cache
+				var nickname = userArrayCacheGetUserNicknameById(streamObject.id);
+				if(nickname) {
+					setNewCurrentStream(pathToStreamRouter(nickname),true);
+					}
+				// if we don't have it in cache we query the server for it
+				// (we _could_ just try the nickname in the link html, but the user can have changed nickname)
+				else {
+					display_spinner();
+					getUserIdFromNicknameFromAPI(streamObject.id,function(nickname) {
+						if(nickname) {
+							setNewCurrentStream(pathToStreamRouter(nickname),true);
+							}
+						else {
+							remove_spinner();
+							alert('could not find local user with id ' + streamObject.id);
+							}
+						});
 					}
 				}
 			else {
-				var linkNickname = $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/','');
+				setNewCurrentStream(streamObject,true);
 				}
-
-			// don't hijack /groups-url
-			if(linkNickname == 'groups') {
-				return;
-				}
-
-			e.preventDefault();
-
-			setNewCurrentStream('statuses/user_timeline.json?screen_name=' + linkNickname,function(){},true);
-			}
-		// tags
-		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/tag/')>-1) {
-			e.preventDefault();
-			setNewCurrentStream('statusnet/tags/timeline/' + $(this).text().toLowerCase().replace('#','') + '.json',function(){},true);
-			}
-		// notices
-		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/notice/')>-1 && $(this).attr('href').indexOf(window.siteRootDomain + '/notice/delete/')==-1) {
-			e.preventDefault();
-			setNewCurrentStream('statuses/show/' + $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/notice/','') + '.json',function(){},true);
-			}
-		// groups
-		else if (/^[0-9]+$/.test($(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/group/','').replace('/id',''))) {
-			e.preventDefault();
-			if($(this).hasClass('account-group')) {
-				var groupName = $(this).find('.screen-name').html().substring(1);
-				}
-			else {
-				var groupName = $(this).text().toLowerCase();
-				if(groupName.substring(0,1) == '!') {
-					groupName = groupName.substring(1);
-					}
-				}
-			setNewCurrentStream('statusnet/groups/timeline/' + groupName + '.json',function(){},true);
-			}
-		else if ($(this).attr('href').indexOf(window.siteRootDomain + '/group/')>-1) {
-			e.preventDefault();
-			setNewCurrentStream('statusnet/groups/timeline/' + $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain + '/group/','') + '.json',function(){},true);
-			}
-		// search
-		else if ($(this).attr('href').indexOf('/search/notice?q=')>-1) {
-			e.preventDefault();
-			var searchToStream = $(this).attr('href').replace('http://','').replace('https://','').replace(window.siteRootDomain,'').replace('/search/notice?q=','');
-			setNewCurrentStream('search.json?q=' + searchToStream,function(){},true);
-			}
-
-		// profile picture
-		else if ($(this).hasClass('profile-picture')) {
-			e.preventDefault();
-				if($(this).closest('.modal-container').attr('id') != 'edit-profile-popup') { // no popup if we're editing our profile
-					popUpAction('popup-profile-picture', $('.profile-card-inner .screen-name').html(),'<img style="width:100%;display:block;" src="' + $(this).attr('href') + '" />',false);
-					}
 			}
 		}
 	});
@@ -1523,7 +1418,7 @@ $(window).scroll(function() {
 	if($(window).scrollTop() + $(window).height() > $(document).height() - 1000) {
 
 		// not if we're already loading or if no stream is set yet
-		if(!$('body').hasClass('loading-older') && typeof window.currentStream != "undefined") {
+		if(!$('body').hasClass('loading-older') && typeof window.currentStream != "undefined" && $('#feed-body').attr('data-end-reached') != 'true') {
 			$('body').addClass('loading-older');
 
 			// remove loading class in 10 seconds, i.e. try again if failed to load within 10 s
@@ -1533,13 +1428,9 @@ $(window).scroll(function() {
 
 			var lastStreamItemId = $('#feed-body').children('.stream-item').last().attr('id');
 
-			// if this is search or users lists, we need page and rpp vars, we store page number in an attribute
-			if(window.currentStream.substring(0,6) == 'search'
-			|| window.currentStream.substring(0,23) == 'statuses/followers.json'
-			|| window.currentStream.substring(0,21) == 'statuses/friends.json'
-			|| window.currentStream.substring(0,26) == 'statusnet/groups/list.json'
-			|| window.currentStream.substring(0,28) == 'statusnet/groups/membership/'
-			|| window.currentStream.substring(0,24) == 'statusnet/groups/admins/') {
+			// if this is a stream that uses 'page' for paging, i.e. search or users lists,
+			// we need page and rpp vars (page number is stored in an attribute in feed-body)
+			if(window.currentStreamObject.maxIdOrPage == 'page') {
 				if(typeof $('#feed-body').attr('data-search-page-number') != 'undefined') {
 					var searchPage = parseInt($('#feed-body').attr('data-search-page-number'),10);
 					}
@@ -1547,7 +1438,7 @@ $(window).scroll(function() {
 					var searchPage=2;
 					}
 				var nextPage = searchPage+1;
-				var getVars = qOrAmp(window.currentStream) + 'rpp=20&page=' + searchPage; // search uses 'rrp' var and others 'count' for paging, though we can add rrp to others aswell without any problem
+				var getVars = qOrAmp(window.currentStream) + 'rpp=20&page=' + searchPage; // search uses 'rpp' var and others 'count' for paging, though we can add rrp to others aswell without any problem
 				}
 			// normal streams
 			else {
@@ -1556,22 +1447,23 @@ $(window).scroll(function() {
 
 			display_spinner('#footer-spinner-container');
 			getFromAPI(window.currentStream + getVars,function(data){
-				if(data) {
+
+				// if data returned an empty array, we have probably reached the bottom
+				if(data.length == 0) {
+					$('#feed-body').attr('data-end-reached',true);
+					}
+
+				else if(data) {
 					addToFeed(data, lastStreamItemId,'visible');
 					$('body').removeClass('loading-older');
 
-					// if this is search our group users lists, we remember page number
-					if(window.currentStream.substring(0,6) == 'search'
-					|| window.currentStream.substring(0,23) == 'statuses/followers.json'
-					|| window.currentStream.substring(0,21) == 'statuses/friends.json'
-					|| window.currentStream.substring(0,26) == 'statusnet/groups/list.json'
-					|| window.currentStream.substring(0,28) == 'statusnet/groups/membership/'
-					|| window.currentStream.substring(0,24) == 'statusnet/groups/admins/') {
+					// if this is search our group users lists, we remember page number (if we got any users)
+					if(window.currentStreamObject.maxIdOrPage == 'page') {
 						$('#feed-body').attr('data-search-page-number',nextPage);
 						}
-
-					remove_spinner();
 					}
+
+				remove_spinner();
 				});
 			}
    	   	}
@@ -1625,7 +1517,7 @@ function checkForNewQueets() {
 		if(new_queets_num > 0) {
 
 			// if this is notifications page, update site title with hidden notification count
-			if(window.currentStream == 'qvitter/statuses/notifications.json') {
+			if(window.currentStreamObject.name == 'notifications') {
 				document.title = window.siteTitle + ' (' + new_queets_num + ')';
 				}
 
@@ -1652,7 +1544,7 @@ function checkForNewQueets() {
    · · · · · · · · · · · · · */
 
 $('body').on('click','#new-queets-bar',function(){
-	if(window.currentStream == 'qvitter/statuses/notifications.json') {
+	if(window.currentStreamObject.name == 'notifications') {
 		document.title = window.siteTitle;
 		}
 	var hiddenStreamItems = $('.stream-item.hidden');
@@ -2303,10 +2195,10 @@ $('body').on('click', '.queet-toolbar button',function () {
 			}
 		// if we can't find a proper place, add it to top and remove conversation class
 		// if this is either 1) our home/all feed, 2) our user timeline or 3) whole site or 4) whole network
-		else if(window.currentStream.indexOf('statuses/friends_timeline.json') > -1
-		|| window.currentStream.indexOf('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name) > -1
-		|| window.currentStream.indexOf('statuses/public_timeline.json') > -1
-		|| window.currentStream.indexOf('statuses/public_and_external_timeline.json') > -1 ) {
+		else if(window.currentStreamObject.name == 'friends timeline'
+			 || window.currentStreamObject.name == 'my profile'
+			 || window.currentStreamObject.name == 'public timeline'
+			 || window.currentStreamObject.name == 'public and external timeline') {
 			$('#feed-body').prepend(queetHtml.replace('class="stream-item conversation','class="stream-item'));
 			}
 		// don't add it to the current stream, open a popup instead, without conversation class
@@ -2411,9 +2303,9 @@ $('body').on('click','button.shorten',function () {
    · · · · · · · · · · · · · */
 $('body').on('click','.reload-stream',function () {
 	$('.reload-stream').hide();
-	setNewCurrentStream(window.currentStream,function(){
+	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,function(){
 		$('.reload-stream').show();
-		},false);
+		});
 	});
 
 
@@ -3036,7 +2928,7 @@ $('body').on('click','#page-container > .profile-card .edit-profile-button',func
 				if(data.cover_photo !== false) {
 					coverPhotoHtml = 'background-image:url(\'' + data.cover_photo + '\')';
 					}
-				$('.hoover-card,.hoover-card-caret').remove();
+				$('.hover-card,.hover-card-caret').remove();
 				$('#edit-profile-popup').prepend('\
 					<div class="edit-profile-container">\
 			  			<div class="upload-background-image"></div>\
@@ -3607,13 +3499,13 @@ function uploadImage(e, thisUploadButton) {
    ·
    · · · · · · · · · · · · · */
 
-$('body').on('click','#mini-edit-profile-button, #edit-profile-header-link, .hoover-card .edit-profile-button',function(){
-	if(window.currentStream == 'statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name)	{
+$('body').on('click','#mini-edit-profile-button, #edit-profile-header-link, .hover-card .edit-profile-button',function(){
+	if(window.currentStreamObject.name == 'my profile') {
 		$('#page-container > .profile-card .edit-profile-button').trigger('click');
 		}
 	else {
-		setNewCurrentStream('statuses/user_timeline.json?screen_name=' + window.loggedIn.screen_name, function(){
+		setNewCurrentStream(pathToStreamRouter(window.loggedIn.screen_name), true, function(){
 			$('#page-container > .profile-card .edit-profile-button').trigger('click');
-			},true);
+			});
 		}
 	});

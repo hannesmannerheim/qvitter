@@ -151,7 +151,7 @@ function getFromAPI(stream, actionOnSuccess) {
 			if(request.getResponseHeader('Qvitter-User-Array') !== null) {
 
                 // while waiting for this data user might have changed stream, so only proceed if current stream still is this one
-                if(window.currentStream == stream.replace('&withuserarray=1','')) {
+                if(window.currentStream == stream) {
                     var qvitterUserArrayHeader = request.getResponseHeader('Qvitter-User-Array');
 
     				// quitter.se fix
@@ -175,6 +175,27 @@ function getFromAPI(stream, actionOnSuccess) {
 			actionOnSuccess(false);
 			console.log(data);
 			remove_spinner();
+			}
+		});
+	}
+
+
+/* ·
+   ·
+   ·   Get user nickname from user id
+   ·
+   ·   @param id: local user id
+   ·   @param callback: function to invoke when done
+   ·
+   · · · · · · · · · · · · · */
+
+function getUserIdFromNicknameFromAPI(id, callback) {
+	getFromAPI('users/show.json?id=' + id, function(data){
+		if(data && typeof data.screen_name != 'undefined') {
+			callback(data.screen_name);
+			}
+		else {
+			callback(false);
 			}
 		});
 	}

@@ -222,10 +222,10 @@ function buildProfileCard(data) {
 			</div>\
 			<div class="profile-banner-footer">\
 				<ul class="stats">\
-					<li class="tweet-num"><a class="tweet-stats">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li>\
-					<li class="following-num"><a class="following-stats">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li>\
-					<li class="follower-num"><a class="follower-stats">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
-					<li class="groups-num"><a class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li>\
+					<li class="tweet-num"><a href="' + data.statusnet_profile_url + '" class="tweet-stats">' + window.sL.notices + '<strong>' + data.statuses_count + '</strong></a></li>\
+					<li class="following-num"><a href="' + data.statusnet_profile_url + '/subscriptions" class="following-stats">' + window.sL.following + '<strong>' + data.friends_count + '</strong></a></li>\
+					<li class="follower-num"><a href="' + data.statusnet_profile_url + '/subscribers" class="follower-stats">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
+					<li class="groups-num"><a href="' + data.statusnet_profile_url + '/groups" class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
 				<div class="clearfix"></div>\
@@ -427,7 +427,52 @@ function groupProfileCard(groupAlias) {
 
 		// add card to DOM
 		$('#feed').siblings('.profile-card').remove();  // remove any old profile card
-		$('#feed').before('<div class="profile-card"><div class="profile-header-inner" style="background-image:url(' + data.original_logo + ')"><div class="profile-header-inner-overlay"></div><a class="profile-picture" href="' + data.original_logo + '"><img src="' + data.homepage_logo + '" /></a><div class="profile-card-inner"><h1 class="fullname">' + data.fullname + '<span></span></h1><h2 class="username"><span class="screen-name">!' + data.nickname + '</span></span></h2><div class="bio-container"><p>' + data.description + '</p></div><p class="location-and-url"></span><span class="url"><a href="' + data.homepage + '">' + data.homepage.replace('http://','').replace('https://','') + '</a></span></p></div></div><div class="profile-banner-footer"><ul class="stats"><li><a class="member-stats">' + window.sL.memberCount + '<strong>' + data.member_count + '</strong></a></li><li><a class="admin-stats">' + window.sL.adminCount + '<strong>' + data.admin_count + '</strong></a></li></ul>' + memberButton + '<div class="clearfix"></div></div></div>');
+		console.log(data);
+		$('#feed').before('	<div class="profile-card group">\
+								<div class="profile-header-inner" style="background-image:url(' + data.original_logo + ')">\
+									<div class="profile-header-inner-overlay"></div>\
+									<a class="profile-picture" href="' + data.original_logo + '">\
+										<img src="' + data.homepage_logo + '" />\
+									</a>\
+									<div class="profile-card-inner">\
+										<a href="' + window.siteInstanceURL + 'group/' + data.nickname + '">\
+											<h1 class="fullname">sadsa\
+												' + data.fullname + '\
+												<span></span>\
+											</h1>\
+											<h2 class="username">\
+												<span class="screen-name">!' + data.nickname + '</span>\
+											</h2>\
+										</a>\
+										<div class="bio-container">\
+											<p>' + data.description + '</p>\
+										</div>\
+										<p class="location-and-url">\
+											<span class="url">\
+												<a href="' + data.homepage + '">' + data.homepage.replace('http://','').replace('https://','') + '</a>\
+											</span>\
+										</p>\
+									</div>\
+								</div>\
+								<div class="profile-banner-footer">\
+									<ul class="stats">\
+										<li>\
+											<a href="' + window.siteInstanceURL + 'group/' + data.nickname + '/members" class="member-stats">\
+												' + window.sL.memberCount + '\
+												<strong>' + data.member_count + '</strong>\
+											</a>\
+										</li>\
+										<li>\
+											<a href="' + window.siteInstanceURL + 'group/' + data.nickname + '/admins" class="admin-stats">\
+												' + window.sL.adminCount + '\
+												<strong>' + data.admin_count + '</strong>\
+											</a>\
+										</li>\
+									</ul>\
+									' + memberButton + '\
+									<div class="clearfix"></div>\
+								</div>\
+							</div>');
 		}});
 	}
 
@@ -437,19 +482,24 @@ function groupProfileCard(groupAlias) {
    ·
    ·   Change stream
    ·
-   ·   @param stream: part of the url to the api (everything after api base url)
+   ·   @param streamObject: object returned by pathToStreamRouter()
    ·   @param actionOnSuccess: callback function on success
    ·
    · · · · · · · · · */
 
-function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
+function setNewCurrentStream(streamObject,setLocation,actionOnSuccess) {
+
+	if(!streamObject && !streamObject.stream) {
+		console.log('invalid streamObject, no stream to set!');
+		return;
+		}
 
 	// remember state of old stream (including profile card)
 	window.oldStreams[window.currentStream] = $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML();
 
 	// set location bar from stream
 	if(setLocation) {
-		setUrlFromStream(stream);
+		setUrlFromStream(streamObject);
 		}
 
 	// halt interval that checks for new queets
@@ -467,97 +517,20 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
     // null any searches
 	$('#feed-body').removeAttr('data-search-page-number');
 
-	// remember the most recent stream selection in global var
-	window.currentStream = stream;
+	// remember the most recent stream
+	window.currentStream = streamObject.stream;
+	window.currentStreamObject = streamObject;
 
-	// a @user stream, i.e. user's queets, user's followers, user's following, we set _queets_ as the default stream in the menu
-	if(stream.substring(0,45) == 'statuses/followers.json?count=20&screen_name='
-	|| stream.substring(0,43) == 'statuses/friends.json?count=20&screen_name='
-	|| stream.substring(0,48) == 'statusnet/groups/list.json?count=10&screen_name='
-	|| stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name='
-	|| stream.substring(0,27) == 'favorites.json?screen_name='
-	|| stream.substring(0,35) == 'statuses/mentions.json?screen_name='
-	|| stream.substring(0,27) == 'statuses/user_timeline.json')	{
-		var defaultStreamName = 'statuses/user_timeline.json?' + stream.substring(stream.indexOf('screen_name='));
-		var streamHeader = '@' + stream.substring(stream.lastIndexOf('=')+1);
-		}
-	// my user streams, i.e. my followers, my following
-	else if(stream == 'statuses/followers.json?count=20'
-	|| stream == 'statuses/friends.json?count=20'
-	|| stream == 'statusnet/groups/list.json?count=10')	{
-		var defaultStreamName = stream;
-		var streamHeader = '@' + window.loggedIn.screen_name;
-		}
-	// the default streams, get header from DOM
-	else if(stream == 'statuses/friends_timeline.json'
-	|| stream == 'statuses/mentions.json'
-	|| stream == 'qvitter/statuses/notifications.json'
-	|| stream == 'favorites.json'
-	|| stream == 'statuses/public_timeline.json'
-	|| stream == 'statuses/public_and_external_timeline.json')	{
-		var defaultStreamName = stream;
-		var streamHeader = $('.stream-selection[data-stream-name="' + stream + '"]').attr('data-stream-header');
-		}
-
-	// !group stream
-	else if(stream.substring(0,26) == 'statusnet/groups/timeline/'
-		 || stream.substring(0,28) == 'statusnet/groups/membership/'
-		 || stream.substring(0,24) == 'statusnet/groups/admins/')	{
-		var defaultStreamName = 'statusnet/groups/timeline/' + stream.substring(stream.lastIndexOf('/')+1);
-		var streamHeader = '!' + stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));
-		}
-	// #tag stream
-	else if(stream.substring(0,24) == 'statusnet/tags/timeline/')	{
-		var defaultStreamName = stream;
-		var hashtagString = stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
-		var streamHeader = '#' + replaceHtmlSpecialChars(decodeURIComponent(hashtagString));
-		}
-	// notice stream
-	else if(stream.substring(0,14) == 'statuses/show/')	{
-		var defaultStreamName = stream;
-		var streamHeader = 'notice/' + stream.substring(stream.indexOf('/show/')+6,stream.indexOf('.json'));
-		}
-	// search stream
-	else if(stream.substring(0,11) == 'search.json')	{
-		var defaultStreamName = stream;
-		var streamHeader = window.sL.searchVerb + ': ' + replaceHtmlSpecialChars(decodeURIComponent(stream.substring(stream.indexOf('?q=')+3)));
-		}
-
-	// set the h2 header in the feed
-	if(stream.substring(0,23) == 'statuses/followers.json') {
-		var h2FeedHeader = '<div class="queet-streams"><a class="queet-stream following">' + window.sL.following + '</a> / </div>' + window.sL.followers;
-		}
-	else if(stream.substring(0,21) == 'statuses/friends.json') {
-		var h2FeedHeader = window.sL.following + '<div class="queet-streams">/ <a class="queet-stream followers">' + window.sL.followers + '</a></div>';
-		}
-	else if(stream.substring(0,40) == 'statuses/user_timeline.json?screen_name=') {
-		var h2FeedHeader = window.sL.notices + '<div class="queet-streams">/ <a class="queet-stream mentions">' + window.sL.mentions + '</a> / <a class="queet-stream favorites">' + window.sL.favoritesNoun +'</a></div>';
-		}
-	else if(stream.substring(0,35) == 'statuses/mentions.json?screen_name=') {
-		var h2FeedHeader = '<div class="queet-streams"><a class="queet-stream queets">' + window.sL.notices + '</a> /</div>' + window.sL.mentions + '<div class="queet-streams">/ <a class="queet-stream favorites">' + window.sL.favoritesNoun + '</a></div>';
-		}
-	else if(stream.substring(0,27) == 'favorites.json?screen_name=') {
-		var h2FeedHeader = '<div class="queet-streams"><a class="queet-stream queets">' + window.sL.notices + '</a> / <a class="queet-stream mentions">' + window.sL.mentions + '</a> /</div>' + window.sL.favoritesNoun;
-		}
-	else if(stream.substring(0,26) == 'statusnet/groups/list.json') {
-		var h2FeedHeader = window.sL.groups;
-		}
-	else if(stream.substring(0,28) == 'statusnet/groups/membership/') {
-		var h2FeedHeader = window.sL.memberCount;
-		}
-	else if(stream.substring(0,24) == 'statusnet/groups/admins/') {
-		var h2FeedHeader = window.sL.adminCount;
-		}
-	else if(stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=') {
-		var h2FeedHeader = '<span style="unicode-bidi:bidi-override;direction:ltr;">' + streamHeader + '/all</span>'; // ugly rtl fix, sry, we should have translations for this stream header
+	if(streamObject.streamSubHeader) {
+		var h2FeedHeader = streamObject.streamSubHeader;
 		}
 	else {
-		var h2FeedHeader = streamHeader;
+		var h2FeedHeader = streamObject.streamHeader;
 		}
 
 	// if we have a saved copy of this stream, show it immediately (but it is replaced when stream finishes to load later)
 	if(typeof window.oldStreams[window.currentStream] != "undefined") {
-		$('.profile-card,.hoover-card,.hoover-card-caret').remove();
+		$('.profile-card,.hover-card,.hover-card-caret').remove();
 		$('#feed').remove();
 		$('#user-container').after(window.oldStreams[window.currentStream]);
 		$('.profile-card').css('display','none');
@@ -568,14 +541,14 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		$('#feed-header-inner h2').animate({opacity:'1'},1000);
 
 		// also mark this stream as the current stream immediately, if a saved copy exists
-		addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);
+		addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
 		}
 	// otherwise we fade out and wait for stream to load
 	else {
 		// fade out
 		$('#feed,.profile-card').animate({opacity:'0'},150,function(){
 			// when fade out finishes, remove any profile cards and set new header
-			$('.profile-card,.hoover-card,.hoover-card-caret').remove();
+			$('.profile-card,.hover-card,.hover-card-caret').remove();
 			$('#feed-header-inner h2').html(h2FeedHeader);
 			});
 		}
@@ -588,31 +561,17 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 		changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
 		}
 
-
-	// for these streams we want a user array in the header to build a profile card
-	var addUserArray = '';
-	if(stream.substring(0,23) == 'statuses/followers.json'
-	|| stream.substring(0,21) == 'statuses/friends.json'
-	|| stream.substring(0,26) == 'statusnet/groups/list.json'
-	|| stream.substring(0,35) == 'statuses/mentions.json?screen_name='
-	|| stream.substring(0,27) == 'favorites.json?screen_name='
-	|| stream.substring(0,27) == 'statuses/user_timeline.json'
-	|| stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=')	{
-		addUserArray = '&withuserarray=1';
-		}
-
 	// get stream
-	getFromAPI(stream + addUserArray, function(queet_data){
+	getFromAPI(streamObject.stream, function(queet_data){
 		if(queet_data) {
 			// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
-			if(window.currentStream == stream) {
+			if(window.currentStream == streamObject.stream) {
 
 				// show group profile card if this is a group stream
-				if(stream.substring(0,26) == 'statusnet/groups/timeline/'
-					 || stream.substring(0,28) == 'statusnet/groups/membership/'
-					 || stream.substring(0,24) == 'statusnet/groups/admins/') {
-					var thisGroupAlias = stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));
-					groupProfileCard(thisGroupAlias);
+				if(streamObject.name == 'group notice stream'
+				|| streamObject.name == 'group member list'
+				|| streamObject.name == 'group admin list') {
+					groupProfileCard(streamObject.nickname);
 					}
 
 				// start checking for new queets again
@@ -620,7 +579,7 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 				checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
 
 				// add this stream to the history menu
-				addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName);
+				addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
 
 				remove_spinner();
 				$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
@@ -629,29 +588,39 @@ function setNewCurrentStream(stream,actionOnSuccess,setLocation) {
 				$('#feed').animate({opacity:'1'},150); // fade in
 				$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
 				$('html,body').scrollTop(0); // scroll to top
-				actionOnSuccess(); // return
+
+				// maybe do something
+				if(typeof actionOnSuccess == 'function') {
+					actionOnSuccess();
+					}
 				}
 			}
 		});
 	}
 
+
 /* ·
    ·
-   ·   Add this stream to history menu if it doesn't exist there (but not if this is me or if we're not logged in)
-   ·   and mark this stream as current in menu
+   ·   Add this stream to history menu if it doesn't exist in stream selection menus (if we're logged in)
+   ·   and mark this stream as current
    ·
-   ·   @param streamHeader: the header to show in the menu
-   ·   @param defaultStreamName: the stream to link in the history menu
+   ·   @param streamObject: stream object returned by pathToStreamRouter()
    ·
    · · · · · · · · · */
 
 
-function addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName) {
+function addStreamToHistoryMenuAndMarkAsCurrent(streamObject) {
 
-	if($('.stream-selection[data-stream-header="' + streamHeader + '"]').length==0
-	&& streamHeader != '@' + window.loggedIn.screen_name
+	if(streamObject.parentPath) {
+		var urlToMarkAsCurrent = window.siteInstanceURL + streamObject.parentPath;
+		}
+	else {
+		var urlToMarkAsCurrent = window.siteInstanceURL + streamObject.path;
+		}
+
+	if($('.stream-selection[href="' + urlToMarkAsCurrent + '"]').length==0
 	&& typeof window.loggedIn.screen_name != 'undefined') {
-		$('#history-container').prepend('<a class="stream-selection" data-stream-header="' + streamHeader + '" href="' + window.siteInstanceURL + convertStreamToPath(defaultStreamName) + '">' + streamHeader + '<i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
+		$('#history-container').prepend('<a class="stream-selection" href="' + urlToMarkAsCurrent + '">' + streamObject.streamHeader + '<i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
 		updateHistoryLocalStorage();
 		// max 10 in history container
 		var historyNum = $('#history-container').children('.stream-selection').length;
@@ -662,379 +631,9 @@ function addStreamToHistoryMenuAndMarkAsCurrent(streamHeader, defaultStreamName)
 
 
 	$('.stream-selection').removeClass('current');
-	$('.stream-selection[data-stream-header="' + streamHeader + '"]').addClass('current');
+	$('.stream-selection[href="' + urlToMarkAsCurrent + '"]').addClass('current');
 	}
 
-
-/* ·
-   ·
-   ·   Convert stream to path
-   ·
-   ·   @param stream: the stream, e.g. 'public_timeline.json'
-   ·   @returns: relative path
-   ·
-   · · · · · · · · · */
-
-function convertStreamToPath(stream) {
-	if(stream.substring(0,45) == 'statuses/followers.json?count=20&screen_name=') {
-		var screenName = stream.substring(stream.lastIndexOf('=')+1);
-		return screenName + '/subscribers';
-		}
-	else if(stream.substring(0,43) == 'statuses/friends.json?count=20&screen_name=') {
-		var screenName = stream.substring(stream.lastIndexOf('=')+1);
-		return screenName + '/subscriptions';
-		}
-	else if(stream.substring(0,35) == 'statuses/mentions.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);
-		return screenName + '/replies';
-		}
-	else if(stream.substring(0,27) == 'favorites.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);
-		return screenName + '/favorites';
-		}
-	else if(stream.substring(0,48) == 'statusnet/groups/list.json?count=10&screen_name=') {
-		var screenName = stream.substring(stream.lastIndexOf('=')+1);
-		return screenName + '/groups';
-		}
-	else if(stream == 'statuses/followers.json?count=20') {
-		return window.loggedIn.screen_name + '/subscribers';
-		}
-	else if(stream == 'statuses/friends.json?count=20') {
-		return window.loggedIn.screen_name + '/subscriptions';
-		}
-	else if(stream == 'statuses/mentions.json') {
-		return window.loggedIn.screen_name + '/replies';
-		}
-	else if(stream == 'qvitter/statuses/notifications.json') {
-		return window.loggedIn.screen_name + '/notifications';
-		}
-	else if(stream == 'favorites.json') {
-		return window.loggedIn.screen_name + '/favorites';
-		}
-	else if(stream == 'statusnet/groups/list.json?count=10') {
-		return window.loggedIn.screen_name + '/groups';
-		}
-	else if (stream.substring(0,27) == 'statuses/user_timeline.json') {
-		var screenName = stream.substring(stream.indexOf('=')+1);
-		return screenName;
-		}
-	else if(stream == 'statuses/friends_timeline.json') {
-		return window.loggedIn.screen_name + '/all';
-		}
-	else if(stream.substring(0,43) == 'statuses/friends_timeline.json?screen_name=') {
-		var screenName = stream.substring(stream.indexOf('=')+1);
-		return screenName + '/all';
-		}
-	else if(stream == 'statuses/public_timeline.json')	{
-		return 'main/public';
-		}
-	else if(stream == 'statuses/public_and_external_timeline.json')	{
-		return 'main/all';
-		}
-	else if(stream.substring(0,26) == 'statusnet/groups/timeline/')	{
-		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
-		return 'group/' + groupName;
-		}
-	else if(stream.substring(0,28) == 'statusnet/groups/membership/')	{
-		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
-		return 'group/' + groupName + '/members';
-		}
-	else if(stream.substring(0,24) == 'statusnet/groups/admins/')	{
-		var groupName = stream.substring(stream.lastIndexOf('/')+1,stream.indexOf('.json'));
-		return 'group/' + groupName + '/admins';
-		}
-	else if(stream.substring(0,24) == 'statusnet/tags/timeline/')	{
-		var tagName = stream.substring(stream.indexOf('/timeline/')+10,stream.indexOf('.json'));
-		return 'tag/' + tagName;
-		}
-	else if(stream.substring(0,14) == 'statuses/show/')	{
-		var noticeId = stream.substring(stream.indexOf('/show/')+6,stream.indexOf('.json'));
-		return 'notice/' + noticeId;
-		}
-	else if(stream.substring(0,11) == 'search.json')	{
-		var searchTerms = stream.substring(stream.indexOf('?q=')+3);
-		return 'search/notice?q=' + searchTerms;
-		}
-	}
-
-
-/* ·
-   ·
-   ·   Sets the location bar in the browser to correspond with given stream
-   ·
-   ·   @param stream: the stream, e.g. 'public_timeline.json'
-   ·
-   · · · · · · · · · */
-
-function setUrlFromStream(stream) {
-	history.pushState({strm:stream},'','/' + convertStreamToPath(stream));
-	}
-
-
-/* ·
-   ·
-   ·   Local URL to stream router
-   ·
-   ·   @param url: any URL
-   ·
-   · · · · · · · · · */
-function URLtoStreamRouter(url) {
-
-	// structure of the returned object
-	var streamObject = new Object();
-	streamObject.nickname = false;
-	streamObject.id = false;
-	streamObject.stream = false;
-	streamObject.name = false;
-
-	// we don't expect protocol to matter
-	url = removeProtocolFromUrl(url);
-
-	// remove anchor tags
-	if(url.indexOf('#')>-1) {
-		url = url.substring(0,url.indexOf('#'));
-		}
-
-	// not a local URL
-	if(url != window.siteRootDomain && url.indexOf(window.siteRootDomain + '/') != 0) {
-		console.log('not a local url: ' + url);
-		return false;
-		}
-
-	// remove server
-	var path = url.substring(window.siteRootDomain.length);
-
-	// remove starting slash
-	if(path.indexOf('/') == 0) {
-		path = path.substring(1);
-		}
-
-	// remove ending slash
-	if(path.length>0 && path.lastIndexOf('/') == (path.length-1)) {
-		path = path.substring(0,path.length-1);
-		}
-
-	// front page
-	if(path.length == 0) {
-		if(window.siteLocalOnlyDefaultPath) {
-			streamObject.stream = 'statuses/public_timeline.json';
-			streamObject.name = 'public timeline';
-			return streamObject;
-			}
-		else {
-			streamObject.stream = 'statuses/public_and_external_timeline.json';
-			streamObject.name = 'public and external timeline';
-			return streamObject;
-			}
-		}
-
-	// main/all, i.e. full network
-	if(path == 'main/all') {
-		streamObject.stream = 'statuses/public_and_external_timeline.json';
-		streamObject.name = 'public and external timeline';
-		return streamObject;
-		}
-
-	// main/public, i.e. site's public timeline, new gnu social style
-	if(path == 'main/public') {
-		streamObject.stream = 'statuses/public_timeline.json';
-		streamObject.name = 'public timeline';
-		return streamObject;
-		}
-
-	// groups directory, qvitter can't handle that yet
-	if(path == 'groups') {
-		streamObject.name = 'group directory';
-		return streamObject;
-		}
-
-	// search/notice?q={urlencoded search terms}
-	if(path.indexOf('search/notice?q=') == 0) {
-		var searchQuery = replaceHtmlSpecialChars(loc.replace('/search/notice?q=',''));
-		if(searchQuery.length>0) {
-			streamToSet.id = searchQuery;
-			streamToSet.stream = 'search.json?q=' + searchToStream;
-			streamObject.name = 'search';
-			return streamObject;
-			}
-		}
-
-	// {screen_name}
-	if(/^[a-zA-Z0-9]+$/.test(path)) {
-		streamObject.nickname = path;
-		streamObject.stream = 'statuses/user_timeline.json?screen_name=' + streamObject.nickname;
-		streamObject.name = 'profile';
-		return streamObject;
-		}
-
-	var pathSplit = path.split('/');
-
-	// tag/{tag}
-	if(pathSplit.length == 2 && pathSplit[0] == 'tag') {
-		streamObject.id = pathSplit[1];
-		streamObject.stream = 'statusnet/tags/timeline/' + streamObject.id + '.json';
-		streamObject.name = 'tag stream';
-		return streamObject;
-		}
-
-	// notice/{id}
-	if(pathSplit.length == 2 && pathSplit[0] == 'notice' && /^[0-9]+$/.test(pathSplit[1])) {
-		streamObject.id = pathSplit[1];
-		streamObject.stream = 'statuses/show/' + streamObject.id + '.json';
-		streamObject.name = 'notice';
-		return streamObject;
-		}
-
-	// user/{id}
-	if(pathSplit.length == 2 && pathSplit[0] == 'user' && /^[0-9]+$/.test(pathSplit[1])) {
-		streamObject.id = pathSplit[1];
-		streamObject.stream = 'statuses/user_timeline.json?id=' + streamObject.id;
-		streamObject.name = 'profile';
-		return streamObject;
-		}
-
-	// group/{group_nickname}
-	if(pathSplit.length == 2 && pathSplit[0] == 'group' && /^[a-zA-Z0-9]+$/.test(pathSplit[1])) {
-		streamObject.nickname = pathSplit[1];
-		streamObject.stream = 'statusnet/groups/timeline/' + streamObject.nickname + '.json';
-		streamObject.name = 'group notice stream';
-		return streamObject;
-		}
-
-	// group/{group_nickname}/members
-	if(pathSplit.length == 3 && pathSplit[0] == 'group' && /^[a-zA-Z0-9]+$/.test(pathSplit[1]) && pathSplit[2] == 'members') {
-		streamObject.nickname = pathSplit[1];
-		streamObject.stream = 'statusnet/groups/membership/' + streamObject.nickname + '.json?count=20';
-		streamObject.name = 'group member list';
-		return streamObject;
-		}
-
-	// group/{group_nickname}/admins
-	if(pathSplit.length == 3 && pathSplit[0] == 'group' && /^[a-zA-Z0-9]+$/.test(pathSplit[1]) && pathSplit[2] == 'admins') {
-		streamObject.nickname = pathSplit[1];
-		streamObject.stream = 'statusnet/groups/admins/' + streamObject.nickname + '.json?count=20';
-		streamObject.name = 'group admin list';
-		return streamObject;
-		}
-
-	// {screen_name}/all
-	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'all') {
-		streamObject.nickname = pathSplit[0];
-		if(window.loggedIn.screen_name == streamObject.nickname) {
-			streamObject.stream = 'statuses/friends_timeline.json';
-			}
-		else {
-			streamObject.stream = 'statuses/friends_timeline.json?screen_name=' + streamObject.nickname;
-			}
-		streamObject.name = 'friends timeline';
-		return streamObject;
-		}
-
-	// {screen_name}/replies
-	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'replies') {
-		streamObject.nickname = pathSplit[0];
-		if(window.loggedIn.screen_name == streamObject.nickname) {
-			streamObject.stream = 'statuses/mentions.json';
-			}
-		else {
-			streamObject.stream = 'statuses/mentions.json?screen_name=' + streamObject.nickname;
-			}
-		streamObject.name = 'mentions';
-		return streamObject;
-		}
-
-	// {screen_name}/notifications
-	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'notifications') {
-		streamObject.nickname = pathSplit[0];
-		// only accessible to the logged in user
-		if(window.loggedIn.screen_name == streamObject.nickname) {
-			streamObject.stream = 'qvitter/statuses/notifications.json';
-			}
-		streamObject.name = 'notifications';
-		return streamObject;
-		}
-
-	// {screen_name}/favorites
-	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'favorites') {
-		streamObject.nickname = pathSplit[0];
-		if(window.loggedIn.screen_name == streamObject.nickname) {
-			streamObject.stream = 'favorites.json';
-			}
-		else {
-			streamObject.stream = 'favorites.json?screen_name=' + streamObject.nickname;
-			}
-		streamObject.name = 'favorites';
-		return streamObject;
-		}
-
-	// {screen_name}/subscribers
-	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'subscribers') {
-		streamObject.nickname = pathSplit[0];
-		if(window.loggedIn.screen_name == streamObject.nickname) {
-			streamObject.stream = 'statuses/followers.json?count=20';
-			}
-		else {
-			streamObject.stream = 'statuses/followers.json?count=20&screen_name=' + streamObject.nickname;
-			}
-		streamObject.name = 'subscribers';
-		return streamObject;
-		}
-
-	// {screen_name}/subscriptions
-	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'subscriptions') {
-		streamObject.nickname = pathSplit[0];
-		if(window.loggedIn.screen_name == streamObject.nickname) {
-			streamObject.stream = 'statuses/friends.json?count=20';
-			}
-		else {
-			streamObject.stream = 'statuses/friends.json?count=20&screen_name=' + streamObject.nickname;
-			}
-		streamObject.name = 'subscriptions';
-		return streamObject;
-		}
-
-	// {screen_name}/groups
-	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'groups') {
-		streamObject.nickname = pathSplit[0];
-		if(window.loggedIn.screen_name == streamObject.nickname) {
-			streamObject.stream = 'statusnet/groups/list.json?count=10';
-			}
-		else {
-			streamObject.stream = 'statusnet/groups/list.json?count=10&screen_name=' + streamObject.nickname;
-			}
-		streamObject.name = 'user group list';
-		return streamObject;
-		}
-	}
-
-
-
-
-/* ·
-   ·
-   ·   Get stream from location bar
-   ·
-   · · · · · · · · · */
-
-function getStreamFromUrl() {
-
-	var streamObject = URLtoStreamRouter(window.location.href);
-
-	if(streamObject.stream) {
-		return streamObject.stream;
-		}
-	// fallback to friends timeline or public timeline if URLtoStreamRouter can't find a stream
-	else if(window.loggedIn) {
-		return 'statuses/friends_timeline.json';
-		}
-	else if(window.siteLocalOnlyDefaultPath) {
-		return 'statuses/public_timeline.json';
-		}
-	else {
-		return 'statuses/public_and_external_timeline.json';
-		}
-
-	}
 
 
 /* ·
@@ -2164,10 +1763,10 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 										<a class="account-group" href="' + obj.user.statusnet_profile_url + '">\
 											<img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" />\
 											<strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> \
-											<span class="screen-name">@' + obj.user.screen_name + '</span>\
-										</a>\
-										<i class="addressees">' + reply_to_html + in_groups_html + '</i>\
-										<small class="created-at" data-created-at="' + obj.created_at + '">\
+											<span class="screen-name">@' + obj.user.screen_name + '</span>' +
+										'</a>' +
+										'<i class="addressees">' + reply_to_html + in_groups_html + '</i>' +
+										'<small class="created-at" data-created-at="' + obj.created_at + '">\
 											<a data-tooltip="' + parseTwitterLongDate(obj.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a>\
 										</small>\
 									</div>\

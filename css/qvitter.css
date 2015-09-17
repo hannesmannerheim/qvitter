@@ -1337,7 +1337,7 @@ body.rtl #footer-spinner-container {
 	border-bottom:0 none;
 	}
 
-.hoover-card {
+.hover-card {
 	width: auto;
 	max-width: 290px;
 	line-height: 20px;
@@ -1356,7 +1356,7 @@ body.rtl #footer-spinner-container {
 	word-break: break-all;
 	box-shadow: 0 0 10px rgba(0,0,0,0.4);
 	}
-.hoover-card-caret {
+.hover-card-caret {
 	z-index: 9999;
 	opacity:0;
 	display:block;
@@ -1370,7 +1370,7 @@ body.rtl #footer-spinner-container {
 	border-right-color: transparent;
 	transition: opacity 0.1s ease-in 0;
 	}
-.hoover-card-caret.bottom {
+.hover-card-caret.bottom {
 	border-top:5px solid #fff;
 	border-bottom:0 none;
 	}
@@ -2226,9 +2226,9 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	vertical-align: top;
 	}
 .stream-item-header .addressees span:first-child:before {
-	content: "\f105";
+	content: "\00A0\f105";
 	display:inline-block;
-	padding:0 6px 0 2px;
+	padding:0 4px 0 2px;
 	font-size:12px;
 	font-family:FontAwesome;
 	font-style:normal;
@@ -2687,12 +2687,12 @@ ul.stats li {
 .profile-card ul.stats li {
 	padding-top: 7px;
 	}
-.hoover-card .profile-card ul.stats li {
+.hover-card .profile-card ul.stats li {
 	padding-top: 6px;
 	min-width:70px;
 	}
-.hoover-card .profile-card ul.stats li.follower-num,
-.hoover-card .profile-card ul.stats li.groups-num {
+.hover-card .profile-card ul.stats li.follower-num,
+.hover-card .profile-card ul.stats li.groups-num {
 	display:none;
 	}
 .queet.rtl ul.stats li {
@@ -2708,7 +2708,7 @@ ul.stats a {
     line-height: 18px;
     font-weight: normal;
 	}
-.hoover-card ul.stats a {
+.hover-card ul.stats a {
 	font-size: 9px;
 	}
 .queet.rtl ul.stats a{
@@ -2722,7 +2722,7 @@ ul.stats a strong {
 	line-height: 16px;
     display: block;
 	}
-.hoover-card ul.stats a strong {
+.hover-card ul.stats a strong {
 	font-size: 17px;
 	}
 
@@ -3467,7 +3467,7 @@ div.nav-session {
     width: 588px;
 	}
 
-.hoover-card .profile-card {
+.hover-card .profile-card {
 	width:290px;
 	margin-bottom:0;
 	border:0 none;
@@ -3495,7 +3495,7 @@ div.nav-session {
 	-o-background-size: cover;
 	background-size: cover;
 	}
-.hoover-card .profile-header-inner {
+.hover-card .profile-header-inner {
 	height: 200px;
 	}
 .profile-header-inner a:hover {
@@ -3514,7 +3514,7 @@ div.nav-session {
     top: 60px;
     width: 100%;
 	}
-.hoover-card .profile-header-inner .profile-header-inner-overlay {
+.hover-card .profile-header-inner .profile-header-inner-overlay {
 	height: 140px;
 	}
 .profile-header-inner .profile-picture {
@@ -3531,7 +3531,7 @@ div.nav-session {
     z-index: 5;
 	}
 
-.hoover-card .profile-header-inner .profile-picture {
+.hover-card .profile-header-inner .profile-picture {
     border: 2px solid #ffffff;
     border-radius: 4px;
     height: 40px;
@@ -3545,7 +3545,7 @@ div.nav-session {
     border-radius: 3px 3px 3px 3px;
     float: none;
 	}
-.hoover-card .profile-header-inner .profile-picture img {
+.hover-card .profile-header-inner .profile-picture img {
 	border-radius: 3px;
     height: 40px;
     width: 40px;
@@ -3576,7 +3576,7 @@ div.nav-session {
 	max-width:100%;
 	text-overflow: ellipsis;
 	}
-.hoover-card .profile-card-inner .fullname {
+.hover-card .profile-card-inner .fullname {
 	font-size: 14px;
     font-weight: 700;
     height: 26px;
@@ -3601,7 +3601,7 @@ div.nav-session {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	}
-.hoover-card .profile-header-inner .profile-card-inner h2.username {
+.hover-card .profile-header-inner .profile-card-inner h2.username {
 	font-size: 14px;
 	line-height:18px;
 	margin-bottom: 4px;
@@ -3632,7 +3632,7 @@ div.nav-session {
 	margin-left:7px;
 	text-transform:uppercase;
 	}
-.hoover-card .profile-header-inner .profile-card-inner h2.username .follows-you {
+.hover-card .profile-header-inner .profile-card-inner h2.username .follows-you {
 	background-color: rgba(0, 0, 0, 0.5);
     bottom: -36px;
     display: block;
@@ -3658,7 +3658,7 @@ div.nav-session {
     overflow: hidden;
     text-overflow: ellipsis;
 	}
-.hoover-card .profile-header-inner .profile-card-inner .bio-container p {
+.hover-card .profile-header-inner .profile-card-inner .bio-container p {
 	font-size: 12px;
     letter-spacing: 0.2px;
     line-height: 15px;
@@ -3672,8 +3672,8 @@ div.nav-session {
 	line-height: 18px;
 	margin:0;
 	}
-.hoover-card .profile-header-inner .profile-card-inner .location-and-url,
-.hoover-card .profile-header-inner .profile-card-inner .location-and-url input {
+.hover-card .profile-header-inner .profile-card-inner .location-and-url,
+.hover-card .profile-header-inner .profile-card-inner .location-and-url input {
 	font-size: 12px;
     letter-spacing: 0.2px;
     line-height: 15px;
@@ -3713,7 +3713,7 @@ div.nav-session {
     min-height: 52px;
     position: relative;
 	}
-.hoover-card .profile-banner-footer {
+.hover-card .profile-banner-footer {
 	min-height: 47px;
 	}
 .profile-banner-footer ul.stats {
@@ -3725,13 +3725,13 @@ div.nav-session {
 .profile-banner-footer ul.stats li a {
 	padding: 0 15px 8px 12px;
 	}
-.hoover-card .profile-banner-footer ul.stats li a {
+.hover-card .profile-banner-footer ul.stats li a {
 	padding-bottom: 5px;
 	}
 .profile-banner-footer ul.stats li:first-child a {
     padding-left: 12px;
 	}
-.hoover-card .profile-banner-footer ul.stats li:first-child a {
+.hover-card .profile-banner-footer ul.stats li:first-child a {
     padding-left: 6px;
 	}
 .profile-banner-footer ul.stats li a strong {
@@ -3742,7 +3742,7 @@ div.nav-session {
 	float: right;
 	margin: 10px;
 	}
-.hoover-card .profile-card .user-actions {
+.hover-card .profile-card .user-actions {
 	margin-right: 5px;
 	margin-bottom: 5px;
 	}
