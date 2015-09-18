@@ -1561,33 +1561,34 @@ $('body').on('click','#new-queets-bar',function(){
    · · · · · · · · · · · · · */
 
 $('body').on('click','.queet',function (event) {
-	if(!$(event.target).is('a')
-		&& !$(event.target).is('video')
-		&& !$(event.target).is('.cm-mention')
-		&& !$(event.target).is('.cm-tag')
-		&& !$(event.target).is('.cm-group')
-		&& !$(event.target).is('.cm-url')
-		&& !$(event.target).is('pre')
-		&& !$(event.target).is('img')
-		&& !$(event.target).is('.name')
-		&& !$(event.target).is('.queet-box')
-		&& !$(event.target).is('.syntax-two')
-		&& !$(event.target).is('button')
-		&& !$(event.target).is('.show-full-conversation')
-		&& !$(event.target).is('span.mention')
-		&& !$(event.target).is('.action-reply-container a span')
-		&& !$(event.target).is('.action-reply-container a b')
-		&& !$(event.target).is('.action-rt-container a span')
-		&& !$(event.target).is('.action-rt-container a b')
-		&& !$(event.target).is('.action-del-container a span')
-		&& !$(event.target).is('.action-del-container a b')
-		&& !$(event.target).is('.action-fav-container a span')
-		&& !$(event.target).is('.action-fav-container a b')
-		&& !$(event.target).is('.action-ellipsis-container a span')
-		&& !$(event.target).is('.action-ellipsis-container a b')
-		&& !$(event.target).is('span.group')
-		&& !$(event.target).is('.longdate')
-		&& !$(event.target).is('.screen-name')
+	if(!$(event.target).is('\
+			a,\
+			video,\
+			.cm-mention,\
+			.cm-tag,\
+			.cm-group,\
+			.cm-url,\
+			pre,\
+			img,\
+			.name,\
+			.queet-box,\
+			.syntax-two,\
+			button,\
+			.show-full-conversation,\
+			span.mention,\
+			.action-reply-container a span,\
+			.action-reply-container a b,\
+			.action-rt-container a span,\
+			.action-rt-container a b,\
+			.action-del-container a span,\
+			.action-del-container a b,\
+			.action-fav-container a span,\
+			.action-fav-container a b,\
+			.action-ellipsis-container a span,\
+			.action-ellipsis-container a b,\
+			span.group,\
+			.longdate,\
+			.screen-name')
 		&& !$(this).parent('.stream-item').hasClass('user')) { // not if user stream
 		expand_queet($(this).parent());
 		}
