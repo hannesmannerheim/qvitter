@@ -548,14 +548,7 @@ function searchForUserDataToCache(obj) {
 
 function appendUserToMentionsSuggestionsArray(user) {
 
-	var userAlreadyExist = false;
-	$.each(window.following, function(){
-		if(user.id == this.id) {
-			userAlreadyExist = true;
-			}
-		});
-
-	if(!userAlreadyExist) {
+	if(typeof window.following[user.id] == 'undefined') {
 
 		// in the window.following array, we use "false" as url if it's a user from this instance
 		if(user.is_local) {
@@ -565,14 +558,15 @@ function appendUserToMentionsSuggestionsArray(user) {
 			var url = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(user.statusnet_profile_url,user.screen_name);
 			}
 
-		var userToAdd = Object();
-		userToAdd.avatar = user.profile_image_url;
-		userToAdd.id = user.id;
-		userToAdd.name = user.name;
-		userToAdd.url = url;
-		userToAdd.username = user.screen_name;
+		var userToAdd = {
+			avatar: user.profile_image_url,
+			id: user.id,
+			name: user.name,
+			url: url,
+			username: user.screen_name
+			};
 
-		window.following.push(userToAdd);
+		window.following[user.id] = userToAdd;
 		}
 
 	}

@@ -147,29 +147,25 @@ function getFromAPI(stream, actionOnSuccess) {
 
 			displayOrHideUnreadNotifications(request.getResponseHeader('Qvitter-Notifications'));
 
-			// profile card from user array, also cache it
+			// parse and cache any user arrays in header
+			var userArray = false;
 			if(request.getResponseHeader('Qvitter-User-Array') !== null) {
+                var qvitterUserArrayHeader = request.getResponseHeader('Qvitter-User-Array');
 
-                // while waiting for this data user might have changed stream, so only proceed if current stream still is this one
-                if(window.currentStream == stream) {
-                    var qvitterUserArrayHeader = request.getResponseHeader('Qvitter-User-Array');
+				// quitter.se fix
+				if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
+					qvitterUserArrayHeader = qvitterUserArrayHeader.replace(new RegExp('http:\\\\/\\\\/' + window.siteRootDomain, 'g'), 'https:\/\/' + window.siteRootDomain);
+					}
 
-    				// quitter.se fix
-    				if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
-    					qvitterUserArrayHeader = qvitterUserArrayHeader.replace(new RegExp('http:\\\\/\\\\/' + window.siteRootDomain, 'g'), 'https:\/\/' + window.siteRootDomain);
-    					}
-
-    				var userArray = iterateRecursiveReplaceHtmlSpecialChars($.parseJSON(qvitterUserArrayHeader));
-    				userArrayCacheStore(userArray);
-    				addProfileCardToDOM(buildProfileCard(userArray));
-                    }
+				userArray = iterateRecursiveReplaceHtmlSpecialChars($.parseJSON(qvitterUserArrayHeader));
+				userArrayCacheStore(userArray);
 				}
 
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
 
-			actionOnSuccess(data);
+			actionOnSuccess(data, userArray);
 			},
 		error: function(data) {
 			actionOnSuccess(false);

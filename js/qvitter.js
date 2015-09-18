@@ -819,14 +819,13 @@ function doLogin(streamObjectToSet) {
 			}
 
 		// get all users i'm following for autosuggestion
-		window.following = new Array();
-		window.groupMemberships = new Array();
+		window.following = new Object();
+		window.groupMemberships = new Object();
 		window.groupNicknamesAndLocalAliases = new Array();
 
 		getFromAPI('qvitter/allfollowing/' + window.loggedIn.screen_name + '.json',function(data){
 
 			if(data.users) {
-				var i=0;
 				$.each(data.users,function(k,v){
 					if(v[2] === false) { var avatar = window.defaultAvatarStreamSize; }
 					else { 	var avatar = v[2]; }
@@ -835,13 +834,11 @@ function doLogin(streamObjectToSet) {
 						v[3] = v[3].substring(v[3].indexOf('://')+3,v[3].lastIndexOf(v[1])-1);
 						}
 					v[0] = v[0] || v[1]; // if name is null we go with username there too
-					window.following[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
-					i++;
+					window.following[k] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
 					});
 				}
 
 			if(data.groups) {
-				var i=0;
 				$.each(data.groups,function(k,v){
 					if(v[2] === false || v[2] === null) { var avatar = window.defaultAvatarStreamSize; }
 					else { 	var avatar = v[2]; }
@@ -851,9 +848,8 @@ function doLogin(streamObjectToSet) {
 						v[3] = v[3].substring(0, v[3].indexOf('/'));
 						}
 					v[0] = v[0] || v[1]; // if name is null we go with username there too
-					window.groupMemberships[i] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
-					window.groupNicknamesAndLocalAliases[i] = v[1];
-					i++;
+					window.groupMemberships[k] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
+					window.groupNicknamesAndLocalAliases[k] = v[1];
 					});
 				}
 

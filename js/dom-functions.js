@@ -562,10 +562,15 @@ function setNewCurrentStream(streamObject,setLocation,actionOnSuccess) {
 		}
 
 	// get stream
-	getFromAPI(streamObject.stream, function(queet_data){
+	getFromAPI(streamObject.stream, function(queet_data, userArray){
 		if(queet_data) {
 			// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
 			if(window.currentStream == streamObject.stream) {
+
+				// profile card from user array
+				if(userArray) {
+    				addProfileCardToDOM(buildProfileCard(userArray));
+					}
 
 				// show group profile card if this is a group stream
 				if(streamObject.name == 'group notice stream'

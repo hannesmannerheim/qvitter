@@ -217,6 +217,15 @@ function pathToStreamRouter(path) {
 		return streamObject;
 		}
 
+	// group/{id  }/id
+	if(pathSplit.length == 3 && pathSplit[0] == 'group' && /^[0-9]+$/.test(pathSplit[1]) && pathSplit[2] == 'id') {
+		streamObject.name = 'group notice stream by id';
+        streamObject.id = pathSplit[1];
+        streamObject.streamHeader = replaceHtmlSpecialChars(path);
+		streamObject.stream = 'statusnet/groups/timeline/' + streamObject.id + '.json';
+		return streamObject;
+		}
+
 	// group/{group_nickname}/members
 	if(pathSplit.length == 3 && pathSplit[0] == 'group' && /^[a-zA-Z0-9]+$/.test(pathSplit[1]) && pathSplit[2] == 'members') {
 		streamObject.name = 'group member list';
