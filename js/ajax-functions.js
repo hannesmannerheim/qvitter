@@ -135,12 +135,6 @@ function getFromAPI(stream, actionOnSuccess) {
 		statusCode: {
 			401:function() {
 				location.reload(); // we may have been logged out in another tab, reload page
-				},
-			404:function() {
-				// redirect to frontpage when trying to access non-existing users
-				if(stream.indexOf('statuses/user_timeline.json?screen_name=') > -1) {
-					window.location.replace(window.siteInstanceURL);
-					}
 				}
 			},
 		success: function(data, textStatus, request) {
@@ -178,15 +172,17 @@ function getFromAPI(stream, actionOnSuccess) {
 
 /* ·
    ·
-   ·   Get user nickname from user id
+   ·   Get user nickname by user id
    ·
    ·   @param id: local user id
    ·   @param callback: function to invoke when done
    ·
    · · · · · · · · · · · · · */
 
-function getUserIdFromNicknameFromAPI(id, callback) {
+function getNicknameByUserIdFromAPI(id, callback) {
+	display_spinner();
 	getFromAPI('users/show.json?id=' + id, function(data){
+		remove_spinner();
 		if(data && typeof data.screen_name != 'undefined') {
 			callback(data.screen_name);
 			}

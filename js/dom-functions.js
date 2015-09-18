@@ -483,11 +483,14 @@ function groupProfileCard(groupAlias) {
    ·   Change stream
    ·
    ·   @param streamObject: object returned by pathToStreamRouter()
+   ·   @param setLocation: whether we should update the browsers location bar when we set the new stream
+   ·   @param fallbackId: if we fail to get the stream, it can be due to a bad/changed user/group nickname,
+   ·                      in that case this parameter can contain a user/group id that we can use to retrieve the correct nickname
    ·   @param actionOnSuccess: callback function on success
    ·
    · · · · · · · · · */
 
-function setNewCurrentStream(streamObject,setLocation,actionOnSuccess) {
+function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess) {
 
 	if(!streamObject && !streamObject.stream) {
 		console.log('invalid streamObject, no stream to set!');
@@ -496,11 +499,6 @@ function setNewCurrentStream(streamObject,setLocation,actionOnSuccess) {
 
 	// remember state of old stream (including profile card)
 	window.oldStreams[window.currentStream] = $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML();
-
-	// set location bar from stream
-	if(setLocation) {
-		setUrlFromStream(streamObject);
-		}
 
 	// halt interval that checks for new queets
 	window.clearInterval(checkForNewQueetsInterval);
@@ -540,6 +538,11 @@ function setNewCurrentStream(streamObject,setLocation,actionOnSuccess) {
 		$('#feed-header-inner h2').css('opacity','0.2');
 		$('#feed-header-inner h2').animate({opacity:'1'},1000);
 
+		// set location bar from stream
+		if(setLocation) {
+			setUrlFromStream(streamObject);
+			}
+
 		// also mark this stream as the current stream immediately, if a saved copy exists
 		addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
 		}
@@ -563,41 +566,74 @@ function setNewCurrentStream(streamObject,setLocation,actionOnSuccess) {
 
 	// get stream
 	getFromAPI(streamObject.stream, function(queet_data, userArray){
-		if(queet_data) {
-			// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
-			if(window.currentStream == streamObject.stream) {
 
-				// profile card from user array
-				if(userArray) {
-    				addProfileCardToDOM(buildProfileCard(userArray));
+		// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
+		if(window.currentStream != streamObject.stream) {
+			console.log('stream has changed, aborting');
+			return;
+			}
+
+		// if we have a fallbackId and a userArray, and the userArray's is is not equal to
+		// the fallackId, this is the wrong stream! we need to re-invoke setNewCurrentStream()
+		// with the correct and up-to-date nickname (maybe best not to send a fallbackId here not
+		// to risk getting into an infinite loop caused by bad data)
+		// also, we do the same thing if getting the stream fails, but we have a fallback id
+		if((userArray && fallbackId && userArray.id != fallbackId)
+		|| (queet_data === false && fallbackId)) {
+			getNicknameByUserIdFromAPI(fallbackId,function(nickname) {
+				if(nickname) {
+					setNewCurrentStream(pathToStreamRouter(nickname),true,false,actionOnSuccess);
 					}
-
-				// show group profile card if this is a group stream
-				if(streamObject.name == 'group notice stream'
-				|| streamObject.name == 'group member list'
-				|| streamObject.name == 'group admin list') {
-					groupProfileCard(streamObject.nickname);
+				else {
+					// redirect to front page if everything fails
+					setNewCurrentStream(pathToStreamRouter('/'),true,false,actionOnSuccess);
 					}
+				});
+			}
 
-				// start checking for new queets again
-				window.clearInterval(checkForNewQueetsInterval);
-				checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
+		// getting stream failed, and we don't have a fallback id, redirect to front page
+		else if(queet_data === false) {
+			setNewCurrentStream(pathToStreamRouter('/'),true,false,actionOnSuccess);
+			}
 
-				// add this stream to the history menu
-				addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
+		// everything seems fine, show the new stream
+		else if(queet_data) {
 
-				remove_spinner();
-				$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
-				$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
-				addToFeed(queet_data, false,'visible'); // add stream items to feed element
-				$('#feed').animate({opacity:'1'},150); // fade in
-				$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
-				$('html,body').scrollTop(0); // scroll to top
+			// set location bar from stream
+			if(setLocation) {
+				setUrlFromStream(streamObject);
+				}
 
-				// maybe do something
-				if(typeof actionOnSuccess == 'function') {
-					actionOnSuccess();
-					}
+			// profile card from user array
+			if(userArray) {
+				addProfileCardToDOM(buildProfileCard(userArray));
+				}
+
+			// show group profile card if this is a group stream
+			if(streamObject.name == 'group notice stream'
+			|| streamObject.name == 'group member list'
+			|| streamObject.name == 'group admin list') {
+				groupProfileCard(streamObject.nickname);
+				}
+
+			// start checking for new queets again
+			window.clearInterval(checkForNewQueetsInterval);
+			checkForNewQueetsInterval=window.setInterval(function(){checkForNewQueets()},window.timeBetweenPolling);
+
+			// add this stream to the history menu
+			addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
+
+			remove_spinner();
+			$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
+			$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
+			addToFeed(queet_data, false,'visible'); // add stream items to feed element
+			$('#feed').animate({opacity:'1'},150); // fade in
+			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
+			$('html,body').scrollTop(0); // scroll to top
+
+			// maybe do something
+			if(typeof actionOnSuccess == 'function') {
+				actionOnSuccess();
 				}
 			}
 		});

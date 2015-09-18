@@ -56,7 +56,7 @@ window.loggedIn = iterateRecursiveReplaceHtmlSpecialChars(window.loggedIn);
 window.onpopstate = function(event) {
 	if(event && event.state) {
 		display_spinner();
-		setNewCurrentStream(pathToStreamRouter(event.state.strm),false,function(){
+		setNewCurrentStream(pathToStreamRouter(event.state.strm),false,false,function(){
 			remove_spinner();
 			});
 		}
@@ -764,7 +764,7 @@ function proceedToSetLanguageAndLogin(data){
 	else {
 		display_spinner();
 		window.currentStream = ''; // force reload stream
-		setNewCurrentStream(getStreamFromUrl(),true,function(){
+		setNewCurrentStream(getStreamFromUrl(),true,false,function(){
 			logoutWithoutReload(false);
 			remove_spinner();
 			});
@@ -878,7 +878,7 @@ function doLogin(streamObjectToSet) {
 
 		// set stream
 		window.currentStream = ''; // always reload stream on login
-		setNewCurrentStream(streamObjectToSet,true,function(){
+		setNewCurrentStream(streamObjectToSet,true,false,function(){
 			$('.language-dropdown').css('display','none');
 			$('#user-header').animate({opacity:'1'},800);
 			$('#user-body').animate({opacity:'1'},800);
@@ -1200,7 +1200,7 @@ $('#user-header').on('click',function(e){
 	if($(e.target).is('#mini-edit-profile-button')) {
 		return;
 		}
-	setNewCurrentStream(pathToStreamRouter(window.loggedIn.screen_name),true);
+	setNewCurrentStream(pathToStreamRouter(window.loggedIn.screen_name),true,false);
 	});
 
 
@@ -1215,7 +1215,7 @@ $('#search-query').on('keyup',function(e) { if(e.keyCode==13) { showSearchStream
 $('button.icon.nav-search').on('click',function(e) { showSearchStream();});	// on click on magnifying glass
 function showSearchStream() {
 	var path = 'search/notice?q=' + encodeURIComponent(replaceHtmlSpecialChars($('#search-query').val()));
-	setNewCurrentStream(pathToStreamRouter(path),true);
+	setNewCurrentStream(pathToStreamRouter(path),true,false);
 	}
 
 
@@ -1272,31 +1272,42 @@ $('body').on('click','a', function(e) {
 		if(streamObject && streamObject.stream) {
 			e.preventDefault();
 
-			// if this is a user/{id} type link
+			// if this is a user/{id} type link we want to find the nickname before setting a new stream
+			// the main reason is that we want to update the browsers location bar and the .stream-selecton
+			// links as fast as we can. we rather not wait for the server response
 			if(streamObject.name == 'profile by id') {
 
-				// see if we have the nickname in cache
-				var nickname = userArrayCacheGetUserNicknameById(streamObject.id);
-				if(nickname) {
-					setNewCurrentStream(pathToStreamRouter(nickname),true);
+				// pathToStreamRouter() might have found a cached nickname
+				if(streamObject.nickname) {
+					setNewCurrentStream(pathToStreamRouter(streamObject.nickname),true,streamObject.id);
 					}
-				// if we don't have it in cache we query the server for it
-				// (we _could_ just try the nickname in the link html, but the user can have changed nickname)
+				// otherwise we might follow the user and thereby already know its nickname
+				else if (typeof window.following != 'undefined' && typeof window.following[streamObject.id] != 'undefined') {
+					setNewCurrentStream(pathToStreamRouter(window.following[streamObject.id].username),true,streamObject.id);
+					}
+				// if the text() of the clicked element looks like a user nickname, use that (but send id to setNewCurrentStream() in case this is bad data)
+				else if(/^@[a-zA-Z0-9]+$/.test($(e.target).text()) || /^[a-zA-Z0-9]+$/.test($(e.target).text())) {
+					var nickname = $(e.target).text();
+					if(nickname.indexOf('@') == 0) {
+						nickname = nickname.substring(1); // remove any starting @
+						}
+					setNewCurrentStream(pathToStreamRouter(nickname),true,streamObject.id);
+					}
+				// if we can't figure out or guess a nickname, query the server for it
 				else {
-					display_spinner();
-					getUserIdFromNicknameFromAPI(streamObject.id,function(nickname) {
+					getNicknameByUserIdFromAPI(streamObject.id,function(nickname) {
 						if(nickname) {
-							setNewCurrentStream(pathToStreamRouter(nickname),true);
+							setNewCurrentStream(pathToStreamRouter(nickname),true,false);
 							}
 						else {
-							remove_spinner();
-							alert('could not find local user with id ' + streamObject.id);
+							alert('user not found');
 							}
 						});
 					}
 				}
+			// all other links that qvitter can handle
 			else {
-				setNewCurrentStream(streamObject,true);
+				setNewCurrentStream(streamObject,true,false);
 				}
 			}
 		}
@@ -2300,7 +2311,7 @@ $('body').on('click','button.shorten',function () {
    · · · · · · · · · · · · · */
 $('body').on('click','.reload-stream',function () {
 	$('.reload-stream').hide();
-	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,function(){
+	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,function(){
 		$('.reload-stream').show();
 		});
 	});
@@ -3501,7 +3512,7 @@ $('body').on('click','#mini-edit-profile-button, #edit-profile-header-link, .hov
 		$('#page-container > .profile-card .edit-profile-button').trigger('click');
 		}
 	else {
-		setNewCurrentStream(pathToStreamRouter(window.loggedIn.screen_name), true, function(){
+		setNewCurrentStream(pathToStreamRouter(window.loggedIn.screen_name), true, false, function(){
 			$('#page-container > .profile-card .edit-profile-button').trigger('click');
 			});
 		}
