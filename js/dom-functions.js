@@ -175,19 +175,24 @@ function buildProfileCard(data) {
 	if(data.following) {
 		followingClass = 'following';
 		}
+
 	var followButton = '';
-	if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID != data.id) {
-		var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
-		}
 
-	// follow from external instance if logged out
-	if(typeof window.loggedIn.screen_name == 'undefined') {
-		var followButton = '<div class="user-actions"><button type="button" class="external-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';
-		}
+	// only add follow button if this is a local user
+	if(data.is_local == true) {
+		if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID != data.id) {
+			var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
+			}
 
-	// edit profile button if me
-	if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID == data.id) {
-		var followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';
+		// follow from external instance if logged out
+		if(typeof window.loggedIn.screen_name == 'undefined') {
+			var followButton = '<div class="user-actions"><button type="button" class="external-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';
+			}
+
+		// edit profile button if me
+		if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID == data.id) {
+			var followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';
+			}
 		}
 
 	// is webpage empty?
@@ -296,7 +301,13 @@ function buildExternalProfileCard(data) {
 
 	var serverUrl = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.statusnet_profile_url, data.screen_name);
 	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl;
-	var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
+
+	var followButton = '';
+
+	// we can only follow remote users if we're logged in at the moment
+	if(window.loggedIn !== false) {
+		var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
+		}
 
 	data.profileCardHtml = '\
 		<div class="profile-card">\
