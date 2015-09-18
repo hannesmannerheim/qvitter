@@ -196,7 +196,7 @@ $('body').on('mouseover',function (e) {
 		}
 
 	// see if we have it in cache, otherwise query server
-	getUserArrayData(hrefAttr, possibleNickname, timeNow, function(userArray, timeOut){
+	getUserArrayData(hrefAttr, possibleNickname, timeNow, targetElement, function(userArray, timeOut){
 
 		// bad data
 		if(typeof userArray.local == 'undefined') {
@@ -204,13 +204,13 @@ $('body').on('mouseover',function (e) {
 			}
 
 		// build card from either the local or external data, depending on what we got
-		if (userArray.local.is_local == true) {
+		if (userArray.local !== null && userArray.local.is_local == true) {
 			var profileCard = buildProfileCard(userArray.local);
 			}
-		else if(userArray.local.is_local == false && (typeof userArray.external == 'undefined' || userArray.external === false)) {
+		else if(userArray.local !== null && userArray.local.is_local == false && (typeof userArray.external == 'undefined' || userArray.external === null || userArray.external === false)) {
 			var profileCard = buildProfileCard(userArray.local);
 			}
-		else if (userArray.local.is_local == false && typeof userArray.external != 'undefined' && userArray.external !== false) {
+		else if ((userArray.local === null || userArray.local === false || userArray.local.is_local == false) && typeof userArray.external != 'undefined' && userArray.external !== false && userArray.external !== null) {
 			var profileCard = buildExternalProfileCard(userArray);
 			}
 		else {
@@ -235,11 +235,11 @@ $('body').on('mouseover',function (e) {
 
 					// if the user array has not been retrieved from the server for the last 60 seconds,
 					// we query it for the lastest data
-					if((typeof window.userArrayLastRetrieved[userArray.local.id] == 'undefined') || (timeNow - window.userArrayLastRetrieved[userArray.local.id]) > 60000) {
-						window.userArrayLastRetrieved[userArray.local.id] = timeNow;
+					if((typeof window.userArrayLastRetrieved[hrefAttr] == 'undefined') || (timeNow - window.userArrayLastRetrieved[hrefAttr]) > 60000) {
+						window.userArrayLastRetrieved[hrefAttr] = timeNow;
 
 						// local users
-						if(userArray.local.is_local === true) {
+						if(userArray.local !== null && userArray.local.is_local === true) {
 							getFromAPI('users/show.json?id=' + userArray.local.screen_name, function(data){
 								if(data) {
 									var newProfileCard = buildProfileCard(data);
@@ -250,8 +250,8 @@ $('body').on('mouseover',function (e) {
 							}
 
 						// external users
-						else if(userArray.local.is_local === false) {
-							getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent(userArray.local.statusnet_profile_url),function(data){
+						else if(userArray.local === null || userArray.local.is_local === false) {
+							getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent(hrefAttr),function(data){
 								if(data && data.external !== null) {
 									var newProfileCard = buildExternalProfileCard(data);
 									hoverCardElement.html(newProfileCard.profileCardHtml);
@@ -276,8 +276,8 @@ $('body').on('mouseover',function (e) {
 		});
 	});
 
-// get user array from cache (or from server – TODO!!)
-function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,callback) {
+// get user array from cache (or from server)
+function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,targetElement,callback) {
 	if(maybeProfileUrl && maybeNickname) {
 
 		userArray = userArrayCacheGetByProfileUrlAndNickname(maybeProfileUrl, maybeNickname);
@@ -285,18 +285,44 @@ function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,callback) {
 		// no cached user array found, query server if this seems to be a profile url
 		if(!userArray) {
 
-			var routedUrl = URLtoStreamRouter(maybeProfileUrl);
+			var streamObject = URLtoStreamRouter(maybeProfileUrl);
 
+			// pathToStreamRouter failed finding a local stream for this path, maybe it's a remote profile?
+			if(streamObject === false) {
+				// we don't want to query the server every time we just pass an a-element with the cursor, so if the user
+				// hovers the element for, say, 200ms we ask the server if the link could be a remote profile
+				setTimeout(function(){
+					if(targetElement.is(":hover")) {
+						window.userArrayLastRetrieved[maybeProfileUrl] = timeNow;
+						getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent(maybeProfileUrl),function(data){
+							if(data && data.external !== null) {
+
+								// we want hover cards to appear _at least_ 600ms after hover (see below)
+								var timeAfterServerQuery = new Date().getTime();
+								var queryTime = timeAfterServerQuery-timeNow;
+								if(queryTime<600) {
+									var timeOut = 600-queryTime;
+									}
+								else {
+									var timeOut = 0;
+									}
+
+								callback(data,timeOut);
+								}
+							});
+						}
+					},200);
+				}
 			// likely an uncached local profile
-			if(routedUrl && routedUrl.name == 'profile') {
+			else if(streamObject && (streamObject.name == 'profile' || streamObject.name == 'profile by id')) {
 
-				var nicknameOrId = routedUrl.nickname;
+				var nicknameOrId = streamObject.nickname;
 				if(!nicknameOrId) {
-					nicknameOrId = routedUrl.id;
+					nicknameOrId = streamObject.id;
 					}
 				// don't query too often for the same user
-				if(typeof window.userArrayLastRetrieved[nicknameOrId] == 'undefined' || (timeNow - window.userArrayLastRetrieved[nicknameOrId]) > 60000) {
-					window.userArrayLastRetrieved[nicknameOrId] = timeNow;
+				if(typeof window.userArrayLastRetrieved[maybeProfileUrl] == 'undefined' || (timeNow - window.userArrayLastRetrieved[maybeProfileUrl]) > 60000) {
+					window.userArrayLastRetrieved[maybeProfileUrl] = timeNow;
 					// query server and cache user data (done automatically in getFromAPI)
 					getFromAPI('users/show.json?id=' + nicknameOrId, function(data){
 						if(data) {
