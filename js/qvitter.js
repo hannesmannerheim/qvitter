@@ -2482,7 +2482,8 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 
 	// loop through the regexps and highlight
 	$.each(window.syntaxHighlightingRegexps,function(k,v){
-		while(currentVal.match(v)) {
+		var i = 0;
+		while(currentVal.match(v) && i < 100) { // 100 matches is enough, we don't want to get caught in an infinite loop here
 			var currentMatch = currentVal.match(v);
 			if(currentMatch[0].slice(-1) == '<'
 			|| currentMatch[0].slice(-1) == '&'
@@ -2496,6 +2497,7 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 				currentMatch[0] = currentMatch[0].slice(0,-1);
 				}
 			currentVal = currentVal.replace(currentMatch[0],'<span class="' + k + '">' + currentMatch[0].replace('#','&#35;').replace('@','&#64;').replace('.','&#046;').replace('!','&#33;') + '</span>')
+			i++;
 			}
 		});
 
