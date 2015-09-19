@@ -280,13 +280,63 @@ class ApiQvitterStatusesUpdateAction extends ApiAuthAction
 
             $content = html_entity_decode($status_shortened, ENT_NOQUOTES, 'UTF-8');
 
-			// groups
-			$group_ids = Array();
-			if(strlen($this->post_to_groups)>0) {
-				$group_ids = explode(':',$this->post_to_groups);
-				}
+            $options = array('reply_to' => $reply_to);
 
-            $options = array('reply_to' => $reply_to, 'groups' => $group_ids);
+
+            // -------------------------------------------------------------
+            // -------- Qvitter's post-to-the-right-group stuff! -----------
+            // -------------------------------------------------------------
+
+			// guess the groups by the content first, if we don't have group id:s as meta data
+            $profile = Profile::getKV('id', $this->scoped->id);
+            $guessed_groups = User_group::groupsFromText($content, $profile);
+
+            // if the user has specified any group id:s, correct the guesswork
+			if(strlen($this->post_to_groups)>0) {
+                // get the groups that the user wants to post to
+                $group_ids = explode(':',$this->post_to_groups);
+                $correct_groups = Array();
+                foreach($group_ids as $group_id) {
+                    $correct_groups[] = User_group::getKV('id',$group_id);
+                }
+
+                // correct the guesses
+                $corrected_group_ids = Array();
+                foreach($guessed_groups as $guessed_group) {
+                    $id_to_keep = $guessed_group->id;
+                    foreach($correct_groups as $k=>$correct_group) {
+                        if($correct_group->nickname == $guessed_group->nickname) {
+                            $id_to_keep = $correct_group->id;
+                            unset($correct_groups[$k]);
+                            break;
+                        }
+                    }
+                    $corrected_group_ids[$id_to_keep] = true;
+                }
+
+                // but we still want to post to all of the groups that the user specified by id
+                // even if we couldn't use it to correct a bad guess
+                foreach($correct_groups as $correct_group) {
+                    $corrected_group_ids[$correct_group->id] = true;
+                }
+
+                $options['groups'] = array_keys($corrected_group_ids);
+			}
+
+            // if the user didn't send any group id:s, go with the guesses
+            else {
+                $guessed_ids = array();
+                foreach ($guessed_groups as $guessed_group) {
+                    $guessed_ids[$guessed_group->id] = true;
+                }
+                $options['groups'] = array_keys($guessed_ids);
+            }
+
+            // -------------------------------------------------------------
+            // ------ End of Qvitter's post-to-the-right-group stuff! ------
+            // -------------------------------------------------------------
+
+
 
             if ($this->scoped->shareLocation()) {
 
