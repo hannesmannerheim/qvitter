@@ -2603,7 +2603,7 @@ function useSelectedMention(queetBox){
 	// replace the halfwritten username with the one we want
 	deleteBetweenCharacterIndices(queetBox[0], window.lastMention.mentionPos+1, window.lastMention.cursorPos);
 	var range = createRangeFromCharacterIndices(queetBox[0], window.lastMention.mentionPos+1, window.lastMention.mentionPos+1);
-	range.insertNode(document.createTextNode(username + ' '));
+	range.insertNode(document.createTextNode(username + '\u00a0')); // non-breaking-space, to prevent collapse
 
 	// put caret after
 	setSelectionRange(queetBox[0], window.lastMention.mentionPos+username.length+2, window.lastMention.mentionPos+username.length+2);
