@@ -812,8 +812,7 @@ function expand_queet(q,doScrolling) {
 			q.prev().addClass('next-expanded');
 
 			// if shortened queet, get full text
-			if(q.children('.queet').find('span.attachment.more').length>0) {
-				var attachmentId = q.children('.queet').find('span.attachment.more').attr('data-attachment-id');
+			if(q.children('.queet').find('span.attachment.more').length>0 && q.data('attachments') != 'undefined') {
 
 				// get full html for queet, first try localstorage cache
 				var cacheData = localStorageObjectCache_GET('fullQueetHtml',qid);
@@ -822,11 +821,20 @@ function expand_queet(q,doScrolling) {
 					q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
 					}
 				else {
-					getFromAPI("attachment/" + attachmentId + ".json",function(data){
-						if(data) {
-							localStorageObjectCache_STORE('fullQueetHtml',qid,data);
-							q.children('.queet').find('.queet-text').html($.trim(data));
-							q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
+
+					var attachmentId = q.children('.queet').find('span.attachment.more').attr('data-attachment-id');
+
+					// the url to the text/html attachment is in an array in an attribute
+					$.each(q.data('attachments'), function(k,attachment) {
+						if(attachment.id == attachmentId) {
+							$.get(attachment.url,function(data){
+								if(data) {
+									localStorageObjectCache_STORE('fullQueetHtml',qid,data);
+									q.children('.queet').find('.queet-text').html($.trim(data));
+									q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
+									}
+								});
+							return false;
 							}
 						});
 					}
@@ -1723,7 +1731,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	var attachmentNum = 0;
 	if(typeof obj.attachments != "undefined") {
 		$.each(obj.attachments, function(){
-			if(this.id != null) { // if there's an id we assume this is a image or video
+			if(typeof this.thumb_url != 'undefined' && this.thumb_url !== null) { // if there's a thumb_url we assume this is a image or video
 				var bigThumbW = 1000;
 				var bigThumbH = 3000;
 				if(bigThumbW > window.siteMaxThumbnailSize) {
@@ -1754,11 +1762,11 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 
 
 				// animated gifs always get default small non-animated thumbnail
-				if(this.animated === true && typeof this.thumb_url != 'undefined') {
+				if(this.animated === true) {
 					var img_url = this.thumb_url;
 					}
 				// if no dimensions are set, go with default thumb
-				else if(this.width === null && this.height === null && typeof this.thumb_url != 'undefined') {
+				else if(this.width === null && this.height === null) {
 					var img_url = this.thumb_url;
 					}
 				// large images get large thumbnail

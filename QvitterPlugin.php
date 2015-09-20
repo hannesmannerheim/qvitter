@@ -453,17 +453,22 @@ class QvitterPlugin extends Plugin {
 			$twitter_status['repeated_id'] = $repeated->id;
 			}
 
-		// thumb urls
+		// more metadata about attachments
 
-        // find all thumbs
+        // get all attachments first, and put all the extra meta data in an array
         $attachments = $notice->attachments();
         $attachment_url_to_id = array();
         if (!empty($attachments)) {
             foreach ($attachments as $attachment) {
 				if(is_object($attachment)) {
-					try {
+                    try {
 						$enclosure_o = $attachment->getEnclosure();
-						$thumb = $attachment->getThumbnail();
+
+                        // add id to all attachments
+                        $attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
+
+                        // add data about thumbnails
+                        $thumb = $attachment->getThumbnail();
 						$large_thumb = $attachment->getThumbnail(1000,3000,false);
                         if(method_exists('File_thumbnail','url')) {
                             $thumb_url = File_thumbnail::url($thumb->filename);
@@ -472,7 +477,6 @@ class QvitterPlugin extends Plugin {
                             $thumb_url = $thumb->getUrl();
                             $large_thumb_url = $large_thumb->getUrl();
                         }
-						$attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
 						$attachment_url_to_id[$enclosure_o->url]['thumb_url'] = $thumb_url;
                         $attachment_url_to_id[$enclosure_o->url]['large_thumb_url'] = $large_thumb_url;
 						$attachment_url_to_id[$enclosure_o->url]['width'] = $attachment->width;
@@ -489,6 +493,7 @@ class QvitterPlugin extends Plugin {
 							}
 						}
 
+                    // this applies to older versions of gnu social, i think
 					} catch (ServerException $e) {
 						$thumb = File_thumbnail::getKV('file_id', $attachment->id);
 						if ($thumb instanceof File_thumbnail) {
@@ -515,18 +520,11 @@ class QvitterPlugin extends Plugin {
             }
         }
 
-		// add thumbs to $twitter_status
+		// add the extra meta data to $twitter_status
         if (!empty($twitter_status['attachments'])) {
             foreach ($twitter_status['attachments'] as &$attachment) {
                 if (!empty($attachment_url_to_id[$attachment['url']])) {
-                    $attachment['id'] = $attachment_url_to_id[$attachment['url']]['id'];
-                    $attachment['width'] = $attachment_url_to_id[$attachment['url']]['width'];
-					$attachment['height'] = $attachment_url_to_id[$attachment['url']]['height'];
-                   	$attachment['thumb_url'] = $attachment_url_to_id[$attachment['url']]['thumb_url'];
-                    $attachment['large_thumb_url'] = $attachment_url_to_id[$attachment['url']]['large_thumb_url'];
-                   	if(isset($attachment_url_to_id[$attachment['url']]['animated'])) {
-	                   	$attachment['animated'] = $attachment_url_to_id[$attachment['url']]['animated'];
-                   		}
+                    $attachment = array_merge($attachment,$attachment_url_to_id[$attachment['url']]);
                 }
             }
         }
