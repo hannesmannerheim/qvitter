@@ -195,6 +195,29 @@ function getNicknameByUserIdFromAPI(id, callback) {
 
 /* ·
    ·
+   ·   Get group nickname by group id
+   ·
+   ·   @param id: local group id
+   ·   @param callback: function to invoke when done
+   ·
+   · · · · · · · · · · · · · */
+
+function getNicknameByGroupIdFromAPI(id, callback) {
+	display_spinner();
+	getFromAPI('statusnet/groups/show/' + id + '.json', function(data){
+		remove_spinner();
+		if(data && typeof data.nickname != 'undefined') {
+			callback(data.nickname);
+			}
+		else {
+			callback(false);
+			}
+		});
+	}
+
+
+/* ·
+   ·
    ·   Update the bookmarks
    ·
    ·   @param newBookmarks: the new bookmarks object to save

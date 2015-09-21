@@ -1331,6 +1331,32 @@ $('body').on('click','a', function(e) {
 						});
 					}
 				}
+			// same with group/{id}/id links
+			else if(streamObject.name == 'group notice stream by id') {
+				// we might be member of the group and thereby already know its nickname
+				if (typeof window.groupMemberships != 'undefined' && typeof window.groupMemberships[streamObject.id] != 'undefined') {
+					setNewCurrentStream(pathToStreamRouter('group/' + window.groupMemberships[streamObject.id].username),true,streamObject.id);
+					}
+				// if the text() of the clicked element looks like a group nickname, use that (but send id to setNewCurrentStream() in case this is bad data)
+				else if(/^![a-zA-Z0-9]+$/.test($(e.target).text()) || /^[a-zA-Z0-9]+$/.test($(e.target).text())) {
+					var nickname = $(e.target).text();
+					if(nickname.indexOf('!') == 0) {
+						nickname = nickname.substring(1); // remove any starting !
+						}
+					setNewCurrentStream(pathToStreamRouter('group/' + nickname),true,streamObject.id);
+					}
+				// if we can't figure out or guess a nickname, query the server for it
+				else {
+					getNicknameByGroupIdFromAPI(streamObject.id,function(nickname) {
+						if(nickname) {
+							setNewCurrentStream(pathToStreamRouter('group/' + nickname),true,false);
+							}
+						else {
+							alert('group not found');
+							}
+						});
+					}
+				}
 			// all other links that qvitter can handle
 			else {
 				setNewCurrentStream(streamObject,true,false);

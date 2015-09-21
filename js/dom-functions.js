@@ -438,7 +438,6 @@ function groupProfileCard(groupAlias) {
 
 		// add card to DOM
 		$('#feed').siblings('.profile-card').remove();  // remove any old profile card
-		console.log(data);
 		$('#feed').before('	<div class="profile-card group">\
 								<div class="profile-header-inner" style="background-image:url(' + data.original_logo + ')">\
 									<div class="profile-header-inner-overlay"></div>\
@@ -584,22 +583,35 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			return;
 			}
 
-		// if we have a fallbackId and a userArray, and the userArray's is is not equal to
+		// if we have a fallbackId and a userArray, and the userArray's id is not equal to
 		// the fallackId, this is the wrong stream! we need to re-invoke setNewCurrentStream()
 		// with the correct and up-to-date nickname (maybe best not to send a fallbackId here not
 		// to risk getting into an infinite loop caused by bad data)
 		// also, we do the same thing if getting the stream fails, but we have a fallback id
 		if((userArray && fallbackId && userArray.id != fallbackId)
 		|| (queet_data === false && fallbackId)) {
-			getNicknameByUserIdFromAPI(fallbackId,function(nickname) {
-				if(nickname) {
-					setNewCurrentStream(pathToStreamRouter(nickname),true,false,actionOnSuccess);
-					}
-				else {
-					// redirect to front page if everything fails
-					setNewCurrentStream(pathToStreamRouter('/'),true,false,actionOnSuccess);
-					}
-				});
+			if(streamObject.name == 'profile') {
+				getNicknameByUserIdFromAPI(fallbackId,function(nickname) {
+					if(nickname) {
+						setNewCurrentStream(pathToStreamRouter(nickname),true,false,actionOnSuccess);
+						}
+					else {
+						// redirect to front page if everything fails
+						setNewCurrentStream(pathToStreamRouter('/'),true,false,actionOnSuccess);
+						}
+					});
+				}
+			else if(streamObject.name == 'group notice stream') {
+				getNicknameByGroupIdFromAPI(fallbackId,function(nickname) {
+					if(nickname) {
+						setNewCurrentStream(pathToStreamRouter('group/' + nickname),true,false,actionOnSuccess);
+						}
+					else {
+						// redirect to front page if everything fails
+						setNewCurrentStream(pathToStreamRouter('/'),true,false,actionOnSuccess);
+						}
+					});
+				}
 			}
 
 		// getting stream failed, and we don't have a fallback id, redirect to front page
