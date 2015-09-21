@@ -631,6 +631,10 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			if(userArray) {
 				addProfileCardToDOM(buildProfileCard(userArray));
 				}
+			// remove any trailing profile cards
+			else {
+				$('.profile-card').remove();
+				}
 
 			// show group profile card if this is a group stream
 			if(streamObject.name == 'group notice stream'
