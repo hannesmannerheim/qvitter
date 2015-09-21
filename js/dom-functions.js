@@ -508,7 +508,11 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		}
 
 	// remember state of old stream (including profile card)
-	window.oldStreams[window.currentStream] = $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML();
+	if(typeof window.currentStreamObject != 'undefined') {
+		localStorageObjectCache_STORE('streamState',window.currentStreamObject.path, $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML());
+		}
+
+	// window.oldStreams[window.currentStream] = $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML();
 
 	// halt interval that checks for new queets
 	window.clearInterval(checkForNewQueetsInterval);
@@ -537,24 +541,35 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		}
 
 	// if we have a saved copy of this stream, show it immediately (but it is replaced when stream finishes to load later)
-	if(typeof window.oldStreams[window.currentStream] != "undefined") {
+	var haveOldStreamState = localStorageObjectCache_GET('streamState',window.currentStreamObject.path);
+	if(haveOldStreamState) {
 		$('.profile-card,.hover-card,.hover-card-caret').remove();
 		$('#feed').remove();
-		$('#user-container').after(window.oldStreams[window.currentStream]);
+		$('#user-container').after(haveOldStreamState);
 		$('.profile-card').css('display','none');
 		$('#feed').css('display','none');
 		$('.profile-card').show();
 		$('#feed').show();
+		$('#feed-body').removeAttr('data-end-reached');
 		$('#feed-header-inner h2').css('opacity','0.2');
 		$('#feed-header-inner h2').animate({opacity:'1'},1000);
 
 		// set location bar from stream
 		if(setLocation) {
 			setUrlFromStream(streamObject);
+			setLocation = false; // don't set location twice if we've already set it here
 			}
 
 		// also mark this stream as the current stream immediately, if a saved copy exists
 		addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
+
+		// maybe do something
+		if(typeof actionOnSuccess == 'function') {
+			actionOnSuccess();
+
+			// don't invoke actionOnSuccess later if we already invoked it here
+			actionOnSuccess = false;
+			}
 		}
 	// otherwise we fade out and wait for stream to load
 	else {
@@ -655,6 +670,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
 			addToFeed(queet_data, false,'visible'); // add stream items to feed element
 			$('#feed').animate({opacity:'1'},150); // fade in
+			$('#feed-body').removeAttr('data-end-reached');
 			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
 			$('html,body').scrollTop(0); // scroll to top
 

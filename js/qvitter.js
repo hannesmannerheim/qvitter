@@ -917,7 +917,6 @@ function doLogin(streamObjectToSet) {
 			$('#settingslink .dropdown-toggle').fadeIn('slow');
 			$('#top-compose').fadeIn('slow');
 			$('input#nickname').blur();
-			remove_spinner();
 			});
 
 	}

@@ -197,7 +197,8 @@ function checkLocalStorage() {
 				'languageData',
 				'fullQueetHtml',
 				'selectedLanguage',
-				'queetBoxInput'
+				'queetBoxInput',
+				'streamState'
 				];
 			var thisDataType = k.substring(0,k.indexOf('-'));
 			if($.inArray(thisDataType, validDataTypes) == -1 || k.indexOf('-') == -1) {
@@ -350,7 +351,7 @@ function cacheSyntaxHighlightingGroups() {
    ·
    ·  User array cache
    ·
-   ·  Stored in window.userArrayCache as instance_url/nickname
+   ·  Stored in localStorage with unique key like instance_url/nickname
    ·  with protocol (http:// or https://) trimmed off, e.g. "quitter.se/hannes2peer"
    ·
    · · · · · · · · · */
