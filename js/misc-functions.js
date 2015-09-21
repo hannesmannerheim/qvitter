@@ -53,7 +53,7 @@ function localStorageObjectCache_STORE(name, unique_id, object) {
 
 	if(localStorageIsEnabled()) {
 
-		if(object === false || object.length < 1) {
+		if(object === false || object === null || object.length < 1) {
 			// false or an empty object means we remove this entry
 			if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
 				delete localStorage[name + '-' + unique_id];
@@ -63,7 +63,7 @@ function localStorageObjectCache_STORE(name, unique_id, object) {
 
 			var dataToSave = {};
 			dataToSave.modified = Date.now();
-			dataToSave.data = object;
+			dataToSave.cdata = LZString.compress(JSON.stringify(object));
 
 			try {
 				localStorage.setItem(name + '-' + unique_id, JSON.stringify(dataToSave));
@@ -134,14 +134,25 @@ function localStorageObjectCache_GET(name, unique_id) {
 
 	if(localStorageIsEnabled()) {
 		if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
-			var parsedObject = JSON.parse(localStorage[name + '-' + unique_id]);
+			try {
+				var parsedObject = JSON.parse(localStorage[name + '-' + unique_id]);
+				}
+			catch(e) {
+				return false;
+				}
 			if(typeof parsedObject.modified == 'undefined' || parsedObject.modified === null) {
 				// invalid or old localstorage object found, check the whole localstorage!
 				checkLocalStorage();
 				return false;
 				}
 			else {
-				return parsedObject.data;
+				try {
+					var decompressedAndParsed = JSON.parse(LZString.decompress(parsedObject.cdata));
+					return decompressedAndParsed;
+					}
+				catch(e) {
+					return false;
+					}
 				}
 			}
 		else {
@@ -164,6 +175,7 @@ function checkLocalStorage() {
 	var dateNow = Date.now()
 	var corrected = 0;
 	var deleted = 0;
+	var compressed = 0;
 	$.each(localStorage, function(k,entry){
 		if(typeof entry == 'string') {
 
@@ -198,7 +210,7 @@ function checkLocalStorage() {
 			if(typeof entryParsed.modified == 'undefined' || entryParsed.modified === null) {
 				var newEntry = {};
 				newEntry.modified = dateNow - corrected; // we want as unique dates as possible
-				newEntry.data = entryParsed;
+				newEntry.cdata = entryParsed;
 				try {
 					localStorage.setItem(k, JSON.stringify(newEntry));
 					}
@@ -209,11 +221,28 @@ function checkLocalStorage() {
 							});
 						}
 					}
+				entryParsed = newEntry;
 				corrected++;
+				}
+
+			// compress uncompressed data
+			if(typeof entryParsed.data != 'undefined') {
+				// but not if it's not containing any data (some bug may have saved an empty, false or null value)
+				if(entryParsed.data === false || entryParsed.data === null || entryParsed.data.length == 0) {
+					delete localStorage[k];
+					deleted++;
+					return true;
+					}
+				var dataCompressed = LZString.compress(JSON.stringify(entryParsed.data));
+				var newCompressedEntry = {};
+				newCompressedEntry.modified = entryParsed.modified;
+				newCompressedEntry.cdata = dataCompressed;
+				localStorage.setItem(k, JSON.stringify(newCompressedEntry));
+				compressed++;
 				}
 			}
 		});
-	console.log(corrected + ' entries corrected, ' + deleted + ' entries deleted');
+	console.log(corrected + ' entries corrected, ' + deleted + ' entries deleted, ' + compressed + ' entries compressed');
 	}
 
 
