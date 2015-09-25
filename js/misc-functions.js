@@ -63,7 +63,7 @@ function localStorageObjectCache_STORE(name, unique_id, object) {
 
 			var dataToSave = {};
 			dataToSave.modified = Date.now();
-			dataToSave.cdata = LZString.compress(JSON.stringify(object));
+			dataToSave.cdata = LZString.compressToUTF16(JSON.stringify(object));
 
 			try {
 				localStorage.setItem(name + '-' + unique_id, JSON.stringify(dataToSave));
@@ -131,7 +131,6 @@ function removeOldestLocalStorageEntries(callback) {
    · · · · · · · · · */
 
 function localStorageObjectCache_GET(name, unique_id) {
-
 	if(localStorageIsEnabled()) {
 		if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
 			try {
@@ -147,7 +146,7 @@ function localStorageObjectCache_GET(name, unique_id) {
 				}
 			else {
 				try {
-					var decompressedAndParsed = JSON.parse(LZString.decompress(parsedObject.cdata));
+					var decompressedAndParsed = JSON.parse(LZString.decompressFromUTF16(parsedObject.cdata));
 					return decompressedAndParsed;
 					}
 				catch(e) {
@@ -234,7 +233,7 @@ function checkLocalStorage() {
 					deleted++;
 					return true;
 					}
-				var dataCompressed = LZString.compress(JSON.stringify(entryParsed.data));
+				var dataCompressed = LZString.compressToUTF16(JSON.stringify(entryParsed.data));
 				var newCompressedEntry = {};
 				newCompressedEntry.modified = entryParsed.modified;
 				newCompressedEntry.cdata = dataCompressed;

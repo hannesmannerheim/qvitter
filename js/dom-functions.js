@@ -861,8 +861,10 @@ function expand_queet(q,doScrolling) {
 						if(attachment.id == attachmentId) {
 							$.get(attachment.url,function(data){
 								if(data) {
-									localStorageObjectCache_STORE('fullQueetHtml',qid,data);
-									q.children('.queet').find('.queet-text').html($.trim(data));
+									// get body and store in localStorage
+									var bodyHtml = $('<html/>').html(data).find('body').html();
+									localStorageObjectCache_STORE('fullQueetHtml',qid,bodyHtml);
+									q.children('.queet').find('.queet-text').html($.trim(bodyHtml));
 									q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
 									}
 								});
