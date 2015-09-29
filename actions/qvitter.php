@@ -219,7 +219,16 @@ class QvitterAction extends ApiAction
 
 					?>;
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
-					window.apiRoot = '<?php print common_path("api/", StatusNet::isHTTPS()); ?>';
+					window.apiRoot = <?php
+
+                        // add dummy basic auth credentials to api root url to suppress any basic auth authentication popups
+                        // that may appear, e.g. if you have multiple tabs open with the same session and logs out in one
+                        $api_root = common_path("api/", StatusNet::isHTTPS());
+                        $api_root = str_replace('http://','http://x:x@',$api_root);
+                        $api_root = str_replace('https://','https://x:x@',$api_root);
+                        print '\''.$api_root.'\'';
+
+                    ?>;
 					window.fullUrlToThisQvitterApp = '<?php print $qvitterpath; ?>';
 					window.siteRootDomain = '<?php print $siterootdomain; ?>';
 					window.siteInstanceURL = '<?php print $instanceurl; ?>';
