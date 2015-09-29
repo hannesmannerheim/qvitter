@@ -125,7 +125,7 @@ function pathToStreamRouter(path) {
 	if((path.length == 0 && window.siteLocalOnlyDefaultPath) || path == 'main/public') {
 		streamObject.path = 'main/public';
         streamObject.name = 'public timeline';
-		streamObject.streamHeader = window.sL.timeline;
+		streamObject.streamHeader = window.sL.publicTimeline;
 		streamObject.stream = 'statuses/public_timeline.json';
 		return streamObject;
 		}
