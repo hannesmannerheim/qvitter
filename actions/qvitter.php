@@ -200,12 +200,15 @@ class QvitterAction extends ApiAction
 					window.registrationsClosed = <?php print json_encode($registrationsclosed) ?>;
 					window.thisSiteThinksItIsHttpButIsActuallyHttps = <?php
 
+                        // this is due to a crazy setup at quitter.se, sorry about that
 						if(isset($_SERVER['HTTPS'])
 						&& $_SERVER['HTTPS'] != 'off'
 						&& substr($instanceurl,0,7) == 'http://') {
-							print 'true';
+                            $this_site_thinks_it_is_http_but_is_actually_https = true;
+                            print 'true';
 							}
 						else {
+                            $this_site_thinks_it_is_http_but_is_actually_https = false;
 							print 'false';
 							}
 
@@ -224,8 +227,13 @@ class QvitterAction extends ApiAction
                         // add dummy basic auth credentials to api root url to suppress any basic auth authentication popups
                         // that may appear, e.g. if you have multiple tabs open with the same session and logs out in one
                         $api_root = common_path("api/", StatusNet::isHTTPS());
-                        $api_root = str_replace('http://','http://x:x@',$api_root);
                         $api_root = str_replace('https://','https://x:x@',$api_root);
+                        if($this_site_thinks_it_is_http_but_is_actually_https) {
+                            $api_root = str_replace('http://','https://x:x@',$api_root);
+                            }
+                        else {
+                            $api_root = str_replace('http://','http://x:x@',$api_root);
+                            }
                         print '\''.$api_root.'\'';
 
                     ?>;
