@@ -521,12 +521,13 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		return;
 		}
 
+	// remove any old error messages
+	$('.error-message').remove();
+
 	// remember state of old stream (including profile card)
 	if(typeof window.currentStreamObject != 'undefined') {
 		localStorageObjectCache_STORE('streamState',window.currentStreamObject.path, $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML());
 		}
-
-	// window.oldStreams[window.currentStream] = $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML();
 
 	// halt interval that checks for new queets
 	window.clearInterval(checkForNewQueetsInterval);
