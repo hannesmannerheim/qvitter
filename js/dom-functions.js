@@ -40,6 +40,20 @@
 
 /* ·
    ·
+   ·   Show error message
+   ·
+   ·   @param message: error message
+   ·
+   · · · · · · · · · */
+
+function showErrorMessage(message) {
+	$('#user-container').after('<div class="error-message">' + message + '<span class="discard-error-message"></span></div>');
+	}
+
+
+
+/* ·
+   ·
    ·   Show favs and requeets in queet element
    ·
    ·   @param q: queet jQuery object
@@ -577,6 +591,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		$('#feed,.profile-card').animate({opacity:'0'},150,function(){
 			// when fade out finishes, remove any profile cards and set new header
 			$('.profile-card,.hover-card,.hover-card-caret').remove();
+			$('#feed-body').html('');
 			$('#feed-header-inner h2').html(h2FeedHeader);
 			});
 		}
@@ -590,7 +605,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		}
 
 	// get stream
-	getFromAPI(streamObject.stream, function(queet_data, userArray){
+	getFromAPI(streamObject.stream, function(queet_data, userArray, error, url){
 
 		// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
 		if(window.currentStream != streamObject.stream) {
@@ -629,9 +644,43 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				}
 			}
 
-		// getting stream failed, and we don't have a fallback id, redirect to front page
+		// getting stream failed, and we don't have a fallback id
 		else if(queet_data === false) {
-			setNewCurrentStream(pathToStreamRouter('/'),true,false,actionOnSuccess);
+
+			// maybe fade in user-container here, ("success" was a badly chosen name...)
+			if(typeof actionOnSuccess == 'function') {
+				actionOnSuccess();
+				}
+
+			if(error.status == 401) {
+				showErrorMessage(window.sL.ERRORmustBeLoggedIn);
+				}
+			else if(error.status == 404) {
+				if(streamObject.name == 'profile'
+				|| streamObject.name == 'friends timeline'
+				|| streamObject.name == 'mentions'
+				|| streamObject.name == 'favorites'
+				|| streamObject.name == 'subscribers'
+				|| streamObject.name == 'subscriptions'
+				|| streamObject.name == 'user group list') {
+					showErrorMessage(window.sL.ERRORcouldNotFindUserWithNickname.replace('{nickname}',replaceHtmlSpecialChars(streamObject.nickname)));
+					}
+				else if(streamObject.name == 'group notice stream'
+					 || streamObject.name == 'group member list'
+				 	 || streamObject.name == 'group admin list') {
+					showErrorMessage(window.sL.ERRORcouldNotFindGroupWithNickname.replace('{nickname}',replaceHtmlSpecialChars(streamObject.nickname)));
+					}
+				else {
+					showErrorMessage(window.sL.ERRORcouldNotFindPage + '<br><br>url: ' + url);
+					}
+				}
+			else {
+				showErrorMessage(window.sL.ERRORsomethingWentWrong + '<br><br>\
+								  url: ' + url + '<br><br>\
+								  jQuery ajax() error:<pre><code>' + replaceHtmlSpecialChars(JSON.stringify(error, null, ' ')) + '</code></pre>\
+								  streamObject:<pre><code>' + replaceHtmlSpecialChars(JSON.stringify(streamObject, null, ' ')) + '</code></pre>\
+								  ');
+				}
 			}
 
 		// everything seems fine, show the new stream
@@ -666,7 +715,8 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
 
 			remove_spinner();
-			$('#feed-body').html(''); // empty feed only now so the scrollers don't flicker on and off
+			$('#feed-body').html(''); // empty feed body
+			$('#feed-header-inner h2').html(h2FeedHeader); // update header (could be wrong in cache)
 			$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
 			addToFeed(queet_data, false,'visible'); // add stream items to feed element
 			$('#feed').animate({opacity:'1'},150); // fade in

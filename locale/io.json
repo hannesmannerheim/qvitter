@@ -131,5 +131,10 @@
 	"tooltipShortenUrls":"Plukurtigar omna ret-adresi en la mesajo",
 	"tooltipReloadStream":"Aktualigar ica diskuto-fluo",
 	"tooltipRemoveBookmark":"Removar ica marko-rubando",
-	"clearHistory":"Vakuigar la navigo-historio"
+	"clearHistory":"Vakuigar la navigo-historio",
+	"ERRORsomethingWentWrong":"Something went wrong.",
+	"ERRORmustBeLoggedIn":"You must be logged in to view this stream.",
+	"ERRORcouldNotFindUserWithNickname":"Could not find a user with nickname \"{nickname}\" on this server",
+	"ERRORcouldNotFindGroupWithNickname":"Could not find a group with nickname \"{nickname}\" on this server",
+	"ERRORcouldNotFindPage":"Could not find that page."
 }

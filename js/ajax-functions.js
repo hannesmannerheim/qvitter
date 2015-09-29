@@ -129,7 +129,8 @@ function checkLogin(username,password,actionOnSuccess) {
    · · · · · · · · · · · · · */
 
 function getFromAPI(stream, actionOnSuccess) {
-	$.ajax({ url: window.apiRoot + stream + qOrAmp(stream) + 't=' + timeNow(),
+	var url = window.apiRoot + stream + qOrAmp(stream) + 't=' + timeNow();
+	$.ajax({ url: url,
 		type: "GET",
 		dataType: 'json',
 		statusCode: {
@@ -138,6 +139,14 @@ function getFromAPI(stream, actionOnSuccess) {
 				}
 			},
 		success: function(data, textStatus, request) {
+
+			// if there's no Qvitter-Notifications header, it means we're logged out
+			// so if it's missing and Qvitter still thinks we're logged in, reload page
+			// we've probably been logged out in another tab or something
+			if(request.getResponseHeader('Qvitter-Notifications') === null && window.loggedIn !== false) {
+				location.reload();
+				return;
+				}
 
 			displayOrHideUnreadNotifications(request.getResponseHeader('Qvitter-Notifications'));
 
@@ -159,11 +168,10 @@ function getFromAPI(stream, actionOnSuccess) {
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
 
-			actionOnSuccess(data, userArray);
+			actionOnSuccess(data, userArray, request, url);
 			},
 		error: function(data) {
-			actionOnSuccess(false);
-			console.log(data);
+			actionOnSuccess(false, false, data, url);
 			remove_spinner();
 			}
 		});

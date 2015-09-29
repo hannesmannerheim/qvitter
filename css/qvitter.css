@@ -106,9 +106,68 @@ button.shorten i,
 .stream-item.notification.repeat .dogear,
 .stream-item.notification.like .dogear,
 .ostatus-link,
-.close-edit-profile-window {
+.close-edit-profile-window,
+.discard-error-message {
 	background-image: url("../img/sprite.png?v=40");
 	background-size: 500px 1329px;
+	}
+
+.error-message {
+	float: right;
+    font-size: 14px;
+    line-height: 18px;
+    width: 590px;
+	background-color: pink;
+	border-radius: 5px;
+	position: relative;
+	padding:10px 40px;
+	box-sizing: border-box;
+	margin-bottom: 5px;
+	overflow: hidden;
+	}
+.error-message pre code {
+	font-family: courier;
+	font-size: 11px;
+	}
+body.rtl .error-message {
+    float: left;
+    margin-left: -1px;
+    margin-right: auto;
+	text-align: right;
+	}
+.error-message::before {
+	content:'\f188';
+	font-family:'FontAwesome';
+	position: absolute;
+	display: block;
+	height: 38px;
+	width: 40px;
+	text-align: center;
+	line-height: 40px;
+	left: 0;
+	top: 0;
+	opacity: 0.8;
+	}
+body.rtl .error-message::before {
+	left: auto;
+	right:0;
+	}
+.discard-error-message {
+	display:block;
+	position:absolute;
+	top: 0;
+	right: 0;
+	width:30px;
+	height:38px;
+	background-position:-29px -495px;
+	cursor: pointer;
+	border-radius: 5px;
+    border-right: 4px solid pink;
+	border-left: 4px solid pink;
+	}
+body.rtl .discard-error-message {
+	right:auto;
+	left:0;
 	}
 
 #accessibility-toggle-link {
@@ -119,6 +178,7 @@ button.shorten i,
 	position:absolute;
 	margin:0;
 	padding:0;
+	overflow: hidden;
 }
 
 #logo {
@@ -1188,10 +1248,10 @@ body.rtl #footer-spinner-container {
     width: 12px;
     }
 #bookmark-container a:hover .chev-right {
-	background-position:-20px -508px;
+	background-position:-18px -508px;
 	}
 #bookmark-container a:hover .chev-right:hover {
-	background-position:-40px -508px;
+	background-position:-38px -508px;
 	}
 
 #history-container {

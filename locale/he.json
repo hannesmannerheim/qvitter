@@ -131,5 +131,10 @@
 	"tooltipShortenUrls":"קצר כל כתובת URL בתוך הקוויט",
 	"tooltipReloadStream":"רענן את זרם זה",
 	"tooltipRemoveBookmark":"הסר את סימנייה זו",
-	"clearHistory":"טהר היסטוריית גלישה"
+	"clearHistory":"טהר היסטוריית גלישה",
+	"ERRORsomethingWentWrong":"Something went wrong.",
+	"ERRORmustBeLoggedIn":"You must be logged in to view this stream.",
+	"ERRORcouldNotFindUserWithNickname":"Could not find a user with nickname \"{nickname}\" on this server",
+	"ERRORcouldNotFindGroupWithNickname":"Could not find a group with nickname \"{nickname}\" on this server",
+	"ERRORcouldNotFindPage":"Could not find that page."
 }

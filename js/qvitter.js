@@ -65,6 +65,19 @@ window.onpopstate = function(event) {
 
 /* ·
    ·
+   ·   Discard error messages
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('click','.discard-error-message',function(){
+	$(this).closest('.error-message').slideUp(100,function(){
+		$(this).remove();
+		});
+	});
+
+
+/* ·
+   ·
    ·   welcome text expand and collapse
    ·
    · · · · · · · · · · · · · */
@@ -180,6 +193,14 @@ $('body').on('mouseover',function (e) {
 	// get href-attribute
 	if(targetElement.is('[href]')) {
 		hrefAttr = targetElement.attr('href');
+		}
+	else {
+		return true;
+		}
+
+	// no hovercard for anchor links
+	if(hrefAttr.substring(0,1) == '#') {
+		return true;
 		}
 
 	// guess what element close by could be a nickname

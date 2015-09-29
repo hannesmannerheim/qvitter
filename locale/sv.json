@@ -131,5 +131,10 @@
 	"tooltipShortenUrls":"Förkorta alla URL:er",
 	"tooltipReloadStream":"Ladda om flödet",
 	"tooltipRemoveBookmark":"Ta bort det här bokmärket",
-	"clearHistory":"Rensa surfhistoriken"
+	"clearHistory":"Rensa surfhistoriken",
+	"ERRORsomethingWentWrong":"Det blev något fel.",
+	"ERRORmustBeLoggedIn":"Du måste vara inloggad för att kunna se det här flödet.",
+	"ERRORcouldNotFindUserWithNickname":"Det finns ingen användare med namet \"{nickname}\" på den här servern.",
+	"ERRORcouldNotFindGroupWithNickname":"Det finns ingen grupp med namnet \"{nickname}\" på den här servern.",
+	"ERRORcouldNotFindPage":"Sidan hittades inte."
 }
