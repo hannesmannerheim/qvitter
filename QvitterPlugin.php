@@ -572,7 +572,7 @@ class QvitterPlugin extends Plugin {
 			$twitter_status['is_activity'] = false;
 			}
 
-		if($notice->verb == 'qvitter-delete-notice') {
+		if(ActivityUtils::compareTypes($notice->verb, array('qvitter-delete-notice', 'delete'))) {
 			$twitter_status['qvitter_delete_notice'] = true;
 			}
 
@@ -797,7 +797,7 @@ class QvitterPlugin extends Plugin {
             $user_is_deleted = true;
         }
 
-        if(!$user_is_deleted) {
+        if(!$user_is_deleted && class_exists('StatusNet') && !array_key_exists('ActivityModeration', StatusNet::getActivePlugins())) {
             $rendered = sprintf(_m('<a href="%1$s">%2$s</a> deleted notice <a href="%3$s">{{%4$s}}</a>.'),
                                 htmlspecialchars($profile->getUrl()),
                                 htmlspecialchars($profile->getBestName()),
@@ -835,7 +835,7 @@ class QvitterPlugin extends Plugin {
 
     public function onEndHandleFeedEntry($activity) {
 
-		if($activity->verb == 'qvitter-delete-notice') {
+		if($activity->verb == 'qvitter-delete-notice' && class_exists('StatusNet') && !array_key_exists('ActivityModeration', StatusNet::getActivePlugins())) {
 
 			$deleter_profile_uri = $activity->actor->id;
 			$deleted_notice_uri = $activity->objects[0]->objects[0]->content;
