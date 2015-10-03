@@ -460,7 +460,7 @@ function groupProfileCard(groupAlias) {
 									</a>\
 									<div class="profile-card-inner">\
 										<a href="' + window.siteInstanceURL + 'group/' + data.nickname + '">\
-											<h1 class="fullname">sadsa\
+											<h1 class="fullname">\
 												' + data.fullname + '\
 												<span></span>\
 											</h1>\
