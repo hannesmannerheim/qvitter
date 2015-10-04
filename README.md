@@ -28,7 +28,9 @@ Setup
 
 3. Add `addPlugin('Qvitter');` to your /config.php file.
 
-4. There are settings in QvitterPlugin.php, but for easy updates, put them in config.php instead. Example:
+4. It's highly recommended to use the StoreRemoteMedia plugin. It will cache attachments from remote instances locally and make them appear in the streams. Add `addPlugin('StoreRemoteMedia');` to your /config.php file. (Only available in newer GNU social)
+
+5. There are settings in QvitterPlugin.php, but for easy updates, put them in config.php instead. Example:
 
 ````
 // Qvitter-settings
@@ -43,7 +45,6 @@ $config['site']['qvitter']['sitebackground'] = 'img/vagnsmossen.jpg';
 $config['site']['qvitter']['favicon'] = 'img/favicon.ico?v=4';
 $config['site']['qvitter']['sprite'] = Plugin::staticPath('Qvitter', '').'img/sprite.png?v=40';
 $config['site']['qvitter']['enablewelcometext'] = true;
-$config['site']['qvitter']['cache_remote_attachments'] = false;
 // $config['site']['qvitter']['customwelcometext']['sv'] = '<h1>Välkommen till Quitter.se – en federerad<sup>1</sup> mikrobloggsallmänning!</h1><p>Etc etc...</p>';
 // $config['site']['qvitter']['customwelcometext']['en'] = '<h1>Welcome to Quitter.se – a federated microblog common!</h1><p>Etc etc...</p>';
 $config['site']['qvitter']['blocked_ips'] = array();
