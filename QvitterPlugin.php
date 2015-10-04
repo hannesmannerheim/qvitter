@@ -565,7 +565,7 @@ class QvitterPlugin extends Plugin {
 				}
 			}
 
-		if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
+		if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity' || $notice->verb == 'delete') {
 			$twitter_status['is_activity'] = true;
 			}
 		else {
