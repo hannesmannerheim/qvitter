@@ -2205,6 +2205,7 @@ $(document).keyup(function(e){
 	if(e.keyCode==27) {
 		$('.stream-item').removeClass('replying-to');
 		$('.modal-container').remove();
+		$('*').blur();
 		abortEditProfile();
 		}
 	});
