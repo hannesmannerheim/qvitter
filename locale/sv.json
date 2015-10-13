@@ -136,5 +136,6 @@
 	"ERRORmustBeLoggedIn":"Du måste vara inloggad för att kunna se det här flödet.",
 	"ERRORcouldNotFindUserWithNickname":"Det finns ingen användare med namet \"{nickname}\" på den här servern.",
 	"ERRORcouldNotFindGroupWithNickname":"Det finns ingen grupp med namnet \"{nickname}\" på den här servern.",
-	"ERRORcouldNotFindPage":"Sidan hittades inte."
+	"ERRORcouldNotFindPage":"Sidan hittades inte.",
+	"ERRORnoticeRemoved": "This notice has been removed."
 }

@@ -136,5 +136,6 @@
 	"ERRORmustBeLoggedIn":"Vu mustas esar identifikita por vidar ica diskuto-fluo.",
 	"ERRORcouldNotFindUserWithNickname":"Onu ne povis trovar uzero kun la uzer-nomo \"{nickname}\" en ica servilo.",
 	"ERRORcouldNotFindGroupWithNickname":"Onu ne povis trovar grupo kun la group-nomo \"{nickname}\" en ica servilo.",
-	"ERRORcouldNotFindPage":"Onu ne povis trovar ica pagino."
+	"ERRORcouldNotFindPage":"Onu ne povis trovar ica pagino.",
+	"ERRORnoticeRemoved": "This notice has been removed."
 }

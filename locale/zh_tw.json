@@ -135,5 +135,6 @@
 	"ERRORmustBeLoggedIn":"You must be logged in to view this stream.",
 	"ERRORcouldNotFindUserWithNickname":"Could not find a user with nickname \"{nickname}\" on this server",
 	"ERRORcouldNotFindGroupWithNickname":"Could not find a group with nickname \"{nickname}\" on this server",
-	"ERRORcouldNotFindPage":"Could not find that page."
+	"ERRORcouldNotFindPage":"Could not find that page.",
+	"ERRORnoticeRemoved": "This notice has been removed."
 }

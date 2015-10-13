@@ -675,6 +675,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 					showErrorMessage(window.sL.ERRORcouldNotFindPage + '<br><br>url: ' + url);
 					}
 				}
+			else if(error.status == 410 && streamObject.name == 'notice') {
+				showErrorMessage(window.sL.ERRORnoticeRemoved);
+				}
 			else {
 				showErrorMessage(window.sL.ERRORsomethingWentWrong + '<br><br>\
 								  url: ' + url + '<br><br>\
