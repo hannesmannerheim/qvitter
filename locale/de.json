@@ -60,7 +60,7 @@
 	"time12am": "{time} AM",
 	"time12pm": "{time} PM",
 	"longDateFormat": "{time24} - {day}. {month} {year}",
-	"shortDateFormatSeconds": "{seconds} Sec",
+	"shortDateFormatSeconds": "{seconds} Sek",
 	"shortDateFormatMinutes": "{minutes} Min",
 	"shortDateFormatHours": "{hours} Std",
 	"shortDateFormatDate": "{day}. {month}",
@@ -121,9 +121,9 @@
 	"blockUser": "Block {username}",
 	"goToOriginalNotice": "Zum originalen Queet gehen",
 	"goToTheUsersRemoteProfile": "Nutzerprofil auf seinem Server ansehen",
-	"clickToDrag":"Click to drag",
+	"clickToDrag":"Klcken und ziehen",
 	"keyboardShortcuts":"Tastatur-Kürzel",
-	"classicInterface":"Klassische Ansicht von {site-title}",
+	"classicInterface":"Klassische Ansicht: {site-title}",
 	"accessibilityToggleLink":"Nutzer von Screenreadern klicken bitte hier, um zur klassischen Version von {site-title} zu gelangen.",
 	"tooltipBookmarkStream":"Diesen Datenstrom zu den Lesezeichen beifügen",
 	"tooltipTopMenu":"Menü und Einstellungen",
@@ -137,5 +137,5 @@
 	"ERRORcouldNotFindUserWithNickname":"Konnte Nutzer mit Name \"{nickname}\" nicht finden",
 	"ERRORcouldNotFindGroupWithNickname":"Konnte Gruppe mit Bezeichnung \"{nickname}\" nicht finden",
 	"ERRORcouldNotFindPage":"Konnte Seite nicht finden.",
-	"ERRORnoticeRemoved": "Dieses Queet wurde gelöscht."
+	"ERRORnoticeRemoved": "Dieser Queet wurde gelöscht."
 }
