@@ -134,8 +134,8 @@
 	"clearHistory":"Slett nettleser historie",
 	"ERRORsomethingWentWrong":"Noe gikk galt.",
 	"ERRORmustBeLoggedIn":"Du må være pålogget for å vise denne strømmen.",
-	"ERRORcouldNotFindUserWithNickname":"Could not find a user with nickname \"{nickname}\" on this server",
-	"ERRORcouldNotFindGroupWithNickname":"Could not find a group with nickname \"{nickname}\" on this server",
-	"ERRORcouldNotFindPage":"Could not find that page.",
-	"ERRORnoticeRemoved": "This notice has been removed."
+	"ERRORcouldNotFindUserWithNickname":"Kan ikke finne en bruker med brukerid \"{nickname}\" på denne instansen",
+	"ERRORcouldNotFindGroupWithNickname":"Kan ikke finne en gruppe med gruppenavnet \"{nickname}\" på denne instansen",
+	"ERRORcouldNotFindPage":"Kan ikke finne siden.",
+	"ERRORnoticeRemoved": "Denne notisen er slettet."
 }
