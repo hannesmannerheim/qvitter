@@ -13,7 +13,7 @@ This «proxy» return the result from http://qttr.at/yourls-api.php
 
 Contact Knut Erik if you have any questions related to this .php file.
 Quitter.no => knuthollund@quitter.no
-GitHub: => https://github.com/knuthollund
+GitHub: => https://github.com/fxdwg
 
 */
 
