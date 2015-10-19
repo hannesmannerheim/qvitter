@@ -523,7 +523,7 @@ class QvitterAction extends ApiAction
 						<div id="new-queets-bar-container" class="hidden"><div id="new-queets-bar"></div></div>
 						<div id="feed-body"></div>
 					</div>
-
+                    <div id="hidden-html"><?php Event::handle('QvitterHiddenHtml', array($this)); ?></div>
 					<div id="footer"><div id="footer-spinner-container"></div></div>
 				</div>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.1.4.min.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/jquery-2.1.4.min.js')); ?>"></script>
