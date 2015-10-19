@@ -494,7 +494,7 @@ class QvitterAction extends ApiAction
 								</div>
 							</div>
 						</div>
-						<div class="menu-container"><?php
+						<div id="main-menu" class="menu-container"><?php
 
                             if($logged_in_user) {
                                 ?><a href="<?php print $instanceurl.$logged_in_user->nickname ?>/all" class="stream-selection friends-timeline"><i class="chev-right"></i></a>

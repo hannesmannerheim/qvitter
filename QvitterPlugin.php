@@ -212,7 +212,11 @@ class QvitterPlugin extends Plugin {
 
 
         if ($this->hijack_ui === true) {
-			$m->connect('', array('action' => 'qvitter'));
+
+            // other plugins might want to reroute to qvitter
+            Event::handle('QvitterHijackUI', array($m));
+
+            $m->connect('', array('action' => 'qvitter'));
 			$m->connect('main/all', array('action' => 'qvitter'));
             $m->connect('main/public', array('action' => 'qvitter'));
 			$m->connect('search/notice', array('action' => 'qvitter'));
