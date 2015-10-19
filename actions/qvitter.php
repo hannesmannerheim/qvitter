@@ -521,7 +521,16 @@ class QvitterAction extends ApiAction
 							</div>
 						</div>
 						<div id="new-queets-bar-container" class="hidden"><div id="new-queets-bar"></div></div>
-						<div id="feed-body"></div>
+						<div id="feed-body"><?php
+							if($this->arg('notice')) {
+								echo '<ol class="notices xoxo">';
+								$notice = Notice::getKV('id', $this->arg('notice'));
+								$widget = new NoticeListItem($notice, $this);
+								$widget->show();
+								$this->flush();
+								echo '</ol>';
+							}
+						?></div>
 					</div>
 
 					<div id="footer"><div id="footer-spinner-container"></div></div>
