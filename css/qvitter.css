@@ -84,7 +84,8 @@ ul, li {
 	list-style: none outside none;
 	}
 
-#dynamic-styles {
+#dynamic-styles,
+#hidden-html {
 	display:none;
 	}
 

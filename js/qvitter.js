@@ -37,6 +37,9 @@
   ·                                                                               ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+// plugins can add translatons to this object
+window.pluginTranslations = [];
+
 // object to keep old states of streams in, to speed up stream change
 window.oldStreams = new Object();
 
@@ -722,6 +725,19 @@ $(window).load(function() {
 // proceed to set language and login
 function proceedToSetLanguageAndLogin(data){
 	window.sL = data;
+
+	// plugins might have added translations
+	$.each(window.pluginTranslations,function(k,pluginTranslation) {
+		if(typeof pluginTranslation[window.selectedLanguage] != 'undefined') {
+			$.extend(window.sL,pluginTranslation[window.selectedLanguage]);
+			}
+		else if(typeof pluginTranslation['en'] != 'undefined') {
+			$.extend(window.sL,pluginTranslation['en']);
+			}
+		});
+
+	// plugins might want to wait and do stuff until after language is set
+	$(document).trigger('qvitterAfterLanguageIsSet');
 
 	// if this is a RTL-language, add rtl class to body
 	if(window.sL.directionality == 'rtl') {

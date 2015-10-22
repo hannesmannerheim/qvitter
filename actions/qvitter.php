@@ -494,7 +494,7 @@ class QvitterAction extends ApiAction
 								</div>
 							</div>
 						</div>
-						<div class="menu-container"><?php
+						<div id="main-menu" class="menu-container"><?php
 
                             if($logged_in_user) {
                                 ?><a href="<?php print $instanceurl.$logged_in_user->nickname ?>/all" class="stream-selection friends-timeline"><i class="chev-right"></i></a>
@@ -523,7 +523,23 @@ class QvitterAction extends ApiAction
 						<div id="new-queets-bar-container" class="hidden"><div id="new-queets-bar"></div></div>
 						<div id="feed-body"></div>
 					</div>
+                    <div id="hidden-html"><?php
 
+                        // adds temporary support for microformats and linkbacks on the notice page
+                    	if(substr($_SERVER['REQUEST_URI'],0,8) == '/notice/' && $this->arg('notice')) {
+                    		echo '<ol class="notices xoxo">';
+                            $notice = Notice::getKV('id', $this->arg('notice'));
+                            if($notice instanceof Notice) {
+                    			$widget = new NoticeListItem($notice, $this);
+                    			$widget->show();
+                    			$this->flush();
+                            }
+                    		echo '</ol>';
+                    	}
+
+                        Event::handle('QvitterHiddenHtml', array($this));
+
+                    ?></div>
 					<div id="footer"><div id="footer-spinner-container"></div></div>
 				</div>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/jquery-2.1.4.min.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/jquery-2.1.4.min.js')); ?>"></script>

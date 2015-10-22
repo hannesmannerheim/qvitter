@@ -37,6 +37,16 @@
   ·                                                                               ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+/* ·
+   ·
+   ·   Other plugins can add streams to Qvitter, by pushing streamObjects to
+   ·   this array. See the structure in pathToStreamRouter()
+   ·
+   · · · · · · · · · */
+
+window.pluginStreamObjects = [];
+
+
 
 /* ·
    ·
@@ -347,6 +357,18 @@ function pathToStreamRouter(path) {
 		streamObject.stream = 'statusnet/groups/list.json?count=10&screen_name=' + streamObject.nickname + '&withuserarray=1';
 		return streamObject;
 		}
+
+	// other plugins can add streams to Qvitter
+	if(window.pluginStreamObjects.length > 0) {
+		$.each(window.pluginStreamObjects,function(k,pluginStreamObject) {
+			if(typeof pluginStreamObject.pathRegExp != 'undefined' && pluginStreamObject.pathRegExp.test(path)){
+				$.extend(streamObject,pluginStreamObject);
+				return false;
+				}
+			});
+		return streamObject;
+		}
+
 	}
 
 
