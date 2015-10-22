@@ -109,10 +109,11 @@ class QvitterAdminSettingsAction extends AdminPanelAction
     {
         // Validate notice text
 
-        if (mb_strlen($qvitterNotice) > 255)  {
+	//The column 'value' in table 'config' is varchar(191)
+        if (mb_strlen($qvitterNotice) > 191)  {
             $this->clientError(
                 // TRANS: Client error displayed when a sidebar notice was longer than allowed.
-                _('Maximum length for the sidebar notice is 255 characters.')
+                _('Maximum length for the sidebar notice is 191 characters.')
             );
         }
 
@@ -179,7 +180,7 @@ class QvitterNoticeAdminPanelForm extends AdminForm
             _('Qvitter sidebar notice text'),
             common_config('site', 'qvitternotice'),
             // TRANS: Tooltip for sidebar notice text field in admin panel.
-            _('Qvitter\'s sidebar notice text (255 characters maximum; HTML allowed)')
+            _('Qvitter\'s sidebar notice text (191 characters maximum; HTML allowed)')
         );
         $this->out->elementEnd('li');
 
@@ -194,7 +195,7 @@ class QvitterNoticeAdminPanelForm extends AdminForm
             _('Qvitter sidebar notice text (logged out)'),
             common_config('site', 'qvitternoticeloggedout'),
             // TRANS: Tooltip for sidebar notice text field in admin panel.
-            _('Qvitter\'s sidebar notice text, when logged out (255 characters maximum; HTML allowed)')
+            _('Qvitter\'s sidebar notice text, when logged out (191 characters maximum; HTML allowed)')
         );
         $this->out->elementEnd('li');
 
