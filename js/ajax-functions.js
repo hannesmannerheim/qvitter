@@ -63,17 +63,24 @@ function timeNow() {
 
 function getDoc(doc, actionOnSuccess) {
 	var timeNow = new Date().getTime();
-	$.get(window.fullUrlToThisQvitterApp + 'doc/' + window.selectedLanguage + '/' + doc + '.html?t=' + timeNow, function(data){
-		if(data) {
+
+	$.ajax({ url: window.fullUrlToThisQvitterApp + 'doc/' + window.selectedLanguage + '/' + doc + '.html',
+		cache: false,
+		type: "GET",
+		success: function(data) {
 			actionOnSuccess(renderDoc(data));
-			}
-		}).fail(function() { // default to english if we can't find the doc in selected language
-			$.get(window.fullUrlToThisQvitterApp + 'doc/en/' + doc + '.html?t=' + timeNow, function(data){
-				if(data) {
+			},
+		error: function() {
+			// default to english if we can't find the doc in selected language
+			$.ajax({ url: window.fullUrlToThisQvitterApp + 'doc/en/' + doc + '.html',
+				cache: false,
+				type: "GET",
+				success: function(data) {
 					actionOnSuccess(renderDoc(data));
 					}
 				});
-			});
+			}
+		});
 	}
 function renderDoc(docHtml) {
 	docHtml = docHtml.replace(/{instance-name}/g,window.siteTitle);
@@ -98,7 +105,8 @@ function renderDoc(docHtml) {
 
 function checkLogin(username,password,actionOnSuccess) {
  	$.ajax({ url: window.apiRoot + 'qvitter/checklogin.json',
-	 	type: 'POST',
+		cache: false,
+		type: 'POST',
 	 	data: {
 			username: username,
 			password: password
@@ -129,8 +137,9 @@ function checkLogin(username,password,actionOnSuccess) {
    · · · · · · · · · · · · · */
 
 function getFromAPI(stream, actionOnSuccess) {
-	var url = window.apiRoot + stream + qOrAmp(stream) + 't=' + timeNow();
+	var url = window.apiRoot + stream;
 	$.ajax({ url: url,
+		cache: false,
 		type: "GET",
 		dataType: 'json',
 		statusCode: {
@@ -234,7 +243,8 @@ function getNicknameByGroupIdFromAPI(id, callback) {
 
 function postUpdateBookmarks(newBookmarks) {
 	var bookmarksString = JSON.stringify(newBookmarks);
-	$.ajax({ url: window.apiRoot + 'qvitter/update_bookmarks.json?t=' + timeNow(),
+	$.ajax({ url: window.apiRoot + 'qvitter/update_bookmarks.json',
+		cache: false,
 		type: "POST",
 		data: {
 			bookmarks: bookmarksString
@@ -257,7 +267,8 @@ function postUpdateBookmarks(newBookmarks) {
    · · · · · · · · · · · · · */
 
 function postNewLinkColor(newLinkColor) {
-	$.ajax({ url: window.apiRoot + 'qvitter/update_link_color.json?t=' + timeNow(),
+	$.ajax({ url: window.apiRoot + 'qvitter/update_link_color.json',
+		cache: false,
 		type: "POST",
 		data: {
 			linkcolor: newLinkColor
@@ -281,7 +292,8 @@ function postNewLinkColor(newLinkColor) {
    · · · · · · · · · · · · · */
 
 function postNewBackgroundColor(newBackgroundColor) {
-	$.ajax({ url: window.apiRoot + 'qvitter/update_background_color.json?t=' + timeNow(),
+	$.ajax({ url: window.apiRoot + 'qvitter/update_background_color.json',
+		cache: false,
 		type: "POST",
 		data: {
 			backgroundcolor: newBackgroundColor
@@ -311,13 +323,14 @@ function postNewBackgroundColor(newBackgroundColor) {
 function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnSuccess) {
 
 	if(followOrUnfollow == 'follow') {
-		var postRequest = 'friendships/create.json?t=' + timeNow();
+		var postRequest = 'friendships/create.json';
 		}
 	else if (followOrUnfollow == 'unfollow') {
-		var postRequest = 'friendships/destroy.json?t=' + timeNow();
+		var postRequest = 'friendships/destroy.json';
 		}
 
 	$.ajax({ url: window.apiRoot + postRequest,
+		cache: false,
 		type: "POST",
 		data: {
 			user_id: user_id
@@ -345,7 +358,8 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
    · · · · · · · · · · · · · */
 
 function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) {
-	$.ajax({ url: window.apiRoot + 'statusnet/groups/' + joinOrLeave + '.json?t=' + timeNow(),
+	$.ajax({ url: window.apiRoot + 'statusnet/groups/' + joinOrLeave + '.json',
+		cache: false,
 		type: "POST",
 		data: {
 			id: group_id
@@ -374,7 +388,8 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
    · · · · · · · · · · · · · */
 
 function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, actionOnSuccess) {
-	$.ajax({ url: window.apiRoot + 'statuses/update.json?t=' + timeNow(),
+	$.ajax({ url: window.apiRoot + 'statuses/update.json',
+		cache: false,
 		type: "POST",
 		data: {
 			status: queetText_txt,
@@ -406,7 +421,8 @@ function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, acti
    · · · · · · · · · · · · · */
 
 function postActionToAPI(action, actionOnSuccess) {
-	$.ajax({ url: window.apiRoot + action + qOrAmp(action) + 't=' + timeNow(),
+	$.ajax({ url: window.apiRoot + action,
+		cache: false,
 		type: "POST",
 		data: {
 			source: 'Qvitter'
@@ -477,7 +493,8 @@ function getFavsAndRequeetsForQueet(q,qid) {
 		showFavsAndRequeetsInQueet(q, cacheData);
 		}
 
-	$.ajax({ url: window.apiRoot + "qvitter/favs_and_repeats/" + qid + ".json?t=" + timeNow(),
+	$.ajax({ url: window.apiRoot + "qvitter/favs_and_repeats/" + qid + ".json",
+		cache: false,
 		type: "GET",
 		dataType: 'json',
 		success: function(data) {
