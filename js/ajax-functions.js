@@ -443,7 +443,7 @@ function unRequeet(this_stream_item, this_action, my_rq_id) {
 		if(data) {
 			remove_spinner();
 			this_stream_item.removeAttr('data-requeeted-by-me-id');
-			this_stream_item.children('.queet').children('.context').find('.requeet-text').children('a[data-user-id="' + window.myUserID + '"]').remove();
+			this_stream_item.children('.queet').children('.context').find('.requeet-text').children('a[data-user-id="' + window.loggedIn.id + '"]').remove();
 			if(this_stream_item.children('.queet').children('.context').find('.requeet-text').children('a').length<1) {
 				this_stream_item.children('.queet').children('.context').remove();
 				}

@@ -180,7 +180,7 @@ function buildProfileCard(data) {
 
 	// follows me?
 	var follows_you = '';
-	if(data.follows_you === true  && window.myUserID != data.id) {
+	if(data.follows_you === true  && window.loggedIn.id != data.id) {
 		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';
 		}
 
@@ -194,7 +194,7 @@ function buildProfileCard(data) {
 
 	// only add follow button if this is a local user
 	if(data.is_local == true) {
-		if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID != data.id) {
+		if(typeof window.loggedIn.screen_name != 'undefined' && window.loggedIn.id != data.id) {
 			var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
 			}
 
@@ -204,7 +204,7 @@ function buildProfileCard(data) {
 			}
 
 		// edit profile button if me
-		if(typeof window.loggedIn.screen_name != 'undefined' && window.myUserID == data.id) {
+		if(typeof window.loggedIn.screen_name != 'undefined' && window.loggedIn.id == data.id) {
 			var followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';
 			}
 		}
@@ -280,7 +280,7 @@ function buildExternalProfileCard(data) {
 
 	// follows me?
 	var follows_you = '';
-	if(data.local !== null && data.local.follows_you === true  && window.myUserID != data.local.id) {
+	if(data.local !== null && data.local.follows_you === true  && window.loggedIn.id != data.local.id) {
 		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';
 		}
 
@@ -1530,7 +1530,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					}
 				var followButton = '';
 				if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
-				   && window.myUserID != obj.id) {	// not if this is me
+				   && window.loggedIn.id != obj.id) {	// not if this is me
 					if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users
 						var followButton = '<div class="user-actions"><button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
 						}
@@ -1612,7 +1612,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					// if no context requeets
 					else {
 						var requeetHtml = '<a data-user-id="' + obj.user.id + '" href="' + obj.user.statusnet_profile_url + '"> <b>' + obj.user.name + '</b></a>';
-						$('#q-' + obj.retweeted_status.id).prepend('<div class="context" id="requeet-' + obj.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetHtml) + '</span></span></div>');
+						$('#q-' + obj.retweeted_status.id).prepend('<div class="context" id="requeet-' + obj.id + '"><span class="with-icn"><i class="badge-requeeted" data-tooltip="' + parseTwitterDate(obj.created_at) + '"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetHtml) + '</span></span></div>');
 						}
 					}
 				}
@@ -1764,7 +1764,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 
 	// is this mine?
 	var isThisMine = 'not-mine';
-	if(obj.user.id == window.myUserID) {
+	if(obj.user.id == window.loggedIn.id) {
 		var isThisMine = 'is-mine';
 		}
 
@@ -1880,7 +1880,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	var requeetHtml = '';
 	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
 		var requeetedByHtml = '<a data-user-id="' + requeeted_by.user.id + '" href="' + requeeted_by.user.statusnet_profile_url + '"> <b>' + requeeted_by.user.name + '</b></a>';
-		requeetHtml = '<div class="context" id="requeet-' + requeeted_by.id + '"><span class="with-icn"><i class="badge-requeeted"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetedByHtml) + '</span></span></div>';
+		requeetHtml = '<div class="context" id="requeet-' + requeeted_by.id + '"><span class="with-icn"><i class="badge-requeeted" data-tooltip="' + parseTwitterDate(requeeted_by.created_at) + '"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetedByHtml) + '</span></span></div>';
 		}
 
 

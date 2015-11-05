@@ -3234,7 +3234,7 @@ $('body').on('click','.crop-and-save-button',function(){
 						$('.profile-picture').attr('href',data.profile_image_url_original);
 						$('.profile-picture img, #user-avatar').attr('src',data.profile_image_url_profile_size);
 						$('#settingslink .nav-session').css('background-image','url(\'' + data.profile_image_url_profile_size + '\')');
-						$('.account-group .name[data-user-id="' + window.myUserID + '"]').siblings('.avatar').attr('src',data.profile_image_url_profile_size);
+						$('.account-group .name[data-user-id="' + window.loggedIn.id + '"]').siblings('.avatar').attr('src',data.profile_image_url_profile_size);
 						}
 					 else {
 						alert('Try again! ' + data.error);
