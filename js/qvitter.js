@@ -826,7 +826,6 @@ function proceedToSetLanguageAndLogin(data){
 		}
 	else {
 		display_spinner();
-		window.currentStream = ''; // force reload stream
 		setNewCurrentStream(getStreamFromUrl(),true,false,function(){
 			logoutWithoutReload(false);
 			remove_spinner();
@@ -855,106 +854,85 @@ function doLogin(streamObjectToSet) {
 	$('#submit-login').focus(); // prevents submit on enter to close alert-popup on wrong credentials
 	display_spinner();
 
-		// add user data to DOM, show search form, remeber user id, show the feed
-		$('#user-container').css('z-index','1000');
-		$('#top-compose').removeClass('hidden');
-		$('#qvitter-notice').show();
-		$('#user-avatar').attr('src', window.loggedIn.profile_image_url_profile_size);
-		$('#settingslink .nav-session').css('background-image', 'url(\'' + window.loggedIn.profile_image_url_profile_size + '\')');
-		$('#user-screen-name, #user-avatar, #user-name').attr('data-tooltip', window.sL.viewMyProfilePage);
-		$('#user-name').append(window.loggedIn.name);
-		$('#user-screen-name').append(window.loggedIn.screen_name);
-		$('#user-queets strong').html(window.loggedIn.statuses_count);
-		$('#user-following strong').html(window.loggedIn.friends_count);
-		$('#user-followers strong').html(window.loggedIn.followers_count);
-		$('#user-groups strong').html(window.loggedIn.groups_count);
-		$('.stream-selection.friends-timeline').attr('href', window.loggedIn.statusnet_profile_url + '/all');
-		$('.stream-selection.mentions').attr('href', window.loggedIn.statusnet_profile_url + '/replies');
-		$('.stream-selection.notifications').attr('href', window.loggedIn.statusnet_profile_url + '/notifications');
-		$('.stream-selection.my-timeline').attr('href', window.loggedIn.statusnet_profile_url);
-		$('.stream-selection.favorites').attr('href', window.loggedIn.statusnet_profile_url + '/favorites');
-		$('#user-queets').attr('href',window.loggedIn.statusnet_profile_url);
-		$('#user-following').attr('href',window.loggedIn.statusnet_profile_url + '/subscriptions');
-		$('#user-groups').attr('href',window.loggedIn.statusnet_profile_url + '/groups');
-		window.myUserID = window.loggedIn.id;
-		if(window.loggedIn.cover_photo !== false) {
-			$('#user-header').css('background-image','url(\'' + window.loggedIn.cover_photo + '\')');
+	// add user data to DOM, show search form, remeber user id, show the feed
+	$('#user-container').css('z-index','1000');
+	$('#top-compose').removeClass('hidden');
+	$('#qvitter-notice').show();
+	$('#user-screen-name, #user-avatar, #user-name').attr('data-tooltip', window.sL.viewMyProfilePage);
+
+	// get all users i'm following for autosuggestion
+	window.following = new Object();
+	window.groupMemberships = new Object();
+	window.groupNicknamesAndLocalAliases = new Array();
+
+	getFromAPI('qvitter/allfollowing/' + window.loggedIn.screen_name + '.json',function(data){
+
+		if(data.users) {
+			$.each(data.users,function(k,v){
+				if(v[2] === false) { var avatar = window.defaultAvatarStreamSize; }
+				else { 	var avatar = v[2]; }
+				if(v[3]) {
+					// extract server base url
+					v[3] = v[3].substring(v[3].indexOf('://')+3,v[3].lastIndexOf(v[1])-1);
+					}
+				v[0] = v[0] || v[1]; // if name is null we go with username there too
+				window.following[k] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
+				});
 			}
 
-		// get all users i'm following for autosuggestion
-		window.following = new Object();
-		window.groupMemberships = new Object();
-		window.groupNicknamesAndLocalAliases = new Array();
+		if(data.groups) {
+			$.each(data.groups,function(k,v){
+				if(v[2] === false || v[2] === null) { var avatar = window.defaultAvatarStreamSize; }
+				else { 	var avatar = v[2]; }
+				if(v[3]) {
+					// extract server base url
+					v[3] = v[3].substring(v[3].indexOf('://')+3);
+					v[3] = v[3].substring(0, v[3].indexOf('/'));
+					}
+				v[0] = v[0] || v[1]; // if name is null we go with username there too
+				window.groupMemberships[k] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
+				window.groupNicknamesAndLocalAliases[k] = v[1];
+				});
+			}
 
-		getFromAPI('qvitter/allfollowing/' + window.loggedIn.screen_name + '.json',function(data){
+		// do this now not to stall slow computers, also we know of group memberships to highlight now
+		cacheSyntaxHighlighting();
+		cacheSyntaxHighlightingGroups();
 
-			if(data.users) {
-				$.each(data.users,function(k,v){
-					if(v[2] === false) { var avatar = window.defaultAvatarStreamSize; }
-					else { 	var avatar = v[2]; }
-					if(v[3]) {
-						// extract server base url
-						v[3] = v[3].substring(v[3].indexOf('://')+3,v[3].lastIndexOf(v[1])-1);
-						}
-					v[0] = v[0] || v[1]; // if name is null we go with username there too
-					window.following[k] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
-					});
-				}
+		// we might have cached text for the queet box
+		// (we need to get the mentions suggestions and cache the syntax highlighting before doing this)
+		var cachedQueetBoxData = localStorageObjectCache_GET('queetBoxInput','queet-box');
+		var cachedQueetBoxDataText = $('<div/>').html(cachedQueetBoxData).text();
+	    if(cachedQueetBoxData) {
+			queetBox = $('#queet-box');
+            queetBox.click();
+            queetBox.html(cachedQueetBoxData);
+            setSelectionRange(queetBox[0], cachedQueetBoxDataText.length, cachedQueetBoxDataText.length);
+            queetBox.trigger('input');
+			}
+		});
 
-			if(data.groups) {
-				$.each(data.groups,function(k,v){
-					if(v[2] === false || v[2] === null) { var avatar = window.defaultAvatarStreamSize; }
-					else { 	var avatar = v[2]; }
-					if(v[3]) {
-						// extract server base url
-						v[3] = v[3].substring(v[3].indexOf('://')+3);
-						v[3] = v[3].substring(0, v[3].indexOf('/'));
-						}
-					v[0] = v[0] || v[1]; // if name is null we go with username there too
-					window.groupMemberships[k] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
-					window.groupNicknamesAndLocalAliases[k] = v[1];
-					});
-				}
+	// load history
+	loadHistoryFromLocalStorage();
 
-			// do this now not to stall slow computers, also we know of group memberships to highlight now
-			cacheSyntaxHighlighting();
-			cacheSyntaxHighlightingGroups();
+	// show bookmarks
+	appendAllBookmarks(window.allBookmarks);
 
-			// we might have cached text for the queet box
-			// (we need to get the mentions suggestions and cache the syntax highlighting before doing this)
-			var cachedQueetBoxData = localStorageObjectCache_GET('queetBoxInput','queet-box');
-			var cachedQueetBoxDataText = $('<div/>').html(cachedQueetBoxData).text();
-		    if(cachedQueetBoxData) {
-				queetBox = $('#queet-box');
-	            queetBox.click();
-	            queetBox.html(cachedQueetBoxData);
-	            setSelectionRange(queetBox[0], cachedQueetBoxDataText.length, cachedQueetBoxDataText.length);
-	            queetBox.trigger('input');
-				}
-			});
-
-		// load history
-		loadHistoryFromLocalStorage();
-
-		// show bookmarks
-		appendAllBookmarks(window.allBookmarks);
-
-		// set stream
-		window.currentStream = ''; // always reload stream on login
-		setNewCurrentStream(streamObjectToSet,true,false,function(){
-			$('.language-dropdown').css('display','none');
-			$('#user-header').animate({opacity:'1'},800);
-			$('#user-body').animate({opacity:'1'},800);
-			$('#user-footer').animate({opacity:'1'},800);
-			$('.menu-container').animate({opacity:'1'},800);
-			$('#page-container').animate({opacity:'1'},200);
-			$('#search').fadeIn('slow');
-			$('#login-content').css('display','none');
-			$('.front-signup').css('display','none');
-			$('#settingslink .dropdown-toggle').fadeIn('slow');
-			$('#top-compose').fadeIn('slow');
-			$('input#nickname').blur();
-			});
+	// set stream
+	setNewCurrentStream(streamObjectToSet,true,false,function(){
+		$('.language-dropdown').css('display','none');
+		$('#user-header').animate({opacity:'1'},800);
+		$('#user-body').animate({opacity:'1'},800);
+		$('#user-footer').animate({opacity:'1'},800);
+		$('.menu-container').animate({opacity:'1'},800);
+		$('#page-container').animate({opacity:'1'},200);
+		$('#search').fadeIn('slow');
+		$('#login-content').css('display','none');
+		$('.front-signup').css('display','none');
+		$('#settingslink .dropdown-toggle').fadeIn('slow');
+		$('#top-compose').fadeIn('slow');
+		$('input#nickname').blur();
+		});
 
 	}
 

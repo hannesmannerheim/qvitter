@@ -344,13 +344,18 @@ class QvitterAction extends ApiAction
                             print $instanceurl.'main/public';
                         }
 
-                    ?>"><div id="logo"></div></a>
-					<a id="settingslink">
-						<div class="dropdown-toggle">
-							<div class="nav-session"></div>
-						</div>
-					</a>
-					<div id="top-compose" class="hidden"></div>
+                    ?>"><div id="logo"></div></a><?php
+
+                    // menu for logged in users
+                    if($logged_in_user) { ?>
+    					<a id="settingslink">
+    						<div class="dropdown-toggle">
+    							<div class="nav-session" style="background-image:url('<?php print $logged_in_user_obj['profile_image_url_profile_size'] ?>')"></div>
+    						</div>
+    					</a><?php
+                        }
+
+                    ?><div id="top-compose" class="hidden"></div>
 					<ul class="quitter-settings dropdown-menu">
 						<li class="dropdown-caret right">
 							<span class="caret-outer"></span>
@@ -463,38 +468,43 @@ class QvitterAction extends ApiAction
 							<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
 							<div id="other-servers-link"></div>
                             <div id="qvitter-notice-logged-out"><?php print common_config('site', 'qvitternoticeloggedout'); ?></div>
-						</div><?php } ?>
-						<div id="user-header">
-							<div id="mini-edit-profile-button"></div>
-							<div class="profile-header-inner-overlay"></div>
-							<div id="user-avatar-container"><img id="user-avatar" src="" /></div>
-							<div id="user-name"></div>
-							<div id="user-screen-name"></div>
-						</div>
-						<ul id="user-body">
-							<li><a id="user-queets"><span class="label"></span><strong></strong></a></li>
-							<li><a id="user-following"><span class="label"></span><strong></strong></a></li>
-							<li><a id="user-groups"><span class="label"></span><strong></strong></a></li>
-						</ul>
-						<div id="user-footer">
-							<div id="user-footer-inner">
-								<div id="queet-box" class="queet-box queet-box-syntax" data-start-text=""></div>
-								<div class="syntax-middle"></div>
-								<div class="syntax-two" contenteditable="true"></div>
-								<div class="mentions-suggestions"></div>
-								<div class="queet-toolbar">
-									<div class="queet-box-extras">
-										<button class="upload-image"></button>
-										<button class="shorten disabled">URL</button>
-									</div>
-									<div class="queet-button">
-										<span class="queet-counter"></span>
-										<button></button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div id="main-menu" class="menu-container"><?php
+						</div><?php }
+
+                        // box containing the logged in users queet count and compose form
+                        if($logged_in_user) { ?>
+    						<div id="user-header" style="background-image:url('<?php print $logged_in_user_obj['cover_photo'] ?>')">
+    							<div id="mini-edit-profile-button"></div>
+    							<div class="profile-header-inner-overlay"></div>
+    							<div id="user-avatar-container"><img id="user-avatar" src="<?php print $logged_in_user_obj['profile_image_url_profile_size'] ?>" /></div>
+    							<div id="user-name"><?php print $logged_in_user_obj['name'] ?></div>
+    							<div id="user-screen-name"><?php print $logged_in_user_obj['screen_name'] ?></div>
+    						</div>
+    						<ul id="user-body">
+    							<li><a href="<?php print $instanceurl.$logged_in_user->nickname ?>" id="user-queets"><span class="label"></span><strong><?php print $logged_in_user_obj['statuses_count'] ?></strong></a></li>
+    							<li><a href="<?php print $instanceurl.$logged_in_user->nickname ?>/subscriptions" id="user-following"><span class="label"></span><strong><?php print $logged_in_user_obj['friends_count'] ?></strong></a></li>
+    							<li><a href="<?php print $instanceurl.$logged_in_user->nickname ?>/groups" id="user-groups"><span class="label"></span><strong><?php print $logged_in_user_obj['groups_count'] ?></strong></a></li>
+    						</ul>
+    						<div id="user-footer">
+    							<div id="user-footer-inner">
+    								<div id="queet-box" class="queet-box queet-box-syntax" data-start-text=""></div>
+    								<div class="syntax-middle"></div>
+    								<div class="syntax-two" contenteditable="true"></div>
+    								<div class="mentions-suggestions"></div>
+    								<div class="queet-toolbar">
+    									<div class="queet-box-extras">
+    										<button class="upload-image"></button>
+    										<button class="shorten disabled">URL</button>
+    									</div>
+    									<div class="queet-button">
+    										<span class="queet-counter"></span>
+    										<button></button>
+    									</div>
+    								</div>
+    							</div>
+    						</div><?php
+                            }
+
+                        ?><div id="main-menu" class="menu-container"><?php
 
                             if($logged_in_user) {
                                 ?><a href="<?php print $instanceurl.$logged_in_user->nickname ?>/all" class="stream-selection friends-timeline"><i class="chev-right"></i></a>
