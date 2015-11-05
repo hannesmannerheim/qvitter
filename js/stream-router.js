@@ -355,6 +355,7 @@ function pathToStreamRouter(path) {
         streamObject.streamHeader = '@' + replaceHtmlSpecialChars(streamObject.nickname);
         streamObject.streamSubHeader = window.sL.groups;
 		streamObject.stream = 'statusnet/groups/list.json?count=10&screen_name=' + streamObject.nickname + '&withuserarray=1';
+		streamObject.maxIdOrPage = 'page';
 		return streamObject;
 		}
 
