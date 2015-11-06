@@ -2545,11 +2545,22 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 				|| currentMatch[0].slice(-1) == ',') {
 					currentMatch[0] = currentMatch[0].slice(0,-1);
 					}
+
+				// remove any starting spaces from match
+				if(currentMatch[0].substring(0,1) == ' ') {
+					currentMatch[0] = currentMatch[0].substring(1);
+					}
+				else if(currentMatch[0].substring(0,6) == '&nbsp;') {
+					currentMatch[0] = currentMatch[0].substring(6);
+					}
+
 				currentVal = currentVal.replace(currentMatch[0],'<span class="' + k + '">' + currentMatch[0].replace('#','&#35;').replace('@','&#64;').replace('.','&#046;').replace('!','&#33;') + '</span>')
 				}
 			i++;
 			}
 		});
+
+	currentVal = currentVal.replace(/&nbsp;<span/g,' <span'); // safari fix
 
 	$(this).siblings('.syntax-middle').html(currentVal);
 	});
