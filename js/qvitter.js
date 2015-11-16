@@ -3484,6 +3484,7 @@ $('body').on('click','.upload-image',function () {
 	var thisUploadButton = $(this);
 
 	$('#upload-image-input').one('click',function(){ // trick to make the change event only fire once when selecting a file
+		$(this).unbind('change');
 		$(this).one('change',function(e){
 			uploadAttachment(e, thisUploadButton);
 			})
