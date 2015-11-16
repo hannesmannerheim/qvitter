@@ -1310,6 +1310,7 @@ $('body').on('click','a', function(e) {
 		e.preventDefault();
 			if($(this).closest('.modal-container').attr('id') != 'edit-profile-popup') { // no popup if we're editing our profile
 				popUpAction('popup-profile-picture', $('.profile-card-inner .screen-name').html(),'<img style="width:100%;display:block;" src="' + $(this).attr('href') + '" />',false);
+				$('.hover-card,.hover-card-caret').remove();
 				}
 		}
 	// hijack link if we find a matching link that qvitter can handle
