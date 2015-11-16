@@ -1645,3 +1645,23 @@ function theUserOrGroupThisStreamBelongsTo(stream) {
 		return stream;
 		}
 	}
+
+/* ·
+   ·
+   ·   Youtube embed link from youtube url
+   ·
+   · · · · · · · · · · · · · */
+
+function youTubeEmbedLinkFromURL(url) {
+	var youtubeId = url.replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
+
+	// get start time hash
+	var l = document.createElement("a");
+	l.href = url;
+	if(l.hash.substring(0,3) == '#t=') {
+		return '//www.youtube.com/embed/' + youtubeId + '?start=' + l.hash.substring(3);
+		}
+	else {
+		return '//www.youtube.com/embed/' + youtubeId;
+		}
+	}
