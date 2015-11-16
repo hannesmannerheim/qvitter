@@ -2384,9 +2384,7 @@ $('body').on('click','button.shorten',function () {
    · · · · · · · · · · · · · */
 $('body').on('click','.reload-stream',function () {
 	$('.reload-stream').hide();
-	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,function(){
-		$('.reload-stream').show();
-		});
+	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,false);
 	});
 
 

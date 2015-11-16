@@ -727,6 +727,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
 			addToFeed(queet_data, false,'visible'); // add stream items to feed element
 			$('#feed').animate({opacity:'1'},150); // fade in
+			$('.reload-stream').show();
 			$('#feed-body').removeAttr('data-end-reached');
 			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
 			$('html,body').scrollTop(0); // scroll to top
