@@ -137,5 +137,6 @@
 	"ERRORcouldNotFindUserWithNickname":"Det finns ingen användare med namet \"{nickname}\" på den här servern.",
 	"ERRORcouldNotFindGroupWithNickname":"Det finns ingen grupp med namnet \"{nickname}\" på den här servern.",
 	"ERRORcouldNotFindPage":"Sidan hittades inte.",
-	"ERRORnoticeRemoved": "Den här qvittringen är borttagen."
+	"ERRORnoticeRemoved": "Den här qvittringen är borttagen.",
+	"ERRORnoContactWithServer": "Kan inte ansluta till servern. Servern kanske är överbelastad, eller så har du ett problem med din internetuppkoppling. Försök igen senare!"
 }

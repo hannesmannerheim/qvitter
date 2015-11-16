@@ -137,5 +137,6 @@
 	"ERRORcouldNotFindUserWithNickname":"No se ha encontrado el usuario con el apodo \"{nickname}\" en este servidor",
 	"ERRORcouldNotFindGroupWithNickname":"No se ha encontrado el grupo con el nombre \"{nickname}\" en este servidor",
 	"ERRORcouldNotFindPage":"No se pudo encontrar la página.",
-	"ERRORnoticeRemoved": "Este aviso se ha eliminado."
+	"ERRORnoticeRemoved": "Este aviso se ha eliminado.",
+	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!"
 }

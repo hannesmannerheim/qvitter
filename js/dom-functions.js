@@ -678,6 +678,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			else if(error.status == 410 && streamObject.name == 'notice') {
 				showErrorMessage(window.sL.ERRORnoticeRemoved);
 				}
+			else if(error.status == 0) {
+				showErrorMessage(window.sL.ERRORnoContactWithServer + ' (' + replaceHtmlSpecialChars(error.statusText) + ')');
+				}
 			else {
 				showErrorMessage(window.sL.ERRORsomethingWentWrong + '<br><br>\
 								  url: ' + url + '<br><br>\
