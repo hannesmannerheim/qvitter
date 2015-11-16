@@ -413,6 +413,7 @@ class QvitterAction extends ApiAction
 						</div>
 					</div>
 				</div>
+                <div id="no-js-error">Please enable javascript to use this site.<script>var element = document.getElementById('no-js-error'); element.parentNode.removeChild(element);</script></div>                
 				<div id="page-container">
 					<?php
 
