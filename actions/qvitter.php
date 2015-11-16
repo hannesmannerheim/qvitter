@@ -224,15 +224,9 @@ class QvitterAction extends ApiAction
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
 					window.apiRoot = <?php
 
-                        // add dummy basic auth credentials to api root url to suppress any basic auth authentication popups
-                        // that may appear, e.g. if you have multiple tabs open with the same session and logs out in one
                         $api_root = common_path("api/", StatusNet::isHTTPS());
-                        $api_root = str_replace('https://','https://x:x@',$api_root);
                         if($this_site_thinks_it_is_http_but_is_actually_https) {
-                            $api_root = str_replace('http://','https://x:x@',$api_root);
-                            }
-                        else {
-                            $api_root = str_replace('http://','http://x:x@',$api_root);
+                            $api_root = str_replace('http://','https://',$api_root);
                             }
                         print '\''.$api_root.'\'';
 
@@ -559,6 +553,7 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/load-image.min.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/xregexp-all-3.0.0-pre.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/xregexp-all-3.0.0-pre.js')); ?>"></script>
                 <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/lz-string.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/lz-string.js')); ?>"></script>
+                <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/bowser.min.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/bowser.min.js')); ?>"></script>
 				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/dom-functions.js')); ?>"></script>
 				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/misc-functions.js')); ?>"></script>
 				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/ajax-functions.js')); ?>"></script>
