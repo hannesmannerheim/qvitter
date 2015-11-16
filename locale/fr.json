@@ -137,6 +137,6 @@
 	"ERRORcouldNotFindUserWithNickname":"Impossible de trouver un compte avec le nom \"{nickname}\" sur ce serveur",
 	"ERRORcouldNotFindGroupWithNickname":"Impossible de trouver un groupe avec le nom \"{nickname}\" sur ce serveur",
 	"ERRORcouldNotFindPage":"Impossible de trouver cette page.",
-	"ERRORnoticeRemoved": "Cet avis a été supprimé."
-	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!"
+	"ERRORnoticeRemoved": "Cet avis a été supprimé.",
+	"ERRORnoContactWithServer": "Impossible d'établir une connexion avec le serveur. Il peut être surchargé, ou il peut y avoir un problème avec votre connexion. Réessayez plus tard !"
 }
