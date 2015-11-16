@@ -171,6 +171,15 @@ body.rtl .discard-error-message {
 	left:0;
 	}
 
+#no-js-error {
+	display:block;
+	position: absolute;
+	top:70px;
+	left: 0;
+	width:100%;
+	text-align: center;
+	}
+
 #accessibility-toggle-link {
 	height:0;
 	width:0;

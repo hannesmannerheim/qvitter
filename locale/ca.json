@@ -137,5 +137,6 @@
 	"ERRORcouldNotFindUserWithNickname":"No s'ha pogut trobar l'usuari amb el sobrenom \"{nickname}\" en aquest servidor",
 	"ERRORcouldNotFindGroupWithNickname":"No s'ha pogut trobar el grup amb el nom \"{nickname}\" en aquest servidor",
 	"ERRORcouldNotFindPage":"No s'ha pogut trobar aquesta pàgina",
-	"ERRORnoticeRemoved": "Aquest avís s'ha eliminat."
+	"ERRORnoticeRemoved": "Aquest avís s'ha eliminat.",
+	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!"
 }

@@ -224,15 +224,9 @@ class QvitterAction extends ApiAction
 					window.timeBetweenPolling = <?php print QvitterPlugin::settings("timebetweenpolling"); ?>;
 					window.apiRoot = <?php
 
-                        // add dummy basic auth credentials to api root url to suppress any basic auth authentication popups
-                        // that may appear, e.g. if you have multiple tabs open with the same session and logs out in one
                         $api_root = common_path("api/", StatusNet::isHTTPS());
-                        $api_root = str_replace('https://','https://x:x@',$api_root);
                         if($this_site_thinks_it_is_http_but_is_actually_https) {
-                            $api_root = str_replace('http://','https://x:x@',$api_root);
-                            }
-                        else {
-                            $api_root = str_replace('http://','http://x:x@',$api_root);
+                            $api_root = str_replace('http://','https://',$api_root);
                             }
                         print '\''.$api_root.'\'';
 
@@ -350,7 +344,7 @@ class QvitterAction extends ApiAction
                     if($logged_in_user) { ?>
     					<a id="settingslink">
     						<div class="dropdown-toggle">
-    							<div class="nav-session" style="background-image:url('<?php print $logged_in_user_obj['profile_image_url_profile_size'] ?>')"></div>
+    							<div class="nav-session" style="background-image:url('<?php print htmlspecialchars($logged_in_user_obj['profile_image_url_profile_size']) ?>')"></div>
     						</div>
     					</a><?php
                         }
@@ -419,6 +413,7 @@ class QvitterAction extends ApiAction
 						</div>
 					</div>
 				</div>
+                <div id="no-js-error">Please enable javascript to use this site.<script>var element = document.getElementById('no-js-error'); element.parentNode.removeChild(element);</script></div>                
 				<div id="page-container">
 					<?php
 
@@ -472,12 +467,12 @@ class QvitterAction extends ApiAction
 
                         // box containing the logged in users queet count and compose form
                         if($logged_in_user) { ?>
-    						<div id="user-header" style="background-image:url('<?php print $logged_in_user_obj['cover_photo'] ?>')">
+    						<div id="user-header" style="background-image:url('<?php print htmlspecialchars($logged_in_user_obj['cover_photo']) ?>')">
     							<div id="mini-edit-profile-button"></div>
     							<div class="profile-header-inner-overlay"></div>
-    							<div id="user-avatar-container"><img id="user-avatar" src="<?php print $logged_in_user_obj['profile_image_url_profile_size'] ?>" /></div>
-    							<div id="user-name"><?php print $logged_in_user_obj['name'] ?></div>
-    							<div id="user-screen-name"><?php print $logged_in_user_obj['screen_name'] ?></div>
+    							<div id="user-avatar-container"><img id="user-avatar" src="<?php print htmlspecialchars($logged_in_user_obj['profile_image_url_profile_size']) ?>" /></div>
+    							<div id="user-name"><?php print htmlspecialchars($logged_in_user_obj['name']) ?></div>
+    							<div id="user-screen-name"><?php print htmlspecialchars($logged_in_user_obj['screen_name']) ?></div>
     						</div>
     						<ul id="user-body">
     							<li><a href="<?php print $instanceurl.$logged_in_user->nickname ?>" id="user-queets"><span class="label"></span><strong><?php print $logged_in_user_obj['statuses_count'] ?></strong></a></li>
@@ -559,6 +554,7 @@ class QvitterAction extends ApiAction
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/load-image.min.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/load-image.min.js')); ?>"></script>
 				<script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/xregexp-all-3.0.0-pre.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/xregexp-all-3.0.0-pre.js')); ?>"></script>
                 <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/lz-string.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/lz-string.js')); ?>"></script>
+                <script type="text/javascript" src="<?php print $qvitterpath; ?>js/lib/bowser.min.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/lib/bowser.min.js')); ?>"></script>
 				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/dom-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/dom-functions.js')); ?>"></script>
 				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/misc-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/misc-functions.js')); ?>"></script>
 				<script charset="utf-8" type="text/javascript" src="<?php print $qvitterpath; ?>js/ajax-functions.js?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/js/ajax-functions.js')); ?>"></script>

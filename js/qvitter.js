@@ -49,6 +49,12 @@ checkLocalStorage();
 // don't let users inject html/scripts into their own user data... not that it matters, it is only displayed to themselves, but just to be 200% safe
 window.loggedIn = iterateRecursiveReplaceHtmlSpecialChars(window.loggedIn);
 
+// hack to supress basic auth popup, e.g. if the user has to tabs open and
+// log out in one of them. but microsoft browsers doesn't support this
+if(typeof bowser.msie == 'undefined' && typeof bowser.msedge == 'undefined') {
+	window.apiRoot = window.apiRoot.replace('://','://x:x@');
+	}
+
 
 /* ·
    ·
@@ -1304,6 +1310,7 @@ $('body').on('click','a', function(e) {
 		e.preventDefault();
 			if($(this).closest('.modal-container').attr('id') != 'edit-profile-popup') { // no popup if we're editing our profile
 				popUpAction('popup-profile-picture', $('.profile-card-inner .screen-name').html(),'<img style="width:100%;display:block;" src="' + $(this).attr('href') + '" />',false);
+				$('.hover-card,.hover-card-caret').remove();
 				}
 		}
 	// hijack link if we find a matching link that qvitter can handle
@@ -2378,9 +2385,7 @@ $('body').on('click','button.shorten',function () {
    · · · · · · · · · · · · · */
 $('body').on('click','.reload-stream',function () {
 	$('.reload-stream').hide();
-	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,function(){
-		$('.reload-stream').show();
-		});
+	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,false);
 	});
 
 

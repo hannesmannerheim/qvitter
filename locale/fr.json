@@ -138,4 +138,5 @@
 	"ERRORcouldNotFindGroupWithNickname":"Impossible de trouver un groupe avec le nom \"{nickname}\" sur ce serveur",
 	"ERRORcouldNotFindPage":"Impossible de trouver cette page.",
 	"ERRORnoticeRemoved": "Cet avis a été supprimé."
+	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!"
 }

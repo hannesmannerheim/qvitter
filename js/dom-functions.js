@@ -567,6 +567,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		$('#feed').show();
 		$('#feed-body').removeAttr('data-end-reached');
 		$('#feed-header-inner h2').css('opacity','0.2');
+		$('#feed-header-inner h2').html(h2FeedHeader); // update header (could be wrong in cache)
 		$('#feed-header-inner h2').animate({opacity:'1'},1000);
 
 		// set location bar from stream
@@ -678,6 +679,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			else if(error.status == 410 && streamObject.name == 'notice') {
 				showErrorMessage(window.sL.ERRORnoticeRemoved);
 				}
+			else if(error.status == 0) {
+				showErrorMessage(window.sL.ERRORnoContactWithServer + ' (' + replaceHtmlSpecialChars(error.statusText) + ')');
+				}
 			else {
 				showErrorMessage(window.sL.ERRORsomethingWentWrong + '<br><br>\
 								  url: ' + url + '<br><br>\
@@ -720,10 +724,10 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 			remove_spinner();
 			$('#feed-body').html(''); // empty feed body
-			$('#feed-header-inner h2').html(h2FeedHeader); // update header (could be wrong in cache)
 			$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
 			addToFeed(queet_data, false,'visible'); // add stream items to feed element
 			$('#feed').animate({opacity:'1'},150); // fade in
+			$('.reload-stream').show();
 			$('#feed-body').removeAttr('data-end-reached');
 			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
 			$('html,body').scrollTop(0); // scroll to top
@@ -946,14 +950,14 @@ function expand_queet(q,doScrolling) {
 
 			// if there's only one thumb and it's a youtube video, show it inline
 			if(q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').length == 1) {
-				var youtubeId = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').children('.attachment-thumb').attr('data-full-image-url').replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
-				if(q.children('.queet').find('.expanded-content').children('.media').children('iframe[src="//www.youtube.com/embed/' + youtubeId + '"]').length < 1) { // not if already showed
+				var youtubeURL = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').children('.attachment-thumb').attr('data-full-image-url');
+				if(q.children('.queet').find('.expanded-content').children('.media').children('iframe[src="' + youTubeEmbedLinkFromURL(youtubeURL) + '"]').length < 1) { // not if already showed
 					// hide video thumbnail if it's the only one
 					if(q.children('.queet').find('.queet-thumbs').children('.thumb-container').length < 2) {
 						q.children('.queet').find('.queet-thumbs').addClass('hide-thumbs');
 						}
 					// show video
-					q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="510" height="315" src="//www.youtube.com/embed/' + youtubeId + '" frameborder="0" allowfullscreen></iframe></div>');
+					q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="510" height="315" src="' + youTubeEmbedLinkFromURL(youtubeURL) + '" frameborder="0" allowfullscreen></iframe></div>');
 					}
 				}
 
@@ -1837,14 +1841,14 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 
 				// play button for videos and animated gifs
 				var playButtonClass = '';
-				if(this.url.indexOf('://www.youtube.com') > -1
+				if((this.url.indexOf('://www.youtube.com') > -1 || this.url.indexOf('://youtu.be') > -1)
 				|| (typeof this.animated != 'undefined' && this.animated === true)) {
 					var playButtonClass = ' play-button';
 					}
 
 				// youtube class
 				var youTubeClass = '';
-				if(this.url.indexOf('://www.youtube.com') > -1) {
+				if(this.url.indexOf('://www.youtube.com') > -1 || this.url.indexOf('://youtu.be') > -1) {
 					youTubeClass = ' youtube';
 					}
 

@@ -282,6 +282,10 @@ class QvitterPlugin extends Plugin {
 									array('action' => 'shownotice'),
 									array('notice' => '[0-9]+'),
 									'qvitter');
+			URLMapperOverwrite::overwrite_variable($m, 'conversation/:id',
+									array('action' => 'conversation'),
+									array('id' => '[0-9]+'),
+									'qvitter');
 		}
 
 		// if qvitter is opt-out, disable the default register page (if we don't have a valid invitation code)

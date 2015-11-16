@@ -74,11 +74,6 @@ function URLtoStreamRouter(url) {
 	// we don't expect protocol to matter
 	url = removeProtocolFromUrl(url);
 
-	// remove anchor tags
-	if(url.indexOf('#')>-1) {
-		url = url.substring(0,url.indexOf('#'));
-		}
-
 	// not a local URL
 	if(url != window.siteRootDomain && url.indexOf(window.siteRootDomain + '/') != 0) {
 		// console.log('not a local url: ' + url);
@@ -101,6 +96,13 @@ function URLtoStreamRouter(url) {
    · · · · · · · · · */
 
 function pathToStreamRouter(path) {
+
+	// remove and remember anchor tags
+	var anchor = false;
+	if(path.indexOf('#')>-1) {
+		anchor = path.substring(path.indexOf('#'));
+		path = path.substring(0,path.indexOf('#'));
+		}
 
 	// remove starting slash
 	if(path.indexOf('/') == 0) {
@@ -197,6 +199,21 @@ function pathToStreamRouter(path) {
 		streamObject.name = 'notice';
         streamObject.streamHeader = replaceHtmlSpecialChars(path);
         streamObject.id = pathSplit[1];
+		streamObject.stream = 'statuses/show/' + streamObject.id + '.json';
+		return streamObject;
+		}
+
+	// conversation/{id}
+	if(pathSplit.length == 2 && pathSplit[0] == 'conversation' && /^[0-9]+$/.test(pathSplit[1])) {
+		streamObject.name = 'notice';
+        streamObject.id = pathSplit[1];
+		// conversation links are redirected to notice page, if the link is to a
+		// non root notice, then the notice we want to link to and expand is in the hash
+		if(anchor && anchor.indexOf('#notice-') == 0) {
+			streamObject.id = anchor.substring(8);
+			}
+		streamObject.path = 'notice/' + streamObject.id;
+		streamObject.streamHeader = replaceHtmlSpecialChars(streamObject.path);
 		streamObject.stream = 'statuses/show/' + streamObject.id + '.json';
 		return streamObject;
 		}
