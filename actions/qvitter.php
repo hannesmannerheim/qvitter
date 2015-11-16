@@ -350,7 +350,7 @@ class QvitterAction extends ApiAction
                     if($logged_in_user) { ?>
     					<a id="settingslink">
     						<div class="dropdown-toggle">
-    							<div class="nav-session" style="background-image:url('<?php print $logged_in_user_obj['profile_image_url_profile_size'] ?>')"></div>
+    							<div class="nav-session" style="background-image:url('<?php print htmlspecialchars($logged_in_user_obj['profile_image_url_profile_size']) ?>')"></div>
     						</div>
     					</a><?php
                         }
@@ -472,12 +472,12 @@ class QvitterAction extends ApiAction
 
                         // box containing the logged in users queet count and compose form
                         if($logged_in_user) { ?>
-    						<div id="user-header" style="background-image:url('<?php print $logged_in_user_obj['cover_photo'] ?>')">
+    						<div id="user-header" style="background-image:url('<?php print htmlspecialchars($logged_in_user_obj['cover_photo']) ?>')">
     							<div id="mini-edit-profile-button"></div>
     							<div class="profile-header-inner-overlay"></div>
-    							<div id="user-avatar-container"><img id="user-avatar" src="<?php print $logged_in_user_obj['profile_image_url_profile_size'] ?>" /></div>
-    							<div id="user-name"><?php print $logged_in_user_obj['name'] ?></div>
-    							<div id="user-screen-name"><?php print $logged_in_user_obj['screen_name'] ?></div>
+    							<div id="user-avatar-container"><img id="user-avatar" src="<?php print htmlspecialchars($logged_in_user_obj['profile_image_url_profile_size']) ?>" /></div>
+    							<div id="user-name"><?php print htmlspecialchars($logged_in_user_obj['name']) ?></div>
+    							<div id="user-screen-name"><?php print htmlspecialchars($logged_in_user_obj['screen_name']) ?></div>
     						</div>
     						<ul id="user-body">
     							<li><a href="<?php print $instanceurl.$logged_in_user->nickname ?>" id="user-queets"><span class="label"></span><strong><?php print $logged_in_user_obj['statuses_count'] ?></strong></a></li>
