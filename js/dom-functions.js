@@ -567,6 +567,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		$('#feed').show();
 		$('#feed-body').removeAttr('data-end-reached');
 		$('#feed-header-inner h2').css('opacity','0.2');
+		$('#feed-header-inner h2').html(h2FeedHeader); // update header (could be wrong in cache)
 		$('#feed-header-inner h2').animate({opacity:'1'},1000);
 
 		// set location bar from stream
@@ -723,7 +724,6 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 			remove_spinner();
 			$('#feed-body').html(''); // empty feed body
-			$('#feed-header-inner h2').html(h2FeedHeader); // update header (could be wrong in cache)
 			$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
 			addToFeed(queet_data, false,'visible'); // add stream items to feed element
 			$('#feed').animate({opacity:'1'},150); // fade in
