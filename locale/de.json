@@ -138,5 +138,6 @@
 	"ERRORcouldNotFindGroupWithNickname":"Konnte Gruppe mit Bezeichnung \"{nickname}\" nicht finden",
 	"ERRORcouldNotFindPage":"Konnte Seite nicht finden.",
 	"ERRORnoticeRemoved": "Dieser Queet wurde gelöscht.",
-	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!"
+	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!",
+	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large."
 }

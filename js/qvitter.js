@@ -79,6 +79,7 @@ window.onpopstate = function(event) {
    · · · · · · · · · · · · · */
 
 $('body').on('click','.discard-error-message',function(){
+	$(this).addClass('clicked');
 	$(this).closest('.error-message').slideUp(100,function(){
 		$(this).remove();
 		});
@@ -1672,7 +1673,8 @@ $('body').on('click','.queet',function (event) {
 			.action-ellipsis-container a b,\
 			span.group,\
 			.longdate,\
-			.screen-name')
+			.screen-name,\
+			.discard-error-message')
 		&& !$(this).parent('.stream-item').hasClass('user')) { // not if user stream
 		expand_queet($(this).parent());
 		}
@@ -2433,6 +2435,11 @@ $('body').on('blur','.queet-box-syntax',function (e) {
 	var clickedToolbarButtons = $(this).siblings('.queet-toolbar').find('button.clicked');
 	if(clickedToolbarButtons.length>0) {
 		clickedToolbarButtons.removeClass('clicked');
+		return true;
+		}
+
+	// don't collapse if an error message discard button has been clicked
+	if($(this).siblings('.error-message').children('.discard-error-message').length>0) {
 		return true;
 		}
 
@@ -3457,7 +3464,7 @@ function cleanUpAfterCropping(){
 
 /* ·
    ·
-   ·   Upload image
+   ·   Upload attachment
    ·
    · · · · · · · · · · · · · */
 
@@ -3478,7 +3485,7 @@ $('body').on('click','.upload-image',function () {
 
 	$('#upload-image-input').one('click',function(){ // trick to make the change event only fire once when selecting a file
 		$(this).one('change',function(e){
-			uploadImage(e, thisUploadButton);
+			uploadAttachment(e, thisUploadButton);
 			})
 		});
 
@@ -3494,103 +3501,83 @@ $('body').on('click','.upload-image',function () {
 		}
 	});
 
-function uploadImage(e, thisUploadButton) {
-	// get orientation
-	loadImage.parseMetaData(e.target.files[0], function (data) {
-		if (data.exif) {
-			var orientation = data.exif.get('Orientation');
-			}
-		else {
-			var orientation = 1;
-			}
+function uploadAttachment(e, thisUploadButton) {
 
-		// loader cover stuff
-		thisUploadButton.closest('.queet-toolbar').parent().append('<div class="queet-box-loading-cover"></div>');
-		thisUploadButton.closest('.queet-toolbar').siblings('.queet-box-loading-cover').width(thisUploadButton.closest('.queet-toolbar').parent().outerWidth());
-		display_spinner(thisUploadButton.closest('.queet-toolbar').siblings('.queet-box-loading-cover')[0]);
-		thisUploadButton.closest('.queet-toolbar').siblings('.queet-box-loading-cover').find('.loader').css('top', (thisUploadButton.closest('.queet-toolbar').parent().outerHeight()/2-20) + 'px');
+	// loader cover stuff
+	thisUploadButton.closest('.queet-toolbar').parent().append('<div class="queet-box-loading-cover"></div>');
+	thisUploadButton.closest('.queet-toolbar').siblings('.queet-box-loading-cover').width(thisUploadButton.closest('.queet-toolbar').parent().outerWidth());
+	display_spinner(thisUploadButton.closest('.queet-toolbar').siblings('.queet-box-loading-cover')[0]);
+	thisUploadButton.closest('.queet-toolbar').siblings('.queet-box-loading-cover').find('.loader').css('top', (thisUploadButton.closest('.queet-toolbar').parent().outerHeight()/2-20) + 'px');
 
-		// clean up
-		cleanUpAfterCropping();
+	var uploadButton = thisUploadButton.closest('.queet-toolbar').find('.upload-image');
+	var queetBox = thisUploadButton.closest('.queet-toolbar').siblings('.queet-box-syntax');
+	var caretPos = uploadButton.attr('data-caret-pos').split(',');
 
-		// create image
-		loadImage(e.target.files[0],
-				function (img) {
-					if(typeof img.target == 'undefined') {
-						// The preview image below queet box.
-						var appendedImg = thisUploadButton.closest('.queet-toolbar').before('<span class="upload-image-container"><img class="to-upload" src="' + img.toDataURL('image/jpeg') +  '" /></span>');
-						var imgFormData = new FormData();
-						imgFormData.append('media', $('#upload-image-input')[0].files[0]);
+	var imgFormData = new FormData();
+	imgFormData.append('media', $('#upload-image-input')[0].files[0]);
 
-						// upload
-						$.ajax({ url: window.apiRoot + 'statusnet/media/upload',
-							type: "POST",
-							data: imgFormData,
-							contentType: false,
-							processData: false,
-							dataType: "xml",
-							error: function(data){ console.log('error'); console.log(data); $('.queet-box-loading-cover').remove(); },
-							success: function(data) {
-								var rsp = $(data).find('rsp');
-								if (rsp.attr('stat') == 'ok') {
-									cleanUpAfterCropping();
+	// upload
+	$.ajax({ url: window.apiRoot + 'statusnet/media/upload',
+		type: "POST",
+		data: imgFormData,
+		contentType: false,
+		processData: false,
+		dataType: "xml",
+		error: function(data, textStatus, errorThrown){
+			showErrorMessage(window.sL.ERRORattachmentUploadFailed, queetBox.siblings('.syntax-two'));
+			$('.queet-box-loading-cover').remove();
+			queetBox.focus();
+			},
+		success: function(data) {
+			var rsp = $(data).find('rsp');
+			if (rsp.attr('stat') == 'ok') {
 
-									// If doing 'multiple' input element, maybe reply with many mediaurl elements
-									// and then rsp.find('mediaurl').each(...)?
-									var mediaurl = rsp.find('mediaurl').text();
+				// maybe add thumbnail below queet box
+				var mimeType = $(data).find('atom\\:link').attr('type');
+				if(mimeType.indexOf('image/') == 0) {
+					var imgUrl = $(data).find('atom\\:link').attr('href');
+					thisUploadButton.closest('.queet-toolbar').before('<span class="upload-image-container"><img class="to-upload" src="' + imgUrl +  '" /></span>');
+					}
 
-									var uploadButton = $('img.to-upload').parent().siblings('.queet-toolbar').find('.upload-image');
-									var queetBox = $('img.to-upload').parent().siblings('.queet-box-syntax');
-									var caretPos = uploadButton.attr('data-caret-pos').split(',');
+				var mediaurl = rsp.find('mediaurl').text();
 
-									// if this site is like quitter.se, we have to do this, otherwise
-									// gnusocial will not recognize the link to the image as a local attachment
-									if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
-										mediaurl = mediaurl.replace('https://','http://');
-										}
+				// if this site is like quitter.se, we have to do this, otherwise
+				// gnusocial will not recognize the link to the image as a local attachment
+				if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
+					mediaurl = mediaurl.replace('https://','http://');
+					}
 
-									$('img.to-upload').attr('data-shorturl', mediaurl);
-									$('img.to-upload').addClass('uploaded');
-									$('img.to-upload').removeClass('to-upload');
+				$('img.to-upload').attr('data-shorturl', mediaurl);
+				$('img.to-upload').addClass('uploaded');
+				$('img.to-upload').removeClass('to-upload');
 
-									// insert shorturl in queet box
-									deleteBetweenCharacterIndices(queetBox[0], caretPos[0], caretPos[1]);
-									var range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);
-									if(typeof range == 'undefined') {
-										// if queetbox is empty no range is returned, and inserting will fail,
-										// so we insert a space and try to get range again...
-										queetBox.html('&nbsp;');
-									    range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);
-										}
-									range.insertNode(document.createTextNode(' ' + mediaurl + ' '));
+				// insert shorturl in queet box
+				deleteBetweenCharacterIndices(queetBox[0], caretPos[0], caretPos[1]);
+				var range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);
+				if(typeof range == 'undefined') {
+					// if queetbox is empty no range is returned, and inserting will fail,
+					// so we insert a space and try to get range again...
+					queetBox.html('&nbsp;');
+				    range = createRangeFromCharacterIndices(queetBox[0], caretPos[0], caretPos[0]);
+					}
+				range.insertNode(document.createTextNode(' ' + mediaurl + ' '));
 
-									// put caret after
-									queetBox.focus();
-									var putCaretAt = parseInt(caretPos[0],10)+mediaurl.length+2;
-									setSelectionRange(queetBox[0], putCaretAt, putCaretAt);
-									queetBox.trigger('input'); // avoid some flickering
-									setTimeout(function(){ queetBox.trigger('input');},1); // make sure chars are counted and shorten-button activated
-									$('.queet-box-loading-cover').remove();
-									}
-								 else {
-									alert('Try again! ' + rsp.find('err').attr('msg'));
-									$('.save-profile-button').removeAttr('disabled');
-									$('.save-profile-button').removeClass('disabled');
-									$('img.to-upload').parent().remove();
-									$('.queet-box-loading-cover').remove();
-									}
-								 }
-							});
-						}
-					else {
-						remove_spinner();
-						$('.queet-box-loading-cover').remove();
-						alert('could not read image');
-						}
-					},
-				{ canvas: true,
-				  orientation: orientation } // Options
-			);
+				// put caret after
+				queetBox.focus();
+				var putCaretAt = parseInt(caretPos[0],10)+mediaurl.length+2;
+				setSelectionRange(queetBox[0], putCaretAt, putCaretAt);
+				queetBox.trigger('input'); // avoid some flickering
+				setTimeout(function(){ queetBox.trigger('input');},1); // make sure chars are counted and shorten-button activated
+				$('.queet-box-loading-cover').remove();
+				}
+			 else {
+				alert('Try again! ' + rsp.find('err').attr('msg'));
+				$('.save-profile-button').removeAttr('disabled');
+				$('.save-profile-button').removeClass('disabled');
+				$('img.to-upload').parent().remove();
+				$('.queet-box-loading-cover').remove();
+				}
+			 }
 		});
 
 	}

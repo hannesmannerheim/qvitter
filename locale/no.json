@@ -138,5 +138,6 @@
 	"ERRORcouldNotFindGroupWithNickname":"Kan ikke finne en gruppe med gruppenavnet \"{nickname}\" på denne instansen",
 	"ERRORcouldNotFindPage":"Kan ikke finne siden.",
 	"ERRORnoticeRemoved": "Denne notisen er slettet.",
-	"ERRORnoContactWithServer": "Kan ikke etablere en kobling til instansen. Dette kan skyldes at den er overbelastet, eller det er et problem med din internet kobling. Vennligst forsøk senere."
+	"ERRORnoContactWithServer": "Kan ikke etablere en kobling til instansen. Dette kan skyldes at den er overbelastet, eller det er et problem med din internet kobling. Vennligst forsøk senere.",
+	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large."
 }

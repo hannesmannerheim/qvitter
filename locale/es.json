@@ -138,5 +138,6 @@
 	"ERRORcouldNotFindGroupWithNickname":"No se ha encontrado el grupo con el nombre \"{nickname}\" en este servidor",
 	"ERRORcouldNotFindPage":"No se pudo encontrar la página.",
 	"ERRORnoticeRemoved": "Este aviso se ha eliminado.",
-	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!"
+	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!",
+	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large."
 }

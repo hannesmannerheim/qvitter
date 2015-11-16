@@ -138,5 +138,6 @@
 	"ERRORcouldNotFindGroupWithNickname":"On ne trovis grupo kun la nomo \"{nickname}\" en ica servilo.",
 	"ERRORcouldNotFindPage":"On ne trovis ica pagino.",
 	"ERRORnoticeRemoved": "Ica mesajo esas supresita.",
-	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!"
+	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!",
+	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large."
 }

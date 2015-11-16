@@ -117,7 +117,8 @@ button.shorten i,
 	float: right;
     font-size: 14px;
     line-height: 18px;
-    width: 590px;
+    max-width: 590px;
+	width:100%;
 	background-color: pink;
 	border-radius: 5px;
 	position: relative;
@@ -125,6 +126,10 @@ button.shorten i,
 	box-sizing: border-box;
 	margin-bottom: 5px;
 	overflow: hidden;
+	}
+#user-footer-inner .error-message,
+.inline-reply-queetbox .error-message {
+	float:none;
 	}
 .error-message pre code {
 	font-family: courier;

@@ -325,7 +325,7 @@ class QvitterAction extends ApiAction
                     }
 
                 ?>
-				<input id="upload-image-input" class="upload-image-input" type="file" name="upload-image-input" accept="image/*">
+				<input id="upload-image-input" class="upload-image-input" type="file" name="upload-image-input">
 				<div class="topbar">
 					<a href="<?php
 
@@ -413,7 +413,7 @@ class QvitterAction extends ApiAction
 						</div>
 					</div>
 				</div>
-                <div id="no-js-error">Please enable javascript to use this site.<script>var element = document.getElementById('no-js-error'); element.parentNode.removeChild(element);</script></div>                
+                <div id="no-js-error">Please enable javascript to use this site.<script>var element = document.getElementById('no-js-error'); element.parentNode.removeChild(element);</script></div>
 				<div id="page-container">
 					<?php
 

@@ -46,8 +46,11 @@
    ·
    · · · · · · · · · */
 
-function showErrorMessage(message) {
-	$('#user-container').after('<div class="error-message">' + message + '<span class="discard-error-message"></span></div>');
+function showErrorMessage(message, after) {
+	if(typeof after == 'undefined') {
+		var after = $('#user-container');
+		}
+	after.after('<div class="error-message">' + message + '<span class="discard-error-message"></span></div>');
 	}
 
 
