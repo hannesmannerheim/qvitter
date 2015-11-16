@@ -139,5 +139,5 @@
 	"ERRORcouldNotFindPage":"Sidan hittades inte.",
 	"ERRORnoticeRemoved": "Den här qvittringen är borttagen.",
 	"ERRORnoContactWithServer": "Kan inte ansluta till servern. Servern kanske är överbelastad, eller så har du ett problem med din internetuppkoppling. Försök igen senare!",
-	"ERRORattachmentUploadFailed": "Uppladdningen misslyckades. Filen är kanske för stor eller av en otillåtet typ."
+	"ERRORattachmentUploadFailed": "Uppladdningen misslyckades. Filen är kanske för stor eller av en otillåten typ."
 }
