@@ -678,7 +678,31 @@ class QvitterPlugin extends Plugin {
  		if($notice->profile_id != $profile->id) {
             $this->insertNotification($notice->profile_id, $profile->id, 'like', $notice->id);
  			}
+
+        // mark reply and mention notifications as seen if i'm liking a notice i'm notified about
+        self::markNotificationAsSeen($notice->id,$profile->id,'mention');
+        self::markNotificationAsSeen($notice->id,$profile->id,'reply');
     }
+
+
+    /**
+     * Mark single notification as seen
+     */
+    public function markNotificationAsSeen($notice_id, $to_profile_id, $ntype)
+    {
+    $notification_to_mark_as_seen = QvitterNotification::pkeyGet(array(
+        'is_seen' => 0,
+        'notice_id' => $notice_id,
+        'to_profile_id' => $to_profile_id,
+        'ntype' => $ntype
+    ));
+    if($notification_to_mark_as_seen instanceof QvitterNotification) {
+        $orig = clone($notification_to_mark_as_seen);
+        $notification_to_mark_as_seen->is_seen = 1;
+        $notification_to_mark_as_seen->update($orig);
+    	}
+    }
+
 
 
     /**
@@ -712,16 +736,8 @@ class QvitterPlugin extends Plugin {
 
 		// mark reply/mention-notifications as read if we're replying to a notice we're notified about
 		if($notice->reply_to) {
-
-            $notification_to_mark_as_seen = QvitterNotification::pkeyGet(array('is_seen' => 0,
-                                                                                'notice_id' => $notice->reply_to,
-                                                                                'to_profile_id' => $notice->profile_id));
-            if($notification_to_mark_as_seen instanceof QvitterNotification
-            && ($notification_to_mark_as_seen->ntype == 'mention' || $notification_to_mark_as_seen->ntype == 'reply')) {
-                $orig = clone($notification_to_mark_as_seen);
-                $notification_to_mark_as_seen->is_seen = 1;
-                $notification_to_mark_as_seen->update($orig);
-            	}
+            self::markNotificationAsSeen($notice->reply_to,$notice->profile_id,'mention');
+            self::markNotificationAsSeen($notice->reply_to,$notice->profile_id,'reply');
 			}
 
 		// repeats
@@ -729,7 +745,11 @@ class QvitterPlugin extends Plugin {
 			$repeated_notice = Notice::getKV('id', $notice->repeat_of);
 			if ($repeated_notice instanceof Notice) {
 	            $this->insertNotification($repeated_notice->profile_id, $notice->profile_id, 'repeat', $repeated_notice->id);
-				}
+
+                // mark reply/mention-notifications as read if we're repeating to a notice we're notified about
+                self::markNotificationAsSeen($repeated_notice->id,$notice->profile_id,'mention');
+                self::markNotificationAsSeen($repeated_notice->id,$notice->profile_id,'reply');
+                }
  			}
 
 		// replies and mentions (no notifications for these if this is a repeat)

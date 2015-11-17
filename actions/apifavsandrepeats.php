@@ -46,7 +46,7 @@ class ApiFavsAndRepeatsAction extends ApiPrivateAuthAction
     {
         parent::prepare($args);
 
-        $this->notice_id = $this->trimmed('notice_id');        
+        $this->notice_id = $this->trimmed('notice_id');
 
         $this->original = Notice::getKV('id', $this->notice_id);
 
@@ -80,20 +80,30 @@ class ApiFavsAndRepeatsAction extends ApiPrivateAuthAction
     protected function handle()
     {
         parent::handle();
-        
-        
+
+
+        // since this api method is in practice only used when expanding a
+        // notice, we can assume the user has seen the notice in question,
+        // an no longer need a notification about it. mark reply/mention-
+        // notifications tied to this notice and the current profile as read
+        if($this->auth_user) {
+            QvitterPlugin::markNotificationAsSeen($this->notice_id,$this->auth_user->id,'mention');
+            QvitterPlugin::markNotificationAsSeen($this->notice_id,$this->auth_user->id,'reply');            
+        }
+
+
         // favs
         $fave = new Fave();
-        $fave->selectAdd(); 
+        $fave->selectAdd();
         $fave->selectAdd('user_id');
-        $fave->selectAdd('modified');        
+        $fave->selectAdd('modified');
         $fave->notice_id = $this->original->id;
         $fave->orderBy('modified');
         if (!is_null($this->cnt)) {
             $fave->limit(0, $this->cnt);
         }
 		$fav_ids = $fave->fetchAll('user_id', 'modified');
-		
+
 		// get nickname and profile image
 		$fav_ids_with_profile_data = array();
 		$i=0;
@@ -101,29 +111,29 @@ class ApiFavsAndRepeatsAction extends ApiPrivateAuthAction
 			$profile = Profile::getKV('id', $id);
 			$fav_ids_with_profile_data[$i]['user_id'] = $id;
 			$fav_ids_with_profile_data[$i]['nickname'] = $profile->nickname;
-			$fav_ids_with_profile_data[$i]['fullname'] = $profile->fullname;			
+			$fav_ids_with_profile_data[$i]['fullname'] = $profile->fullname;
 			$fav_ids_with_profile_data[$i]['profileurl'] = $profile->profileurl;
-			$fav_ids_with_profile_data[$i]['time'] = strtotime($time);								
+			$fav_ids_with_profile_data[$i]['time'] = strtotime($time);
 			$profile = new Profile();
 			$profile->id = $id;
 			$avatarurl = $profile->avatarUrl(48);
-			$fav_ids_with_profile_data[$i]['avatarurl'] = $avatarurl;								
+			$fav_ids_with_profile_data[$i]['avatarurl'] = $avatarurl;
 			$i++;
-		}       
-		 
-        
+		}
+
+
         // repeats
         $notice = new Notice();
         $notice->selectAdd(); // clears it
-        $notice->selectAdd('profile_id');        
-        $notice->selectAdd('created');               
+        $notice->selectAdd('profile_id');
+        $notice->selectAdd('created');
         $notice->repeat_of = $this->original->id;
         $notice->orderBy('created, id'); // NB: asc!
         if (!is_null($this->cnt)) {
             $notice->limit(0, $this->cnt);
         }
         $repeat_ids = $notice->fetchAll('profile_id','created');
-        
+
 		// get nickname and profile image
 		$repeat_ids_with_profile_data = array();
 		$i=0;
@@ -131,18 +141,18 @@ class ApiFavsAndRepeatsAction extends ApiPrivateAuthAction
 			$profile = Profile::getKV('id', $id);
 			$repeat_ids_with_profile_data[$i]['user_id'] = $id;
 			$repeat_ids_with_profile_data[$i]['nickname'] = $profile->nickname;
-			$repeat_ids_with_profile_data[$i]['fullname'] = $profile->fullname;			
-			$repeat_ids_with_profile_data[$i]['profileurl'] = $profile->profileurl;	
-			$repeat_ids_with_profile_data[$i]['time'] = strtotime($time);																
+			$repeat_ids_with_profile_data[$i]['fullname'] = $profile->fullname;
+			$repeat_ids_with_profile_data[$i]['profileurl'] = $profile->profileurl;
+			$repeat_ids_with_profile_data[$i]['time'] = strtotime($time);
 			$profile = new Profile();
 			$profile->id = $id;
 			$avatarurl = $profile->avatarUrl(48);
-			$repeat_ids_with_profile_data[$i]['avatarurl'] = $avatarurl;								
+			$repeat_ids_with_profile_data[$i]['avatarurl'] = $avatarurl;
 			$i++;
-		}               
-        
+		}
+
         $favs_and_repeats = array('favs'=>$fav_ids_with_profile_data,'repeats'=>$repeat_ids_with_profile_data);
-        
+
         $this->initDocument('json');
 		$this->showJsonObjects($favs_and_repeats);
         $this->endDocument('json');
@@ -162,6 +172,6 @@ class ApiFavsAndRepeatsAction extends ApiPrivateAuthAction
         return true;
     }
 
-    
-    
+
+
 }
