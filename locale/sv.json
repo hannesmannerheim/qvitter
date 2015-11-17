@@ -31,8 +31,8 @@
 	"favoritesNoun": "Favoriter",
 	"requeetNoun": "återqvittring",
 	"requeetsNoun": "återqvittringar",
-	"newQueet": "ny qvittring",
-	"newQueets": "nya qvittringar",
+	"newQueet": "{new-notice-count} ny qvittring",
+	"newQueets": "{new-notice-count} nya qvittringar",
 	"longmonthsJanuary": "januari",
 	"longmonthsFebruary": "februari",
 	"longmonthsMars": "mars",
@@ -139,5 +139,16 @@
 	"ERRORcouldNotFindPage":"Sidan hittades inte.",
 	"ERRORnoticeRemoved": "Den här qvittringen är borttagen.",
 	"ERRORnoContactWithServer": "Kan inte ansluta till servern. Servern kanske är överbelastad, eller så har du ett problem med din internetuppkoppling. Försök igen senare!",
-	"ERRORattachmentUploadFailed": "Uppladdningen misslyckades. Filen är kanske för stor eller av en otillåten typ."
+	"ERRORattachmentUploadFailed": "Uppladdningen misslyckades. Filen är kanske för stor eller av en otillåten typ.",
+	"hideRepliesToPeopleIDoNotFollow":"Visa inte svar till folk jag inte följer",
+	"markAllNotificationsAsSeen":"Markera alla notiser som lästa",
+	"notifyRepliesAndMentions":"Svar och omnämnanden",
+	"notifyFavs":"Favoriter",
+	"notifyRepeats":"Återqvittringar",
+	"notifyFollows":"Nya följare",
+	"timelineOptions":"Inställningar för det här flödet",
+	"ERRORfailedSavingYourSetting":"Misslyckades med att spara din inställning",
+	"ERRORfailedMarkingAllNotificationsAsRead":"Misslyckades med att markera alla notiser som lästa.",
+	"newNotification": "{new-notice-count} ny notis",
+	"newNotifications": "{new-notice-count} nya notiser"
 }

@@ -612,45 +612,56 @@ function appendUserToMentionsSuggestionsArray(user) {
 function displayOrHideUnreadNotifications(notifications) {
 
 		var data = $.parseJSON(notifications);
+		var totNotif = 0;
 
-		// if this is notifications page, we use the info from the hidden items in the feed
-		if(window.currentStream == 'qvitter/statuses/notifications.json') {
-			var new_queets_num = $('#feed-body').find('.stream-item.notification.hidden').length;
-
-			if(new_queets_num == 0) {
-				document.title = window.siteTitle;
-				$('#unseen-notifications').hide();
-				}
-			else {
-				document.title = window.siteTitle + ' (' + new_queets_num + ')';
-				$('#unseen-notifications').html(new_queets_num);
-				$('#unseen-notifications').show();
-				}
-			}
-		// all other pages use the header info
-		else if(data === null || typeof data == 'undefined' || data.length == 0) {
-			$('#unseen-notifications').hide();
-			document.title = window.siteTitle;
-			}
-		else {
-
-			var totNotif = 0;
+		if(data !== null && typeof data != 'undefined') {
 			$.each(data,function(k,v){
 				totNotif = totNotif + parseInt(v,10);
 				});
+			}
 
-			if(totNotif>0) {
-				$('#unseen-notifications').html(totNotif);
-				document.title = window.siteTitle + ' (' + totNotif + ')'; // update html page title
-				$('#unseen-notifications').show();
-				}
-			else {
-				$('#unseen-notifications').hide();
-				document.title = window.siteTitle;
+		if(window.currentStreamObject.name == 'notifications') {
+			var hiddenNotifications = $('#feed-body').find('.stream-item.hidden:not(.activity)').length;
+			if(hiddenNotifications>0) {
+				totNotif = totNotif + hiddenNotifications;
 				}
 			}
 
+		if(totNotif>0) {
+			$('#unseen-notifications').html(totNotif);
+			document.title = window.siteTitle + ' (' + totNotif + ')'; // update html page title
+			$('#unseen-notifications').show();
+			}
+		else {
+			$('#unseen-notifications').hide();
+			document.title = window.siteTitle;
+			}
+
 	}
+
+/* ·
+   ·
+   ·   Mark all notifications as seen
+   ·
+   · · · · · · · · · · · · · */
+
+function markAllNotificationsAsSeen() {
+	display_spinner();
+	getFromAPI('qvitter/mark_all_notifications_as_seen.json',function(data){
+		if(data === false) {
+			showErrorMessage(window.sL.ERRORfailedMarkingAllNotificationsAsRead);
+			}
+		else {
+			helloAPI(function(){
+				$('.not-seen-disc').remove();
+				$('#new-queets-bar').trigger('click'); // show any hidden notifications (this will also remove the dropdown menu)
+				remove_spinner();
+				});
+			}
+		});
+
+	}
+
 
 
 /* ·
@@ -1196,9 +1207,10 @@ function saveAllBookmarks() {
    · · · · · · · · · · · · · */
 
 function appendAllBookmarks(bookmarkContainer) {
-	if(bookmarkContainer) {
+	if(typeof bookmarkContainer != 'undefined' && bookmarkContainer) {
 		$('#bookmark-container').html('');
-		$.each(bookmarkContainer, function(key,obj) {
+		var bookmarkContainerParsed = JSON.parse(bookmarkContainer);
+		$.each(bookmarkContainerParsed, function(key,obj) {
 			$('#bookmark-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipRemoveBookmark + '"></i></a>');
 			});
 		}

@@ -37,6 +37,104 @@
   ·                                                                               ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
+/* ·
+   ·
+   ·   Build a menu for a stream, if there is any to build
+   ·
+   ·   Stream menus currently support three row types: divider, functions and profile-prefs-toggles
+   ·   They are defined in stream-router.js. Function rows run the function in
+   ·   the function attribute when clicked. Profile-prefs-toggle rows toggles the
+   ·   preference in the attribute when clicked.
+   ·
+   ·   @param streamObject: stream object returned by pathToStreamRouter()
+   ·
+   · · · · · · · · · */
+
+function streamObjectGetMenu(streamObject) {
+	if(typeof streamObject == 'undefined') {
+		return false;
+		}
+	if(streamObject.menu === false) {
+		return false;
+		}
+
+	var menuHTML = buildMenuTop();
+	$.each(streamObject.menu,function(){
+		if(this.type == 'divider') {
+			menuHTML = menuHTML + buildMenuDivider();
+			}
+		else if(this.type == 'function') {
+			menuHTML = menuHTML + buildMenuRowFullwidth(this.label, {
+				class: 'row-type-' + this.type,
+				'data-menu-row-type': this.type,
+				'data-function-name': this.functionName
+				});
+			}
+		else if(this.type == 'profile-prefs-toggle') {
+
+			// only prefs in the qvitter namespace is supported
+			if(this.namespace == 'qvitter') {
+
+				// enabled?
+				var prefEnabledOrDisabled = 'disabled';
+				if(typeof window.qvitterProfilePrefs[this.topic] != 'undefined'
+					&& window.qvitterProfilePrefs[this.topic] !== null
+				&& window.qvitterProfilePrefs[this.topic] != ''
+				&& window.qvitterProfilePrefs[this.topic] !== false
+				&& window.qvitterProfilePrefs[this.topic] != 0
+				&& window.qvitterProfilePrefs[this.topic] != '0') {
+					prefEnabledOrDisabled = 'enabled';
+					}
+
+				// get row html
+				menuHTML = menuHTML + buildMenuRowFullwidth(this.label, {
+					id: this.topic,
+					class: 'row-type-' + this.type + ' ' + prefEnabledOrDisabled,
+					'data-menu-row-type': this.type,
+					'data-profile-prefs-topic': this.topic,
+					'data-profile-prefs-namespace': this.namespace,
+					'data-profile-pref-state': prefEnabledOrDisabled
+					});
+				}
+			}
+		});
+
+	return menuHTML + buildMenuBottom();
+	}
+
+/* ·
+   ·
+   ·   Menu components
+   ·
+   · · · · · · · · · */
+
+function buildMenuTop() {
+	return '<ul class="dropdown-menu">\
+				<li class="dropdown-caret right">\
+					<span class="caret-outer"></span>\
+					<span class="caret-inner"></span>\
+				</li>';
+	}
+function buildMenuBottom() {
+	return '</ul>';
+	}
+function buildMenuDivider() {
+	return '<li class="fullwidth dropdown-divider"></li>';
+	}
+function buildMenuRowFullwidth(label, attributes) {
+	var attributesHTML = '';
+	$.each(attributes,function(k,v){
+		attributesHTML = attributesHTML + ' ' + k + '="' + v + '"';
+		});
+	return '<li class="fullwidth"><a' + attributesHTML + '>' + replaceHtmlSpecialChars(label) + '</a></li>';
+	}
+function alignMenuToParent(menu, parent) {
+	var menuLeft = parent.width()/2 - menu.width() + 15;
+	var menuTop = parent.height()+5;
+	menu.css('left', menuLeft + 'px');
+	menu.css('top', menuTop + 'px');
+	}
+
 
 /* ·
    ·
@@ -388,28 +486,6 @@ function addProfileCardToDOM(data) {
 	}
 
 
-/* ·
-   ·
-   ·   Adds a profile card before feed element, with data from the first object in the included object
-   ·
-   ·   @param data: an object with one or more queet objects
-   ·
-   · · · · · · · · · */
-
-function profileCardFromFirstObject(data,screen_name) {
-	var first = new Object();
-	for (var i in data) {
-	    if (data.hasOwnProperty(i) && typeof(i) !== 'function') {
-	        first = data[i];
-	        break;
-		    }
-		}
-	if(typeof first.user != 'undefined') {
-		addProfileCardToDOM(first.user);
-		}
-	}
-
-
 
 
 /* ·
@@ -571,6 +647,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		$('#feed-body').removeAttr('data-end-reached');
 		$('#feed-header-inner h2').css('opacity','0.2');
 		$('#feed-header-inner h2').html(h2FeedHeader); // update header (could be wrong in cache)
+		if(streamObject.menu && window.loggedIn) {
+			$('#feed-header-inner h2').append('<div id="stream-menu-cog" data-tooltip="' + window.sL.timelineOptions + '"></div>');
+			}
 		$('#feed-header-inner h2').animate({opacity:'1'},1000);
 
 		// set location bar from stream
@@ -598,6 +677,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			$('.profile-card,.hover-card,.hover-card-caret').remove();
 			$('#feed-body').html('');
 			$('#feed-header-inner h2').html(h2FeedHeader);
+			if(streamObject.menu && window.loggedIn) {
+				$('#feed-header-inner h2').append('<div id="stream-menu-cog" data-tooltip="' + window.sL.timelineOptions + '"></div>');
+				}
 			});
 		}
 
@@ -716,6 +798,12 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			|| streamObject.name == 'group member list'
 			|| streamObject.name == 'group admin list') {
 				groupProfileCard(streamObject.nickname);
+				}
+
+			// say hello to the api if this is notifications stream, to
+			// get correct unread notifcation count
+			if(window.currentStreamObject.name == 'notifications') {
+				helloAPI();
 				}
 
 			// start checking for new queets again
@@ -1067,7 +1155,7 @@ function cleanUpAfterCollapseQueet(q) {
 
 /* ·
    ·
-   ·   Get an inline queet box
+   ·   Get a queet box, mainly for popups
    ·
    ·   @return the html for the queet box
    ·
@@ -1499,7 +1587,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				// add not seen notification circle
 				$.each($('.notification.not-seen .queet'),function(){
 					if($(this).children('.not-seen').length<1) {
-						$(this).prepend('<div class="not-seen"></div>');
+						$(this).prepend('<div class="not-seen-disc"></div>');
 						}
 					});
 				}

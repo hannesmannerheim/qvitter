@@ -923,7 +923,7 @@ function doLogin(streamObjectToSet) {
 	loadHistoryFromLocalStorage();
 
 	// show bookmarks
-	appendAllBookmarks(window.allBookmarks);
+	appendAllBookmarks(window.qvitterProfilePrefs.bookmarks);
 
 	// set stream
 	setNewCurrentStream(streamObjectToSet,true,false,function(){
@@ -1073,6 +1073,108 @@ $('#settingslink').click(function(){
 	removeAllTooltips();
 	if(!$('.quitter-settings').hasClass('dropped')) { $('.quitter-settings').addClass('dropped'); }
 	else { $('.quitter-settings').removeClass('dropped'); }
+	});
+
+
+/* ·
+   ·
+   ·   Show/hide the stream menu dropdown on click
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('click','#stream-menu-cog',function(e){
+	if(!$(e.target).is('#stream-menu-cog') && $(e.target).closest('#stream-menu-cog').length>0) {
+		// don't show/hide when clicking inside the menu
+		}
+	else if($(this).hasClass('dropped')) {
+		$(this).removeClass('dropped');
+		$(this).children('.dropdown-menu').remove();
+		}
+	else {
+		$(this).addClass('dropped');
+		var menu = $(streamObjectGetMenu(window.currentStreamObject)).appendTo(this);
+		alignMenuToParent(menu,$(this));
+		}
+	});
+
+// hide the stream menu when clicking outside it
+$('body').on('click',function(e){
+	if(!$(e.target).is('#stream-menu-cog') && $('#stream-menu-cog').hasClass('dropped') && !$(e.target).closest('#stream-menu-cog').length>0) {
+		$('#stream-menu-cog').children('.dropdown-menu').remove();
+		$('#stream-menu-cog').removeClass('dropped');
+		}
+	});
+
+
+/* ·
+   ·
+   ·   When clicking a function row in a stream menu – invoke the function
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('click','.row-type-function',function(e){
+	window[$(this).attr('data-function-name')]();
+	});
+
+
+/* ·
+   ·
+   ·   When toggeling a a profile pref in a dropdown menu
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('click','.row-type-profile-prefs-toggle',function(e){
+
+	var thisToggle = $(this);
+
+	// wait for last toggle to finish before toggeling again
+	if(thisToggle.hasClass('clicked')) {
+		return true;
+		}
+
+	if(thisToggle.attr('data-profile-pref-state') == 'disabled') {
+		var prefDataToSet = '1';
+		}
+	else if(thisToggle.attr('data-profile-pref-state') == 'enabled') {
+		var prefDataToSet = '0';
+		}
+	else { // invalid
+		return true;
+		}
+
+	thisToggle.addClass('clicked');
+
+	var prefNamespace = thisToggle.attr('data-profile-prefs-namespace');
+	var prefTopic = thisToggle.attr('data-profile-prefs-topic');
+
+	// only prefs in the 'qvitter' namespace allowed
+	if(prefNamespace != 'qvitter') {
+		return true;
+		}
+
+	// save pref to server
+	postSetProfilePref(prefNamespace,prefTopic,prefDataToSet,function(data){
+		if(data === false) { // error
+			showErrorMessage(window.sL.ERRORfailedSavingYourSetting + ' (' + prefTopic + ')');
+			}
+		else { // success
+			thisToggle.removeClass('clicked');
+			if(thisToggle.attr('data-profile-pref-state') == 'disabled') {
+				thisToggle.removeClass('disabled');
+				thisToggle.addClass('enabled');
+				thisToggle.attr('data-profile-pref-state','enabled');
+				window.qvitterProfilePrefs[prefTopic] = '1';
+				}
+			else if(thisToggle.attr('data-profile-pref-state') == 'enabled') {
+				thisToggle.removeClass('enabled');
+				thisToggle.addClass('disabled');
+				thisToggle.attr('data-profile-pref-state','disabled');
+				window.qvitterProfilePrefs[prefTopic] = '0';
+				}
+
+			}
+		});
+
 	});
 
 
@@ -1397,10 +1499,12 @@ $('body').on('click','a', function(e) {
 $('body').on('click','.sm-ellipsis',function(){
 	// hide
 	if($(this).closest('.action-ellipsis-container').children('.dropdown-menu').length > 0) {
+		$(this).closest('.action-ellipsis-container').removeClass('dropped');
 		$(this).closest('.action-ellipsis-container').children('.dropdown-menu').remove();
 		}
 	// show
 	else {
+		$(this).closest('.action-ellipsis-container').addClass('dropped');
 		$('.action-ellipsis-container').children('.dropdown-menu').remove(); // remove menu from other queets
 		var streamItemUsername = $(this).closest('.queet').find('.stream-item-header').find('.screen-name').text();
 		var streamItemUserID = $(this).closest('.queet').find('.stream-item-header').find('.name').attr('data-user-id');
@@ -1426,7 +1530,13 @@ $('body').on('click','.sm-ellipsis',function(){
 		}
 	});
 
-
+// remove the ellipsis menu when clicking outside it
+$('body').on('click',function(e){
+	if(!$(e.target).is('.action-ellipsis-container') && $('.action-ellipsis-container.dropped').length>0 && !$(e.target).closest('.action-ellipsis-container').length>0) {
+		$('.action-ellipsis-container').children('.dropdown-menu').remove();
+		$('.action-ellipsis-container').removeClass('dropped');
+		}
+	});
 
 
 
@@ -1578,8 +1688,8 @@ function checkForNewQueets() {
 	if(!$('body').hasClass('loading-newer')) {
 		$('body').addClass('loading-newer');
 
-		// only of logged in and not user stream
-		if($('#user-container').css('display') == 'block' && $('.stream-item.user').length==0) {
+		// only if logged in and only for notice or notification streams
+		if(window.loggedIn && (window.currentStreamObject.type == 'notices' || window.currentStreamObject.type == 'notifications')) {
 			var lastId = $('#feed-body').children('.stream-item').not('.temp-post').attr('data-quitter-id-in-stream');
 			var addThisStream = window.currentStream;
 			var timeNow = new Date().getTime();
@@ -1588,31 +1698,33 @@ function checkForNewQueets() {
 					$('body').removeClass('loading-newer');
 					if(addThisStream == window.currentStream) {
 						addToFeed(data, false, 'hidden');
+
+						// if we have hidden items, show new-queets-bar
+						var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.activity)').length;
+						if(new_queets_num > 0) {
+
+							$('#new-queets-bar').parent().removeClass('hidden');
+
+							// bar label
+							if(new_queets_num == 1) { var q_txt = window.sL.newQueet; }
+							else { var q_txt = window.sL.newQueets; }
+							if(window.currentStreamObject.name == 'notifications') {
+								if(new_queets_num == 1) { var q_txt = window.sL.newNotification; }
+								else { var q_txt = window.sL.newNotifications; }
+								}
+
+							$('#new-queets-bar').html(q_txt.replace('{new-notice-count}',new_queets_num));
+
+							// say hello to the api if this is notifications stream, to
+							// get correct unread notifcation count
+							if(window.currentStreamObject.name == 'notifications') {
+								helloAPI();
+								}
+							}
+
 						}
 					}
 				});
-			}
-
-		// if we have hidden items, show new-queets-bar
-		var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.activity)').length;
-		if(new_queets_num > 0) {
-
-			// if this is notifications page, update site title with hidden notification count
-			if(window.currentStreamObject.name == 'notifications') {
-				document.title = window.siteTitle + ' (' + new_queets_num + ')';
-				}
-
-			$('#new-queets-bar').parent().removeClass('hidden');
-
-			// text plural
-			if(new_queets_num == 1) {
-				var q_txt = ' ' + window.sL.newQueet;
-				}
-			else {
-				var q_txt = ' ' + window.sL.newQueets;
-				}
-
-			$('#new-queets-bar').html(new_queets_num + q_txt);
 			}
 		}
 	}
@@ -1634,6 +1746,12 @@ $('body').on('click','#new-queets-bar',function(){
 	hiddenStreamItems.addClass('visible');
 	hiddenStreamItems.removeClass('hidden');
 	$('#new-queets-bar').parent().addClass('hidden');
+
+	// say hello to the api if this is notifications stream, to
+	// get correct unread notifcation count
+	if(window.currentStreamObject.name == 'notifications') {
+		helloAPI();
+		}
 	});
 
 
@@ -1905,13 +2023,12 @@ function disableOrEnableNavigationButtonsInImagePopup(popUp) {
 
 /* ·
    ·
-   ·   Collapse all open conversations, ellipsis menus and the welcome text on esc or when clicking the margin
+   ·   Collapse all open conversations and the welcome text on esc or when clicking the margin
    ·
    · · · · · · · · · · · · · */
 
 $('body').click(function(event){
-	if($(event.target).is('body')) {
-		$('.action-ellipsis-container').children('.dropdown-menu').remove();
+	if($(event.target).is('body') || $(event.target).is('#page-container')) {
 		$('.front-welcome-text.expanded > .show-full-welcome-text').trigger('click');
 		$.each($('.stream-item.expanded'),function(){
 			expand_queet($(this), false);
@@ -1921,7 +2038,6 @@ $('body').click(function(event){
 
 $(document).keyup(function(e){
 	if(e.keyCode==27) { // esc
-		$('.action-ellipsis-container').children('.dropdown-menu').remove();
 		$('.front-welcome-text.expanded > .show-full-welcome-text').trigger('click');
 		$.each($('.stream-item.expanded'),function(){
 			expand_queet($(this), false);

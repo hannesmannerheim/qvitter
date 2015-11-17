@@ -141,6 +141,10 @@ class QvitterPlugin extends Plugin {
     public function onRouterInitialized($m)
     {
 
+        $m->connect('api/qvitter/hello.json',
+					array('action' => 'ApiQvitterHello'));
+        $m->connect('api/qvitter/mark_all_notifications_as_seen.json',
+					array('action' => 'ApiQvitterMarkAllNotificationsAsSeen'));
 		$m->connect('api/qvitter/favs_and_repeats/:notice_id.json',
 					array('action' => 'ApiFavsAndRepeats'),
 					array('notice_id' => '[0-9]+'));
@@ -149,6 +153,8 @@ class QvitterPlugin extends Plugin {
 						  'format' => '(xml|json|rss|atom|as)'));
         $m->connect('api/qvitter/update_bookmarks.json',
 					array('action' => 'ApiQvitterUpdateBookmarks'));
+        $m->connect('api/qvitter/set_profile_pref.json',
+					array('action' => 'ApiQvitterSetProfilePref'));
         $m->connect('api/qvitter/update_link_color.json',
 					array('action' => 'apiqvitterupdatelinkcolor'));
 		$m->connect('api/qvitter/update_background_color.json',
@@ -1020,6 +1026,27 @@ class QvitterPlugin extends Plugin {
 		$notification->selectAdd('ntype');
 		$notification->selectAdd('count(id) as count');
 		$notification->whereAdd("(to_profile_id = '".$user_id."')");
+
+        // the user might have opted out from certain notification types
+        $current_profile = $user->getProfile();
+        $disable_notify_replies_and_mentions = Profile_prefs::getConfigData($current_profile, 'qvitter', 'disable_notify_replies_and_mentions');
+        $disable_notify_favs = Profile_prefs::getConfigData($current_profile, 'qvitter', 'disable_notify_favs');
+        $disable_notify_repeats = Profile_prefs::getConfigData($current_profile, 'qvitter', 'disable_notify_repeats');
+        $disable_notify_follows = Profile_prefs::getConfigData($current_profile, 'qvitter', 'disable_notify_follows');
+        if($disable_notify_replies_and_mentions == '1') {
+            $notification->whereAdd('qvitternotification.ntype != "mention"');
+            $notification->whereAdd('qvitternotification.ntype != "reply"');
+            }
+        if($disable_notify_favs == '1') {
+            $notification->whereAdd('qvitternotification.ntype != "like"');
+            }
+        if($disable_notify_repeats == '1') {
+            $notification->whereAdd('qvitternotification.ntype != "repeat"');
+            }
+        if($disable_notify_follows == '1') {
+            $notification->whereAdd('qvitternotification.ntype != "follow"');
+            }
+
 		$notification->groupBy('ntype');
 		$notification->whereAdd("(is_seen = '0')");
 		$notification->whereAdd("(notice_id IS NOT NULL)");	// sometimes notice_id is NULL, those notifications are corrupt and should be discarded

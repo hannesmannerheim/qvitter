@@ -186,6 +186,23 @@ function getFromAPI(stream, actionOnSuccess) {
 		});
 	}
 
+/* ·
+   ·
+   ·   Hello to the API! When saying hello you will e.g. also get headers
+   ·   with up-to-date unread notifications count to update etc
+   ·
+   ·   @param callback: function to invoke when done
+   ·
+   · · · · · · · · · · · · · */
+
+function helloAPI(callback) {
+	getFromAPI('qvitter/hello.json',function(){
+		if(typeof callback == 'function') {
+			callback();
+			}
+		});
+	}
+
 
 /* ·
    ·
@@ -305,6 +322,34 @@ function postNewBackgroundColor(newBackgroundColor) {
 			window.loggedIn.background_image = false;
 			changeDesign({backgroundimage:false,backgroundcolor:newBackgroundColor});
 			}
+		});
+	}
+
+
+/* ·
+   ·
+   ·   Set a profile pref
+   ·
+   ·   @param namespace: the namespace field in the db table, should be 'qvitter'
+   ·   @param topic: the topic field in the db table,
+   ·   @param data: the data to set
+   ·   @param callback: function to run when finished
+   ·
+   · · · · · · · · · · · · · */
+
+function postSetProfilePref(namespace, topic, data, callback) {
+	$.ajax({ url: window.apiRoot + 'qvitter/set_profile_pref.json',
+		cache: false,
+		type: "POST",
+		data: {
+			namespace: namespace,
+			topic: topic,
+			data: data
+			},
+		dataType:"json",
+		error: function(data){ callback(false); },
+		success: function(data) {
+			callback(data);			}
 		});
 	}
 

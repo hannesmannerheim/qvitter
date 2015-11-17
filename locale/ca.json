@@ -31,8 +31,8 @@
 	"favoritesNoun": "Preferits",
 	"requeetNoun": "Requeet",
 	"requeetsNoun": "Requeets",
-	"newQueet": "queet nou",
-	"newQueets": "queets nous",
+	"newQueet": "{new-notice-count} queet nou",
+	"newQueets": "{new-notice-count} queets nous",
 	"longmonthsJanuary": "gener",
 	"longmonthsFebruary": "febrer",
 	"longmonthsMars": "març",
@@ -139,5 +139,16 @@
 	"ERRORcouldNotFindPage":"No s'ha pogut trobar aquesta pàgina",
 	"ERRORnoticeRemoved": "Aquest avís s'ha eliminat.",
 	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!",
-	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large."
+	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large.",
+	"hideRepliesToPeopleIDoNotFollow":"Hide replies to people I don't follow",
+	"markAllNotificationsAsSeen":"Mark all notifications as seen",
+	"notifyRepliesAndMentions":"Mentions and replies",
+	"notifyFavs":"Favorites",
+	"notifyRepeats":"Requeets",
+	"notifyFollows":"New followers",
+	"timelineOptions":"Timeline options",
+	"ERRORfailedSavingYourSetting":"Failed saving your setting",
+	"ERRORfailedMarkingAllNotificationsAsRead":"Failed marking all notifications as seen.",
+	"newNotification": "{new-notice-count} new notification",
+	"newNotifications": "{new-notice-count} new notifications"
 }

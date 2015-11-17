@@ -31,8 +31,8 @@
 	"favoritesNoun": "Favoris",
 	"requeetNoun": "Repartage",
 	"requeetsNoun": "Repartages",
-	"newQueet": "nouvel avis",
-	"newQueets": "nouveaux avis",
+	"newQueet": "{new-notice-count} nouvel avis",
+	"newQueets": "{new-notice-count} nouveaux avis",
 	"longmonthsJanuary": "janvier",
 	"longmonthsFebruary": "février",
 	"longmonthsMars": "mars",
@@ -139,5 +139,16 @@
 	"ERRORcouldNotFindPage":"Impossible de trouver cette page.",
 	"ERRORnoticeRemoved": "Cet avis a été supprimé.",
 	"ERRORnoContactWithServer": "Impossible d'établir une connexion avec le serveur. Il peut être surchargé, ou il peut y avoir un problème avec votre connexion. Réessayez plus tard !",
-	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large."
+	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large.",
+	"hideRepliesToPeopleIDoNotFollow":"Hide replies to people I don't follow",
+	"markAllNotificationsAsSeen":"Mark all notifications as seen",
+	"notifyRepliesAndMentions":"Mentions and replies",
+	"notifyFavs":"Favorites",
+	"notifyRepeats":"Requeets",
+	"notifyFollows":"New followers",
+	"timelineOptions":"Timeline options",
+	"ERRORfailedSavingYourSetting":"Failed saving your setting",
+	"ERRORfailedMarkingAllNotificationsAsRead":"Failed marking all notifications as seen.",
+	"newNotification": "{new-notice-count} new notification",
+	"newNotifications": "{new-notice-count} new notifications"
 }

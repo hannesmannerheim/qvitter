@@ -251,14 +251,18 @@ class QvitterAction extends ApiAction
                     window.siteLocalOnlyDefaultPath = <?php print (common_config('public', 'localonly') ? 'true' : 'false'); ?>;
                     <?php
 
-                        // bookmarks
+                        // Get all topics in Qvitter's namespace in Profile_prefs
                         if($logged_in_user) {
-                            $bookmarks = Profile_prefs::getConfigData(Profile::current(), 'qvitter', 'bookmarks');
-                            if($bookmarks) {
-                                print 'window.allBookmarks = '.$bookmarks.';';
+                            $qvitter_profile_prefs = Profile_prefs::getNamespace(Profile::current(),'qvitter');
+                            if(count($qvitter_profile_prefs)>0) {
+                                $topic_data = new stdClass();
+                                foreach($qvitter_profile_prefs as $pref) {
+                                    $topic_data->{$pref->topic} = $pref->data;
+                            		}
+                                print 'window.qvitterProfilePrefs = '.json_encode($topic_data).';';
                                 }
                             else {
-                                print 'window.allBookmarks = false;';
+                                print 'window.qvitterProfilePrefs = false;';
                                 }
                             }
                     ?>
@@ -604,7 +608,7 @@ class QvitterAction extends ApiAction
 						color:/*COLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*COLOREND*/;
 						}
 					#unseen-notifications,
-					.stream-item.notification .not-seen,
+					.stream-item.notification .not-seen-disc,
 					#top-compose,
 					#logo,
 					.queet-toolbar button,
@@ -618,7 +622,8 @@ class QvitterAction extends ApiAction
 					.save-profile-button,
 					.crop-and-save-button,
 					.topbar .global-nav.show-logo:before,
-					.topbar .global-nav.pulse-logo:before {
+					.topbar .global-nav.pulse-logo:before,
+                    .dropdown-menu li:not(.dropdown-caret) a:hover {
 						background-color:/*BACKGROUNDCOLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*BACKGROUNDCOLOREND*/;
 						}
 					.queet-box-syntax[contenteditable="true"]:focus,

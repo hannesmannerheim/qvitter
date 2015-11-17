@@ -481,20 +481,6 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     text-decoration: none;
 	}
 .dropdown-menu li:not(.dropdown-caret) a:hover {
-    background-color: #2271A9;
-    background: -moz-linear-gradient(top,  #2f7eb6 0px, #2271a9 100%); /* FF3.6+ */
-
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0px,#2f7eb6), color-stop(100%,#2271a9)); /* Chrome,Safari4+ */
-
-	background: -webkit-linear-gradient(top,  #2f7eb6 0px,#2271a9 100%); /* Chrome10+,Safari5.1+ */
-
-	background: -o-linear-gradient(top,  #2f7eb6 0px,#2271a9 100%); /* Opera 11.10+ */
-
-	background: -ms-linear-gradient(top,  #2f7eb6 0px,#2271a9 100%); /* IE10+ */
-
-	background: linear-gradient(to bottom,  #2f7eb6 0px,#2271a9 100%); /* W3C */
-
-    background-repeat: repeat-x;
     color: #FFFFFF;
     text-decoration: none;
 	}
@@ -515,6 +501,37 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
 .action-ellipsis-container .dropdown-menu a {
 	width:auto;
 	}
+
+.dropdown-menu .row-type-profile-prefs-toggle::before {
+	position: absolute;
+	height:24px;
+	width:18px;
+	text-align: center;
+	left: 3px;
+	font-family: fontAwesome;
+	content:'\f00c';
+	font-size:10px;
+	line-height: 18px;
+	}
+.dropdown-menu .row-type-profile-prefs-toggle.disabled::before {
+	content:' ';
+	}
+
+/* these toggles are inverted, they appear the the user as disabled when enabled,
+   since they are enabled by default....*/
+.dropdown-menu a#disable_notify_replies_and_mentions.disabled::before,
+.dropdown-menu a#disable_notify_favs.disabled::before,
+.dropdown-menu a#disable_notify_repeats.disabled::before,
+.dropdown-menu a#disable_notify_follows.disabled::before {
+	content:'\f00c';
+	}
+.dropdown-menu a#disable_notify_replies_and_mentions.enabled::before,
+.dropdown-menu a#disable_notify_favs.enabled::before,
+.dropdown-menu a#disable_notify_repeats.enabled::before,
+.dropdown-menu a#disable_notify_follows.enabled::before {
+	content:' ';
+	}
+
 
 
 #invite-link {
@@ -1569,6 +1586,27 @@ body.rtl #footer-spinner-container {
     line-height: 22px;
 	}
 
+#stream-menu-cog {
+	display: inline-block;
+    font-size: 20px;
+    line-height: 20px;
+    margin-left: 9px;
+    opacity: 0.4;
+    position: relative;
+	cursor:pointer;
+	}
+#stream-menu-cog::before {
+	content:'\f013';
+	font-family: fontAwesome;
+	}
+#stream-menu-cog.dropped {
+	opacity:1;
+	}
+#stream-menu-cog .dropdown-menu {
+	z-index:1000;
+	display:block;
+	}
+
 .queet-streams {
     bottom: 0;
     color: #999999;
@@ -1687,7 +1725,7 @@ body.rtl #footer-spinner-container {
 	background-color:#F6F6F6;
 	}
 
-.stream-item.notification .not-seen {
+.stream-item.notification .not-seen-disc {
 	position:absolute;
 	left:-5px;
 	top:50%;

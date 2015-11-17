@@ -31,8 +31,8 @@
 	"favoritesNoun": "Stelsignitaj",
 	"requeetNoun": "Repepo",
 	"requeetsNoun": "Repepoj",
-	"newQueet": "nova pepo",
-	"newQueets": "novaj pepoj",
+	"newQueet": "{new-notice-count} nova pepo",
+	"newQueets": "{new-notice-count} novaj pepoj",
 	"longmonthsJanuary": "januaro",
 	"longmonthsFebruary": "februaro",
 	"longmonthsMars": "marto",
@@ -139,5 +139,16 @@
 	"ERRORcouldNotFindPage":"Could not find that page.",
 	"ERRORnoticeRemoved": "This notice has been removed.",
 	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!",
-	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large."
+	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large.",
+	"hideRepliesToPeopleIDoNotFollow":"Hide replies to people I don't follow",
+	"markAllNotificationsAsSeen":"Mark all notifications as seen",
+	"notifyRepliesAndMentions":"Mentions and replies",
+	"notifyFavs":"Favorites",
+	"notifyRepeats":"Requeets",
+	"notifyFollows":"New followers",
+	"timelineOptions":"Timeline options",
+	"ERRORfailedSavingYourSetting":"Failed saving your setting",
+	"ERRORfailedMarkingAllNotificationsAsRead":"Failed marking all notifications as seen.",
+	"newNotification": "{new-notice-count} new notification",
+	"newNotifications": "{new-notice-count} new notifications"
 }

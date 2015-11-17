@@ -130,7 +130,9 @@ function pathToStreamRouter(path) {
 		stream: false,				// the API path
 		nickname: false,			// if we can read a nickname/screen_name from the path, add it to this property
 		id: false,					// if we can read a id number string from the path, add it to this property
-        maxIdOrPage: 'maxId'		// whether this stream uses 'maxId' or 'page' for paging (maxId is default)
+        maxIdOrPage: 'maxId',		// whether this stream uses 'maxId' or 'page' for paging (maxId is default)
+		menu: false,				// optional menu in the header
+		type: 'notices'				// notices, notifications, users, groups, lists etc. notices is default
 		};
 
 	// instance's public timeline
@@ -262,6 +264,7 @@ function pathToStreamRouter(path) {
         streamObject.streamSubHeader = window.sL.memberCount;
 		streamObject.stream = 'statusnet/groups/membership/' + streamObject.nickname + '.json?count=20';
         streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
 		return streamObject;
 		}
 
@@ -274,6 +277,7 @@ function pathToStreamRouter(path) {
         streamObject.streamSubHeader = window.sL.adminCount;
 		streamObject.stream = 'statusnet/groups/admins/' + streamObject.nickname + '.json?count=20';
         streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
 		return streamObject;
 		}
 
@@ -290,6 +294,14 @@ function pathToStreamRouter(path) {
 			streamObject.stream = 'statuses/friends_timeline.json?screen_name=' + streamObject.nickname + '&withuserarray=1';
             streamObject.parentPath = streamObject.nickname;
 			}
+		streamObject.menu = [
+			{
+				type: 'profile-prefs-toggle',
+				namespace: 'qvitter',
+				topic: 'hide_replies',
+				label: window.sL.hideRepliesToPeopleIDoNotFollow
+				}
+			];
 		return streamObject;
 		}
 
@@ -319,6 +331,41 @@ function pathToStreamRouter(path) {
 			streamObject.stream = 'qvitter/statuses/notifications.json';
             streamObject.streamHeader = '@' + replaceHtmlSpecialChars(streamObject.nickname);
             streamObject.streamSubHeader = window.sL.notifications;
+			streamObject.type = 'notifications';
+			streamObject.menu = [
+				{
+					type: 'function',
+					functionName: 'markAllNotificationsAsSeen',
+					label: window.sL.markAllNotificationsAsSeen
+					},
+				{
+					type: 'divider'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'disable_notify_replies_and_mentions',
+					label: window.sL.notifyRepliesAndMentions
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'disable_notify_favs',
+					label: window.sL.notifyFavs
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'disable_notify_repeats',
+					label: window.sL.notifyRepeats
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'disable_notify_follows',
+					label: window.sL.notifyFollows
+					}
+				];
 			}
 		return streamObject;
 		}
@@ -349,6 +396,7 @@ function pathToStreamRouter(path) {
         streamObject.streamSubHeader = '<div class="queet-streams"><a class="queet-stream following" href="' + window.siteInstanceURL + streamObject.nickname + '/subscriptions">' + window.sL.following + '</a> / </div>' + window.sL.followers;
 		streamObject.stream = 'statuses/followers.json?count=20&screen_name=' + streamObject.nickname + '&withuserarray=1';
         streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
 		return streamObject;
 		}
 
@@ -361,6 +409,7 @@ function pathToStreamRouter(path) {
         streamObject.streamSubHeader = window.sL.following + '<div class="queet-streams">/ <a class="queet-stream followers" href="' + window.siteInstanceURL + streamObject.nickname + '/subscribers">' + window.sL.followers + '</a></div>';
 		streamObject.stream = 'statuses/friends.json?count=20&screen_name=' + streamObject.nickname + '&withuserarray=1';
         streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
 		return streamObject;
 		}
 
@@ -373,6 +422,7 @@ function pathToStreamRouter(path) {
         streamObject.streamSubHeader = window.sL.groups;
 		streamObject.stream = 'statusnet/groups/list.json?count=10&screen_name=' + streamObject.nickname + '&withuserarray=1';
 		streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'groups';
 		return streamObject;
 		}
 
