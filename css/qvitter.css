@@ -1685,10 +1685,6 @@ body.rtl #footer-spinner-container {
 	list-style-image: none;
 	list-style-position: outside;
 	list-style-type: none;
-    -webkit-transition: opacity 0.1s ease, height 0s linear, margin 0.05s linear;
-    -moz-transition: opacity 0.1s ease, height 0s linear, margin 0.05s linear;
-    -o-transition: opacity 0.1s ease, height 0s linear, margin 0.05s linear;
-    transition: opacity 0.1s ease, height 0s linear, margin 0.05s linear;
     height:auto;
     position:relative;
 	}
@@ -1708,10 +1704,6 @@ body.rtl #footer-spinner-container {
 	border:0 none;
 	border-top:1px solid #F6F6F6;
 	opacity:0.5;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
 	}
 .stream-item.conversation > .queet {
 	background-color:#F6F6F6;
