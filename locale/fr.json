@@ -150,5 +150,6 @@
 	"ERRORfailedSavingYourSetting":"Échec de l’enregistrement de vos paramètres",
 	"ERRORfailedMarkingAllNotificationsAsRead":"Échec du marquage de toutes les notifications comme vues",
 	"newNotification": "{new-notice-count} nouvelle notification",
-	"newNotifications": "{new-notice-count} nouvelles notifications"
+	"newNotifications": "{new-notice-count} nouvelles notifications",
+	"thisIsANoticeFromABlockedUser":"Warning: This is a notice from a user you have blocked. Click to show it."
 }

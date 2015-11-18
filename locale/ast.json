@@ -150,5 +150,6 @@
 	"ERRORfailedSavingYourSetting":"Failed saving your setting",
 	"ERRORfailedMarkingAllNotificationsAsRead":"Failed marking all notifications as seen.",
 	"newNotification": "{new-notice-count} new notification",
-	"newNotifications": "{new-notice-count} new notifications"
+	"newNotifications": "{new-notice-count} new notifications",
+	"thisIsANoticeFromABlockedUser":"Warning: This is a notice from a user you have blocked. Click to show it."
 }

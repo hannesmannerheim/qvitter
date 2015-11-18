@@ -150,5 +150,6 @@
 	"ERRORfailedSavingYourSetting":"Feilet ved lagring av innstillinger",
 	"ERRORfailedMarkingAllNotificationsAsRead":"Feilet ved forsøk å markere alle notifikasjoner som lest.",
 	"newNotification": "{new-notice-count} ny notifikasjon",
-	"newNotifications": "{new-notice-count} nye notifikasjoner"
+	"newNotifications": "{new-notice-count} nye notifikasjoner",
+	"thisIsANoticeFromABlockedUser":"Warning: This is a notice from a user you have blocked. Click to show it."
 }

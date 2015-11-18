@@ -1841,10 +1841,12 @@ function addToFeed(feed, after, extraClasses, isReply) {
 function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isConversation) {
 
 	// if we've blocked this user, but it has slipped through anyway
+	var blockingTooltip = '';
 	if(typeof window.allBlocking != 'undefined') {
 		$.each(window.allBlocking,function(){
 			if(this == obj.user.id){
 				extraClassesThisRun = extraClassesThisRun + ' profile-blocked-by-me';
+				blockingTooltip = ' data-tooltip="' + window.sL.thisIsANoticeFromABlockedUser + '"';
 				return false; // break
 				}
 			});
@@ -2010,7 +2012,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 						data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" \
 						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"\
 						' + requeetedByMe + '>\
-							<div class="queet" id="' + idPrepend + 'q-' + obj.id + '">\
+							<div class="queet" id="' + idPrepend + 'q-' + obj.id + '"' + blockingTooltip  + '>\
 								' + requeetHtml + '\
 								' + ostatusHtml + '\
 								<div class="queet-content">\

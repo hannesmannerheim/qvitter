@@ -150,5 +150,6 @@
 	"ERRORfailedSavingYourSetting":"Misslyckades med att spara din inställning",
 	"ERRORfailedMarkingAllNotificationsAsRead":"Misslyckades med att markera alla notiser som lästa.",
 	"newNotification": "{new-notice-count} ny notis",
-	"newNotifications": "{new-notice-count} nya notiser"
+	"newNotifications": "{new-notice-count} nya notiser",
+	"thisIsANoticeFromABlockedUser":"Varning! Det här är en qvittring från en användare som du har blockerat. Klicka för att visa den."
 }

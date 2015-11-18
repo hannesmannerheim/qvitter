@@ -133,7 +133,7 @@ $('body').on({
 		// regular tooltips
 		if($(e.target).is('[data-tooltip]')) {
 			tooltip_data = $(e.target).attr('data-tooltip');
-			var tooltipElement = $('<div class="tooltip">' + tooltip_data + '</div>');
+			var tooltipElement = $('<div class="tooltip" lang="' + window.selectedLanguage + '">' + tooltip_data + '</div>');
 			var tooltipCaret = $('<div class="tooltip-caret"></div>');
 			$('body').prepend(tooltipElement);
 			$('body').prepend(tooltipCaret);
