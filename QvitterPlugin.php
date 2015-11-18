@@ -141,6 +141,8 @@ class QvitterPlugin extends Plugin {
     public function onRouterInitialized($m)
     {
 
+        $m->connect('api/qvitter/blocks.json',
+					array('action' => 'ApiQvitterBlocks'));
         $m->connect('api/qvitter/hello.json',
 					array('action' => 'ApiQvitterHello'));
         $m->connect('api/qvitter/mark_all_notifications_as_seen.json',
