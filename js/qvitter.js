@@ -867,44 +867,11 @@ function doLogin(streamObjectToSet) {
 	$('#qvitter-notice').show();
 	$('#user-screen-name, #user-avatar, #user-name').attr('data-tooltip', window.sL.viewMyProfilePage);
 
-	// get all users i'm following for autosuggestion
-	window.following = new Object();
-	window.groupMemberships = new Object();
-	window.groupNicknamesAndLocalAliases = new Array();
-
-	getFromAPI('qvitter/allfollowing/' + window.loggedIn.screen_name + '.json',function(data){
-
-		if(data.users) {
-			$.each(data.users,function(k,v){
-				if(v[2] === false) { var avatar = window.defaultAvatarStreamSize; }
-				else { 	var avatar = v[2]; }
-				if(v[3]) {
-					// extract server base url
-					v[3] = v[3].substring(v[3].indexOf('://')+3,v[3].lastIndexOf(v[1])-1);
-					}
-				v[0] = v[0] || v[1]; // if name is null we go with username there too
-				window.following[k] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
-				});
-			}
-
-		if(data.groups) {
-			$.each(data.groups,function(k,v){
-				if(v[2] === false || v[2] === null) { var avatar = window.defaultAvatarStreamSize; }
-				else { 	var avatar = v[2]; }
-				if(v[3]) {
-					// extract server base url
-					v[3] = v[3].substring(v[3].indexOf('://')+3);
-					v[3] = v[3].substring(0, v[3].indexOf('/'));
-					}
-				v[0] = v[0] || v[1]; // if name is null we go with username there too
-				window.groupMemberships[k] = { 'id': k,'name': v[0], 'username': v[1],'avatar': avatar, 'url':v[3] };
-				window.groupNicknamesAndLocalAliases[k] = v[1];
-				});
-			}
+	// get everyone we follow, block and our memberships and stor in global objects
+	getAllFollowsMembershipsAndBlocks(function(){
 
 		// do this now not to stall slow computers, also we know of group memberships to highlight now
 		cacheSyntaxHighlighting();
-		cacheSyntaxHighlightingGroups();
 
 		// we might have cached text for the queet box
 		// (we need to get the mentions suggestions and cache the syntax highlighting before doing this)

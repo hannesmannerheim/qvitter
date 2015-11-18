@@ -1936,6 +1936,33 @@ body.rtl .queet.rtl .expanded-content {
 	color:#999999;
 	}
 
+.stream-item:not(.expanded).profile-blocked-by-me {
+	height:15px;
+	overflow:hidden;
+	}
+.stream-item:not(.expanded).profile-blocked-by-me .queet::before {
+	display: block;
+	position: absolute;
+	left:0;
+	top:0;
+	height:15px;
+	width:100%;
+	background-color: #fff;
+	content: '\f071';
+	font-family:fontAwesome;
+	color:#ddd;
+	font-size:10px;
+	line-height:15px;
+	text-align: right;
+	padding-right: 5px;
+	z-index: 100;
+	border-bottom:1px solid #ddd;
+	box-sizing: border-box;
+	}
+.stream-item:not(.expanded).profile-blocked-by-me:hover .queet::before {
+	background-color: #f5f5f5;
+	}
+
 /* only show activity notices if they are conversation starters
    we never need to see these, but sometimes someone replies to
    an activity notice, and then it can be good to know what the

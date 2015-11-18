@@ -1839,6 +1839,15 @@ function addToFeed(feed, after, extraClasses, isReply) {
 
 function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isConversation) {
 
+	// if we've blocked this user, but it has slipped through anyway
+	$.each(window.allBlocking,function(){
+		if(this == obj.user.id){
+			extraClassesThisRun = extraClassesThisRun + ' profile-blocked-by-me';
+			return false; // break
+			}
+		});
+
+
 	// if we have the full html for a truncated notice cached in localstorage, we use that
 	var cacheData = localStorageObjectCache_GET('fullQueetHtml',obj.id);
 	if(cacheData) {

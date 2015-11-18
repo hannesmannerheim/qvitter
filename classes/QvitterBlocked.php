@@ -53,7 +53,7 @@ class QvitterBlocked extends Profile_block
     }
 
 
-    private static function getBlockedIDs($profile_id, $offset, $limit)
+    public static function getBlockedIDs($profile_id, $offset, $limit)
     {
         $cacheKey = 'qvitterblocked:'.$profile_id;
 

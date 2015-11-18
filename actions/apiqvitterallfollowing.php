@@ -49,6 +49,7 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
     var $profiles = null;
   	var $users_stripped = null;
     var $groups_stripped = null;
+    var $blocks = null;
 
     /**
      * Take arguments for running
@@ -73,6 +74,7 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 
         $this->profiles = $this->getProfiles();
         $this->groups = $this->getGroups();
+        $this->blocks = QvitterBlocked::getBlockedIDs($this->target->id,0,10000);
 
 
 		// profiles: only keep id, name, nickname and avatar URL
@@ -104,7 +106,7 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 				$this_group[3] = false;
 				}
 			$this->groups_stripped[$user_group->id] = $this_group;
-			}
+			}		
 
         return true;
     }
@@ -122,7 +124,7 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 
 
         $this->initDocument('json');
-        $this->showJsonObjects(array('users'=>$this->users_stripped,'groups'=>$this->groups_stripped));
+        $this->showJsonObjects(array('users'=>$this->users_stripped,'groups'=>$this->groups_stripped,'blocks'=>$this->blocks));
         $this->endDocument('json');
     }
 
