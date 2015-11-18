@@ -253,7 +253,13 @@ class QvitterAction extends ApiAction
 
                         // Get all topics in Qvitter's namespace in Profile_prefs
                         if($logged_in_user) {
-                            $qvitter_profile_prefs = Profile_prefs::getNamespace(Profile::current(),'qvitter');
+
+                            try {
+                                $qvitter_profile_prefs = Profile_prefs::getNamespace(Profile::current(),'qvitter');
+                            } catch (Exception $e) {
+                                $qvitter_profile_prefs = array();
+                            }
+
                             if(count($qvitter_profile_prefs)>0) {
                                 $topic_data = new stdClass();
                                 foreach($qvitter_profile_prefs as $pref) {
