@@ -644,7 +644,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
     // blur any selected links
     $('a').blur();
 
-    // null any searches
+    // null any pagings
 	$('#feed-body').removeAttr('data-search-page-number');
 
 	// remember the most recent stream
@@ -844,6 +844,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			$('#feed').animate({opacity:'1'},150); // fade in
 			$('.reload-stream').show();
 			$('#feed-body').removeAttr('data-end-reached');
+			$('#feed-body').removeAttr('data-search-page-number');
 			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
 			$('html,body').scrollTop(0); // scroll to top
 
@@ -1652,7 +1653,13 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
 				   && window.loggedIn.id != obj.id) {	// not if this is me
 					if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users
-						var followButton = '<div class="user-actions"><button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
+						var followButton = '<div class="user-actions">\
+												<button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '">\
+													<span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span>\
+													<span class="button-text following-text">' + window.sL.userFollowing + '</span>\
+													<span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span>\
+												</button>\
+											</div>';
 						}
 					}
 

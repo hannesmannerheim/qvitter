@@ -334,14 +334,7 @@ class QvitterPlugin extends Plugin {
                     }
 
                 if($user instanceof User) {
-					if (common_logged_in()) {
-						$profilecurrent = Profile::current();
-						$currentuser = $profilecurrent->getUser();
-						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($user->getProfile(),$currentuser)));
-						}
-					else {
-						header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($user->getProfile())));
-						}
+					header('Qvitter-User-Array: '.json_encode($this->qvitterTwitterUserArray($user->getProfile())));
 					}
 				}
 			break;
@@ -1096,7 +1089,7 @@ class QvitterPlugin extends Plugin {
     }
 
 
-    function qvitterTwitterUserArray($profile, $logged_in=false)
+    function qvitterTwitterUserArray($profile)
     {
         $twitter_user = array();
 
@@ -1159,14 +1152,14 @@ class QvitterPlugin extends Plugin {
         $twitter_user['following'] = false;
         $twitter_user['statusnet_blocking'] = false;
 
-		$logged_in_profile = Profile::current();
+		$logged_in_profile = false;
 
-        if ($logged_in) {
+        if(common_logged_in()) {
 
-            $twitter_user['following'] = $logged_in->isSubscribed($profile);
-            $twitter_user['statusnet_blocking']  = $logged_in->hasBlocked($profile);
+            $logged_in_profile = Profile::current();
 
-            $logged_in_profile = $logged_in->getProfile();
+            $twitter_user['following'] = $logged_in_profile->isSubscribed($profile);
+            $twitter_user['statusnet_blocking']  = $logged_in_profile->hasBlocked($profile);
 
         }
 

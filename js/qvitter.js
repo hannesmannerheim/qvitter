@@ -1150,6 +1150,16 @@ $('body').on('click',function(e){
    · · · · · · · · · · · · · */
 
 $('body').on('click','.row-type-function',function(e){
+
+	var thisFunctionRow = $(this);
+
+	// don't invoke the function again if it's not finished last time
+	if(thisFunctionRow.hasClass('clicked')) {
+		return true;
+		}
+
+	thisFunctionRow.addClass('clicked');
+
 	var functionName = $(this).attr('data-function-name');
 	if($(this).attr('data-function-arguments') == 'undefined') {
 		var functionArguments = false;
@@ -1157,7 +1167,11 @@ $('body').on('click','.row-type-function',function(e){
 	else {
 		var functionArguments = JSON.parse($(this).attr('data-function-arguments'));
 		}
-	window[functionName](functionArguments);
+	window[functionName](functionArguments, function(success){
+		if(success) {
+			thisFunctionRow.removeClass('clicked');
+			}
+		});
 	});
 
 
