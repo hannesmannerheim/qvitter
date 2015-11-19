@@ -39,27 +39,24 @@
 
 /* ·
    ·
-   ·   Build a menu for a stream, if there is any to build
+   ·   Build a menu
    ·
-   ·   Stream menus currently support three row types: divider, functions and profile-prefs-toggles
-   ·   They are defined in stream-router.js. Function rows run the function in
-   ·   the function attribute when clicked. Profile-prefs-toggle rows toggles the
-   ·   preference in the attribute when clicked.
+   ·   Menus currently support four row types: divider, functions, links and profile-prefs-toggles
+   ·   Function rows run the function in  the function attribute when clicked.
+   ·   Profile-prefs-toggle rows toggles the preference in the attribute when clicked.
    ·
    ·   @param streamObject: stream object returned by pathToStreamRouter()
    ·
    · · · · · · · · · */
 
-function streamObjectGetMenu(streamObject) {
-	if(typeof streamObject == 'undefined') {
-		return false;
-		}
-	if(streamObject.menu === false) {
+function getMenu(menuArray) {
+
+	if(typeof getMenu == 'undefined' || getMenu === false) {
 		return false;
 		}
 
 	var menuHTML = buildMenuTop();
-	$.each(streamObject.menu,function(){
+	$.each(menuArray,function(){
 		if(this.type == 'divider') {
 			menuHTML = menuHTML + buildMenuDivider();
 			}
@@ -67,7 +64,14 @@ function streamObjectGetMenu(streamObject) {
 			menuHTML = menuHTML + buildMenuRowFullwidth(this.label, {
 				class: 'row-type-' + this.type,
 				'data-menu-row-type': this.type,
-				'data-function-name': this.functionName
+				'data-function-name': this.functionName,
+				'data-function-arguments': JSON.stringify(this.functionArguments)
+				});
+			}
+		else if(this.type == 'link') {
+			menuHTML = menuHTML + buildMenuRowFullwidth(this.label, {
+				class: 'row-type-' + this.type,
+				'href': this.href
 				});
 			}
 		else if(this.type == 'profile-prefs-toggle') {
@@ -104,6 +108,22 @@ function streamObjectGetMenu(streamObject) {
 
 /* ·
    ·
+   ·   Menu from streamObject
+   ·
+   · · · · · · · · · */
+
+function streamObjectGetMenu(streamObject) {
+	if(typeof streamObject == 'undefined') {
+		return false;
+		}
+	if(streamObject.menu === false) {
+		return false;
+		}
+	return getMenu(streamObject.menu);
+	}
+
+/* ·
+   ·
    ·   Menu components
    ·
    · · · · · · · · · */
@@ -124,15 +144,19 @@ function buildMenuDivider() {
 function buildMenuRowFullwidth(label, attributes) {
 	var attributesHTML = '';
 	$.each(attributes,function(k,v){
-		attributesHTML = attributesHTML + ' ' + k + '="' + v + '"';
+		attributesHTML = attributesHTML + ' ' + k + '=\'' + v + '\'';
 		});
 	return '<li class="fullwidth"><a' + attributesHTML + '>' + replaceHtmlSpecialChars(label) + '</a></li>';
 	}
-function alignMenuToParent(menu, parent) {
-	var menuLeft = parent.width()/2 - menu.width() + 15;
+function alignMenuToParent(menu, parent, offsetLeft) {
+	if(typeof offsetLeft == 'undefined') {
+		var offsetLeft = 0;
+		}
+	var menuLeft = parent.innerWidth()/2 - menu.width() + 15 + offsetLeft;
 	var menuTop = parent.height()+5;
 	menu.css('left', menuLeft + 'px');
 	menu.css('top', menuTop + 'px');
+	menu.css('display','block'); // show menu
 	}
 
 

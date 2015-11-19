@@ -1053,10 +1053,14 @@ $('body').on('click','#stream-menu-cog',function(e){
 	if(!$(e.target).is('#stream-menu-cog') && $(e.target).closest('#stream-menu-cog').length>0) {
 		// don't show/hide when clicking inside the menu
 		}
+
+	// hide
 	else if($(this).hasClass('dropped')) {
 		$(this).removeClass('dropped');
 		$(this).children('.dropdown-menu').remove();
 		}
+
+	// show
 	else {
 		$(this).addClass('dropped');
 		var menu = $(streamObjectGetMenu(window.currentStreamObject)).appendTo(this);
@@ -1073,6 +1077,72 @@ $('body').on('click',function(e){
 	});
 
 
+
+/* ·
+   ·
+   ·   Open a queet menu when clicking ellipsis button
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('click','.sm-ellipsis',function(e){
+
+	if(!$(e.target).is('.sm-ellipsis') && $(e.target).closest('.sm-ellipsis').length>0) {
+		// don't show/hide when clicking inside the menu
+		}
+
+	// hide
+	else if($(this).hasClass('dropped')) {
+		$(this).removeClass('dropped');
+		$(this).children('.dropdown-menu').remove();
+		}
+
+	// show
+	else {
+		$(this).addClass('dropped');
+
+		var streamItemUsername = $(this).closest('.queet').find('.stream-item-header').find('.screen-name').text();
+		var streamItemUserID = $(this).closest('.queet').find('.stream-item-header').find('.name').attr('data-user-id');
+		var streamItemID = $(this).closest('.queet').parent('.stream-item').attr('data-quitter-id');
+
+		// my notice
+		if(streamItemUserID == window.loggedIn.id) {
+			var menuArray = [
+				{
+					type: 'function',
+					functionName: 'deleteQueet',
+					functionArguments: {
+						streamItemID: streamItemID
+						},
+					label: window.sL.deleteVerb
+					},
+				];
+			}
+		// other users' notices
+		else {
+			var menuArray = [
+				{
+					type: 'link',
+					href: window.siteInstanceURL + 'main/block?profileid=' + streamItemUserID,
+					label: window.sL.blockUser.replace('{username}',streamItemUsername)
+					},
+				];
+			}
+
+		// add menu to DOM and align it
+		var menu = $(getMenu(menuArray)).appendTo(this);
+		alignMenuToParent(menu,$(this));
+		}
+	});
+
+// remove the ellipsis menu when clicking outside it
+$('body').on('click',function(e){
+	if(!$(e.target).is('.sm-ellipsis') && $('.sm-ellipsis.dropped').length>0 && !$(e.target).closest('.sm-ellipsis').length>0) {
+		$('.sm-ellipsis').children('.dropdown-menu').remove();
+		$('.sm-ellipsis').removeClass('dropped');
+		}
+	});
+
+
 /* ·
    ·
    ·   When clicking a function row in a stream menu – invoke the function
@@ -1080,7 +1150,14 @@ $('body').on('click',function(e){
    · · · · · · · · · · · · · */
 
 $('body').on('click','.row-type-function',function(e){
-	window[$(this).attr('data-function-name')]();
+	var functionName = $(this).attr('data-function-name');
+	if($(this).attr('data-function-arguments') == 'undefined') {
+		var functionArguments = false;
+		}
+	else {
+		var functionArguments = JSON.parse($(this).attr('data-function-arguments'));
+		}
+	window[functionName](functionArguments);
 	});
 
 
@@ -1453,55 +1530,6 @@ $('body').on('click','a', function(e) {
 				setNewCurrentStream(streamObject,true,false);
 				}
 			}
-		}
-	});
-
-
-/* ·
-   ·
-   ·   Open a queet menu when clicking ellipsis button
-   ·
-   · · · · · · · · · · · · · */
-
-$('body').on('click','.sm-ellipsis',function(){
-	// hide
-	if($(this).closest('.action-ellipsis-container').children('.dropdown-menu').length > 0) {
-		$(this).closest('.action-ellipsis-container').removeClass('dropped');
-		$(this).closest('.action-ellipsis-container').children('.dropdown-menu').remove();
-		}
-	// show
-	else {
-		$(this).closest('.action-ellipsis-container').addClass('dropped');
-		$('.action-ellipsis-container').children('.dropdown-menu').remove(); // remove menu from other queets
-		var streamItemUsername = $(this).closest('.queet').find('.stream-item-header').find('.screen-name').text();
-		var streamItemUserID = $(this).closest('.queet').find('.stream-item-header').find('.name').attr('data-user-id');
-		var streamItemID = $(this).closest('.queet').parent('.stream-item').attr('data-quitter-id');
-
-		var blockHtml = '';
-		var deleteHtml = '';
-		if(streamItemUserID != window.loggedIn.id) {
-			blockHtml = '<li><a class="block-user" href="' + window.siteInstanceURL + 'main/block?profileid=' + streamItemUserID + '">' + window.sL.blockUser.replace('{username}',streamItemUsername) + '</a></li>';
-			}
-		else {
-			deleteHtml = '<li><a class="delete-queet" href="' + window.siteInstanceURL + 'notice/delete/' + streamItemID + '">' + window.sL.deleteVerb + '</a></li>';
-			}
-
-
-		$(this).closest('.action-ellipsis-container').append('\
-			<ul class="dropdown-menu">\
-				<li class="dropdown-caret left"><span class="caret-outer"></span><span class="caret-inner"></span></li>\
-				' + blockHtml + '\
-				' + deleteHtml + '\
-			</ul>\
-			');
-		}
-	});
-
-// remove the ellipsis menu when clicking outside it
-$('body').on('click',function(e){
-	if(!$(e.target).is('.action-ellipsis-container') && $('.action-ellipsis-container.dropped').length>0 && !$(e.target).closest('.action-ellipsis-container').length>0) {
-		$('.action-ellipsis-container').children('.dropdown-menu').remove();
-		$('.action-ellipsis-container').removeClass('dropped');
 		}
 	});
 
@@ -2019,9 +2047,9 @@ $(document).keyup(function(e){
    ·
    · · · · · · · · · · · · · */
 
-$('body').on('click','.action-ellipsis-container .delete-queet',function(e){
-	e.preventDefault();
-	var this_stream_item = $(this).closest('.stream-item');
+function deleteQueet(arg) {
+
+	var this_stream_item = $('.stream-item[data-quitter-id="' + arg.streamItemID + '"]');
 
 	// don't do anything if this is a queet being posted
 	if(this_stream_item.hasClass('temp-post')) {
@@ -2054,7 +2082,7 @@ $('body').on('click','.action-ellipsis-container .delete-queet',function(e){
 			});
 		});
 
-	});
+	}
 
 
 /* ·

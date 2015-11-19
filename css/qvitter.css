@@ -491,10 +491,7 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
 	}
 .action-ellipsis-container .dropdown-menu {
     display: block;
-    float: right;
-    left: 17px;
     right: auto;
-    top: 28px;
 	}
 .action-ellipsis-container .dropdown-menu,
 .action-ellipsis-container .dropdown-menu li:not(.dropdown-caret),
@@ -1872,6 +1869,7 @@ background-repeat: no-repeat;
 
 .stream-item.expanded.collapsing > .queet {
 	background-color:#fff;
+	z-index:102;
     -webkit-transition: margin-top 5s linear;
     -moz-transition: margin-top 5s linear;
     -o-transition: margin-top 5s linear;
@@ -1947,6 +1945,7 @@ body.rtl .queet.rtl .expanded-content {
 	border-bottom:1px solid #ddd;
 	box-sizing: border-box;
 	}
+
 .stream-item:not(.expanded).profile-blocked-by-me .queet {
 	width:20px;
 	position:absolute;
@@ -2506,6 +2505,7 @@ ul.queet-actions li .icon {
     line-height: 25px;
     text-align: center;
 	margin-right:7px;
+	position: relative;
 	}
 ul.queet-actions li:not(:first-child) .icon {
 	margin-left:26px;
