@@ -571,6 +571,40 @@ function searchForUserDataToCache(obj) {
 
 /* ·
    ·
+   ·  Store the current stream's state (html) in localStorage
+   ·
+   · · · · · · · · · */
+
+
+function rememberStreamStateInLocalStorage() {
+	if(typeof window.currentStreamObject != 'undefined') {
+
+		// dont store open conversations, and only store profile card and the top 20 stream-items
+		var firstTwentyHTML = '';
+		$.each($('#feed-body').children('.stream-item').slice(0,20),function(){
+			firstTwentyHTML += $(this).outerHTML();
+			});
+		var feed = $('<div/>').append(firstTwentyHTML);
+		feed.find('.view-more-container-top').remove();
+		feed.find('.view-more-container-bottom').remove();
+		feed.find('.stream-item.conversation').remove();
+		feed.find('.expanded-content').remove();
+		feed.find('.inline-reply-queetbox').remove();
+		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded');
+		var feedHtml = feed.html();
+		var profileCardHtml = $('#feed').siblings('.profile-card').outerHTML();
+		var streamData = {
+			card: profileCardHtml,
+			feed: feedHtml
+			};
+
+		localStorageObjectCache_STORE('streamState',window.currentStreamObject.path, streamData);
+		}
+	}
+
+
+/* ·
+   ·
    ·  Appends a user to the array containing the mentions suggestions to show when typing a notice
    ·
    · · · · · · · · · */

@@ -1729,6 +1729,9 @@ function checkForNewQueets() {
 							if(window.currentStreamObject.name == 'notifications') {
 								helloAPI();
 								}
+
+							// cache the now updated stream
+							rememberStreamStateInLocalStorage();
 							}
 
 						}

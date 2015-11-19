@@ -628,9 +628,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 	$('.error-message').remove();
 
 	// remember state of old stream (including profile card)
-	if(typeof window.currentStreamObject != 'undefined') {
-		localStorageObjectCache_STORE('streamState',window.currentStreamObject.path, $('#feed').siblings('.profile-card').outerHTML() + $('#feed').outerHTML());
-		}
+	rememberStreamStateInLocalStorage();
 
 	// halt interval that checks for new queets
 	window.clearInterval(checkForNewQueetsInterval);
@@ -644,75 +642,90 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
     // blur any selected links
     $('a').blur();
 
-    // null any pagings
+    // unset metadata for the old stream saved in attributes
 	$('#feed-body').removeAttr('data-search-page-number');
+	$('#feed-body').removeAttr('data-end-reached');
+
+	// are we just reloading?
+	var weAreReloading = false;
+	if(typeof window.currentStreamObject != 'undefined' && window.currentStreamObject.name == streamObject.name) {
+		weAreReloading = true;
+		}
 
 	// remember the most recent stream
 	window.currentStream = streamObject.stream;
 	window.currentStreamObject = streamObject;
 
+	// set the new streams header
 	if(streamObject.streamSubHeader) {
-		var h2FeedHeader = streamObject.streamSubHeader;
+		$('#feed-header-inner h2').html(streamObject.streamSubHeader);
 		}
 	else {
-		var h2FeedHeader = streamObject.streamHeader;
+		$('#feed-header-inner h2').html(streamObject.streamHeader);
 		}
 
-	// if we have a saved copy of this stream, show it immediately (but it is replaced when stream finishes to load later)
-	var haveOldStreamState = localStorageObjectCache_GET('streamState',window.currentStreamObject.path);
-	if(haveOldStreamState) {
-		$('.profile-card,.hover-card,.hover-card-caret').remove();
-		$('#feed').remove();
-		$('#user-container').after(haveOldStreamState);
-		$('.profile-card').css('display','none');
-		$('#feed').css('display','none');
-		$('.profile-card').show();
-		$('#feed').show();
-		$('#feed-body').removeAttr('data-end-reached');
-		$('#feed-header-inner h2').css('opacity','0.2');
-		$('#feed-header-inner h2').html(h2FeedHeader); // update header (could be wrong in cache)
-		if(streamObject.menu && window.loggedIn) {
-			$('#feed-header-inner h2').append('<div id="stream-menu-cog" data-tooltip="' + window.sL.timelineOptions + '"></div>');
-			}
-		$('#feed-header-inner h2').animate({opacity:'1'},1000);
-
-		// set location bar from stream
-		if(setLocation) {
-			setUrlFromStream(streamObject);
-			setLocation = false; // don't set location twice if we've already set it here
-			}
-
-		// also mark this stream as the current stream immediately, if a saved copy exists
-		addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
-
-		// maybe do something
-		if(typeof actionOnSuccess == 'function') {
-			actionOnSuccess();
-
-			// don't invoke actionOnSuccess later if we already invoked it here
-			actionOnSuccess = false;
-			}
+	// add menu cog if this stream has a menu
+	if(streamObject.menu && window.loggedIn) {
+		$('#feed-header-inner h2').append('<div id="stream-menu-cog" data-tooltip="' + window.sL.timelineOptions + '"></div>');
 		}
-	// otherwise we fade out and wait for stream to load
-	else {
-		// fade out
-		$('#feed,.profile-card').animate({opacity:'0'},150,function(){
-			// when fade out finishes, remove any profile cards and set new header
+
+	// if we're just reloading, we dont need to:
+	// (1) check if we have a cached version of this stream
+	// (2) remove the stream if we don't
+	// (3) change design
+	if(weAreReloading === false) {
+
+		// (1) check if we have a cached version of the stream
+		var haveOldStreamState = localStorageObjectCache_GET('streamState',window.currentStreamObject.path);
+
+		// discard and remove any cached data that is not in this (new) format
+		if(typeof haveOldStreamState.card == 'undefined'
+		|| typeof haveOldStreamState.feed == 'undefined') {
+			localStorageObjectCache_STORE('streamState',window.currentStreamObject.path, false);
+			haveOldStreamState = false;
+			}
+
+		// show cached version immediately (it is replaced when stream finishes to load later)
+		if(haveOldStreamState) {
 			$('.profile-card,.hover-card,.hover-card-caret').remove();
-			$('#feed-body').html('');
-			$('#feed-header-inner h2').html(h2FeedHeader);
-			if(streamObject.menu && window.loggedIn) {
-				$('#feed-header-inner h2').append('<div id="stream-menu-cog" data-tooltip="' + window.sL.timelineOptions + '"></div>');
-				}
-			});
-		}
+			$('#feed').before(haveOldStreamState.card);
+			$('#feed-body').html(haveOldStreamState.feed);
 
-	// change design immediately to either cached design or logged in user's
-	if(typeof window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)] != 'undefined') {
-		changeDesign(window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)]);
-		}
-	else {
-		changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
+			// subtle animation to show somethings happening
+			$('#feed-header-inner h2').css('opacity','0.2');
+			$('#feed-header-inner h2').animate({opacity:'1'},1000);
+
+			// set location bar from stream
+			if(setLocation) {
+				setUrlFromStream(streamObject);
+				setLocation = false; // don't set location twice if we've already set it here
+				}
+
+			// also mark this stream as the current stream immediately, if a saved copy exists
+			addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
+
+			// maybe do something
+			if(typeof actionOnSuccess == 'function') {
+				actionOnSuccess();
+
+				// don't invoke actionOnSuccess later if we already invoked it here
+				actionOnSuccess = false;
+				}
+			}
+		// (2) if we don't have a cached version we remove and hide the old stream and wait for the new one to load
+		else {
+			$('.profile-card,.hover-card,.hover-card-caret').remove();
+			$('#feed').css('opacity',0);
+			$('#feed-body').html('');
+			}
+
+		// (3) change design immediately to either cached design or logged in user's
+		if(typeof window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)] != 'undefined') {
+			changeDesign(window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)]);
+			}
+		else {
+			changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
+			}
 		}
 
 	// get stream
@@ -758,7 +771,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		// getting stream failed, and we don't have a fallback id
 		else if(queet_data === false) {
 
-			// maybe fade in user-container here, ("success" was a badly chosen name...)
+			// e.g. maybe fade in user-container here, ("success" was a badly chosen name...)
 			if(typeof actionOnSuccess == 'function') {
 				actionOnSuccess();
 				}
@@ -843,8 +856,6 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			addToFeed(queet_data, false,'visible'); // add stream items to feed element
 			$('#feed').animate({opacity:'1'},150); // fade in
 			$('.reload-stream').show();
-			$('#feed-body').removeAttr('data-end-reached');
-			$('#feed-body').removeAttr('data-search-page-number');
 			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
 			$('html,body').scrollTop(0); // scroll to top
 
@@ -1135,10 +1146,8 @@ function expand_queet(q,doScrolling) {
 			// show conversation and reply form (but not if already in conversation)
 			if(!q.hasClass('conversation')) {
 
-				// show conversation (wait for css to animate the margin 50ms)
-				setTimeout(function(){
-					getConversation(q, qid);
-					},50);
+				// show conversation
+				getConversation(q, qid);
 
 				// show inline reply form if logged in
 				if(typeof window.loggedIn.screen_name != 'undefined') {
@@ -1302,7 +1311,7 @@ function getConversation(q, qid) {
 	// check if we have a conversation for this notice cached in localstorage
 	var cacheData = localStorageObjectCache_GET('conversation',q.attr('data-conversation-id'));
 	if(cacheData) {
-		showConversation(q, qid, cacheData);
+		showConversation(q, qid, cacheData, 8);
 		}
 	// always get most recent conversation from server
 	getFromAPI('statusnet/conversation/' + q.attr('data-conversation-id') + '.json?count=100', function(data){ if(data) {
@@ -1310,14 +1319,12 @@ function getConversation(q, qid) {
 		// cache in localstorage
 		localStorageObjectCache_STORE('conversation',q.attr('data-conversation-id'), data);
 
-		showConversation(q, qid,data);
+		showConversation(q, qid,data, 0);
 		}});
 	}
 
 
-function showConversation(q, qid, data) {
-
-	rememberMyScrollPos(q.children('.queet'),qid,0);
+function showConversation(q, qid, data, offsetScroll) {
 
 	if(data && !q.hasClass('collapsing')){
 
@@ -1379,6 +1386,7 @@ function showConversation(q, qid, data) {
 			}
 
 		// loop trough this stream items conversation and show the "strict" line of replies
+		rememberMyScrollPos(q.children('.queet'),qid,offsetScroll);
 		findInReplyToStatusAndShow(q,qid,q.attr('data-in-reply-to-status-id'),true,false);
 		backToMyScrollPos(q.children('.queet'),qid,false);
 		findAndMarkLastVisibleInConversation(q);
@@ -1466,12 +1474,6 @@ function checkForHiddenConversationQueets(q, qid) {
 	if(q.find('.hidden-conversation').length>0) {
 		if(q.children('.queet').find('.show-full-conversation').length == 0) {
 			q.children('.queet').find('.stream-item-footer').append('<span class="show-full-conversation" data-stream-item-id="' + qid + '">' + window.sL.expandFullConversation + '</span>');
-
-			// if this is a single notice, we show conversation
-			if(window.currentStream.substring(0,14) == 'statuses/show/') {
-				q.children('.queet').find('.show-full-conversation').trigger('click');
-				}
-
 			}
 		}
 	else {
