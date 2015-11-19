@@ -1152,7 +1152,7 @@ class QvitterPlugin extends Plugin {
         $twitter_user['following'] = false;
         $twitter_user['statusnet_blocking'] = false;
 
-		$logged_in_profile = false;
+		$logged_in_profile = null;
 
         if(common_logged_in()) {
 
@@ -1166,8 +1166,6 @@ class QvitterPlugin extends Plugin {
         // StatusNet-specific
 
         $twitter_user['statusnet_profile_url'] = $profile->profileurl;
-
-        // The event call to handle NoticeSimpleStatusArray lets plugins add data to the output array
 
         Event::handle('TwitterUserArray', array($profile, &$twitter_user, $logged_in_profile, array()));
 
