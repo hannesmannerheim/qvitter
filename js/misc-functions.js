@@ -1189,7 +1189,7 @@ function saveAllBookmarks() {
 	$.each($('#bookmark-container .stream-selection'), function(key,obj) {
 		bookmarkContainer[i] = new Object();
 		bookmarkContainer[i].dataStreamHref = $(obj).attr('href');
-		bookmarkContainer[i].dataStreamHeader = $(obj).html();
+		bookmarkContainer[i].dataStreamHeader = $(obj).text();
 		i++;
 		});
 
@@ -1211,7 +1211,7 @@ function appendAllBookmarks(bookmarkContainer) {
 		$('#bookmark-container').html('');
 		var bookmarkContainerParsed = JSON.parse(bookmarkContainer);
 		$.each(bookmarkContainerParsed, function(key,obj) {
-			$('#bookmark-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipRemoveBookmark + '"></i></a>');
+			$('#bookmark-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '<i class="chev-right" data-tooltip="' + window.sL.tooltipRemoveBookmark + '"></i></a>');
 			});
 		}
 	$('#bookmark-container').sortable({delay: 100});
@@ -1232,7 +1232,7 @@ function updateHistoryLocalStorage() {
 		$.each($('#history-container .stream-selection'), function(key,obj) {
 			historyContainer[i] = new Object();
 			historyContainer[i].dataStreamHref = $(obj).attr('href');
-			historyContainer[i].dataStreamHeader = $(obj).html();
+			historyContainer[i].dataStreamHeader = $(obj).text();
 			i++;
 			});
 		localStorageObjectCache_STORE('browsingHistory', window.loggedIn.screen_name,historyContainer);
@@ -1259,7 +1259,7 @@ function loadHistoryFromLocalStorage() {
 			$('#history-container').css('display','block');
 			$('#history-container').html('');
 			$.each(cacheData, function(key,obj) {
-				$('#history-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '</i><i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
+				$('#history-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '<i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
 				});
 			}
 		updateHistoryLocalStorage();
