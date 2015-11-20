@@ -22,8 +22,9 @@ along with Qvitter. If not, see <http://www.gnu.org/licenses/>.
 Setup
 -----
 
-1. Install GNU social with _fancy urls_ enabled (if your instance has
-"index.php" in its URLs, Qvitter will not work properly) and HTTPS enabled (it's
+1. Install GNU social _directly under a domain_ (Qvitter is not compatible with
+subdirectory installs) with _fancy urls_ enabled (if your instance has
+"index.php" in its URLs, Qvitter will not work properly) _and HTTPS enabled_ (it's
 always best to use HTTPS from the beginning, there will be issues with federation
 if you choose to enable HTTPS later)
 
