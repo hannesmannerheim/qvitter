@@ -437,6 +437,7 @@ function pathToStreamRouter(path) {
 		return streamObject;
 		}
 
+	return false;
 	}
 
 
