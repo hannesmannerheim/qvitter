@@ -31,7 +31,7 @@
 	"favoritesNoun": "Favoriten",
 	"requeetNoun": "Requeet",
 	"requeetsNoun": "Requeets",
-	"newQueet": "n{new-notice-count} euer Queet",
+	"newQueet": "{new-notice-count} neuer Queet",
 	"newQueets": "{new-notice-count} neue Queets",
 	"longmonthsJanuary": "Januar",
 	"longmonthsFebruary": "Februar",
