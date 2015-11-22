@@ -51,35 +51,37 @@
 
 function localStorageObjectCache_STORE(name, unique_id, object) {
 
-	if(localStorageIsEnabled()) {
+	if(localStorageIsEnabled() === false) {
+		return false;
+		}
 
-		if(object === false || object === null || object.length < 1) {
-			// false or an empty object means we remove this entry
-			if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
-				delete localStorage[name + '-' + unique_id];
-				}
+	name = localStorageMaybeAppendIdToKey(name);
+
+	if(object === false || object === null || object.length < 1) {
+		// false or an empty object means we remove this entry
+		if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
+			delete localStorage[name + '-' + unique_id];
+			}
+		return false;
+		}
+
+	var dataToSave = {};
+	dataToSave.modified = Date.now();
+	dataToSave.cdata = LZString.compressToUTF16(JSON.stringify(object));
+
+	try {
+		localStorage.setItem(name + '-' + unique_id, JSON.stringify(dataToSave));
+		}
+	catch (e) {
+		if (e.name == 'QUOTA_EXCEEDED_ERR' || e.name == 'NS_ERROR_DOM_QUOTA_REACHED' || e.name == 'QuotaExceededError' || e.name == 'W3CException_DOM_QUOTA_EXCEEDED_ERR') {
+
+			removeOldestLocalStorageEntries(function(){
+				localStorageObjectCache_STORE(name, unique_id, object);
+				});
+
 			}
 		else {
-
-			var dataToSave = {};
-			dataToSave.modified = Date.now();
-			dataToSave.cdata = LZString.compressToUTF16(JSON.stringify(object));
-
-			try {
-				localStorage.setItem(name + '-' + unique_id, JSON.stringify(dataToSave));
-				}
-			catch (e) {
-				if (e.name == 'QUOTA_EXCEEDED_ERR' || e.name == 'NS_ERROR_DOM_QUOTA_REACHED' || e.name == 'QuotaExceededError' || e.name == 'W3CException_DOM_QUOTA_EXCEEDED_ERR') {
-
-					removeOldestLocalStorageEntries(function(){
-						localStorageObjectCache_STORE(name, unique_id, object);
-						});
-
-					}
-				else {
-					console.log('could not store in localStorage, unknown error');
-					}
-				}
+			console.log('could not store in localStorage, unknown error');
 			}
 		}
 	}
@@ -131,37 +133,60 @@ function removeOldestLocalStorageEntries(callback) {
    · · · · · · · · · */
 
 function localStorageObjectCache_GET(name, unique_id) {
-	if(localStorageIsEnabled()) {
-		if(typeof localStorage[name + '-' + unique_id] != 'undefined' && localStorage[name + '-' + unique_id] !== null) {
-			try {
-				var parsedObject = JSON.parse(localStorage[name + '-' + unique_id]);
-				}
-			catch(e) {
-				return false;
-				}
-			if(typeof parsedObject.modified == 'undefined' || parsedObject.modified === null) {
-				// invalid or old localstorage object found, check the whole localstorage!
-				checkLocalStorage();
-				return false;
-				}
-			else {
-				try {
-					var decompressedAndParsed = JSON.parse(LZString.decompressFromUTF16(parsedObject.cdata));
-					return decompressedAndParsed;
-					}
-				catch(e) {
-					return false;
-					}
-				}
+
+	if(localStorageIsEnabled() === false) {
+		return false;
+		}
+
+	name = localStorageMaybeAppendIdToKey(name);
+
+	if(typeof localStorage[name + '-' + unique_id] == 'undefined' || localStorage[name + '-' + unique_id] === null) {
+		return false;
+		}
+
+	try {
+		var parsedObject = JSON.parse(localStorage[name + '-' + unique_id]);
+		}
+	catch(e) {
+		return false;
+		}
+
+	if(typeof parsedObject.modified == 'undefined' || parsedObject.modified === null) {
+		// invalid or old localstorage object found, check the whole localstorage!
+		checkLocalStorage();
+		return false;
+		}
+	else {
+		try {
+			var decompressedAndParsed = JSON.parse(LZString.decompressFromUTF16(parsedObject.cdata));
+			return decompressedAndParsed;
 			}
-		else {
+		catch(e) {
 			return false;
 			}
 		}
+
+	}
+
+
+// to the following data types we add the logged in user's user id,
+// since they contain user specific data (0 for logged out)
+// selectedLanguage is handled differently, since we want to be able to
+// access the logged out user's data if we're logged in
+function localStorageMaybeAppendIdToKey(name) {
+	if(jQuery.inArray(name, ['browsingHistory', 'conversation', 'queetBoxInput', 'streamState']) !== -1) {
+		if(window.loggedIn) {
+			return name + '-' + window.loggedIn.id;
+			}
+		else {
+			return name + '-0' ;
+			}
+		}
 	else {
-		return false;
+		return name;
 		}
 	}
+
 
 function checkLocalStorage() {
 
@@ -243,6 +268,60 @@ function checkLocalStorage() {
 			}
 		});
 	console.log(corrected + ' entries corrected, ' + deleted + ' entries deleted, ' + compressed + ' entries compressed');
+	}
+
+
+/* ·
+   ·
+   ·   Checks if localstorage is availible
+   ·
+   ·   We can't just do if(typeof localStorage.selectedLanguage != 'undefined')
+   ·   because firefox with cookies disabled then freaks out and stops executing js completely
+   ·
+   · · · · · · · · · */
+
+function localStorageIsEnabled() {
+	var mod = 'test';
+	try {
+		localStorage.setItem(mod, mod);
+		localStorage.removeItem(mod);
+		return true;
+		}
+	catch(e) {
+		if (e.name == 'QUOTA_EXCEEDED_ERR' || e.name == 'NS_ERROR_DOM_QUOTA_REACHED' || e.name == 'QuotaExceededError' || e.name == 'W3CException_DOM_QUOTA_EXCEEDED_ERR') {
+			removeOldestLocalStorageEntries(function(){
+				localStorageIsEnabled();
+				});
+			}
+		else {
+			return false;
+			}
+		}
+	}
+
+
+/* ·
+   ·
+   ·  Check for hidden items and show the new queets bar if there are any
+   ·
+   · · · · · · · · · */
+
+function maybeShowTheNewQueetsBar() {
+	var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.activity)').length;
+	if(new_queets_num > 0) {
+
+		$('#new-queets-bar').parent().removeClass('hidden');
+
+		// bar label
+		if(new_queets_num == 1) { var q_txt = window.sL.newQueet; }
+		else { var q_txt = window.sL.newQueets; }
+		if(window.currentStreamObject.name == 'notifications') {
+			if(new_queets_num == 1) { var q_txt = window.sL.newNotification; }
+			else { var q_txt = window.sL.newNotifications; }
+			}
+
+		$('#new-queets-bar').html(q_txt.replace('{new-notice-count}',new_queets_num));
+		}
 	}
 
 
@@ -568,10 +647,132 @@ function searchForUserDataToCache(obj) {
 		}
 	}
 
+/* ·
+   ·
+   ·   Iterates recursively through an API response in search for updated notice data
+   ·   If we find a "repeated" key we assume the parent is a notice object (chosen arbitrary)
+   ·
+   · · · · · · · · · · · · · */
+
+
+window.knownDeletedNotices = new Object();
+function searchForUpdatedNoticeData(obj) {
+	for (var property in obj) {
+		if (obj.hasOwnProperty(property)) {
+			if (typeof obj[property] == "object") {
+				searchForUpdatedNoticeData(obj[property]);
+				}
+			else if(typeof obj[property] == 'boolean' && property == 'repeated') {
+				var streamItemFoundInFeed = $('.stream-item[data-conversation-id][data-quitter-id="' + obj.id + '"]'); // data-conversation-id identifies it as a notice, not a user or something
+
+				// if this is a special qvitter-delete-notice activity notice it means we try to hide
+				// the deleted notice from our stream
+	            // the uri is in the obj.text var, between the double curly brackets
+				if(typeof obj.qvitter_delete_notice != 'undefined' && obj.qvitter_delete_notice == true) {
+					var uriToHide = obj.text.substring(obj.text.indexOf('{{')+2,obj.text.indexOf('}}'));
+					window.knownDeletedNotices[uriToHide] = true;
+	                var streamItemToHide = $('.stream-item[data-uri="' + uriToHide + '"]');
+					slideUpAndRemoveStreamItem(streamItemToHide);
+					}
+
+				// ordinary notices
+				else if(streamItemFoundInFeed.length>0) {
+
+					var queetFoundInFeed = streamItemFoundInFeed.children('.queet');
+					var queetID = streamItemFoundInFeed.attr('data-quitter-id');
+
+					// console.log(obj);
+
+					// sometimes activity notices don't get the is_activity flag set to true
+					// maybe because they were in the process of being saved when
+					// we first got them
+					if(obj.is_activity) {
+						streamItemFoundInFeed.addClass('activity');
+						}
+
+					// update the avatar row if the queet is expanded and the numbers are not the same
+					if(streamItemFoundInFeed.hasClass('expanded')) {
+						var oldFavNum = parseInt(queetFoundInFeed.find('.action-fav-num').text(),10);
+						var oldRQNum = parseInt(queetFoundInFeed.find('.action-rq-num').text(),10);
+						if(oldFavNum != obj.fave_num || oldRQNum != obj.repeat_num) {
+							getFavsAndRequeetsForQueet(streamItemFoundInFeed, queetID);
+							}
+						}
+
+					// avatar may have changed
+					if(typeof obj.user != 'undefined'
+					&& typeof obj.user.profile_image_url_profile_size != 'undefined'
+					&& queetFoundInFeed.find('img.avatar').src != obj.user.profile_image_url_profile_size) {
+						queetFoundInFeed.find('img.avatar').attr('src',obj.user.profile_image_url_profile_size);
+						}
+
+					// name may have changed
+					if(typeof obj.user != 'undefined'
+					&& typeof obj.user.name != 'undefined'
+					&& queetFoundInFeed.find('strong.name').html() != obj.user.name) {
+						queetFoundInFeed.find('strong.name').html(obj.user.name);
+						}
+
+					// set favorite data
+					queetFoundInFeed.find('.action-fav-num').attr('data-fav-num',obj.fave_num);
+					queetFoundInFeed.find('.action-fav-num').html(obj.fave_num);
+					if(obj.favorited) {
+						streamItemFoundInFeed.addClass('favorited');
+						queetFoundInFeed.find('.action-fav-container').children('.with-icn').addClass('done');
+						queetFoundInFeed.find('.action-fav-container').find('.icon.sm-fav').attr('data-tooltip',window.sL.favoritedVerb);
+						}
+					else {
+						streamItemFoundInFeed.removeClass('favorited');
+						queetFoundInFeed.find('.action-fav-container').children('.with-icn').removeClass('done');
+						queetFoundInFeed.find('.action-fav-container').find('.icon.sm-fav').attr('data-tooltip',window.sL.favoriteVerb);
+						}
+
+					// set repeat data
+					queetFoundInFeed.find('.action-rq-num').attr('data-rq-num',obj.repeat_num);
+					queetFoundInFeed.find('.action-rq-num').html(obj.repeat_num);
+					if(obj.repeated) {
+						streamItemFoundInFeed.addClass('requeeted');
+						queetFoundInFeed.find('.action-rt-container').children('.with-icn').addClass('done');
+						queetFoundInFeed.find('.action-rt-container').find('.icon.sm-rt').attr('data-tooltip',window.sL.requeetedVerb);
+						streamItemFoundInFeed.attr('data-requeeted-by-me-id',obj.repeated_id);
+						}
+					else {
+						streamItemFoundInFeed.removeClass('requeeted');
+						queetFoundInFeed.find('.action-rt-container').children('.with-icn').removeClass('done');
+						queetFoundInFeed.find('.action-rt-container').find('.icon.sm-rt').attr('data-tooltip',window.sL.requeetVerb);
+						streamItemFoundInFeed.removeAttr('data-requeeted-by-me-id');
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 
 /* ·
    ·
-   ·  Store the current stream's state (html) in localStorage
+   ·  Removes a stream item from the feed gracefully
+   ·
+   · · · · · · · · · */
+
+function slideUpAndRemoveStreamItem(streamItem,callback) {
+	if(streamItem.length>0) {
+		streamItem.animate({opacity:'0.2'},1000,'linear',function(){
+			$(this).css('height',$(this).height() + 'px');
+			$(this).animate({height:'0px'},500,'linear',function(){
+				$(this).remove();
+				if(typeof callback == 'function') {
+					callback();
+					}
+				});
+			});
+		}
+	}
+
+/* ·
+   ·
+   ·  Store the current stream's state (html) in localStorage (if we're logged in)
    ·
    · · · · · · · · · */
 
@@ -580,17 +781,25 @@ function rememberStreamStateInLocalStorage() {
 	if(typeof window.currentStreamObject != 'undefined') {
 
 		// dont store open conversations, and only store profile card and the top 20 stream-items
-		var firstTwentyHTML = '';
-		$.each($('#feed-body').children('.stream-item').slice(0,20),function(){
-			firstTwentyHTML += $(this).outerHTML();
+		var firstTwentyVisibleHTML = '';
+		var i = 0;
+		$.each($('#feed-body').children('.stream-item'),function(k,streamItem){
+			firstTwentyVisibleHTML += $(streamItem).outerHTML();
+			if(!$(streamItem).hasClass('activity')) {
+				i++;
+				}
+			if(i>20) {
+				return false;
+				}
 			});
-		var feed = $('<div/>').append(firstTwentyHTML);
+		var feed = $('<div/>').append(firstTwentyVisibleHTML);
 		feed.find('.view-more-container-top').remove();
 		feed.find('.view-more-container-bottom').remove();
 		feed.find('.stream-item.conversation').remove();
 		feed.find('.expanded-content').remove();
 		feed.find('.inline-reply-queetbox').remove();
-		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded');
+		feed.find('.not-seen-disc').remove();
+		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').addClass('visible');
 		var feedHtml = feed.html();
 		var profileCardHtml = $('#feed').siblings('.profile-card').outerHTML();
 		var streamData = {
@@ -602,6 +811,47 @@ function rememberStreamStateInLocalStorage() {
 		}
 	}
 
+
+
+
+/* ·
+   ·
+   ·  Gets the full unshortened HTML for a queet
+   ·
+   · · · · · · · · · */
+
+function getFullUnshortenedHtmlForQueet(streamItem) {
+ 	var queet = streamItem.children('.queet');
+	var queetId = streamItem.attr('data-quitter-id');
+	var attachmentMore = queet.find('span.attachment.more');
+	// only if actually shortened
+	if(attachmentMore.length>0 && streamItem.data('attachments') != 'undefined') {
+		// first try localstorage cache
+		var cacheData = localStorageObjectCache_GET('fullQueetHtml',queetId);
+		if(cacheData) {
+			queet.find('.queet-text').html(cacheData);
+			queet.outerHTML(detectRTL(queet.outerHTML()));
+			}
+		// then try static html file attachment, that we should have in an array in a data-attachments attribute
+		else {
+			var attachmentId = attachmentMore.attr('data-attachment-id');
+			$.each(streamItem.data('attachments'), function(k,attachment) {
+				if(attachment.id == attachmentId) {
+					$.get(attachment.url,function(data){
+						if(data) {
+							// get body and store in localStorage
+							var bodyHtml = $('<html/>').html(data).find('body').html();
+							localStorageObjectCache_STORE('fullQueetHtml',queetId,bodyHtml);
+							queet.find('.queet-text').html($.trim(bodyHtml));
+							queet.outerHTML(detectRTL(queet.outerHTML()));
+							}
+						});
+					return false;
+					}
+				});
+			}
+		}
+	}
 
 /* ·
    ·
@@ -736,27 +986,6 @@ function replaceHtmlSpecialChars(text) {
 	return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 	}
 
-/* ·
-   ·
-   ·   Checks if localstorage is availible
-   ·
-   ·   We can't just do if(typeof localStorage.selectedLanguage != 'undefined')
-   ·   because firefox with cookies disabled then freaks out and stops executing js completely
-   ·
-   · · · · · · · · · */
-
-function localStorageIsEnabled() {
-	var mod = 'test';
-	try {
-		localStorage.setItem(mod, mod);
-		localStorage.removeItem(mod);
-		return true;
-		}
-	catch(e) {
-		return false;
-		}
-	}
-
 
 /* ·
    ·
@@ -873,7 +1102,7 @@ function changeDesign(obj) {
 
 	// if we're logged out and this is the front page, we use the default design
 	if(!window.loggedIn &&
-	(window.currentStream == 'statuses/public_timeline.json' || window.currentStream == 'statuses/public_and_external_timeline.json')) {
+	(window.currentStreamObject.name == 'public timeline' || window.currentStreamObject.name == 'public and external timeline')) {
 		obj.backgroundimage = window.fullUrlToThisQvitterApp + window.siteBackground;
 		obj.backgroundcolor = window.defaultBackgroundColor;
 		obj.linkcolor = window.defaultLinkColor;
@@ -886,8 +1115,8 @@ function changeDesign(obj) {
 		}
 
 	// remember the design for this stream
-	if(typeof window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)] == 'undefined') {
-		window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)] = new Object();
+	if(typeof window.oldStreamsDesigns[window.currentStreamObject.nickname] == 'undefined') {
+		window.oldStreamsDesigns[window.currentStreamObject.nickname] = new Object();
 		}
 
 	// change design elements
@@ -898,21 +1127,21 @@ function changeDesign(obj) {
 		else if(obj.backgroundimage.length > 4) {
 			$('body').css('background-image','url(\'' + obj.backgroundimage + '\')');
 			}
-		window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)].backgroundimage = obj.backgroundimage;
+		window.oldStreamsDesigns[window.currentStreamObject.nickname].backgroundimage = obj.backgroundimage;
 		}
 	if(typeof obj.backgroundcolor != 'undefined') {
 		if(obj.backgroundcolor === false || obj.backgroundcolor == '') {
 			obj.backgroundcolor = window.defaultBackgroundColor;
 			}
 		changeBackgroundColor(obj.backgroundcolor);
-		window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)].backgroundcolor = obj.backgroundcolor;
+		window.oldStreamsDesigns[window.currentStreamObject.nickname].backgroundcolor = obj.backgroundcolor;
 		}
 	if(typeof obj.linkcolor != 'undefined') {
 		if(obj.linkcolor === false || obj.linkcolor == '') {
 			obj.linkcolor = window.defaultLinkColor;
 			}
 		changeLinkColor(obj.linkcolor);
-		window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)].linkcolor = obj.linkcolor;
+		window.oldStreamsDesigns[window.currentStreamObject.nickname].linkcolor = obj.linkcolor;
 		}
 	}
 
@@ -1031,7 +1260,7 @@ function detectRTL(s) {
     	$streamItem.find('.queet-text').find('.h-card.mention').prepend('@');
     	$streamItem.find('.queet-text').find('.h-card.group').prepend('!');
     	$streamItem.find('.queet-text').find('.vcard .fn.nickname:not(.group)').prepend('@'); // very old style
-      $streamItem.find('.queet-text').find('.vcard .nickname.mention:not(.fn)').prepend('@'); // old style
+        $streamItem.find('.queet-text').find('.vcard .nickname.mention:not(.fn)').prepend('@'); // old style
     	$streamItem.find('.queet-text').find('.vcard .nickname.group').prepend('!'); // old style
     	$streamItem.find('.queet-text').find('a[rel="tag"]').prepend('#');
     	}
@@ -1403,6 +1632,26 @@ function countCharsInQueetBox(src,trgt,btn) {
 
 /* ·
    ·
+   ·   Prefill the queet box with cached text, if there is any in an attribute
+   ·
+   ·   @param queetBox: jQuery object for the queet box
+   ·
+   · · · · · · · · · · · · · */
+
+function maybePrefillQueetBoxWithCachedText(queetBox) {
+    var cachedText = decodeURIComponent(queetBox.attr('data-cached-text'));
+    var cachedTextText = $('<div/>').html(cachedText).text();
+    if(cachedText != 'undefined' && cachedText != 'false') {
+        queetBox.click();
+        queetBox.html(cachedText);
+        setSelectionRange(queetBox[0], cachedTextText.length, cachedTextText.length);
+        queetBox.trigger('input');
+        }
+	}
+
+
+/* ·
+   ·
    ·   Remember my scroll position
    ·
    ·   @param obj: jQuery object which position we want to remember
@@ -1510,6 +1759,17 @@ jQuery.fn.outerHTML = function(s) {
 };
 
 
+
+/* ·
+   ·
+   ·   Sort divs by attribute descending
+   ·
+   · · · · · · · · · · · · · */
+
+jQuery.fn.sortDivsByAttrDesc = function sortDivsByAttrDesc(attr) {
+    $("> div", this[0]).sort(dec_sort).appendTo(this[0]);
+    function dec_sort(a, b){ return parseInt($(b).attr(attr),10) > parseInt($(a).attr(attr),10) ? 1 : -1; }
+}
 
 
 /* ·
@@ -1661,38 +1921,8 @@ function shortenUrlsInBox(shortenButton) {
 				}
 			});
 		});
-}
-
-/* ·
-   ·
-   ·   Return the user screen name that this stream belongs to. last resort just return the stream
-   ·
-   · · · · · · · · · · · · · */
-
-function theUserOrGroupThisStreamBelongsTo(stream) {
-	// if screen_name is given as get-var, use that
-	if(stream.indexOf('screen_name=')>-1) {
-		var thisUsersScreenName = stream.substring(stream.indexOf('screen_name=')+12);
-		if(thisUsersScreenName.indexOf('&=')>-1) {
-			thisUsersScreenName = thisUsersScreenName.substring(0,stream.indexOf('&'));
-			}
-		return thisUsersScreenName;
-		}
-	// 	groups
-	else if(stream.indexOf('statusnet/groups/timeline/')>-1
-	     || stream.indexOf('statusnet/groups/membership/')>-1
-	     || stream.indexOf('statusnet/groups/admins/')>-1) {
-		var groupName = '!' + stream.substring(stream.lastIndexOf('/')+1, stream.indexOf('.json'));
-		return groupName;
-		}
-	// otherwise, and if we're logged in, we assume this is my stream
-	else if (window.loggedIn){
-		return window.loggedIn.screen_name;
-		}
-	else {
-		return stream;
-		}
 	}
+
 
 /* ·
    ·

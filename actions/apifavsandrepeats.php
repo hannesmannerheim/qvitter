@@ -88,7 +88,7 @@ class ApiFavsAndRepeatsAction extends ApiPrivateAuthAction
         // notifications tied to this notice and the current profile as read
         if($this->auth_user) {
             QvitterPlugin::markNotificationAsSeen($this->notice_id,$this->auth_user->id,'mention');
-            QvitterPlugin::markNotificationAsSeen($this->notice_id,$this->auth_user->id,'reply');            
+            QvitterPlugin::markNotificationAsSeen($this->notice_id,$this->auth_user->id,'reply');
         }
 
 
@@ -128,6 +128,7 @@ class ApiFavsAndRepeatsAction extends ApiPrivateAuthAction
         $notice->selectAdd('profile_id');
         $notice->selectAdd('created');
         $notice->repeat_of = $this->original->id;
+        $notice->verb =  ActivityVerb::SHARE;
         $notice->orderBy('created, id'); // NB: asc!
         if (!is_null($this->cnt)) {
             $notice->limit(0, $this->cnt);

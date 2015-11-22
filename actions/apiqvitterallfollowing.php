@@ -106,7 +106,7 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
 				$this_group[3] = false;
 				}
 			$this->groups_stripped[$user_group->id] = $this_group;
-			}		
+			}
 
         return true;
     }
@@ -169,11 +169,12 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
             $this->since_id,
             $this->max_id
         );
-
-        while ($group->fetch()) {
-            $groups[] = clone($group);
+        
+        if(!empty($group)) {
+            while ($group->fetch()) {
+                $groups[] = clone($group);
+            }
         }
-
         return $groups;
     }
 

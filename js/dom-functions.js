@@ -619,21 +619,19 @@ function groupProfileCard(groupAlias) {
 
 function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess) {
 
-	if(!streamObject && !streamObject.stream) {
+	if(!streamObject || !streamObject.stream) {
 		console.log('invalid streamObject, no stream to set!');
 		return;
 		}
 
+	// update the cache for the old stream
+	rememberStreamStateInLocalStorage();
+
 	// remove any old error messages
 	$('.error-message').remove();
 
-	// remember state of old stream (including profile card)
-	rememberStreamStateInLocalStorage();
-
 	// halt interval that checks for new queets
 	window.clearInterval(checkForNewQueetsInterval);
-
-	display_spinner();
 
 	// scroll to top
 	$(window).scrollTop(0);
@@ -646,14 +644,19 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 	$('#feed-body').removeAttr('data-search-page-number');
 	$('#feed-body').removeAttr('data-end-reached');
 
+	// hide new queets bar and reload stream button
+	$('#new-queets-bar-container').addClass('hidden');
+	$('.reload-stream').hide();
+
+	display_spinner('#feed-header-inner');
+
 	// are we just reloading?
 	var weAreReloading = false;
-	if(typeof window.currentStreamObject != 'undefined' && window.currentStreamObject.name == streamObject.name) {
+	if(typeof window.currentStreamObject != 'undefined' && window.currentStreamObject.stream == streamObject.stream) {
 		weAreReloading = true;
 		}
 
-	// remember the most recent stream
-	window.currentStream = streamObject.stream;
+	// remember the most recent stream object
 	window.currentStreamObject = streamObject;
 
 	// set the new streams header
@@ -668,6 +671,10 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 	if(streamObject.menu && window.loggedIn) {
 		$('#feed-header-inner h2').append('<div id="stream-menu-cog" data-tooltip="' + window.sL.timelineOptions + '"></div>');
 		}
+
+	// subtle animation to show somethings happening
+	$('#feed-header-inner h2').css('opacity','0.2');
+	$('#feed-header-inner h2').animate({opacity:'1'},1000);
 
 	// if we're just reloading, we dont need to:
 	// (1) check if we have a cached version of this stream
@@ -689,11 +696,18 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		if(haveOldStreamState) {
 			$('.profile-card,.hover-card,.hover-card-caret').remove();
 			$('#feed').before(haveOldStreamState.card);
-			$('#feed-body').html(haveOldStreamState.feed);
 
-			// subtle animation to show somethings happening
-			$('#feed-header-inner h2').css('opacity','0.2');
-			$('#feed-header-inner h2').animate({opacity:'1'},1000);
+			var oldStreamState = $('<div/>').html(haveOldStreamState.feed);
+
+			// if the cached items has data-quitter-id-in-stream attributes, sort them before adding them
+			if(oldStreamState.children('.stream-item[data-quitter-id-in-stream]').length>0) {
+				oldStreamState.sortDivsByAttrDesc('data-quitter-id-in-stream');
+				$('#feed-body').html('');
+				oldStreamState.children('.stream-item[data-quitter-id-in-stream]').appendTo('#feed-body');
+				}
+			else {
+				$('#feed-body').html(haveOldStreamState.feed);
+				}
 
 			// set location bar from stream
 			if(setLocation) {
@@ -717,11 +731,12 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			$('.profile-card,.hover-card,.hover-card-caret').remove();
 			$('#feed').css('opacity',0);
 			$('#feed-body').html('');
+			remove_spinner(); display_spinner(); // display spinner in page header instead feed header
 			}
 
 		// (3) change design immediately to either cached design or logged in user's
-		if(typeof window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)] != 'undefined') {
-			changeDesign(window.oldStreamsDesigns[theUserOrGroupThisStreamBelongsTo(window.currentStream)]);
+		if(typeof window.oldStreamsDesigns[window.currentStreamObject.nickname] != 'undefined') {
+			changeDesign(window.oldStreamsDesigns[window.currentStreamObject.nickname]);
 			}
 		else {
 			changeDesign({backgroundimage:window.loggedIn.background_image, backgroundcolor:window.loggedIn.backgroundcolor, linkcolor:window.loggedIn.linkcolor});
@@ -732,7 +747,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 	getFromAPI(streamObject.stream, function(queet_data, userArray, error, url){
 
 		// while waiting for this data user might have changed stream, so only proceed if current stream still is this one
-		if(window.currentStream != streamObject.stream) {
+		if(window.currentStreamObject.stream != streamObject.stream) {
 			console.log('stream has changed, aborting');
 			return;
 			}
@@ -801,7 +816,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			else if(error.status == 410 && streamObject.name == 'notice') {
 				showErrorMessage(window.sL.ERRORnoticeRemoved);
 				}
-			else if(error.status == 0) {
+			else if(error.status == 0
+			|| (error.status == 200 && error.responseText == 'An error occurred.')
+				) {
 				showErrorMessage(window.sL.ERRORnoContactWithServer + ' (' + replaceHtmlSpecialChars(error.statusText) + ')');
 				}
 			else {
@@ -851,13 +868,48 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
 
 			remove_spinner();
-			$('#feed-body').html(''); // empty feed body
-			$('#new-queets-bar').parent().addClass('hidden'); document.title = window.siteTitle; // hide new queets bar if it's visible there
-			addToFeed(queet_data, false,'visible'); // add stream items to feed element
-			$('#feed').animate({opacity:'1'},150); // fade in
+
+			// some streams, e.g. /statuses/show/1234.json is not enclosed in an array, make sure it is
+			if(!$.isArray(queet_data)) {
+				queet_data = [queet_data];
+				}
+
+
+
+			// empty feed-body if this is a
+			// (1) notice page
+			// (2) if we got an empty result
+			// (3) it's not a stream of notices or notifications
+			if(window.currentStreamObject.name == 'notice'
+			|| queet_data.length==0
+			|| (window.currentStreamObject.type != 'notices' && window.currentStreamObject.type != 'notifications')) {
+				$('#feed-body').html('');
+				}
+			// if the last item in the stream doesn't exists in the feed-body, we can't
+			// just prepend the new items, since it will create a gap in the middle of the
+			// feed. in that case we just empty the body and start from scratch
+			else if($('#feed-body').children('.stream-item[data-quitter-id-in-stream="' + queet_data.slice(-1)[0].id + '"]').length == 0) {
+				$('#feed-body').html('');
+				}
+
+			// if the stream is slow to load, the user might have expanded a notice, or scrolled down
+			// and started reading. in that case we add the new items _hidden_
+			if($('#feed-body').children('.stream-item.expanded').length>0 || $(window).scrollTop() > 50) {
+				addToFeed(queet_data, false,'hidden');
+				maybeShowTheNewQueetsBar();
+				}
+			else {
+				addToFeed(queet_data, false,'visible');
+				}
+
+
+			// fade in if we need too
+			if(parseInt($('#feed').css('opacity'),10) == '0') {
+				$('#feed').animate({opacity:'1'},150);
+				}
+
 			$('.reload-stream').show();
 			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
-			$('html,body').scrollTop(0); // scroll to top
 
 			// maybe do something
 			if(typeof actionOnSuccess == 'function') {
@@ -1028,36 +1080,8 @@ function expand_queet(q,doScrolling) {
 			q.addClass('expanded');
 			q.prev().addClass('next-expanded');
 
-			// if shortened queet, get full text
-			if(q.children('.queet').find('span.attachment.more').length>0 && q.data('attachments') != 'undefined') {
-
-				// get full html for queet, first try localstorage cache
-				var cacheData = localStorageObjectCache_GET('fullQueetHtml',qid);
-				if(cacheData) {
-					q.children('.queet').find('.queet-text').html(cacheData);
-					q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
-					}
-				else {
-
-					var attachmentId = q.children('.queet').find('span.attachment.more').attr('data-attachment-id');
-
-					// the url to the text/html attachment is in an array in an attribute
-					$.each(q.data('attachments'), function(k,attachment) {
-						if(attachment.id == attachmentId) {
-							$.get(attachment.url,function(data){
-								if(data) {
-									// get body and store in localStorage
-									var bodyHtml = $('<html/>').html(data).find('body').html();
-									localStorageObjectCache_STORE('fullQueetHtml',qid,bodyHtml);
-									q.children('.queet').find('.queet-text').html($.trim(bodyHtml));
-									q.children('.queet').outerHTML(detectRTL(q.children('.queet').outerHTML()));
-									}
-								});
-							return false;
-							}
-						});
-					}
-				}
+			// get full html, if shortened
+			getFullUnshortenedHtmlForQueet(q);
 
 			// add expanded container
 			var longdate = parseTwitterLongDate(q.find('.created-at').attr('data-created-at'));
@@ -1152,17 +1176,7 @@ function expand_queet(q,doScrolling) {
 				// show inline reply form if logged in
 				if(typeof window.loggedIn.screen_name != 'undefined') {
 					q.children('.queet').append(replyFormHtml(q,qid));
-
-                    // if we have cached text, expand the reply form and add that
-                    var queetBox = q.children('.queet').find('.queet-box');
-                    var cachedText = decodeURIComponent(queetBox.attr('data-cached-text'));
-                    var cachedTextText = $('<div/>').html(cachedText).text();
-                    if(cachedText != 'undefined') {
-                        queetBox.click();
-                        queetBox.html(cachedText);
-                        setSelectionRange(queetBox[0], cachedTextText.length, cachedTextText.length);
-                        queetBox.trigger('input');
-                        }
+					maybePrefillQueetBoxWithCachedText(q.children('.queet').find('.queet-box'));
                     }
 				}
 			}
@@ -1189,15 +1203,22 @@ function cleanUpAfterCollapseQueet(q) {
 
 /* ·
    ·
-   ·   Get a queet box, mainly for popups
+   ·   Get a popup queet box
    ·
    ·   @return the html for the queet box
    ·
    · · · · · · · · · */
 
-function queetBoxHtml() {
+function queetBoxPopUpHtml() {
+
+    // if we have cached text in localstorage
+	var data = localStorageObjectCache_GET('queetBoxInput','pop-up-queet-box');
+    if(data) {
+        var cachedText = encodeURIComponent(data);
+		}
+
 	var startText = encodeURIComponent(window.sL.compose);
-	return '<div class="inline-reply-queetbox"><div class="queet-box queet-box-syntax" data-start-text="' + startText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button data-tooltip="' + window.sL.tooltipAttachImage + '" class="upload-image"></button><button data-tooltip="' + window.sL.tooltipShortenUrls + '" class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';
+	return '<div class="inline-reply-queetbox"><div id="pop-up-queet-box" class="queet-box queet-box-syntax" data-start-text="' + startText + '" data-cached-text="' + cachedText + '">' + decodeURIComponent(startText) + '</div><div class="syntax-middle"></div><div class="syntax-two" contenteditable="true"></div><div class="mentions-suggestions"></div><div class="queet-toolbar toolbar-reply"><div class="queet-box-extras"><button data-tooltip="' + window.sL.tooltipAttachImage + '" class="upload-image"></button><button data-tooltip="' + window.sL.tooltipShortenUrls + '" class="shorten disabled">URL</button></div><div class="queet-button"><span class="queet-counter"></span><button>' + window.sL.queetVerb + '</button></div></div></div>';
 	}
 
 
@@ -1341,28 +1362,14 @@ function showConversation(q, qid, data, offsetScroll) {
 				// note: first we add the full conversation, but hidden
 				if(obj.id != qid) {
 					var queetTime = parseTwitterDate(obj.created_at);
-
-					if(obj.source == 'activity') {
-
-						// because we had an xss issue, the obj.statusnet_html of qvitter-deleted-activity-notices can contain unwanted html, so we escape..
-						obj.statusnet_html = replaceHtmlSpecialChars(obj.statusnet_html);
-
-						var queetHtml = '<div id="conversation-stream-item-' + obj.id + '" class="stream-item conversation activity hidden-conversation" data-source="' + escape(obj.source) + '" data-quitter-id="' + obj.id + '"  data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="conversation-q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a>' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
-
-						// detect rtl
-						queetHtml = detectRTL(queetHtml);
-						}
-					else {
-						var queetHtml = buildQueetHtml(obj, obj.id, 'conversation hidden-conversation', false, true);
-						}
+					var queetHtml = buildQueetHtml(obj, obj.id, 'hidden-conversation', false, true);
 
 					if(q.hasClass('expanded')) { // add queet to conversation only if still expanded
 
 						// replace already existing queets' html
-						if(q.children('#conversation-stream-item-' + obj.id).length > 0) {
+						if(q.children('.stream-item.conversation[data-quitter-id="' + obj.id + '"]').length > 0) {
 							var streamItemInnerHtml = $('<div/>').append(queetHtml).find('.stream-item').html();
-							q.children('#conversation-stream-item-' + obj.id).html(streamItemInnerHtml);
-
+							q.children('.stream-item.conversation[data-quitter-id="' + obj.id + '"]').html(streamItemInnerHtml);
 							}
 						else if(before_or_after == 'before') {
 							q.children('.queet').before(queetHtml);
@@ -1412,13 +1419,13 @@ function findAndMarkLastVisibleInConversation(streamItem) {
 
 /* ·
    ·
-   ·  Recursive walker functions to view onlt reyplies to replies, not full conversation
+   ·  Recursive walker functions to view only reyplies to replies, not full conversation
    ·
    · · · · · · · · · · · · · */
 
 function findInReplyToStatusAndShow(q, qid,reply,only_first,onlyINreplyto) {
-	var reply_found = $('#stream-item-' + qid).find('.stream-item[data-quitter-id="' + reply + '"]');
-	var reply_found_reply_to = $('#stream-item-' + qid).find('.stream-item[data-quitter-id="' + reply_found.attr('data-in-reply-to-status-id') + '"]');
+	var reply_found = q.find('.stream-item[data-quitter-id="' + reply + '"]');
+	var reply_found_reply_to = q.find('.stream-item[data-quitter-id="' + reply_found.attr('data-in-reply-to-status-id') + '"]');
 	if(reply_found.length>0) {
 		reply_found.removeClass('hidden-conversation');
 		reply_found.css('opacity','1');
@@ -1490,30 +1497,22 @@ function checkForHiddenConversationQueets(q, qid) {
    ·
    · · · · · · · · · · · · · */
 
-function addToFeed(feed, after, extraClasses, isReply) {
+function addToFeed(feed, after, extraClasses) {
+
 
 	// some streams, e.g. /statuses/show/1234.json is not enclosed in an array, make sure it is
 	if(!$.isArray(feed)) {
 		feed = [feed];
 		}
 
+	var addedToTopOfFeedBodyNum = 0;
 
 	$.each(feed.reverse(), function (key,obj) {
 
 		var extraClassesThisRun = extraClasses;
 
-		// is this a temp-post-placeholder?
-		var isTempPost = false;
-		if(after) {
-			if(after.indexOf('stream-item-temp-post') > -1) {
-				isTempPost = true;
-				}
-			}
-
-
-		// if this is the notifications feed, but not if it is a reply
-		if(window.currentStream.substring(0,35) == 'qvitter/statuses/notifications.json'
-		&& !isReply) {
+		// if this is the notifications feed
+		if(window.currentStreamObject.name == 'notifications') {
 
 			// don't show any notices with object_type "activity"
 			if(typeof obj.notice != 'undefined' && obj.notice !== null && obj.notice.is_activity === true) {
@@ -1526,8 +1525,10 @@ function addToFeed(feed, after, extraClasses, isReply) {
 				obj.from_profile.description = obj.from_profile.description || '';
 				var notificationTime = parseTwitterDate(obj.created_at);
 
+				var notSeenHtml = '';
 				if(obj.is_seen == '0') {
-					extraClassesThisRun = extraClassesThisRun + ' not-seen'
+					extraClassesThisRun += ' not-seen'
+					notSeenHtml = '<div class="not-seen-disc"></div>';
 					}
 
 				// external
@@ -1541,6 +1542,7 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
 					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like">\
 												<div class="queet">\
+													' + notSeenHtml + '\
 													<div class="dogear"></div>\
 													' + ostatusHtml + '\
 													<div class="queet-content">\
@@ -1570,9 +1572,10 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
 					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat">\
 												<div class="queet">\
+													' + notSeenHtml + '\
+													<div class="dogear"></div>\
+													' + ostatusHtml + '\
 													<div class="queet-content">\
-														<div class="dogear"></div>\
-														' + ostatusHtml + '\
 														<div class="stream-item-header">\
 															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '">\
 																<img class="avatar" src="' + obj.from_profile.profile_image_url + '" />\
@@ -1610,24 +1613,13 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					}
 				else {
 					$('#feed-body').prepend(notificationHtml);
+					addedToTopOfFeedBodyNum++;
 					}
-
-				// add not seen notification circle
-				$.each($('.notification.not-seen .queet'),function(){
-					if($(this).children('.not-seen').length<1) {
-						$(this).prepend('<div class="not-seen-disc"></div>');
-						}
-					});
 				}
 			}
 
 		// if this is a user feed
-		else if((window.currentStream.substring(0,21) == 'statuses/friends.json'
-		|| window.currentStream.substring(0,18) == 'statuses/followers'
-		|| window.currentStream.substring(0,28) == 'statusnet/groups/membership/'
-		|| window.currentStream.substring(0,24) == 'statusnet/groups/admins/')
-			&& isTempPost === false // not if we're posting queet
-			) {
+		else if(window.currentStreamObject.type == 'users') {
 
 			// only if not user is already in stream
 			if($('#stream-item-' + obj.id).length == 0) {
@@ -1672,14 +1664,13 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					}
 				else {
 					$('#feed-body').prepend(userHtml);
+					addedToTopOfFeedBodyNum++;
 					}
 				}
 			}
 
 		// if this is a list of groups
-		else if(window.currentStream.substring(0,26) == 'statusnet/groups/list.json'
-				&& isTempPost === false // not if we're posting queet
-				) {
+		else if(window.currentStreamObject.type == 'groups') {
 
 			// only if not group is already in stream
 			if($('#stream-item-' + obj.id).length == 0) {
@@ -1713,41 +1704,19 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					}
 				else {
 					$('#feed-body').prepend(groupHtml);
+					addedToTopOfFeedBodyNum++;
 					}
 				}
 			}
 
 		// if this is a retweet
-		else if(typeof obj.retweeted_status != 'undefined') {
+		// (note the difference between "the repeat-notice" and "the repeated notice")
+		// but the unrepeat delete activity notices have retweeted_status added to them, so check this is not a delete notice
+		else if(typeof obj.retweeted_status != 'undefined'
+			 && (typeof obj.qvitter_delete_notice == 'undefined' || obj.qvitter_delete_notice === false)) {
 
-			// don't show any notices with object_type "activity"
-			if(typeof obj.retweeted_status.is_activity != 'undefined' && obj.retweeted_status.is_activity === true) {
-				return true;
-				}
-
-			// retweeted object already exist in feed
-			if($('#q-' + obj.retweeted_status.id).length > 0) {
-
-				// only if not already shown and not mine
-				if($('#requeet-' + obj.id).length == 0 && obj.user.statusnet_profile_url != $('#user-profile-link').children('a').attr('href')) {
-
-					// if requeeted before
-					if($('#q-' + obj.retweeted_status.id + ' > .context').find('.requeet-text').length > 0) {
-						// if users rt not already added
-						if($('#q-' + obj.retweeted_status.id + ' > .context').find('.requeet-text').find('a[data-user-id="' + obj.user.id + '"]').length==0) {
-							$('#q-' + obj.retweeted_status.id + ' > .context').find('.requeet-text').children('a').last().after('<a data-user-id="' + obj.user.id + '" href="' + obj.user.statusnet_profile_url + '"> <b>' + obj.user.name + '</b></a>');
-							}
-						}
-					// if no context requeets
-					else {
-						var requeetHtml = '<a data-user-id="' + obj.user.id + '" href="' + obj.user.statusnet_profile_url + '"> <b>' + obj.user.name + '</b></a>';
-						$('#q-' + obj.retweeted_status.id).prepend('<div class="context" id="requeet-' + obj.id + '"><span class="with-icn"><i class="badge-requeeted" data-tooltip="' + parseTwitterDate(obj.created_at) + '"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetHtml) + '</span></span></div>');
-						}
-					}
-				}
-			// retweeted object don't exist in feed
-			else {
-
+			// if repeat-notice doesn't already exist in feed
+			if($('#stream-item-' + obj.id).length == 0) {
 				var queetHtml = buildQueetHtml(obj.retweeted_status, obj.id, extraClassesThisRun, obj);
 
 				if(after) {
@@ -1755,112 +1724,44 @@ function addToFeed(feed, after, extraClasses, isReply) {
 					}
 				else {
 					$('#feed-body').prepend(queetHtml);
+					addedToTopOfFeedBodyNum++;
 					}
-
 				}
-
 			}
 
 		// ordinary tweet
 		else {
 
-			// if this is a special qvitter-delete-notice activity notice it means we try to hide
-			// the deleted notice from our stream
-            // the uri is in the obj.text var, between the double curly brackets
-			if(typeof obj.qvitter_delete_notice != 'undefined' && obj.qvitter_delete_notice == true) {
-				var uriToHide = obj.text.substring(obj.text.indexOf('{{')+2,obj.text.indexOf('}}'));
-                var streamItemToHide = $('.stream-item[data-uri="' + uriToHide + '"]');
-				streamItemToHide.animate({opacity:'0.2'},1000,'linear',function(){
-					$(this).css('height',$(this).height() + 'px');
-					$(this).animate({height:'0px'},500,'linear',function(){
-						$(this).remove();
-						});
-					});
-				}
-
 			// only if not already exist
-			if($('#q-' + obj.id).length == 0) {
+			if($('#stream-item-' + obj.id).length == 0) {
 
-				// activity get special design
-				if(obj.source == 'activity' || obj.is_activity === true) {
+				var queetHtml = buildQueetHtml(obj, obj.id, extraClassesThisRun);
 
-					// because we had an xss issue, the obj.statusnet_html of qvitter-deleted-activity-notices can contain unwanted html, so we escape..
-					obj.statusnet_html = replaceHtmlSpecialChars(obj.statusnet_html);
-
-					var queetTime = parseTwitterDate(obj.created_at);
-					var queetHtml = '<div id="stream-item-' + obj.id + '" class="stream-item activity ' + extraClassesThisRun + '" data-quitter-id="' + obj.id + '" data-conversation-id="' + obj.statusnet_conversation_id + '" data-quitter-id-in-stream="' + obj.id + '"><div class="queet" id="q-' + obj.id + '"><div class="queet-content"><div class="stream-item-header"><small class="created-at" data-created-at="' + obj.created_at + '"><a href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a></small></div><div class="queet-text">' + $.trim(obj.statusnet_html) + '</div></div></div></div>';
-
-					// detect rtl
-					queetHtml = detectRTL(queetHtml);
-
-					if(after) {
-						$('#' + after).after(queetHtml);
-						}
-					else {
-						$('#feed-body').prepend(queetHtml);
-						}
-
+				if(after) {
+					$('#' + after).after(queetHtml);
 					}
 				else {
+					$('#feed-body').prepend(queetHtml);
+					addedToTopOfFeedBodyNum++;
 
-					// if this is my queet, remove any temp-queets
-					if(typeof obj.user != 'undefined') {
-						if(obj.user.screen_name == $('#user-screen-name').html()) {
-							if($('.temp-post').length > 0) {
-								$('.temp-post').each(function (){
-									// remove temp duplicate
-									$(this).css('display','none');
-
-									// we do this so this queet gets added after correct temp-queet in expanded conversations
-									if($(this).find('.queet-text').text() == obj.text) {
-										after = $(this).attr('id');
-										}
-
-									// but don't hide my new queet
-									extraClassesThisRun = 'visible';
-									});
-								}
-							}
+					// if this is a single notice, we expand it
+					if(window.currentStreamObject.name == 'notice') {
+						expand_queet($('#stream-item-' + obj.id));
 						}
-
-					var queetHtml = buildQueetHtml(obj, obj.id, extraClassesThisRun);
-
-					if(after) {
-						if($('#' + after).hasClass('conversation')) { // if this is a reply, give stream item some conversation formatting
-							if($('#conversation-q-' + obj.id).length == 0) { // only if it's not already there
-								$('#' + after).after(queetHtml.replace('id="stream-item','id="conversation-stream-item').replace('class="stream-item','class="stream-item conversation').replace('id="q','id="conversation-q'));
-								$('#' + after).remove();
-								}
-							}
-						else {
-							$('#' + after).after(queetHtml);
-							}
-						}
-					else {
-						$('#feed-body').prepend(queetHtml);
-
-						// if this is a single notice, we expand it
-						if(window.currentStream.substring(0,14) == 'statuses/show/') {
-							expand_queet($('#stream-item-' + obj.id));
-							}
-
-						}
-
-					// fadeout any posting-popups
-					setTimeout(function(){
-						$('#popup-sending').fadeOut(1000, function(){
-							$('#popup-sending').remove();
-							});
-						},100);
-
 					}
 				}
 			}
-
-		convertAttachmentMoreHref();
 		});
+
+	convertAttachmentMoreHref();
+
+	// if we've added stuff to the top of feed-body, we update our stream cache
+	if(addedToTopOfFeedBodyNum>0) {
+		rememberStreamStateInLocalStorage();
+		}
 	$('.stream-selection').removeAttr('data-current-user-stream-name'); // don't remeber user feeds
 	}
+
 
 /* ·
    ·
@@ -1871,20 +1772,38 @@ function addToFeed(feed, after, extraClasses, isReply) {
    ·
    · · · · · · · · · · · · · */
 
-function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isConversation) {
+function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversation) {
 
 	// if we've blocked this user, but it has slipped through anyway
 	var blockingTooltip = '';
 	if(typeof window.allBlocking != 'undefined') {
 		$.each(window.allBlocking,function(){
 			if(this == obj.user.id){
-				extraClassesThisRun = extraClassesThisRun + ' profile-blocked-by-me';
+				extraClasses += ' profile-blocked-by-me';
 				blockingTooltip = ' data-tooltip="' + window.sL.thisIsANoticeFromABlockedUser + '"';
 				return false; // break
 				}
 			});
 		}
 
+	// deleted?
+	if(window.knownDeletedNotices[obj.uri]) {
+
+		}
+	// unrepeated?
+	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
+		if(window.knownDeletedNotices[requeeted_by.uri]) {
+
+			}
+		}
+
+	// activity? (hidden with css)
+	if(obj.source == 'activity' || obj.is_activity === true) {
+		extraClasses += ' activity';
+
+		// because we had an xss issue with activities, the obj.statusnet_html of qvitter-deleted-activity-notices can contain unwanted html, so we escape, they are hidden anyway
+		obj.statusnet_html = replaceHtmlSpecialChars(obj.statusnet_html);
+		}
 
 	// if we have the full html for a truncated notice cached in localstorage, we use that
 	var cacheData = localStorageObjectCache_GET('fullQueetHtml',obj.id);
@@ -1902,6 +1821,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 	var idPrepend = '';
 	if(typeof isConversation != 'undefined' && isConversation === true) {
 		var idPrepend = 'conversation-';
+		extraClasses += ' conversation'
 		}
 
 	// is this mine?
@@ -1917,19 +1837,17 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 		}
 
 	// requeet html
-	var requeetedClass = '';
 	if(obj.repeated) {
 		var requeetHtml = '<li class="action-rt-container"><a class="with-icn done"><span class="icon sm-rt" title="' + window.sL.requeetedVerb + '"></span></a></li>';
-		var requeetedClass = 'requeeted';
+		extraClasses += ' requeeted';
 		}
 	else {
 		var requeetHtml = '<li class="action-rt-container"><a class="with-icn"><span class="icon sm-rt ' + isThisMine + '" title="' + window.sL.requeetVerb + '"></span></a></li>';
 		}
 	// favorite html
-	var favoritedClass = '';
 	if(obj.favorited) {
 		var favoriteHtml = '<a class="with-icn done"><span class="icon sm-fav" title="' + window.sL.favoritedVerb + '"></span></a>';
-		favoritedClass = 'favorited';
+		extraClasses += ' favorited';
 		}
 	else {
 		var favoriteHtml = '<a class="with-icn"><span class="icon sm-fav" title="' + window.sL.favoriteVerb + '"></span></a>';
@@ -2018,25 +1936,40 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 			});
 		}
 
-	// requeets
+	// requeets get's a context element and a identifying class
+	// uri used is the repeate-notice's uri for repeats, not the repetED notice's uri (necessary if someone deletes a repeat)
+	var URItoUse = obj.uri;
 	var requeetHtml = '';
 	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
 		var requeetedByHtml = '<a data-user-id="' + requeeted_by.user.id + '" href="' + requeeted_by.user.statusnet_profile_url + '"> <b>' + requeeted_by.user.name + '</b></a>';
 		requeetHtml = '<div class="context" id="requeet-' + requeeted_by.id + '"><span class="with-icn"><i class="badge-requeeted" data-tooltip="' + parseTwitterDate(requeeted_by.created_at) + '"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetedByHtml) + '</span></span></div>';
+		var URItoUse = requeeted_by.uri;
+		extraClasses += ' is-requeet';
 		}
 
+	// the URI for delete activity notices are the same as the notice that is to be deleted
+	// so we make the URI for the (hidden) actitity notice unique, otherwise we might remove
+	// the activity notice from DOM when we remove the deleted notice
+	if(typeof obj.qvitter_delete_notice != 'undefined' && obj.qvitter_delete_notice == true) {
+		URItoUse += '-activity-notice';
+		}
+
+
+
+	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
+
+		}
 
 	// external
 	var ostatusHtml = '';
 	if(obj.is_local === false) {
 		ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
 		}
-
 	var queetTime = parseTwitterDate(obj.created_at);
 	var queetHtml = '<div \
-						id="' + idPrepend + 'stream-item-' + obj.id + '" \
-						data-uri="' + obj.uri + '" \
-						class="stream-item ' + extraClassesThisRun + ' ' + requeetedClass + ' ' + favoritedClass + '" \
+						id="' + idPrepend + 'stream-item-' + idInStream + '" \
+						data-uri="' + URItoUse + '" \
+						class="stream-item ' + extraClasses + '" \
 						data-attachments=\'' + JSON.stringify(obj.attachments) + '\'\
 						data-source="' + escape(obj.source) + '" \
 						data-quitter-id="' + obj.id + '" \
@@ -2045,7 +1978,7 @@ function buildQueetHtml(obj, idInStream, extraClassesThisRun, requeeted_by, isCo
 						data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" \
 						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"\
 						' + requeetedByMe + '>\
-							<div class="queet" id="' + idPrepend + 'q-' + obj.id + '"' + blockingTooltip  + '>\
+							<div class="queet" id="' + idPrepend + 'q-' + idInStream + '"' + blockingTooltip  + '>\
 								' + requeetHtml + '\
 								' + ostatusHtml + '\
 								<div class="queet-content">\

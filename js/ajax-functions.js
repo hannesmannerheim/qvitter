@@ -176,6 +176,7 @@ function getFromAPI(stream, actionOnSuccess) {
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
+			searchForUpdatedNoticeData(data);
 
 			actionOnSuccess(data, userArray, request, url);
 			},
@@ -256,7 +257,7 @@ function getAllFollowsMembershipsAndBlocks(callback) {
 
 		if(data.blocks)	{
 			window.allBlocking = data.blocks;
-			}			
+			}
 
 		if(typeof callback == 'function') {
 			callback();
@@ -542,42 +543,6 @@ function postActionToAPI(action, actionOnSuccess) {
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
 			actionOnSuccess(data);
-			}
-		});
-	}
-
-
-/* ·
-   ·
-   ·   Delete requeet
-   ·
-   ·   @param this_stream_item: jQuery object for stream-item
-   ·   @param this_action: JQuery object for the requeet-button
-   ·   @param my_rq_id: the id for the requeet
-   ·
-   · · · · · · · · · */
-
-function unRequeet(this_stream_item, this_action, my_rq_id) {
-	this_action.children('.with-icn').removeClass('done');
-	this_action.find('.with-icn b').html(window.sL.requeetVerb);
-	this_stream_item.removeClass('requeeted');
-
-	// post unrequeet
-	postActionToAPI('statuses/destroy/' + my_rq_id + '.json', function(data) {
-		if(data) {
-			remove_spinner();
-			this_stream_item.removeAttr('data-requeeted-by-me-id');
-			this_stream_item.children('.queet').children('.context').find('.requeet-text').children('a[data-user-id="' + window.loggedIn.id + '"]').remove();
-			if(this_stream_item.children('.queet').children('.context').find('.requeet-text').children('a').length<1) {
-				this_stream_item.children('.queet').children('.context').remove();
-				}
-			getFavsAndRequeetsForQueet(this_stream_item, this_stream_item.attr('data-quitter-id'));
-			}
-		else {
-			remove_spinner();
-			this_action.children('.with-icn').addClass('done');
-			this_action.find('.with-icn b').html(window.sL.requeetedVerb);
-			this_stream_item.addClass('requeeted');
 			}
 		});
 	}

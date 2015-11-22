@@ -1405,6 +1405,7 @@ body.rtl #footer-spinner-container {
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
     hyphens: auto;
+	word-wrap: break-word;
 	}
 .tooltip-caret {
 	z-index: 10000;
@@ -4163,6 +4164,15 @@ button.shorten:after {
     margin: 0;
     position: relative;
     top: 20px;
+	}
+
+#feed-header-inner .loader {
+	position: absolute;
+	right:4px;
+	top:3px;
+	left:auto;
+	margin-left:0;
+	opacity:0.5;
 	}
 
 .reload-stream {

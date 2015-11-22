@@ -875,15 +875,8 @@ function doLogin(streamObjectToSet) {
 
 		// we might have cached text for the queet box
 		// (we need to get the mentions suggestions and cache the syntax highlighting before doing this)
-		var cachedQueetBoxData = localStorageObjectCache_GET('queetBoxInput','queet-box');
-		var cachedQueetBoxDataText = $('<div/>').html(cachedQueetBoxData).text();
-	    if(cachedQueetBoxData) {
-			queetBox = $('#queet-box');
-            queetBox.click();
-            queetBox.html(cachedQueetBoxData);
-            setSelectionRange(queetBox[0], cachedQueetBoxDataText.length, cachedQueetBoxDataText.length);
-            queetBox.trigger('input');
-			}
+		$('#queet-box').attr('data-cached-text',encodeURIComponent(localStorageObjectCache_GET('queetBoxInput','queet-box')));
+		maybePrefillQueetBoxWithCachedText($('#queet-box'));
 		});
 
 	// load history
@@ -1618,11 +1611,11 @@ $(window).scroll(function() {
 	if($(window).scrollTop() + $(window).height() > $(document).height() - 1000) {
 
 		// not if we're already loading or if no stream is set yet
-		if(!$('body').hasClass('loading-older') && typeof window.currentStream != "undefined" && $('#feed-body').attr('data-end-reached') != 'true') {
+		if(!$('body').hasClass('loading-older') && typeof window.currentStreamObject != "undefined" && $('#feed-body').attr('data-end-reached') != 'true') {
 			$('body').addClass('loading-older');
 
 			// remove loading class in 10 seconds, i.e. try again if failed to load within 10 s
-			if(window.currentStream.substring(0,6) != 'search') {
+			if(window.currentStreamObject.name != 'search') {
 				setTimeout(function(){$('body').removeClass('loading-older');},10000);
 				}
 
@@ -1638,15 +1631,15 @@ $(window).scroll(function() {
 					var searchPage=2;
 					}
 				var nextPage = searchPage+1;
-				var getVars = qOrAmp(window.currentStream) + 'rpp=20&page=' + searchPage; // search uses 'rpp' var and others 'count' for paging, though we can add rrp to others aswell without any problem
+				var getVars = qOrAmp(window.currentStreamObject.stream) + 'rpp=20&page=' + searchPage; // search uses 'rpp' var and others 'count' for paging, though we can add rrp to others aswell without any problem
 				}
 			// normal streams
 			else {
-				var getVars = qOrAmp(window.currentStream) + 'max_id=' + ($('#feed-body').children('.stream-item').last().attr('data-quitter-id-in-stream'));
+				var getVars = qOrAmp(window.currentStreamObject.stream) + 'max_id=' + ($('#feed-body').children('.stream-item').last().attr('data-quitter-id-in-stream'));
 				}
 
 			display_spinner('#footer-spinner-container');
-			getFromAPI(window.currentStream + getVars,function(data){
+			getFromAPI(window.currentStreamObject.stream + getVars,function(data){
 
 				// if data returned an empty array, we have probably reached the bottom
 				if(data.length == 0) {
@@ -1699,40 +1692,23 @@ function checkForNewQueets() {
 
 		// only if logged in and only for notice or notification streams
 		if(window.loggedIn && (window.currentStreamObject.type == 'notices' || window.currentStreamObject.type == 'notifications')) {
-			var lastId = $('#feed-body').children('.stream-item').not('.temp-post').attr('data-quitter-id-in-stream');
-			var addThisStream = window.currentStream;
+			var lastId = $('#feed-body').children('.stream-item').not('.temp-post').not('.posted-from-form').attr('data-quitter-id-in-stream');
+			var addThisStream = window.currentStreamObject.stream;
 			var timeNow = new Date().getTime();
-			getFromAPI(addThisStream + qOrAmp(window.currentStream) + 'since_id=' + lastId,function(data){
+			getFromAPI(addThisStream + qOrAmp(window.currentStreamObject.stream) + 'since_id=' + lastId,function(data){
 				if(data) {
 					$('body').removeClass('loading-newer');
-					if(addThisStream == window.currentStream) {
+					if(addThisStream == window.currentStreamObject.stream) {
 						addToFeed(data, false, 'hidden');
 
-						// if we have hidden items, show new-queets-bar
-						var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.activity)').length;
-						if(new_queets_num > 0) {
-
-							$('#new-queets-bar').parent().removeClass('hidden');
-
-							// bar label
-							if(new_queets_num == 1) { var q_txt = window.sL.newQueet; }
-							else { var q_txt = window.sL.newQueets; }
-							if(window.currentStreamObject.name == 'notifications') {
-								if(new_queets_num == 1) { var q_txt = window.sL.newNotification; }
-								else { var q_txt = window.sL.newNotifications; }
-								}
-
-							$('#new-queets-bar').html(q_txt.replace('{new-notice-count}',new_queets_num));
-
-							// say hello to the api if this is notifications stream, to
-							// get correct unread notifcation count
-							if(window.currentStreamObject.name == 'notifications') {
-								helloAPI();
-								}
-
-							// cache the now updated stream
-							rememberStreamStateInLocalStorage();
+						// say hello to the api if this is notifications stream, to
+						// get correct unread notifcation count
+						if(window.currentStreamObject.name == 'notifications') {
+							helloAPI();
 							}
+
+						// if we have hidden items, show new-queets-bar
+						maybeShowTheNewQueetsBar()
 
 						}
 					}
@@ -2138,9 +2114,9 @@ $('body').on('click','.action-rt-container .icon:not(.is-mine)',function(){
 				getFavsAndRequeetsForQueet(this_stream_item, this_stream_item.attr('data-quitter-id'));
 
 				// mark all instances of this notice as repeated
-				$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').addClass('requeeted');
-				$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').attr('data-requeeted-by-me-id',data.id);
-				$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').children('.queet').find('.action-rt-container').children('.with-icn').addClass('done');
+				$('.stream-item[data-quitter-id="' + data.retweeted_status.id + '"]').addClass('requeeted');
+				$('.stream-item[data-quitter-id="' + data.retweeted_status.id + '"]').attr('data-requeeted-by-me-id',data.id);
+				$('.stream-item[data-quitter-id="' + data.retweeted_status.id + '"]').children('.queet').find('.action-rt-container').children('.with-icn').addClass('done');
 				}
 			else {
 				// error
@@ -2154,13 +2130,34 @@ $('body').on('click','.action-rt-container .icon:not(.is-mine)',function(){
 	else if(this_action.children('.with-icn').hasClass('done')) {
 		display_spinner();
 
-		var my_rq_id = this_stream_item.attr('data-requeeted-by-me-id');
-		unRequeet(this_stream_item, this_action, my_rq_id);
+		var myRequeetID = this_stream_item.attr('data-requeeted-by-me-id');
 
-		// mark all instances of this notice as non-repeated
-		$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').removeClass('requeeted');
-		$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').removeAttr('data-requeeted-by-me-id');
-		$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').children('.queet').find('.action-rt-container').children('.with-icn').removeClass('done');
+		// display button as unrepeated
+		this_action.children('.with-icn').removeClass('done');
+		this_action.find('.with-icn b').html(window.sL.requeetVerb);
+		this_stream_item.removeClass('requeeted');
+
+		// post unrequeet
+		postActionToAPI('statuses/destroy/' + myRequeetID + '.json', function(data) {
+			if(data) {
+				// remove my repeat-notice from the feed, if it's there
+				slideUpAndRemoveStreamItem($('.stream-item[data-quitter-id-in-stream="' + myRequeetID + '"]'));
+
+				// mark all instances of this notice as non-repeated
+				$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').removeClass('requeeted');
+				$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').removeAttr('data-requeeted-by-me-id');
+				$('.stream-item[data-quitter-id="' + this_stream_item.attr('data-quitter-id') + '"]').children('.queet').find('.action-rt-container').children('.with-icn').removeClass('done');
+
+				getFavsAndRequeetsForQueet(this_stream_item, this_stream_item.attr('data-quitter-id'));
+				remove_spinner();
+				}
+			else {
+				remove_spinner();
+				this_action.children('.with-icn').addClass('done');
+				this_action.find('.with-icn b').html(window.sL.requeetedVerb);
+				this_stream_item.addClass('requeeted');
+				}
+			});
 		}
 	});
 
@@ -2285,12 +2282,13 @@ $('body').on('click','.action-reply-container',function(){
 	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.children('.queet').find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
 
 	// fix the width of the queet box, otherwise the syntax highlighting break
-	var queetBoxWidth = $('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox').width()-20;
-	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box-syntax').width(queetBoxWidth);
-	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.syntax-middle').width(queetBoxWidth);
-	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.syntax-two').width(queetBoxWidth);
+	var queetBox = $('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox');
+	var queetBoxWidth = queetBox.width()-20;
+	queetBox.children('.queet-box-syntax, .syntax-middle, .syntax-two').width(queetBoxWidth);
 
 	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
+
+	maybePrefillQueetBoxWithCachedText(queetBox.children('.queet-box'));
 	});
 
 
@@ -2301,12 +2299,13 @@ $('body').on('click','.action-reply-container',function(){
    · · · · · · · · · · · · · */
 
 $('body').on('click','#top-compose',function(){
-	popUpAction('popup-compose', window.sL.compose,queetBoxHtml(),false);
+	popUpAction('popup-compose', window.sL.compose,queetBoxPopUpHtml(),false);
 	var queetBoxWidth = $('#popup-compose').find('.inline-reply-queetbox').width()-20;
 	$('#popup-compose').find('.queet-box-syntax').width(queetBoxWidth);
 	$('#popup-compose').find('.syntax-middle').width(queetBoxWidth);
 	$('#popup-compose').find('.syntax-two').width(queetBoxWidth);
 	$('#popup-compose').find('.queet-box').trigger('click');
+	maybePrefillQueetBoxWithCachedText($('#popup-compose').find('.queet-box'));
 	});
 
 
@@ -2392,18 +2391,22 @@ $('body').on('click', '.queet-toolbar button',function () {
 		$('.modal-container').remove();
 
 		// try to find a queet to add the temp queet to:
+		var tempQueetInsertedInConversation = false;
 
 		// if the queet is in conversation, add it to parent's conversation
 		if($('.stream-item.replying-to').length > 0 && $('.stream-item.replying-to').hasClass('conversation')) {
-			$('.stream-item.replying-to').parent().append(queetHtml);
+			var insertedTempQueet = $(queetHtml).appendTo($('.stream-item.replying-to').parent());
+			tempQueetInsertedInConversation = true;
 			}
 		// if the queet is expanded, add it to its conversation
 		else if($('.stream-item.replying-to').length > 0 && $('.stream-item.replying-to').hasClass('expanded')) {
-			$('.stream-item.replying-to').append(queetHtml);
+			var insertedTempQueet = $(queetHtml).appendTo($('.stream-item.replying-to'));
+			tempQueetInsertedInConversation = true;
 			}
 		// maybe the replying-to class is missing but we still have a suiting place to add it
 		else if($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').length > 0) {
-			$('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').append(queetHtml);
+			var insertedTempQueet = $(queetHtml).appendTo($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]'));
+			tempQueetInsertedInConversation = true;
 			}
 		// if we can't find a proper place, add it to top and remove conversation class
 		// if this is either 1) our home/all feed, 2) our user timeline or 3) whole site or 4) whole network
@@ -2411,11 +2414,14 @@ $('body').on('click', '.queet-toolbar button',function () {
 			 || window.currentStreamObject.name == 'my profile'
 			 || window.currentStreamObject.name == 'public timeline'
 			 || window.currentStreamObject.name == 'public and external timeline') {
-			$('#feed-body').prepend(queetHtml.replace('class="stream-item conversation','class="stream-item'));
+			var insertedTempQueet = $(queetHtml).prependTo('#feed-body');
+			insertedTempQueet.removeClass('conversation');
 			}
 		// don't add it to the current stream, open a popup instead, without conversation class
 		else {
-			popUpAction('popup-sending', '',queetHtml.replace('class="stream-item conversation','class="stream-item'),false);
+			popUpAction('popup-sending','','',false);
+			var insertedTempQueet = $(queetHtml).prependTo($('#popup-sending').find('.modal-body'));
+			insertedTempQueet.removeClass('conversation');
 			}
 
 		// maybe post queet in groups
@@ -2443,19 +2449,22 @@ $('body').on('click', '.queet-toolbar button',function () {
 		// post queet
 		postQueetToAPI(queetText, in_reply_to_status_id, postToGroups, function(data){ if(data) {
 
-			// show real queet
-			var new_queet = Array();
-			new_queet[0] = data;
-			addToFeed(new_queet,tempPostId,'visible', true);
-
-			// remove temp queet
-			$('#' + tempPostId).remove();
+			// show real queet and remove temp queet
+			var insertedRealQueet = $(buildQueetHtml(data, data.id, 'visible posted-from-form', false, tempQueetInsertedInConversation)).insertAfter(insertedTempQueet);
+			insertedTempQueet.remove();
 
 			// clear queetbox input cache
 			localStorageObjectCache_STORE('queetBoxInput',queetBox.attr('id'),false);
 
 			// queet count
 			$('#user-queets strong').html(parseInt($('#user-queets strong').html(),10)+1);
+
+			// fadeout any posting-popups
+			setTimeout(function(){
+				$('#popup-sending').fadeOut(1000, function(){
+					$('#popup-sending').remove();
+					});
+				},100);
 
 			}});
 		}
@@ -2514,7 +2523,6 @@ $('body').on('click','button.shorten',function () {
    ·
    · · · · · · · · · · · · · */
 $('body').on('click','.reload-stream',function () {
-	$('.reload-stream').hide();
 	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,false);
 	});
 
@@ -2972,15 +2980,29 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
    · · · · · · · · · · · · · */
 
 $('body').on('keyup', 'div.queet-box-syntax', function(e) {
+
+	var thisId = $(this).attr('id');
+	var thisText = $.trim($(this).text());
+
+	// keep in global var to avoid doing all these operations every keystroke
+	if(typeof window.queetBoxCurrentlyActive == 'undefined'
+	|| window.queetBoxCurrentlyActive.id != thisId) {
+		window.queetBoxCurrentlyActive = {
+			id: thisId,
+			startText: $.trim($('<div/>').append(decodeURIComponent($(this).attr('data-start-text'))).text()),
+			repliesText: $.trim($('<div/>').append(decodeURIComponent($(this).attr('data-replies-text'))).text())
+			};
+		}
+
 	// remove from cache if empty, or same as default text
-	if($.trim($(this).text()) == ''
-	|| $.trim($(this).text()) == window.sL.compose
-	|| $.trim($(this).text()) == $.trim(decodeURIComponent($(this).attr('data-start-text')))
-	|| $.trim($(this).text()) == $.trim(decodeURIComponent($(this).attr('data-replies-text')))) {
-		localStorageObjectCache_STORE('queetBoxInput',$(this).attr('id'),false);
+	if(thisText == ''
+	|| thisText == window.sL.compose
+	|| thisText == window.queetBoxCurrentlyActive.startText
+	|| thisText == window.queetBoxCurrentlyActive.repliesText) {
+		localStorageObjectCache_STORE('queetBoxInput',thisId,false);
 		}
 	else {
-		localStorageObjectCache_STORE('queetBoxInput',$(this).attr('id'),$(this).html());
+		localStorageObjectCache_STORE('queetBoxInput',thisId,$(this).html());
 		}
 	});
 
@@ -3122,8 +3144,8 @@ $('body').on('click','.view-more-container-top', function(){
 $('body').on('click','.show-full-conversation',function(){
 
 	var this_q = $(this).closest('.queet');
-	var this_qid = $(this).closest('.stream-item:not(.conversation)').attr('data-quitter-id');
-	var thisStreamItem = $('#stream-item-' + $(this).attr('data-stream-item-id'));
+	var thisStreamItem = this_q.parent();
+	var this_qid = thisStreamItem.attr('data-quitter-id');
 
 	rememberMyScrollPos(this_q,this_qid);
 

@@ -442,6 +442,7 @@ class QvitterPlugin extends Plugin {
     function onNoticeSimpleStatusArray($notice, &$twitter_status, $scoped)
     {
 
+
     	// groups
 		$notice_groups = $notice->getGroups();
 		$group_addressees = false;
@@ -449,13 +450,6 @@ class QvitterPlugin extends Plugin {
 			$group_addressees[] = array('nickname'=>$g->nickname,'url'=>$g->mainpage);
 			}
 		$twitter_status['statusnet_in_groups'] = $group_addressees;
-
-		// include the repeat-id, which we need when unrepeating later
-		if(array_key_exists('repeated', $twitter_status) && $twitter_status['repeated'] === true) {
-			$repeated = Notice::pkeyGet(array('profile_id' => $scoped->id,
-                                        	'repeat_of' => $notice->id));
-			$twitter_status['repeated_id'] = $repeated->id;
-			}
 
 		// more metadata about attachments
 
@@ -541,6 +535,7 @@ class QvitterPlugin extends Plugin {
 		    $twitter_status['in_reply_to_profileurl'] = null;
         }
 
+
 		// fave number
 		$faves = Fave::byNotice($notice);
 		$favenum = count($faves);
@@ -550,7 +545,9 @@ class QvitterPlugin extends Plugin {
 		$repeats = $notice->repeatStream();
         $repeatnum=0;
         while ($repeats->fetch()) {
-        	$repeatnum++;
+            if($repeats->verb == ActivityVerb::SHARE) { // i.e. not deleted repeats
+                $repeatnum++;
+                }
         	}
 		$twitter_status['repeat_num'] = $repeatnum;
 
@@ -724,17 +721,6 @@ class QvitterPlugin extends Plugin {
 
         assert($notice->id > 0);    // since we removed tests below
 
-		// don't add notifications for activity type notices
-				if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
-			return true;
-			}
-
-		// mark reply/mention-notifications as read if we're replying to a notice we're notified about
-		if($notice->reply_to) {
-            self::markNotificationAsSeen($notice->reply_to,$notice->profile_id,'mention');
-            self::markNotificationAsSeen($notice->reply_to,$notice->profile_id,'reply');
-			}
-
 		// repeats
         if ($notice->isRepeat()) {
 			$repeated_notice = Notice::getKV('id', $notice->repeat_of);
@@ -744,44 +730,57 @@ class QvitterPlugin extends Plugin {
                 // mark reply/mention-notifications as read if we're repeating to a notice we're notified about
                 self::markNotificationAsSeen($repeated_notice->id,$notice->profile_id,'mention');
                 self::markNotificationAsSeen($repeated_notice->id,$notice->profile_id,'reply');
+
+                // (no other notifications repeats)
+                return true;
                 }
  			}
 
-		// replies and mentions (no notifications for these if this is a repeat)
- 		else {
-	 		$reply_notification_to = false;
-			// check for reply to insert in notifications
-			if($notice->reply_to) {
-				try {
-					$replyauthor = $notice->getParent()->getProfile();
-					$reply_notification_to = $replyauthor->id;
-					$this->insertNotification($replyauthor->id, $notice->profile_id, 'reply', $notice->id);
-				//} catch (NoParentNoticeException $e) {	// TODO: catch this when everyone runs latest GNU social!
-					// This is not a reply to something (has no parent)
-				} catch (NoResultException $e) {
-					// Parent author's profile not found! Complain louder?
-					common_log(LOG_ERR, "Parent notice's author not found: ".$e->getMessage());
-				}
+		// don't add notifications for activity type notices
+		if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
+			return true;
 			}
 
-			// check for mentions to insert in notifications
-			$mentions = $notice->getReplies();
-			$sender = Profile::getKV($notice->profile_id);
-			$all_mentioned_user_ids = array();
-			foreach ($mentions as $mentioned) {
+		// mark reply/mention-notifications as read if we're replying to a notice we're notified about
+		if($notice->reply_to) {
+            self::markNotificationAsSeen($notice->reply_to,$notice->profile_id,'mention');
+            self::markNotificationAsSeen($notice->reply_to,$notice->profile_id,'reply');
+			}
 
-				// no duplicate mentions
-				if(in_array($mentioned, $all_mentioned_user_ids)) {
-					continue;
-					}
-				$all_mentioned_user_ids[] = $mentioned;
 
-				// only notify if mentioned user is not already notified for reply
-				if($reply_notification_to != $mentioned) {
-					$this->insertNotification($mentioned, $notice->profile_id, 'mention', $notice->id);
-					}
+		// replies and mentions
+ 		$reply_notification_to = false;
+		// check for reply to insert in notifications
+		if($notice->reply_to) {
+			try {
+				$replyauthor = $notice->getParent()->getProfile();
+				$reply_notification_to = $replyauthor->id;
+				$this->insertNotification($replyauthor->id, $notice->profile_id, 'reply', $notice->id);
+			//} catch (NoParentNoticeException $e) {	// TODO: catch this when everyone runs latest GNU social!
+				// This is not a reply to something (has no parent)
+			} catch (NoResultException $e) {
+				// Parent author's profile not found! Complain louder?
+				common_log(LOG_ERR, "Parent notice's author not found: ".$e->getMessage());
+			}
+		}
+
+		// check for mentions to insert in notifications
+		$mentions = $notice->getReplies();
+		$sender = Profile::getKV($notice->profile_id);
+		$all_mentioned_user_ids = array();
+		foreach ($mentions as $mentioned) {
+
+			// no duplicate mentions
+			if(in_array($mentioned, $all_mentioned_user_ids)) {
+				continue;
 				}
- 			}
+			$all_mentioned_user_ids[] = $mentioned;
+
+			// only notify if mentioned user is not already notified for reply
+			if($reply_notification_to != $mentioned) {
+				$this->insertNotification($mentioned, $notice->profile_id, 'mention', $notice->id);
+				}
+			}
 
         return true;
     	}
