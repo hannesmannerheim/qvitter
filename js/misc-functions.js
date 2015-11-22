@@ -702,15 +702,15 @@ function searchForUpdatedNoticeData(obj) {
 					// avatar may have changed
 					if(typeof obj.user != 'undefined'
 					&& typeof obj.user.profile_image_url_profile_size != 'undefined'
-					&& queetFoundInFeed.find('img.avatar').src != obj.user.profile_image_url_profile_size) {
-						queetFoundInFeed.find('img.avatar').attr('src',obj.user.profile_image_url_profile_size);
+					&& queetFoundInFeed.find('.stream-item-header').find('img.avatar').src != obj.user.profile_image_url_profile_size) {
+						queetFoundInFeed.find('.stream-item-header').find('img.avatar').attr('src',obj.user.profile_image_url_profile_size);
 						}
 
 					// name may have changed
 					if(typeof obj.user != 'undefined'
 					&& typeof obj.user.name != 'undefined'
-					&& queetFoundInFeed.find('strong.name').html() != obj.user.name) {
-						queetFoundInFeed.find('strong.name').html(obj.user.name);
+					&& queetFoundInFeed.find('.stream-item-header').find('strong.name').html() != obj.user.name) {
+						queetFoundInFeed.find('.stream-item-header').find('strong.name').html(obj.user.name);
 						}
 
 					// set favorite data
