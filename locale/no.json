@@ -141,15 +141,15 @@
 	"ERRORnoContactWithServer": "Kan ikke etablere en kobling til instansen. Dette kan skyldes at den er overbelastet, eller det er et problem med din internet kobling. Vennligst forsøk senere.",
 	"ERRORattachmentUploadFailed": "Opplasting feilet. Formatet er muligens ikke supportert, eller filen er for stor.",
 	"hideRepliesToPeopleIDoNotFollow":"Skjul svar fra profiler jeg ikke følger.",
-	"markAllNotificationsAsSeen":"Marker alle notifikasjoner som lest",
+	"markAllNotificationsAsSeen":"Marker alle varsler som lest",
 	"notifyRepliesAndMentions":"Nevninger og svar",
 	"notifyFavs":"Favoritter",
 	"notifyRepeats":"Requeets",
 	"notifyFollows":"Nye følgere",
 	"timelineOptions":"Tidslinje innstillinger",
 	"ERRORfailedSavingYourSetting":"Feilet ved lagring av innstillinger",
-	"ERRORfailedMarkingAllNotificationsAsRead":"Feilet ved forsøk å markere alle notifikasjoner som lest.",
-	"newNotification": "{new-notice-count} ny notifikasjon",
-	"newNotifications": "{new-notice-count} nye notifikasjoner",
-	"thisIsANoticeFromABlockedUser":"Warning: This is a notice from a user you have blocked. Click to show it."
+	"ERRORfailedMarkingAllNotificationsAsRead":"Feilet ved forsøk å markere alle varsler som lest.",
+	"newNotification": "{new-notice-count} nytt varsel",
+	"newNotifications": "{new-notice-count} nye varsler",
+	"thisIsANoticeFromABlockedUser":"Advarsel: Dette er en notis fra en bruker du har blokkert. Klikk for å se den."
 }
