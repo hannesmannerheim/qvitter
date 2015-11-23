@@ -1366,10 +1366,9 @@ function showConversation(q, qid, data, offsetScroll) {
 
 					if(q.hasClass('expanded')) { // add queet to conversation only if still expanded
 
-						// replace already existing queets' html
+						// don't add if already exist in conversation
 						if(q.children('.stream-item.conversation[data-quitter-id="' + obj.id + '"]').length > 0) {
-							var streamItemInnerHtml = $('<div/>').append(queetHtml).find('.stream-item').html();
-							q.children('.stream-item.conversation[data-quitter-id="' + obj.id + '"]').html(streamItemInnerHtml);
+							// the data in the existing notice is updated automatically in searchForUpdatedNoticeData invoked from getFromAPI
 							}
 						else if(before_or_after == 'before') {
 							q.children('.queet').before(queetHtml);
