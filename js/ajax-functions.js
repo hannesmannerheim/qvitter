@@ -512,6 +512,7 @@ function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, acti
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
+			searchForUpdatedNoticeData(data);
 			actionOnSuccess(data);
 			}
 		});
@@ -542,6 +543,7 @@ function postActionToAPI(action, actionOnSuccess) {
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
+			searchForUpdatedNoticeData(data);
 			actionOnSuccess(data);
 			}
 		});

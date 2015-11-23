@@ -2449,8 +2449,23 @@ $('body').on('click', '.queet-toolbar button',function () {
 		// post queet
 		postQueetToAPI(queetText, in_reply_to_status_id, postToGroups, function(data){ if(data) {
 
-			// show real queet and remove temp queet
-			var insertedRealQueet = $(buildQueetHtml(data, data.id, 'visible posted-from-form', false, tempQueetInsertedInConversation)).insertAfter(insertedTempQueet);
+			var queetHtml = buildQueetHtml(data, data.id, 'visible posted-from-form', false, tempQueetInsertedInConversation);
+
+			// while we were waiting for our posted queet to arrive here, it may have already
+			// arrived in the automatic update of the feed, so if it's already there, we
+			// replace it (but not if the temp queet is inserted in a conversation of course, or if
+			// the user has had time to expand it)
+			var alredyArrived = $('#feed-body > .stream-item[data-quitter-id-in-stream=' + data.id + ']');
+			if(alredyArrived.length > 0 && tempQueetInsertedInConversation === false) {
+				if(!alredyArrived.hasClass('expanded')) {
+					alredyArrived.replaceWith(queetHtml);
+					}
+				}
+			else {
+				insertedTempQueet.after(queetHtml);
+				}
+
+			// remove temp queet
 			insertedTempQueet.remove();
 
 			// clear queetbox input cache

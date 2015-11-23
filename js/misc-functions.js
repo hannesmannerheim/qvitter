@@ -713,6 +713,11 @@ function searchForUpdatedNoticeData(obj) {
 						queetFoundInFeed.find('.stream-item-header').find('strong.name').html(obj.user.name);
 						}
 
+					// attachments might have been added (had time to be processed)
+					if(streamItemFoundInFeed.attr('data-attachments') == 'undefined' && typeof obj.attachments != 'undefined') {
+						streamItemFoundInFeed.attr('data-attachments',JSON.stringify(obj.attachments));
+						}
+
 					// set favorite data
 					queetFoundInFeed.find('.action-fav-num').attr('data-fav-num',obj.fave_num);
 					queetFoundInFeed.find('.action-fav-num').html(obj.fave_num);
@@ -799,6 +804,7 @@ function rememberStreamStateInLocalStorage() {
 		feed.find('.expanded-content').remove();
 		feed.find('.inline-reply-queetbox').remove();
 		feed.find('.not-seen-disc').remove();
+		feed.find('.show-full-conversation').remove();
 		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').addClass('visible');
 		var feedHtml = feed.html();
 		var profileCardHtml = $('#feed').siblings('.profile-card').outerHTML();

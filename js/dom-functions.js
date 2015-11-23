@@ -1735,12 +1735,26 @@ function addToFeed(feed, after, extraClasses) {
 			// only if not already exist
 			if($('#stream-item-' + obj.id).length == 0) {
 
+				// remove any matching temp post
+				if(typeof obj.user != 'undefined'
+				&& obj.user.id == window.loggedIn.id
+				&& $('#feed-body > .temp-post').length > 0
+				&& after === false) {
+					$('#feed-body > .temp-post').each(function (){
+						if($(this).children('.queet').find('.queet-text').text() == obj.text) {
+							$(this).remove();
+							extraClassesThisRun = 'visible';
+							}
+						});
+					}
+
 				var queetHtml = buildQueetHtml(obj, obj.id, extraClassesThisRun);
 
 				if(after) {
 					$('#' + after).after(queetHtml);
 					}
 				else {
+
 					$('#feed-body').prepend(queetHtml);
 					addedToTopOfFeedBodyNum++;
 
