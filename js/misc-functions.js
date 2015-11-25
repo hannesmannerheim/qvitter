@@ -713,16 +713,16 @@ function searchForUpdatedNoticeData(obj) {
 						queetFoundInFeed.find('.stream-item-header').find('strong.name').html(obj.user.name);
 						}
 
-					// attachments might have been added (have had time to be processed)
-					var existingAttachments = streamItemFoundInFeed.attr('data-attachments');
-					if((existingAttachments == 'undefined' || existingAttachments == '' || existingAttachments == 'false')
-					&& queetFoundInFeed.find('.queet-thumbs').hasClass('thumb-num-0')
-					&& typeof obj.attachments != 'undefined') {
+					// attachments might have been added/changed/have had time to be processed
+					if(streamItemFoundInFeed.attr('data-attachments') != JSON.stringify(obj.attachments)) {
 						streamItemFoundInFeed.attr('data-attachments',JSON.stringify(obj.attachments));
-						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
-						queetFoundInFeed.find('.queet-thumbs').removeClass('thumb-num-0');
-						queetFoundInFeed.find('.queet-thumbs').addClass('thumb-num-' + attachmentsHTMLBuild.num);
-						queetFoundInFeed.find('.queet-thumbs').html(attachmentsHTMLBuild.html);
+						// we might want to add thumbnails
+						if(queetFoundInFeed.find('.queet-thumbs').hasClass('thumb-num-0')) {
+							var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
+							queetFoundInFeed.find('.queet-thumbs').removeClass('thumb-num-0');
+							queetFoundInFeed.find('.queet-thumbs').addClass('thumb-num-' + attachmentsHTMLBuild.num);
+							queetFoundInFeed.find('.queet-thumbs').html(attachmentsHTMLBuild.html);
+							}
 						}
 
 					// set favorite data
