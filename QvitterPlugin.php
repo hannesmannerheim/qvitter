@@ -451,6 +451,15 @@ class QvitterPlugin extends Plugin {
 			}
 		$twitter_status['statusnet_in_groups'] = $group_addressees;
 
+		// for older verions of gnu social: include the repeat-id, which we need when unrepeating later
+		if(array_key_exists('repeated', $twitter_status) && $twitter_status['repeated'] === true) {
+            $repeated = Notice::pkeyGet(array('profile_id' => $scoped->id,
+                                        	'repeat_of' => $notice->id,
+                                            'verb' => 'http://activitystrea.ms/schema/1.0/share'));
+			$twitter_status['repeated_id'] = $repeated->id;
+
+			}
+
 		// more metadata about attachments
 
         // get all attachments first, and put all the extra meta data in an array
