@@ -1686,10 +1686,9 @@ body.rtl #footer-spinner-container {
     height:auto;
     position:relative;
 	}
-.stream-item.collapsing {
-	overflow:hidden;
-	}
-.stream-item.hidden {
+.stream-item.collapsing,
+.stream-item.hidden,
+.stream-item.always-hidden {
 	display:none;
 	}
 .stream-item.expanded > div.last-visible,
@@ -3411,7 +3410,6 @@ body.rtl #user-body {
 	position:relative;
 	display:inline-block; /* important! otherwise webkit will nest div:s in the contenteditable */
 	}
-
 
 div.syntax-middle,
 div.syntax-two {

@@ -692,7 +692,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			haveOldStreamState = false;
 			}
 
-		// show cached version immediately (it is replaced when stream finishes to load later)
+		// show cached version immediately
 		if(haveOldStreamState) {
 			$('.profile-card,.hover-card,.hover-card-caret').remove();
 			$('#feed').before(haveOldStreamState.card);
@@ -702,12 +702,16 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			// if the cached items has data-quitter-id-in-stream attributes, sort them before adding them
 			if(oldStreamState.children('.stream-item[data-quitter-id-in-stream]').length>0) {
 				oldStreamState.sortDivsByAttrDesc('data-quitter-id-in-stream');
-				$('#feed-body').html('');
-				oldStreamState.children('.stream-item[data-quitter-id-in-stream]').appendTo('#feed-body');
 				}
-			else {
-				$('#feed-body').html(haveOldStreamState.feed);
+
+			// hide any removed notices that we know of
+			if(typeof window.knownDeletedNotices != 'undefined') {
+				$.each(window.knownDeletedNotices,function(delededURI,v){
+					oldStreamState.children('.stream-item[data-uri="' + delededURI + '"]').addClass('deleted always-hidden');
+					});
 				}
+
+			$('#feed-body').html(oldStreamState.html());
 
 			// set location bar from stream
 			if(setLocation) {
@@ -1113,54 +1117,63 @@ function expand_queet(q,doScrolling) {
 				}
 
 			// show certain attachments in expanded content
-			if(q.data('attachments') != 'undefined') {
-				$.each(q.data('attachments'), function() {
+			if(q.attr('data-attachments') != 'undefined') {
+				try {
+					var attachmentsParsed = JSON.parse(q.attr('data-attachments'));
+					}
+				catch(e) {
+					var attachmentsParsed = false;
+					console.log('could not parse attachment data when expanding the notice');
+					}
+				if(attachmentsParsed !== false) {
+					$.each(attachmentsParsed, function() {
 
-					var attachment_mimetype = this.mimetype;
-					var attachment_title = this.url;
+						var attachment_mimetype = this.mimetype;
+						var attachment_title = this.url;
 
-					// filename extension
-					var attachment_title_extension = attachment_title.substr((~-attachment_title.lastIndexOf(".") >>> 0) + 2);
+						// filename extension
+						var attachment_title_extension = attachment_title.substr((~-attachment_title.lastIndexOf(".") >>> 0) + 2);
 
-					// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
-					if(typeof attachment_title != 'undefined') {
+						// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
+						if(typeof attachment_title != 'undefined') {
 
-						// hack to make remote webm-movies load
-						if(attachment_title_extension == 'webm') {
-							attachment_mimetype = 'video/webm';
+							// hack to make remote webm-movies load
+							if(attachment_title_extension == 'webm') {
+								attachment_mimetype = 'video/webm';
+								}
+
+							// videos
+							if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
+								if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
+
+									// local attachment with a thumbnail
+									var attachment_poster = '';
+									if(typeof this.thumb_url != 'undefined') {
+										attachment_poster = ' poster="' + this.thumb_url + '"';
+										}
+
+									if(q.children('.queet').find('.expanded-content').children('.media').length > 0) {
+										q.children('.queet').find('.media').last().after('<div class="media"><video class="u-video" controls="controls"' + attachment_poster + '><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');
+										}
+									else {
+										q.children('.queet').find('.expanded-content').prepend('<div class="media"><video class="u-video" controls="controls"' + attachment_poster + '><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');
+										}
+								}
 							}
-
-						// videos
-						if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
-							if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
-
-								// local attachment with a thumbnail
-								var attachment_poster = '';
-								if(typeof this.thumb_url != 'undefined') {
-									attachment_poster = ' poster="' + this.thumb_url + '"';
-									}
-
-								if(q.children('.queet').find('.expanded-content').children('.media').length > 0) {
-									q.children('.queet').find('.media').last().after('<div class="media"><video class="u-video" controls="controls"' + attachment_poster + '><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');
-									}
-								else {
-									q.children('.queet').find('.expanded-content').prepend('<div class="media"><video class="u-video" controls="controls"' + attachment_poster + '><source type="' + attachment_mimetype + '" src="' + attachment_title + '" /></video></div>');
-									}
+							else {
+								// other plugins, e.g. gotabulo, can check for other attachment file formats to expand
+								window.currentlyExpanding = {
+									"attachment_title":attachment_title,
+									"attachment_mimetype":attachment_mimetype,
+									"attachment_title_extension":attachment_title_extension,
+									"streamItem":q,
+									"thisAttachmentLink":$(this)
+									};
+								$(document).trigger('qvitterExpandOtherAttachments');
+								}
 							}
-						}
-						else {
-							// other plugins, e.g. gotabulo, can check for other attachment file formats to expand
-							window.currentlyExpanding = {
-								"attachment_title":attachment_title,
-								"attachment_mimetype":attachment_mimetype,
-								"attachment_title_extension":attachment_title_extension,
-								"streamItem":q,
-								"thisAttachmentLink":$(this)
-								};
-							$(document).trigger('qvitterExpandOtherAttachments');
-							}
-						}
-					});
+						});
+					}
 				}
 
 			// get and show favs and repeats
@@ -1800,19 +1813,19 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		}
 
 	// deleted?
-	if(window.knownDeletedNotices[obj.uri]) {
-
+	if(typeof window.knownDeletedNotices[obj.uri] != 'undefined') {
+		extraClasses += ' deleted always-hidden';
 		}
 	// unrepeated?
-	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
-		if(window.knownDeletedNotices[requeeted_by.uri]) {
-
-			}
+	if(typeof requeeted_by != 'undefined'
+	&& requeeted_by !== false
+	&& typeof window.knownDeletedNotices[requeeted_by.uri != 'undefined']) {
+		extraClasses += ' unrepeated always-hidden';
 		}
 
 	// activity? (hidden with css)
 	if(obj.source == 'activity' || obj.is_activity === true) {
-		extraClasses += ' activity';
+		extraClasses += ' activity always-hidden';
 
 		// because we had an xss issue with activities, the obj.statusnet_html of qvitter-deleted-activity-notices can contain unwanted html, so we escape, they are hidden anyway
 		obj.statusnet_html = replaceHtmlSpecialChars(obj.statusnet_html);
@@ -1888,10 +1901,90 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		}
 
 	// image attachment thumbnails
+	var attachmentsBuild = buildAttachmentHTML(obj.attachments);
+
+	// requeets get's a context element and a identifying class
+	// uri used is the repeate-notice's uri for repeats, not the repetED notice's uri (necessary if someone deletes a repeat)
+	var URItoUse = obj.uri;
+	var requeetHtml = '';
+	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
+		var requeetedByHtml = '<a data-user-id="' + requeeted_by.user.id + '" href="' + requeeted_by.user.statusnet_profile_url + '"> <b>' + requeeted_by.user.name + '</b></a>';
+		requeetHtml = '<div class="context" id="requeet-' + requeeted_by.id + '"><span class="with-icn"><i class="badge-requeeted" data-tooltip="' + parseTwitterDate(requeeted_by.created_at) + '"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetedByHtml) + '</span></span></div>';
+		var URItoUse = requeeted_by.uri;
+		extraClasses += ' is-requeet';
+		}
+
+	// the URI for delete activity notices are the same as the notice that is to be deleted
+	// so we make the URI for the (hidden) actitity notice unique, otherwise we might remove
+	// the activity notice from DOM when we remove the deleted notice
+	if(typeof obj.qvitter_delete_notice != 'undefined' && obj.qvitter_delete_notice == true) {
+		URItoUse += '-activity-notice';
+		}
+
+	// external
+	var ostatusHtml = '';
+	if(obj.is_local === false) {
+		ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
+		}
+	var queetTime = parseTwitterDate(obj.created_at);
+	var queetHtml = '<div \
+						id="' + idPrepend + 'stream-item-' + idInStream + '" \
+						data-uri="' + URItoUse + '" \
+						class="stream-item ' + extraClasses + '" \
+						data-attachments=\'' + JSON.stringify(obj.attachments) + '\'\
+						data-source="' + escape(obj.source) + '" \
+						data-quitter-id="' + obj.id + '" \
+						data-conversation-id="' + obj.statusnet_conversation_id + '" \
+						data-quitter-id-in-stream="' + idInStream + '" \
+						data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" \
+						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"\
+						' + requeetedByMe + '>\
+							<div class="queet" id="' + idPrepend + 'q-' + idInStream + '"' + blockingTooltip  + '>\
+								' + requeetHtml + '\
+								' + ostatusHtml + '\
+								<div class="queet-content">\
+									<div class="stream-item-header">\
+										<a class="account-group" href="' + obj.user.statusnet_profile_url + '">\
+											<img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" />\
+											<strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> \
+											<span class="screen-name">@' + obj.user.screen_name + '</span>' +
+										'</a>' +
+										'<i class="addressees">' + reply_to_html + in_groups_html + '</i>' +
+										'<small class="created-at" data-created-at="' + obj.created_at + '">\
+											<a data-tooltip="' + parseTwitterLongDate(obj.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a>\
+										</small>\
+									</div>\
+									<div class="queet-text">' + $.trim(obj.statusnet_html) + '</div>\
+									<div class="queet-thumbs thumb-num-' + attachmentsBuild.num + '">' + attachmentsBuild.html + '</div>\
+									<div class="stream-item-footer">\
+										' + queetActions + '\
+									</div>\
+								</div>\
+							</div>\
+						</div>';
+
+	// detect rtl
+	queetHtml = detectRTL(queetHtml);
+
+	return queetHtml;
+	}
+
+
+
+
+/* ·
+   ·
+   ·   Build HTML for the attachments to a queet
+   ·
+   ·   @param attachments: attachment object returned by the api
+   ·
+   · · · · · · · · · · · · · */
+
+function buildAttachmentHTML(attachments){
 	var attachment_html = '';
 	var attachmentNum = 0;
-	if(typeof obj.attachments != "undefined") {
-		$.each(obj.attachments, function(){
+	if(typeof attachments != "undefined") {
+		$.each(attachments, function(){
 			if(typeof this.thumb_url != 'undefined' && this.thumb_url !== null) { // if there's a thumb_url we assume this is a image or video
 				var bigThumbW = 1000;
 				var bigThumbH = 3000;
@@ -1948,75 +2041,8 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 				}
 			});
 		}
-
-	// requeets get's a context element and a identifying class
-	// uri used is the repeate-notice's uri for repeats, not the repetED notice's uri (necessary if someone deletes a repeat)
-	var URItoUse = obj.uri;
-	var requeetHtml = '';
-	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
-		var requeetedByHtml = '<a data-user-id="' + requeeted_by.user.id + '" href="' + requeeted_by.user.statusnet_profile_url + '"> <b>' + requeeted_by.user.name + '</b></a>';
-		requeetHtml = '<div class="context" id="requeet-' + requeeted_by.id + '"><span class="with-icn"><i class="badge-requeeted" data-tooltip="' + parseTwitterDate(requeeted_by.created_at) + '"></i><span class="requeet-text"> ' + window.sL.requeetedBy.replace('{requeeted-by}',requeetedByHtml) + '</span></span></div>';
-		var URItoUse = requeeted_by.uri;
-		extraClasses += ' is-requeet';
-		}
-
-	// the URI for delete activity notices are the same as the notice that is to be deleted
-	// so we make the URI for the (hidden) actitity notice unique, otherwise we might remove
-	// the activity notice from DOM when we remove the deleted notice
-	if(typeof obj.qvitter_delete_notice != 'undefined' && obj.qvitter_delete_notice == true) {
-		URItoUse += '-activity-notice';
-		}
-
-
-
-	if(typeof requeeted_by != 'undefined' && requeeted_by !== false) {
-
-		}
-
-	// external
-	var ostatusHtml = '';
-	if(obj.is_local === false) {
-		ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
-		}
-	var queetTime = parseTwitterDate(obj.created_at);
-	var queetHtml = '<div \
-						id="' + idPrepend + 'stream-item-' + idInStream + '" \
-						data-uri="' + URItoUse + '" \
-						class="stream-item ' + extraClasses + '" \
-						data-attachments=\'' + JSON.stringify(obj.attachments) + '\'\
-						data-source="' + escape(obj.source) + '" \
-						data-quitter-id="' + obj.id + '" \
-						data-conversation-id="' + obj.statusnet_conversation_id + '" \
-						data-quitter-id-in-stream="' + idInStream + '" \
-						data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" \
-						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"\
-						' + requeetedByMe + '>\
-							<div class="queet" id="' + idPrepend + 'q-' + idInStream + '"' + blockingTooltip  + '>\
-								' + requeetHtml + '\
-								' + ostatusHtml + '\
-								<div class="queet-content">\
-									<div class="stream-item-header">\
-										<a class="account-group" href="' + obj.user.statusnet_profile_url + '">\
-											<img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" />\
-											<strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> \
-											<span class="screen-name">@' + obj.user.screen_name + '</span>' +
-										'</a>' +
-										'<i class="addressees">' + reply_to_html + in_groups_html + '</i>' +
-										'<small class="created-at" data-created-at="' + obj.created_at + '">\
-											<a data-tooltip="' + parseTwitterLongDate(obj.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a>\
-										</small>\
-									</div>\
-									<div class="queet-text">' + $.trim(obj.statusnet_html) + '</div>\
-									<div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachment_html + '</div>\
-									<div class="stream-item-footer">\
-										' + queetActions + '\
-									</div>\
-								</div>\
-							</div>\
-						</div>';
-
-	// detect rtl
-	queetHtml = detectRTL(queetHtml);
-
-	return queetHtml;
+	return {
+		html: attachment_html,
+		num: attachmentNum
+		};
 	}

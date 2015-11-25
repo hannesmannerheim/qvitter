@@ -2064,10 +2064,8 @@ function deleteQueet(arg) {
 		postActionToAPI('statuses/destroy/' + this_qid + '.json', function(data) {
 			if(data) {
 				remove_spinner();
-				// remove the stream-item clicked and all other displays of this object from dom (e.g. in conversation)
-				$('.stream-item[data-quitter-id="' + this_qid + '"]').find('.queet').animate({opacity:'0'},700,function(){
-					$('.stream-item[data-quitter-id="' + this_qid + '"]').remove();
-					});
+				window.knownDeletedNotices[$('.stream-item[data-quitter-id="' + this_qid + '"]').attr('data-uri')] = true;
+				slideUpAndRemoveStreamItem($('.stream-item[data-quitter-id="' + this_qid + '"]'));
 				}
 			else {
 				remove_spinner();
@@ -3079,14 +3077,14 @@ $('body').keyup(function (e) {
 			// next queet on 'j'
 			if(e.which == 74) {
 				selectedQueet.removeClass('selected-by-keyboard');
-				var next = selectedQueet.nextAll('.visible').not('.activity').first();
+				var next = selectedQueet.nextAll('.visible').not('.always-hidden').first();
 				next.addClass('selected-by-keyboard');
 				scrollToQueet(next);
 				}
 			// prev queet on 'k'
 			else if(e.which == 75) {
 				selectedQueet.removeClass('selected-by-keyboard');
-				var prev = selectedQueet.prevAll('.visible').not('.activity').first();
+				var prev = selectedQueet.prevAll('.visible').not('.always-hidden').first();
 				prev.addClass('selected-by-keyboard');
 				scrollToQueet(prev);
 				}

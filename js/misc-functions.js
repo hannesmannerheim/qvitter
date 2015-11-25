@@ -307,7 +307,7 @@ function localStorageIsEnabled() {
    · · · · · · · · · */
 
 function maybeShowTheNewQueetsBar() {
-	var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.activity)').length;
+	var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.always-hidden)').length;
 	if(new_queets_num > 0) {
 
 		$('#new-queets-bar').parent().removeClass('hidden');
@@ -687,7 +687,7 @@ function searchForUpdatedNoticeData(obj) {
 					// maybe because they were in the process of being saved when
 					// we first got them
 					if(obj.is_activity) {
-						streamItemFoundInFeed.addClass('activity');
+						streamItemFoundInFeed.addClass('activity always-hidden');
 						}
 
 					// update the avatar row if the queet is expanded and the numbers are not the same
@@ -713,9 +713,16 @@ function searchForUpdatedNoticeData(obj) {
 						queetFoundInFeed.find('.stream-item-header').find('strong.name').html(obj.user.name);
 						}
 
-					// attachments might have been added (had time to be processed)
-					if(streamItemFoundInFeed.attr('data-attachments') == 'undefined' && typeof obj.attachments != 'undefined') {
+					// attachments might have been added (have had time to be processed)
+					var existingAttachments = streamItemFoundInFeed.attr('data-attachments');
+					if((existingAttachments == 'undefined' || existingAttachments == '' || existingAttachments == 'false')
+					&& queetFoundInFeed.find('.queet-thumbs').hasClass('thumb-num-0')
+					&& typeof obj.attachments != 'undefined') {
 						streamItemFoundInFeed.attr('data-attachments',JSON.stringify(obj.attachments));
+						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
+						queetFoundInFeed.find('.queet-thumbs').removeClass('thumb-num-0');
+						queetFoundInFeed.find('.queet-thumbs').addClass('thumb-num-' + attachmentsHTMLBuild.num);
+						queetFoundInFeed.find('.queet-thumbs').html(attachmentsHTMLBuild.html);
 						}
 
 					// set favorite data
@@ -757,16 +764,16 @@ function searchForUpdatedNoticeData(obj) {
 
 /* ·
    ·
-   ·  Removes a stream item from the feed gracefully
+   ·  Removes a deleted stream item from the feed gracefully, if not already hidden
    ·
    · · · · · · · · · */
 
 function slideUpAndRemoveStreamItem(streamItem,callback) {
-	if(streamItem.length>0) {
+	if(streamItem.length>0 && !streamItem.hasClass('always-hidden')) {
 		streamItem.animate({opacity:'0.2'},1000,'linear',function(){
 			$(this).css('height',$(this).height() + 'px');
 			$(this).animate({height:'0px'},500,'linear',function(){
-				$(this).remove();
+				$(this).addClass('deleted always-hidden');
 				if(typeof callback == 'function') {
 					callback();
 					}
@@ -785,12 +792,12 @@ function slideUpAndRemoveStreamItem(streamItem,callback) {
 function rememberStreamStateInLocalStorage() {
 	if(typeof window.currentStreamObject != 'undefined') {
 
-		// dont store open conversations, and only store profile card and the top 20 stream-items
+		// don't store expanded content, only store profile card and the top 20 visible stream-items
 		var firstTwentyVisibleHTML = '';
 		var i = 0;
 		$.each($('#feed-body').children('.stream-item'),function(k,streamItem){
 			firstTwentyVisibleHTML += $(streamItem).outerHTML();
-			if(!$(streamItem).hasClass('activity')) {
+			if(!$(streamItem).hasClass('always-hidden')) {
 				i++;
 				}
 			if(i>20) {
@@ -911,7 +918,7 @@ function displayOrHideUnreadNotifications(notifications) {
 			}
 
 		if(window.currentStreamObject.name == 'notifications') {
-			var hiddenNotifications = $('#feed-body').find('.stream-item.hidden:not(.activity)').length;
+			var hiddenNotifications = $('#feed-body').find('.stream-item.hidden:not(.always-hidden)').length;
 			if(hiddenNotifications>0) {
 				totNotif = totNotif + hiddenNotifications;
 				}
