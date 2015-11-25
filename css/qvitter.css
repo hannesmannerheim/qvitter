@@ -1686,7 +1686,9 @@ body.rtl #footer-spinner-container {
     height:auto;
     position:relative;
 	}
-.stream-item.collapsing,
+.stream-item.collapsing {
+	overflow:hidden;
+	}
 .stream-item.hidden,
 .stream-item.always-hidden {
 	display:none;
