@@ -711,6 +711,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 					});
 				}
 
+			// if this is notidfications we have seen obviously seen them before
+			oldStreamState.children('.stream-item').removeClass('not-seen');
+
 			$('#feed-body').html(oldStreamState.html());
 
 			// set location bar from stream
@@ -1537,10 +1540,8 @@ function addToFeed(feed, after, extraClasses) {
 				obj.from_profile.description = obj.from_profile.description || '';
 				var notificationTime = parseTwitterDate(obj.created_at);
 
-				var notSeenHtml = '';
 				if(obj.is_seen == '0') {
 					extraClassesThisRun += ' not-seen'
-					notSeenHtml = '<div class="not-seen-disc"></div>';
 					}
 
 				// external
@@ -1554,7 +1555,6 @@ function addToFeed(feed, after, extraClasses) {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
 					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like">\
 												<div class="queet">\
-													' + notSeenHtml + '\
 													<div class="dogear"></div>\
 													' + ostatusHtml + '\
 													<div class="queet-content">\
@@ -1584,7 +1584,6 @@ function addToFeed(feed, after, extraClasses) {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
 					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat">\
 												<div class="queet">\
-													' + notSeenHtml + '\
 													<div class="dogear"></div>\
 													' + ostatusHtml + '\
 													<div class="queet-content">\
@@ -1617,7 +1616,25 @@ function addToFeed(feed, after, extraClasses) {
 					var notificationHtml = buildQueetHtml(obj.notice, obj.id, extraClassesThisRun + ' notification reply');
 					}
 				else if(obj.ntype == 'follow') {
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification follow"><div class="queet"><div class="queet-content">' + ostatusHtml + '<div class="stream-item-header"><a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '"><img class="avatar" src="' + obj.from_profile.profile_image_url + '" /><strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">' + obj.from_profile.name + '</strong></a> ' + window.sL.xStartedFollowingYou + '<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">' + notificationTime + '</small></div></div></div></div>';
+					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification follow">\
+												<div class="queet">\
+													<div class="queet-content">\
+														' + ostatusHtml + '\
+														<div class="stream-item-header">\
+															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '">\
+																<img class="avatar" src="' + obj.from_profile.profile_image_url + '" />\
+																<strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">\
+																	' + obj.from_profile.name + '\
+																</strong>\
+															</a> \
+															' + window.sL.xStartedFollowingYou + '\
+															<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">\
+																' + notificationTime + '\
+															</small>\
+														</div>\
+													</div>\
+												</div>\
+											</div>';
 					}
 
 				if(after) {

@@ -614,7 +614,7 @@ class QvitterAction extends ApiAction
 						color:/*COLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*COLOREND*/;
 						}
 					#unseen-notifications,
-					.stream-item.notification .not-seen-disc,
+					.stream-item.notification.not-seen > .queet::before,
 					#top-compose,
 					#logo,
 					.queet-toolbar button,

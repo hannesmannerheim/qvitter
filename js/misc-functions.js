@@ -810,7 +810,7 @@ function rememberStreamStateInLocalStorage() {
 		feed.find('.stream-item.conversation').remove();
 		feed.find('.expanded-content').remove();
 		feed.find('.inline-reply-queetbox').remove();
-		feed.find('.not-seen-disc').remove();
+		feed.children('.stream-item').removeClass('not-seen');
 		feed.find('.show-full-conversation').remove();
 		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').addClass('visible');
 		var feedHtml = feed.html();
@@ -951,7 +951,7 @@ function markAllNotificationsAsSeen(arg,callback) {
 			}
 		else {
 			helloAPI(function(){
-				$('.not-seen-disc').remove();
+				$('.stream-item').removeClass('not-seen');
 				$('#new-queets-bar').trigger('click'); // show any hidden notifications (this will also remove the dropdown menu)
 				remove_spinner();
 				callback(true);

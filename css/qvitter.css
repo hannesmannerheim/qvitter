@@ -1716,7 +1716,7 @@ body.rtl #footer-spinner-container {
 	background-color:#F6F6F6;
 	}
 
-.stream-item.notification .not-seen-disc {
+.stream-item.notification.not-seen > .queet::before {
 	position:absolute;
 	left:-5px;
 	top:50%;
@@ -1725,6 +1725,7 @@ body.rtl #footer-spinner-container {
 	height:10px;
 	border-radius:6px;
 	z-index:10;
+	content:" ";
 	}
 
 .stream-item.notification.follow .queet,
@@ -1775,6 +1776,7 @@ background-repeat: no-repeat;
 .stream-item.notification .small-grey-notice,
 .stream-item.notification .small-grey-notice a {
 	color:#999;
+	word-break: break-all;
 	}
 .stream-item.notification .small-grey-notice a:hover {
 	color:#333;
