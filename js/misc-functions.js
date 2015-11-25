@@ -833,12 +833,15 @@ function rememberStreamStateInLocalStorage() {
    ·
    · · · · · · · · · */
 
-function getFullUnshortenedHtmlForQueet(streamItem) {
- 	var queet = streamItem.children('.queet');
+function getFullUnshortenedHtmlForQueet(streamItem, cacheOnly) {
+	if(typeof cacheOnly == 'undefined') {
+		var cacheOnly = false;
+		}
+	var queet = streamItem.children('.queet');
 	var queetId = streamItem.attr('data-quitter-id');
 	var attachmentMore = queet.find('span.attachment.more');
 	// only if actually shortened
-	if(attachmentMore.length>0 && streamItem.data('attachments') != 'undefined') {
+	if(attachmentMore.length>0 && streamItem.attr('data-attachments') != 'undefined') {
 		// first try localstorage cache
 		var cacheData = localStorageObjectCache_GET('fullQueetHtml',queetId);
 		if(cacheData) {
@@ -846,9 +849,9 @@ function getFullUnshortenedHtmlForQueet(streamItem) {
 			queet.outerHTML(detectRTL(queet.outerHTML()));
 			}
 		// then try static html file attachment, that we should have in an array in a data-attachments attribute
-		else {
+		else if(cacheOnly === false){
 			var attachmentId = attachmentMore.attr('data-attachment-id');
-			$.each(streamItem.data('attachments'), function(k,attachment) {
+			$.each(JSON.parse(streamItem.attr('data-attachments')), function(k,attachment) {
 				if(attachment.id == attachmentId) {
 					$.get(attachment.url,function(data){
 						if(data) {

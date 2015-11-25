@@ -711,6 +711,11 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 					});
 				}
 
+			// show full notice text for all cached notices, if we have it in cache
+			$.each(oldStreamState.children('.stream-item'),function(){
+				getFullUnshortenedHtmlForQueet($(this),true);
+				});
+
 			// if this is notidfications we have seen obviously seen them before
 			oldStreamState.children('.stream-item').removeClass('not-seen');
 
