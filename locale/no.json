@@ -151,5 +151,10 @@
 	"ERRORfailedMarkingAllNotificationsAsRead":"Feilet ved forsøk å markere alle varsler som lest.",
 	"newNotification": "{new-notice-count} nytt varsel",
 	"newNotifications": "{new-notice-count} nye varsler",
-	"thisIsANoticeFromABlockedUser":"Advarsel: Dette er en notis fra en bruker du har blokkert. Klikk for å se den."
+	"thisIsANoticeFromABlockedUser":"Advarsel: Dette er en notis fra en bruker du har blokkert. Klikk for å se den.",
+	"nicknamesListWithListName":"{nickname}’s list: {list-name}",
+	"myListWithListName":"My list: {list-name}",
+	"listMembers":"Members",
+	"listSubscribers":"Subscribers",
+	"ERRORcouldNotFindList":"There is no such list."
 }

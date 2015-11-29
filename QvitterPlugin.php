@@ -141,6 +141,19 @@ class QvitterPlugin extends Plugin {
     public function onRouterInitialized($m)
     {
 
+
+        $m->connect('api/qvitter/:nickname/lists/:id/subscribers.json',
+                    array('action' => 'ApiQvitterListSubscribers',
+                          'nickname' => '[a-zA-Z0-9]+',
+                          'id' => '[a-zA-Z0-9]+'));
+        $m->connect('api/qvitter/:nickname/lists/:id/members.json',
+                    array('action' => 'ApiQvitterListMembers',
+                          'nickname' => '[a-zA-Z0-9]+',
+                          'id' => '[a-zA-Z0-9]+'));
+        $m->connect('api/qvitter/:nickname/lists/:id/statuses.json',
+                    array('action' => 'ApiQvitterTimelineList',
+                          'nickname' => '[a-zA-Z0-9]+',
+                          'id' => '[a-zA-Z0-9]+'));
         $m->connect('api/qvitter/blocks.json',
 					array('action' => 'ApiQvitterBlocks'));
         $m->connect('api/qvitter/hello.json',
@@ -277,6 +290,23 @@ class QvitterPlugin extends Plugin {
 									array('action' => 'groupmembers'),
 									array('nickname' => Nickname::DISPLAY_FMT),
 									'qvitter');
+			URLMapperOverwrite::overwrite_variable($m, ':nickname/all/:tag',
+									array('action' => 'showprofiletag'),
+									array('nickname' => Nickname::DISPLAY_FMT,
+                                          'tag' => Router::REGEX_TAG),
+									'qvitter');
+			URLMapperOverwrite::overwrite_variable($m, ':tagger/all/:tag/tagged',
+									array('action' => 'peopletagged'),
+									array('tagger' => Nickname::DISPLAY_FMT,
+                                          'tag' => Router::REGEX_TAG),
+									'qvitter');
+			URLMapperOverwrite::overwrite_variable($m, ':tagger/all/:tag/subscribers',
+									array('action' => 'peopletagsubscribers'),
+									array('tagger' => Nickname::DISPLAY_FMT,
+                                          'tag' => Router::REGEX_TAG),
+									'qvitter');
+
+
 
 			$m->connect('group/:nickname/admins',
 						array('action' => 'qvitter'),

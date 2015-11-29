@@ -821,6 +821,11 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				 	 || streamObject.name == 'group admin list') {
 					showErrorMessage(window.sL.ERRORcouldNotFindGroupWithNickname.replace('{nickname}',replaceHtmlSpecialChars(streamObject.nickname)));
 					}
+				else if(streamObject.name == 'list notice stream'
+					 || streamObject.name == 'list members'
+					 || streamObject.name == 'list subscribers') {
+					showErrorMessage(window.sL.ERRORcouldNotFindList);
+					}
 				else {
 					showErrorMessage(window.sL.ERRORcouldNotFindPage + '<br><br>url: ' + url);
 					}

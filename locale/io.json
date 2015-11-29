@@ -151,5 +151,10 @@
 	"ERRORfailedMarkingAllNotificationsAsRead":"On faliis, ke on markizez omna notifiki kom vidita.",
 	"newNotification": "{new-notice-count} nova notifiko",
 	"newNotifications": "{new-notice-count} nova notifiki",
-	"thisIsANoticeFromABlockedUser":"Averto: Ita mesajo esas da uzero quan vu blokusis. Kliktigez por ke on montrez olu."
+	"thisIsANoticeFromABlockedUser":"Averto: Ita mesajo esas da uzero quan vu blokusis. Kliktigez por ke on montrez olu.",
+	"nicknamesListWithListName":"{nickname}’s list: {list-name}",
+	"myListWithListName":"My list: {list-name}",
+	"listMembers":"Members",
+	"listSubscribers":"Subscribers",
+	"ERRORcouldNotFindList":"There is no such list."
 }

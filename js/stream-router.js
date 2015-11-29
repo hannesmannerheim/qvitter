@@ -426,6 +426,62 @@ function pathToStreamRouter(path) {
 		return streamObject;
 		}
 
+	// {screen_name}/all/{listname}
+	if(pathSplit.length == 3 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'all' && /^[a-zA-Z0-9]+$/.test(pathSplit[2])) {
+		streamObject.name = 'list notice stream';
+        streamObject.nickname = pathSplit[2];
+		streamObject.stream = 'qvitter/' + pathSplit[0] + '/lists/' + pathSplit[2] + '/statuses.json';
+		streamObject.type = 'notices';
+		if(window.loggedIn.screen_name == pathSplit[0]) {
+			streamObject.streamHeader = window.sL.myListWithListName.replace('{list-name}',streamObject.nickname);
+			streamObject.streamSubHeader = window.sL.myListWithListName.replace('{list-name}',streamObject.nickname) + '<div class="queet-streams">/ <a class="queet-stream list-members" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname + '/tagged">' + window.sL.listMembers + '</a> / <a class="queet-stream list-subscribers" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname  + '/subscribers">' + window.sL.listSubscribers + '</a></div>';
+			}
+		else {
+			streamObject.streamHeader = window.sL.nicknamesListWithListName.replace('{list-name}',streamObject.nickname).replace('{nickname}',pathSplit[0]);
+			streamObject.streamSubHeader = window.sL.nicknamesListWithListName.replace('{list-name}',streamObject.nickname).replace('{nickname}',pathSplit[0]) + '<div class="queet-streams">/ <a class="queet-stream list-members" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname + '/tagged">' + window.sL.listMembers + '</a> / <a class="queet-stream list-subscribers" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname  + '/subscribers">' + window.sL.listSubscribers + '</a></div>';
+			}
+		return streamObject;
+		}
+
+	// {screen_name}/all/{listname}/members
+	if(pathSplit.length == 4 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'all' && /^[a-zA-Z0-9]+$/.test(pathSplit[2]) && pathSplit[3] == 'tagged') {
+		streamObject.name = 'list members';
+        streamObject.nickname = pathSplit[2];
+		streamObject.parentPath = pathSplit[0] + '/all/' + pathSplit[2];
+		streamObject.stream = 'qvitter/' + pathSplit[0] + '/lists/' + pathSplit[2] + '/members.json';
+		streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
+		if(window.loggedIn.screen_name == pathSplit[0]) {
+			streamObject.streamHeader = window.sL.myListWithListName.replace('{list-name}',streamObject.nickname);
+			streamObject.streamSubHeader = '<div class="queet-streams"><a class="queet-stream list-notice-stream" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname + '">' + window.sL.myListWithListName.replace('{list-name}',streamObject.nickname) + '</a> /</div>' + window.sL.listMembers + '<div class="queet-streams">/ <a class="queet-stream list-subscribers" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname  + '/subscribers">' + window.sL.listSubscribers + '</a></div>';
+			}
+		else {
+			streamObject.streamHeader = window.sL.nicknamesListWithListName.replace('{list-name}',streamObject.nickname).replace('{nickname}',pathSplit[0]);
+			streamObject.streamSubHeader = '<div class="queet-streams"><a class="queet-stream list-notice-stream" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname + '">' + window.sL.nicknamesListWithListName.replace('{list-name}',streamObject.nickname).replace('{nickname}',pathSplit[0]) + '</a> /</div>' + window.sL.listMembers + '<div class="queet-streams">/ <a class="queet-stream list-subscribers" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname  + '/subscribers">' + window.sL.listSubscribers + '</a></div>';
+			}
+		return streamObject;
+		}
+
+	// {screen_name}/all/{listname}/subscribers
+	if(pathSplit.length == 4 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'all' && /^[a-zA-Z0-9]+$/.test(pathSplit[2]) && pathSplit[3] == 'subscribers') {
+		streamObject.name = 'list subscribers';
+        streamObject.nickname = pathSplit[2];
+		streamObject.parentPath = pathSplit[0] + '/all/' + pathSplit[2];
+		streamObject.stream = 'qvitter/' + pathSplit[0] + '/lists/' + pathSplit[2] + '/subscribers.json';
+		streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
+		if(window.loggedIn.screen_name == pathSplit[0]) {
+			streamObject.streamHeader = window.sL.myListWithListName.replace('{list-name}',streamObject.nickname);
+			streamObject.streamSubHeader = '<div class="queet-streams"><a class="queet-stream list-notice-stream" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname + '">' + window.sL.myListWithListName.replace('{list-name}',streamObject.nickname) + '</a> / <a class="queet-stream list-members" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname  + '/tagged">' + window.sL.listMembers + '</a> /</div>' + window.sL.listSubscribers;
+			}
+		else {
+			streamObject.streamHeader = window.sL.nicknamesListWithListName.replace('{list-name}',streamObject.nickname).replace('{nickname}',pathSplit[0]);
+			streamObject.streamSubHeader = '<div class="queet-streams"><a class="queet-stream list-notice-stream" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname + '">' + window.sL.nicknamesListWithListName.replace('{list-name}',streamObject.nickname).replace('{nickname}',pathSplit[0]) + '</a> / <a class="queet-stream list-members" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname  + '/tagged">' + window.sL.listMembers + '</a> /</div>' + window.sL.listSubscribers;
+			}
+		return streamObject;
+		}
+
+
 	// other plugins can add streams to Qvitter
 	if(window.pluginStreamObjects.length > 0) {
 		$.each(window.pluginStreamObjects,function(k,pluginStreamObject) {

@@ -150,5 +150,10 @@
 	"ERRORfailedMarkingAllNotificationsAsRead":"Failed marking all notifications as seen.",
 	"newNotification": "{new-notice-count} new notification",
 	"newNotifications": "{new-notice-count} new notifications",
-	"thisIsANoticeFromABlockedUser":"Warning: This is a notice from a user you have blocked. Click to show it."
+	"thisIsANoticeFromABlockedUser":"Warning: This is a notice from a user you have blocked. Click to show it.",
+	"nicknamesListWithListName":"{nickname}’s list: {list-name}",
+	"myListWithListName":"My list: {list-name}",
+	"listMembers":"Members",
+	"listSubscribers":"Subscribers",
+	"ERRORcouldNotFindList":"There is no such list."
 }

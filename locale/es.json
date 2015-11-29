@@ -151,5 +151,10 @@
 	"ERRORfailedMarkingAllNotificationsAsRead":"Error al marcar todas las notificaciones como vistas.",
 	"newNotification": "{new-notice-count} nueva notificación",
 	"newNotifications": "{new-notice-count} nuevas notificaciones",
-	"thisIsANoticeFromABlockedUser":"Atención: Ésta es una nota de un usuario que bloqueaste. Pulsa para mostrarla."
+	"thisIsANoticeFromABlockedUser":"Atención: Ésta es una nota de un usuario que bloqueaste. Pulsa para mostrarla.",
+	"nicknamesListWithListName":"{nickname}’s list: {list-name}",
+	"myListWithListName":"My list: {list-name}",
+	"listMembers":"Members",
+	"listSubscribers":"Subscribers",
+	"ERRORcouldNotFindList":"There is no such list."
 }

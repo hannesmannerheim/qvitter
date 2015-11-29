@@ -151,5 +151,10 @@
 	"ERRORfailedMarkingAllNotificationsAsRead":"Alle Benachrichtigungen als gelesen markieren fehlgeschlagen.",
 	"newNotification": "{new-notice-count} neue Benachrichtigung",
 	"newNotifications": "{new-notice-count} neue Benachrichtigungen",
-	"thisIsANoticeFromABlockedUser":"Achtung: Dies ist ein Queet von einem Nutzer, den du blockiert hast. Klicke um ihn anzuzeigen."
+	"thisIsANoticeFromABlockedUser":"Achtung: Dies ist ein Queet von einem Nutzer, den du blockiert hast. Klicke um ihn anzuzeigen.",
+	"nicknamesListWithListName":"{nickname}’s list: {list-name}",
+	"myListWithListName":"My list: {list-name}",
+	"listMembers":"Members",
+	"listSubscribers":"Subscribers",
+	"ERRORcouldNotFindList":"There is no such list."
 }

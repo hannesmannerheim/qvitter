@@ -151,5 +151,10 @@
 	"ERRORfailedMarkingAllNotificationsAsRead":"Misslyckades med att markera alla notiser som lästa.",
 	"newNotification": "{new-notice-count} ny notis",
 	"newNotifications": "{new-notice-count} nya notiser",
-	"thisIsANoticeFromABlockedUser":"Varning! Det här är en qvittring från en användare som du har blockerat. Klicka för att visa den."
+	"thisIsANoticeFromABlockedUser":"Varning! Det här är en qvittring från en användare som du har blockerat. Klicka för att visa den.",
+	"nicknamesListWithListName":"Lista: {list-name} (av @{nickname})",
+	"myListWithListName":"Min lista: {list-name}",
+	"listMembers":"Listmedlemmar",
+	"listSubscribers":"Prenumeranter",
+	"ERRORcouldNotFindList":"Det finns ingen sådan lista."
 }
