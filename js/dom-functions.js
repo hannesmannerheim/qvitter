@@ -1846,7 +1846,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 	// unrepeated?
 	if(typeof requeeted_by != 'undefined'
 	&& requeeted_by !== false
-	&& typeof window.knownDeletedNotices[requeeted_by.uri != 'undefined']) {
+	&& typeof window.knownDeletedNotices[requeeted_by.uri] != 'undefined') {
 		extraClasses += ' unrepeated always-hidden';
 		}
 
