@@ -674,6 +674,12 @@ function searchForUpdatedNoticeData(obj) {
 	                var streamItemToHide = $('.stream-item[data-uri="' + uriToHide + '"]');
 					slideUpAndRemoveStreamItem(streamItemToHide);
 					}
+				// if this is not a delete notice it means the notice exists and is not deleted,
+				// correct any notices that are marked as unrepeated, they might have
+				// been marked like that by mistake (i.e. a bug...)
+				else if(streamItemFoundInFeed.hasClass('unrepeated')) {
+					streamItemFoundInFeed.removeClass('unrepeated always-hidden');
+					}
 
 				// ordinary notices
 				else if(streamItemFoundInFeed.length>0) {
