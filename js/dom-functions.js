@@ -711,6 +711,13 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 					});
 				}
 
+			// hide all notices from blocked users
+			if(typeof window.allBlocking != 'undefined') {
+				$.each(window.allBlocking,function(){
+					oldStreamState.find('strong.name[data-user-id="' + this + '"]').closest('.stream-item').addClass('profile-blocked-by-me');
+					});
+				}
+
 			// show full notice text for all cached notices, if we have it in cache
 			$.each(oldStreamState.children('.stream-item'),function(){
 				getFullUnshortenedHtmlForQueet($(this),true);
