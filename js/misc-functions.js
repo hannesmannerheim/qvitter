@@ -429,7 +429,7 @@ function cacheSyntaxHighlightingGroups() {
    ·
    ·  User array cache
    ·
-   ·  Stored in localStorage with unique key like instance_url/nickname
+   ·  Stored in window.userArrayCache with unique key like instance_url/nickname
    ·  with protocol (http:// or https://) trimmed off, e.g. "quitter.se/hannes2peer"
    ·
    · · · · · · · · · */
@@ -767,7 +767,6 @@ function searchForUpdatedNoticeData(obj) {
 	}
 
 
-
 /* ·
    ·
    ·  Removes a deleted stream item from the feed gracefully, if not already hidden
@@ -817,6 +816,7 @@ function rememberStreamStateInLocalStorage() {
 		feed.find('.expanded-content').remove();
 		feed.find('.inline-reply-queetbox').remove();
 		feed.children('.stream-item').removeClass('not-seen');
+		feed.children('.stream-item').removeClass('selected-by-keyboard');
 		feed.find('.show-full-conversation').remove();
 		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').addClass('visible');
 		var feedHtml = feed.html();

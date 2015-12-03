@@ -432,51 +432,55 @@ class QvitterAction extends ApiAction
 						print '<div id="site-notice">'.common_config('site', 'notice').'</div>';
 						}
 
-					?><div class="front-welcome-text <?php if ($registrationsclosed) { print 'registrations-closed'; } ?>">
-					</div>
-					<div id="user-container" style="display:none;">
-						<div id="login-content">
-							<form id="form_login" class="form_settings" action="<?php print common_local_url('qvitterlogin'); ?>" method="post">
-								<div id="username-container">
-									<input id="nickname" name="nickname" type="text" value="<?php print $logged_in_user_nickname ?>" tabindex="1" />
-								</div>
-								<table class="password-signin"><tbody><tr>
-									<td class="flex-table-primary">
-										<div class="placeholding-input">
-											<input id="password" name="password" type="password" tabindex="2" value="" />
-										</div>
-									</td>
-									<td class="flex-table-secondary">
-										<button class="submit" type="submit" id="submit-login" tabindex="4"></button>
-									</td>
-								</tr></tbody></table>
-								<div id="remember-forgot">
-									<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3" checked="checked"> <span id="rememberme_label"></span> · <a id="forgot-password" href="<?php print $instanceurl ?>main/recoverpassword" ></a>
-									<input type="hidden" id="token" name="token" value="<?php print common_session_token(); ?>">
-									<?php
+                    // welcome text, login and register container if logged out
+                    if($logged_in_user === null) { ?>
+                        <div class="front-welcome-text <?php if ($registrationsclosed) { print 'registrations-closed'; } ?>"></div>
+                        <div id="login-register-container">
+    						<div id="login-content">
+    							<form id="form_login" class="form_settings" action="<?php print common_local_url('qvitterlogin'); ?>" method="post">
+    								<div id="username-container">
+    									<input id="nickname" name="nickname" type="text" value="<?php print $logged_in_user_nickname ?>" tabindex="1" />
+    								</div>
+    								<table class="password-signin"><tbody><tr>
+    									<td class="flex-table-primary">
+    										<div class="placeholding-input">
+    											<input id="password" name="password" type="password" tabindex="2" value="" />
+    										</div>
+    									</td>
+    									<td class="flex-table-secondary">
+    										<button class="submit" type="submit" id="submit-login" tabindex="4"></button>
+    									</td>
+    								</tr></tbody></table>
+    								<div id="remember-forgot">
+    									<input type="checkbox" id="rememberme" name="rememberme" value="yes" tabindex="3" checked="checked"> <span id="rememberme_label"></span> · <a id="forgot-password" href="<?php print $instanceurl ?>main/recoverpassword" ></a>
+    									<input type="hidden" id="token" name="token" value="<?php print common_session_token(); ?>">
+    									<?php
 
-									if (array_key_exists('OpenID', StatusNet::getActivePlugins())) {
-										print '<a href="'.$instanceurl.'main/openid" id="openid-login" title="OpenID" donthijack>OpenID</a>';
-										}
+    									if (array_key_exists('OpenID', StatusNet::getActivePlugins())) {
+    										print '<a href="'.$instanceurl.'main/openid" id="openid-login" title="OpenID" donthijack>OpenID</a>';
+    										}
 
-									?>
-								</div>
-							</form>
-						</div>
-						<?php
-						if($registrationsclosed === false && $client_ip_is_blocked === false) {
-						?><div class="front-signup">
-							<h2></h2>
-							<div class="signup-input-container"><input placeholder="" type="text" name="user[name]" autocomplete="off" class="text-input" id="signup-user-name"></div>
-							<div class="signup-input-container"><input placeholder="" type="text" name="user[email]" autocomplete="off" id="signup-user-email"></div>
-							<div class="signup-input-container"><input placeholder="" type="password" name="user[user_password]" class="text-input" id="signup-user-password"></div>
-							<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
-							<div id="other-servers-link"></div>
-                            <div id="qvitter-notice-logged-out"><?php print common_config('site', 'qvitternoticeloggedout'); ?></div>
-						</div><?php }
+    									?>
+    								</div>
+    							</form>
+    						</div>
+    						<?php
+    						if($registrationsclosed === false && $client_ip_is_blocked === false) {
+    						?><div class="front-signup">
+    							<h2></h2>
+    							<div class="signup-input-container"><input placeholder="" type="text" name="user[name]" autocomplete="off" class="text-input" id="signup-user-name"></div>
+    							<div class="signup-input-container"><input placeholder="" type="text" name="user[email]" autocomplete="off" id="signup-user-email"></div>
+    							<div class="signup-input-container"><input placeholder="" type="password" name="user[user_password]" class="text-input" id="signup-user-password"></div>
+    							<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
+    						</div>
+                            <div id="other-servers-link"></div><?php }
+                            ?><div id="qvitter-notice-logged-out"><?php print common_config('site', 'qvitternoticeloggedout'); ?></div>
+                        </div><?php
+                        }
 
-                        // box containing the logged in users queet count and compose form
-                        if($logged_in_user) { ?>
+                    // box containing the logged in users queet count and compose form
+                    if($logged_in_user) { ?>
+                        <div id="user-container" style="display:none;">
     						<div id="user-header" style="background-image:url('<?php print htmlspecialchars($logged_in_user_obj['cover_photo']) ?>')">
     							<div id="mini-edit-profile-button"></div>
     							<div class="profile-header-inner-overlay"></div>
@@ -506,29 +510,29 @@ class QvitterAction extends ApiAction
     									</div>
     								</div>
     							</div>
-    						</div><?php
-                            }
+    						</div>
+                            <div id="main-menu" class="menu-container"><?php
 
-                        ?><div id="main-menu" class="menu-container"><?php
+                                    if($logged_in_user) {
+                                        ?><a href="<?php print $instanceurl.$logged_in_user->nickname ?>/all" class="stream-selection friends-timeline"><i class="chev-right"></i></a>
+            							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/notifications" class="stream-selection notifications"><span id="unseen-notifications"></span><i class="chev-right"></i></a>
+            							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/replies" class="stream-selection mentions"><i class="chev-right"></i></a>
+            							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>" class="stream-selection my-timeline"><i class="chev-right"></i></a>
+            							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/favorites" class="stream-selection favorites"><i class="chev-right"></i></a>
+            							<a href="<?php print $instanceurl ?>main/public" class="stream-selection public-timeline"><i class="chev-right"></i></a>
+            							<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline"><i class="chev-right"></i></a>
+                                        <?php
+                                        }
+                                ?>
+        						</div>
+        						<div class="menu-container" id="bookmark-container"></div>
+                                <div class="menu-container" id="history-container"></div>
+                                <div id="clear-history"></div>
+        						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div>
+        					</div><?php
+                            } ?>
 
-                            if($logged_in_user) {
-                                ?><a href="<?php print $instanceurl.$logged_in_user->nickname ?>/all" class="stream-selection friends-timeline"><i class="chev-right"></i></a>
-    							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/notifications" class="stream-selection notifications"><span id="unseen-notifications"></span><i class="chev-right"></i></a>
-    							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/replies" class="stream-selection mentions"><i class="chev-right"></i></a>
-    							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>" class="stream-selection my-timeline"><i class="chev-right"></i></a>
-    							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/favorites" class="stream-selection favorites"><i class="chev-right"></i></a>
-    							<a href="<?php print $instanceurl ?>main/public" class="stream-selection public-timeline"><i class="chev-right"></i></a>
-    							<a href="<?php print $instanceurl ?>main/all" class="stream-selection public-and-external-timeline"><i class="chev-right"></i></a>
-                                <?php
-                                }
-                        ?>
-						</div>
-						<div class="menu-container" id="bookmark-container"></div>
-                        <div class="menu-container" id="history-container"></div>
-                        <div id="clear-history"></div>
-						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div>
-					</div>
-					<div id="feed">
+                    <div id="feed">
 						<div id="feed-header">
 							<div id="feed-header-inner">
 								<h2></h2>

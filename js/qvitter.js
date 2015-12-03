@@ -441,10 +441,11 @@ $(window).scroll(function(e){
 		}
 
 	if ($(this).scrollTop() > (feedOrProfileCardOffsetTop-55) && $('#login-content').css('position') != 'fixed'){
-		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'fixed', 'top': '55px'});
+		var loginAndSignUpBoxesHeight = $('#login-content').outerHeight() + $('.front-signup').not('#popup-signup').outerHeight();
+		$('#login-register-container').css({'position': 'fixed', 'top': '55px'});
 		}
 	else if ($(this).scrollTop() < (feedOrProfileCardOffsetTop-55) && $('#login-content').css('position') != 'absolute'){
-		$('#login-content, .front-signup').not('#popup-signup').css({'position': 'absolute', 'top': 'auto'});
+		$('#login-register-container').css({'position': 'relative', 'top': 'auto'});
 		}
  	});
 
@@ -821,51 +822,43 @@ function proceedToSetLanguageAndLogin(data){
 	$('button.shorten').attr('data-tooltip',window.sL.tooltipShortenUrls);
 	$('.reload-stream').attr('data-tooltip',window.sL.tooltipReloadStream);
 	$('#clear-history').html(window.sL.clearHistory);
-
+	$('#user-screen-name, #user-avatar, #user-name').attr('data-tooltip', window.sL.viewMyProfilePage);
 
 	// show site body now
 	$('#user-container').css('display','block');
 	$('#feed').css('display','block');
 
-	// login or not
+	// logged in or not?
 	if(window.loggedIn) {
-		doLogin(getStreamFromUrl());
+		proceedLoggedIn();
 		}
 	else {
-		display_spinner();
-		setNewCurrentStream(getStreamFromUrl(),true,false,function(){
-			logoutWithoutReload(false);
-			remove_spinner();
-			});
+		proceedLoggedOut();
 		}
 	}
 
 /* ·
    ·
-   ·   Login action
+   ·   Stuff we do on load specifically for logged out users
    ·
    · · · · · · · · · · · · · */
 
-$('#form_login').submit(function(e) {
-	if(typeof window.loginCheckSuccessful == 'undefined') {
-		e.preventDefault();
-		checkLogin($('input#nickname').val(),$('input#password').val(),function(data){
-			window.loginCheckSuccessful = true;
-			$('#form_login').submit();
-			});
-		}
-	});
-
-function doLogin(streamObjectToSet) {
-	$('#submit-login').attr('disabled','disabled');
-	$('#submit-login').focus(); // prevents submit on enter to close alert-popup on wrong credentials
+function proceedLoggedOut() {
 	display_spinner();
+	setNewCurrentStream(getStreamFromUrl(),true,false,function(){
+		$('input#nickname').focus();
+		$('#page-container').css('opacity','1');
+		});
+	}
 
-	// add user data to DOM, show search form, remeber user id, show the feed
-	$('#user-container').css('z-index','1000');
-	$('#top-compose').removeClass('hidden');
-	$('#qvitter-notice').show();
-	$('#user-screen-name, #user-avatar, #user-name').attr('data-tooltip', window.sL.viewMyProfilePage);
+/* ·
+   ·
+   ·   Stuff we do on load specifically for logged in users
+   ·
+   · · · · · · · · · · · · · */
+
+function proceedLoggedIn() {
+	display_spinner();
 
 	// get everyone we follow, block and our memberships and stor in global objects
 	getAllFollowsMembershipsAndBlocks(function(){
@@ -886,22 +879,33 @@ function doLogin(streamObjectToSet) {
 	appendAllBookmarks(window.qvitterProfilePrefs.bookmarks);
 
 	// set stream
-	setNewCurrentStream(streamObjectToSet,true,false,function(){
+	setNewCurrentStream(getStreamFromUrl(),true,false,function(){
 		$('.language-dropdown').css('display','none');
-		$('#user-header').animate({opacity:'1'},800);
-		$('#user-body').animate({opacity:'1'},800);
-		$('#user-footer').animate({opacity:'1'},800);
-		$('.menu-container').animate({opacity:'1'},800);
 		$('#page-container').animate({opacity:'1'},200);
 		$('#search').fadeIn('slow');
-		$('#login-content').css('display','none');
-		$('.front-signup').css('display','none');
 		$('#settingslink .dropdown-toggle').fadeIn('slow');
 		$('#top-compose').fadeIn('slow');
 		$('input#nickname').blur();
 		});
 
 	}
+
+
+/* ·
+   ·
+   ·   Shake the login box, i.e. when indicating an error
+   ·
+   · · · · · · · · · · · · · */
+
+function shakeLoginBox() {
+	$('input#nickname').css('background-color','pink');
+	$('input#password').css('background-color','pink');
+	$('#login-content').effect('shake',{distance:5,times:2},function(){
+		$('input#nickname').animate({backgroundColor:'#fff'},1000);
+		$('input#password').animate({backgroundColor:'#fff'},1000);
+		});
+	}
+
 
 
 /* ·
@@ -921,6 +925,21 @@ $('#rememberme_label').click(function(){
 $('#rememberme_label').disableSelection();
 
 
+/* ·
+   ·
+   ·   Submit login form
+   ·
+   · · · · · · · · · · · · · */
+
+$('#form_login').submit(function(e) {
+	if(typeof window.loginCheckSuccessful == 'undefined') {
+		e.preventDefault();
+		checkLogin($('input#nickname').val(),$('input#password').val(),function(data){
+			window.loginCheckSuccessful = true;
+			$('#form_login').submit();
+			});
+		}
+	});
 
 
 /* ·
@@ -963,35 +982,6 @@ $('#classic-link, #accessibility-toggle-link').click(function(){
 		});
 
 	});
-
-
-
-/* ·
-   ·
-   ·   Do a logout without reloading, i.e. on login errors
-   ·
-   · · · · · · · · · · · · · */
-
-function logoutWithoutReload(doShake) {
-
-	$('input#nickname').focus();
-	$('.front-signup').animate({opacity:'1'},200);
-	if(doShake) {
-		$('input#nickname').css('background-color','pink');
-		$('input#password').css('background-color','pink');
-		}
-	$('#login-content').animate({opacity:'1'},200, function(){
-		if(doShake) {
-			$('#login-content').effect('shake',{distance:5,times:2},function(){
-				$('input#nickname').animate({backgroundColor:'#fff'},1000);
-				$('input#password').animate({backgroundColor:'#fff'},1000);
-				});
-			}
-		$('.front-welcome-text').show();
-		});
-	$('#page-container').animate({opacity:'1'},200);
-
-	}
 
 
 /* ·

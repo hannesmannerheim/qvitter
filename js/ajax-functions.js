@@ -113,14 +113,14 @@ function checkLogin(username,password,actionOnSuccess) {
 			},
 	 	dataType: 'json',
 	 	error: function() {
-	 		logoutWithoutReload(true);
+	 		shakeLoginBox();
 	 		},
  		success: function(data) {
 			if(typeof data.error == 'undefined' && data !== false) {
 				actionOnSuccess(data);
 				}
 			else {
-		 		logoutWithoutReload(true);
+		 		shakeLoginBox();
 				}
 			}
 		});
