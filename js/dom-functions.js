@@ -1588,7 +1588,7 @@ function addToFeed(feed, after, extraClasses) {
 															</small>\
 														</div>\
 														<div class="small-grey-notice">\
-															<a data-tooltip="' + parseTwitterLongDate(obj.notice.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">\
+															<a data-created-at="' + obj.notice.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.notice.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">\
 																' + noticeTime + '\
 															</a>: \
 															' + $.trim(obj.notice.statusnet_html) + '\
@@ -1617,7 +1617,7 @@ function addToFeed(feed, after, extraClasses) {
 															</small>\
 														</div>\
 														<div class="small-grey-notice">\
-															<a data-tooltip="' + parseTwitterLongDate(obj.notice.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">\
+															<a data-created-at="' + obj.notice.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.notice.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">\
 																' + noticeTime + '\
 															</a>: \
 															' + $.trim(obj.notice.statusnet_html) + '\
