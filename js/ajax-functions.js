@@ -176,6 +176,7 @@ function getFromAPI(stream, actionOnSuccess) {
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
+			updateUserDataInStream();
 			searchForUpdatedNoticeData(data);
 
 			actionOnSuccess(data, userArray, request, url);
@@ -450,6 +451,7 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
+			updateUserDataInStream();
 			actionOnSuccess(data,this_element);
 			}
 		});
@@ -479,6 +481,7 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
+			updateUserDataInStream();
 			actionOnSuccess(data,this_element);
 			}
 		});
@@ -512,6 +515,7 @@ function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, acti
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
+			updateUserDataInStream();
 			searchForUpdatedNoticeData(data);
 			actionOnSuccess(data);
 			}
@@ -543,6 +547,7 @@ function postActionToAPI(action, actionOnSuccess) {
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
+			updateUserDataInStream();
 			searchForUpdatedNoticeData(data);
 			actionOnSuccess(data);
 			}

@@ -472,11 +472,10 @@ function userArrayCacheStore(data) {
 		var instanceUrlWithoutProtocol = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.statusnet_profile_url, data.screen_name);
 		var key = instanceUrlWithoutProtocol + '/' + data.screen_name;
 
-		var dataProfileImageUrlWithoutProtocol = removeProtocolFromUrl(data.profile_image_url);
-		var siteInstanceURLWithoutProtocol = removeProtocolFromUrl(window.siteInstanceURL);
+		var localOrExternal = detectLocalOrExternalUserObject(data);
 
 		// local
-		if(dataProfileImageUrlWithoutProtocol.substring(0,siteInstanceURLWithoutProtocol.length) == siteInstanceURLWithoutProtocol){
+		if(localOrExternal == 'local'){
 			var dataToStore = {local:data,external:false};
 			}
 		// external
@@ -491,6 +490,7 @@ function userArrayCacheStore(data) {
 	// store
 	if(typeof window.userArrayCache[key] == 'undefined') {
 		window.userArrayCache[key] = dataToStore;
+		window.userArrayCache[key].modified = Date.now();
 
 		// easy conversion between URI and statusnet_profile_url and the key we're using in window.userArrayCache
 		window.convertUriToUserArrayCacheKey[dataToStore.local.ostatus_uri] = key;
@@ -516,6 +516,10 @@ function userArrayCacheStore(data) {
 			// easy conversion between URI and the key we're using in window.userArrayCache
 			window.convertUriToUserArrayCacheKey[dataToStore.external.ostatus_uri] = key;
 			window.convertStatusnetProfileUrlToUserArrayCacheKey[dataToStore.external.statusnet_profile_url] = key;
+			}
+		// store the time when this record was modified
+		if(dataToStore.local || dataToStore.external) {
+			window.userArrayCache[key].modified = Date.now();
 			}
 		}
 	}
@@ -571,6 +575,23 @@ function userArrayCacheGetUserNicknameById(id) {
 	return false;
 	}
 
+
+/* ·
+   ·
+   ·  Detect if the supplied user object is from the local server or external
+   ·
+   · · · · · · · · · */
+
+function detectLocalOrExternalUserObject(userObject) {
+	var dataProfileImageUrlWithoutProtocol = removeProtocolFromUrl(userObject.profile_image_url);
+	var siteInstanceURLWithoutProtocol = removeProtocolFromUrl(window.siteInstanceURL);
+	if(dataProfileImageUrlWithoutProtocol.substring(0,siteInstanceURLWithoutProtocol.length) == siteInstanceURLWithoutProtocol){
+		return 'local';
+		}
+	else {
+		return 'external';
+		}
+	}
 
 
 /* ·
@@ -647,13 +668,98 @@ function searchForUserDataToCache(obj) {
 		}
 	}
 
+
+/* ·
+   ·
+   ·   Updates user data loaded into the stream with the latest data from the user array cache
+   ·   This function should therefor always be invoked _after_ searchForUserDataToCache()
+   ·
+   · · · · · · · · · · · · · */
+
+function updateUserDataInStream() {
+	var timeNow = Date.now();
+	$.each(window.userArrayCache,function(k,userArray){
+		// if the cache record was updated the latest second, we assume this is brand new info that we haven't
+		// updated the stream with
+		if(typeof userArray.local != 'undefined'
+		&& userArray.local !== false
+		&& typeof userArray.modified != 'undefined'
+		&& (timeNow-userArray.modified)<1000) {
+
+			// profile size avatars (notices, users)
+			$.each($('img.avatar.profile-size[data-user-id="' + userArray.local.id + '"]'),function(){
+				if($(this).attr('src') != userArray.local.profile_image_url_profile_size) {
+					$(this).attr('src',userArray.local.profile_image_url_profile_size);
+					}
+				});
+
+			// standard size avatars (notifications)
+			$.each($('img.avatar.standard-size[data-user-id="' + userArray.local.id + '"]'),function(){
+				if($(this).attr('src') != userArray.local.profile_image_url) {
+					$(this).attr('src',userArray.local.profile_image_url);
+					}
+				});
+
+			// full names
+			$.each($('strong.name[data-user-id="' + userArray.local.id + '"],\
+					  .fullname[data-user-id="' + userArray.local.id + '"]'),function(){
+				if($(this).html() != userArray.local.name) {
+					$(this).html(userArray.local.name);
+					}
+				});
+
+			// user/screen names
+			$.each($('.screen-name[data-user-id="' + userArray.local.id + '"]'),function(){
+				if($(this).html().substring(1) != userArray.local.screen_name) {
+					$(this).html('@' + userArray.local.screen_name);
+					}
+				});
+
+			// profile urls
+			// try to find the last account group with this id, if the statusnet_profile_url seems to
+			// be changed we replace it wherever we can find it, even in list urls etc that starts with statusnet_profile_url
+			if($('a.account-group[data-user-id="' + userArray.local.id + '"]').last().attr('href') != userArray.local.statusnet_profile_url) {
+				var oldStatusnetProfileURL = $('a.account-group[data-user-id="' + userArray.local.id + '"]').last().attr('href');
+				// all links with the exact statusnet_profile_url
+				$.each($('[href="' + oldStatusnetProfileURL + '"]'),function(){
+					$(this).attr('href',userArray.local.statusnet_profile_url);
+					});
+				// links starting with statusnet_profile_url
+				$.each($('[href*="' + oldStatusnetProfileURL + '/"]'),function(){
+					$(this).attr('href',$(this).attr('href').replace(oldStatusnetProfileURL + '/',userArray.local.statusnet_profile_url + '/'));
+					});
+				}
+
+			// cover photos
+			$.each($('.profile-header-inner[data-user-id="' + userArray.local.id + '"]'),function(){
+				if($(this).css('background-image') != 'url("' + userArray.local.cover_photo + '")') {
+					$(this).css('background-image','url("' + userArray.local.cover_photo + '")');
+					}
+				});
+
+			// the window.following object might need updating also
+			if(typeof window.following != 'undefined' && typeof window.following[userArray.local.id] != 'undefined') {
+				if(window.following[userArray.local.id].avatar != userArray.local.profile_image_url) {
+					window.following[userArray.local.id].avatar = userArray.local.profile_image_url;
+					}
+				if(window.following[userArray.local.id].name != userArray.local.name) {
+					window.following[userArray.local.id].name = userArray.local.name;
+					}
+				if(window.following[userArray.local.id].username != userArray.local.screen_name) {
+					window.following[userArray.local.id].username = userArray.local.screen_name;
+					}
+				}
+
+			}
+		});
+	}
+
 /* ·
    ·
    ·   Iterates recursively through an API response in search for updated notice data
    ·   If we find a "repeated" key we assume the parent is a notice object (chosen arbitrary)
    ·
    · · · · · · · · · · · · · */
-
 
 window.knownDeletedNotices = new Object();
 function searchForUpdatedNoticeData(obj) {
@@ -687,8 +793,6 @@ function searchForUpdatedNoticeData(obj) {
 					var queetFoundInFeed = streamItemFoundInFeed.children('.queet');
 					var queetID = streamItemFoundInFeed.attr('data-quitter-id');
 
-					// console.log(obj);
-
 					// sometimes activity notices don't get the is_activity flag set to true
 					// maybe because they were in the process of being saved when
 					// we first got them
@@ -703,20 +807,6 @@ function searchForUpdatedNoticeData(obj) {
 						if(oldFavNum != obj.fave_num || oldRQNum != obj.repeat_num) {
 							getFavsAndRequeetsForQueet(streamItemFoundInFeed, queetID);
 							}
-						}
-
-					// avatar may have changed
-					if(typeof obj.user != 'undefined'
-					&& typeof obj.user.profile_image_url_profile_size != 'undefined'
-					&& queetFoundInFeed.find('.stream-item-header').find('img.avatar').src != obj.user.profile_image_url_profile_size) {
-						queetFoundInFeed.find('.stream-item-header').find('img.avatar').attr('src',obj.user.profile_image_url_profile_size);
-						}
-
-					// name may have changed
-					if(typeof obj.user != 'undefined'
-					&& typeof obj.user.name != 'undefined'
-					&& queetFoundInFeed.find('.stream-item-header').find('strong.name').html() != obj.user.name) {
-						queetFoundInFeed.find('.stream-item-header').find('strong.name').html(obj.user.name);
 						}
 
 					// attachments might have been added/changed/have had time to be processed

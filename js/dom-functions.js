@@ -343,15 +343,15 @@ function buildProfileCard(data) {
 	// full card html
 	data.profileCardHtml = '\
 		<div class="profile-card">\
-			<div class="profile-header-inner" style="' + coverPhotoHtml + '">\
+			<div class="profile-header-inner" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture" href="' + data.profile_image_url_original + '">\
-					<img src="' + data.profile_image_url_profile_size + '" />\
+					<img class="avatar profile-size" src="' + data.profile_image_url_profile_size + '" data-user-id="' + data.id + '" />\
 				</a>\
 				<div class="profile-card-inner">\
-					<h1 class="fullname">' + data.name + '<span></span></h1>\
+					<h1 class="fullname" data-user-id="' + data.id + '">' + data.name + '<span></span></h1>\
 					<h2 class="username">\
-						<span class="screen-name">@' + data.screen_name + '</span>\
+						<span class="screen-name" data-user-id="' + data.id + '">@' + data.screen_name + '</span>\
 						' + follows_you + '\
 					</h2>\
 					<div class="bio-container"><p>' + data.description + '</p></div>\
@@ -1576,8 +1576,8 @@ function addToFeed(feed, after, extraClasses) {
 													' + ostatusHtml + '\
 													<div class="queet-content">\
 														<div class="stream-item-header">\
-															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '">\
-																<img class="avatar" src="' + obj.from_profile.profile_image_url + '" />\
+															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '" data-user-id="' + obj.from_profile.id + '">\
+																<img class="avatar standard-size" src="' + obj.from_profile.profile_image_url + '" data-user-id="' + obj.from_profile.id + '" />\
 																<strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">\
 																	' + obj.from_profile.name + '\
 																</strong>\
@@ -1605,8 +1605,8 @@ function addToFeed(feed, after, extraClasses) {
 													' + ostatusHtml + '\
 													<div class="queet-content">\
 														<div class="stream-item-header">\
-															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '">\
-																<img class="avatar" src="' + obj.from_profile.profile_image_url + '" />\
+															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '" data-user-id="' + obj.from_profile.id + '">\
+																<img class="avatar standard-size" src="' + obj.from_profile.profile_image_url + '" data-user-id="' + obj.from_profile.id + '" />\
 																<strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">\
 																	' + obj.from_profile.name + '\
 																</strong>\
@@ -1638,8 +1638,8 @@ function addToFeed(feed, after, extraClasses) {
 													<div class="queet-content">\
 														' + ostatusHtml + '\
 														<div class="stream-item-header">\
-															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '">\
-																<img class="avatar" src="' + obj.from_profile.profile_image_url + '" />\
+															<a class="account-group" href="' + obj.from_profile.statusnet_profile_url + '" data-user-id="' + obj.from_profile.id + '">\
+																<img class="avatar standard-size" src="' + obj.from_profile.profile_image_url + '" data-user-id="' + obj.from_profile.id + '" />\
 																<strong class="name" data-user-id="' + obj.from_profile.id + '" title="@' + obj.from_profile.screen_name + '">\
 																	' + obj.from_profile.name + '\
 																</strong>\
@@ -1703,7 +1703,7 @@ function addToFeed(feed, after, extraClasses) {
 						}
 					}
 
-				var userHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet ' + rtlOrNot + '">' + followButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.statusnet_profile_url + '"><img class="avatar" src="' + obj.profile_image_url_profile_size + '" /><strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> <span class="screen-name">@' + obj.screen_name + '</span></a>' + ostatusHtml + '</div><div class="queet-text">' + obj.description + '</div></div></div></div>';
+				var userHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet ' + rtlOrNot + '">' + followButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.statusnet_profile_url + '" data-user-id="' + obj.id + '"><img class="avatar profile-size" src="' + obj.profile_image_url_profile_size + '" data-user-id="' + obj.id + '" /><strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> <span class="screen-name" data-user-id="' + obj.id + '">@' + obj.screen_name + '</span></a>' + ostatusHtml + '</div><div class="queet-text">' + obj.description + '</div></div></div></div>';
 
 				if(after) {
 					$('#' + after).after(userHtml);
@@ -1964,7 +1964,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 	var queetHtml = '<div \
 						id="' + idPrepend + 'stream-item-' + idInStream + '" \
 						data-uri="' + URItoUse + '" \
-						class="stream-item ' + extraClasses + '" \
+						class="stream-item notice ' + extraClasses + '" \
 						data-attachments=\'' + JSON.stringify(obj.attachments) + '\'\
 						data-source="' + escape(obj.source) + '" \
 						data-quitter-id="' + obj.id + '" \
@@ -1978,10 +1978,10 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 								' + ostatusHtml + '\
 								<div class="queet-content">\
 									<div class="stream-item-header">\
-										<a class="account-group" href="' + obj.user.statusnet_profile_url + '">\
-											<img class="avatar" src="' + obj.user.profile_image_url_profile_size + '" />\
+										<a class="account-group" href="' + obj.user.statusnet_profile_url + '" data-user-id="' + obj.user.id + '">\
+											<img class="avatar profile-size" src="' + obj.user.profile_image_url_profile_size + '" data-user-id="' + obj.user.id + '" />\
 											<strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> \
-											<span class="screen-name">@' + obj.user.screen_name + '</span>' +
+											<span class="screen-name" data-user-id="' + obj.user.id + '">@' + obj.user.screen_name + '</span>' +
 										'</a>' +
 										'<i class="addressees">' + reply_to_html + in_groups_html + '</i>' +
 										'<small class="created-at" data-created-at="' + obj.created_at + '">\
