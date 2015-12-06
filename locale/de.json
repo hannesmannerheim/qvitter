@@ -152,9 +152,9 @@
 	"newNotification": "{new-notice-count} neue Benachrichtigung",
 	"newNotifications": "{new-notice-count} neue Benachrichtigungen",
 	"thisIsANoticeFromABlockedUser":"Achtung: Dies ist ein Queet von einem Nutzer, den du blockiert hast. Klicke um ihn anzuzeigen.",
-	"nicknamesListWithListName":"{nickname}’s list: {list-name}",
-	"myListWithListName":"My list: {list-name}",
-	"listMembers":"Members",
-	"listSubscribers":"Subscribers",
-	"ERRORcouldNotFindList":"There is no such list."
+	"nicknamesListWithListName":"{nickname}s Liste: {list-name}",
+	"myListWithListName":"Meine Liste: {list-name}",
+	"listMembers":"Mitglieder",
+	"listSubscribers":"Abonnenten",
+	"ERRORcouldNotFindList":"Diese Liste gibt es nicht."
 }
