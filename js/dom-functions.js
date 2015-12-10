@@ -1934,9 +1934,6 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 			});
 		}
 
-	// image attachment thumbnails
-	var attachmentsBuild = buildAttachmentHTML(obj.attachments);
-
 	// requeets get's a context element and a identifying class
 	// uri used is the repeate-notice's uri for repeats, not the repetED notice's uri (necessary if someone deletes a repeat)
 	var URItoUse = obj.uri;
@@ -1989,7 +1986,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 										</small>\
 									</div>\
 									<div class="queet-text">' + $.trim(obj.statusnet_html) + '</div>\
-									<div class="queet-thumbs thumb-num-' + attachmentsBuild.num + '">' + attachmentsBuild.html + '</div>\
+									' + buildAttachmentHTML(obj.attachments) + '\
 									<div class="stream-item-footer">\
 										' + queetActions + '\
 									</div>\
@@ -2019,7 +2016,9 @@ function buildAttachmentHTML(attachments){
 	var attachmentNum = 0;
 	if(typeof attachments != "undefined") {
 		$.each(attachments, function(){
-			if(typeof this.thumb_url != 'undefined' && this.thumb_url !== null) { // if there's a thumb_url we assume this is a image or video
+			if(typeof this.thumb_url != 'undefined'
+			&& this.thumb_url !== null
+			&& isLocalURL(this.thumb_url)) { // if there's a local thumb_url we assume this is a image or video
 				var bigThumbW = 1000;
 				var bigThumbH = 3000;
 				if(bigThumbW > window.siteMaxThumbnailSize) {
@@ -2075,8 +2074,5 @@ function buildAttachmentHTML(attachments){
 				}
 			});
 		}
-	return {
-		html: attachment_html,
-		num: attachmentNum
-		};
+	return '<div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachment_html + '</div>';
 	}

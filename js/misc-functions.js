@@ -302,6 +302,22 @@ function localStorageIsEnabled() {
 
 /* ·
    ·
+   ·  Is this a local URL?
+   ·
+   · · · · · · · · · */
+
+function isLocalURL(url) {
+	if(url.substring(0,window.siteInstanceURL.length) == window.siteInstanceURL) {
+		return true;
+		}
+	else {
+		return false;
+		}
+	}
+
+
+/* ·
+   ·
    ·  Check for hidden items and show the new queets bar if there are any
    ·
    · · · · · · · · · */
@@ -812,13 +828,9 @@ function searchForUpdatedNoticeData(obj) {
 					// attachments might have been added/changed/have had time to be processed
 					if(streamItemFoundInFeed.attr('data-attachments') != JSON.stringify(obj.attachments)) {
 						streamItemFoundInFeed.attr('data-attachments',JSON.stringify(obj.attachments));
-						// we might want to add thumbnails
-						if(queetFoundInFeed.find('.queet-thumbs').hasClass('thumb-num-0')) {
-							var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
-							queetFoundInFeed.find('.queet-thumbs').removeClass('thumb-num-0');
-							queetFoundInFeed.find('.queet-thumbs').addClass('thumb-num-' + attachmentsHTMLBuild.num);
-							queetFoundInFeed.find('.queet-thumbs').html(attachmentsHTMLBuild.html);
-							}
+						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
+						queetFoundInFeed.find('.queet-thumbs').remove();
+						queetFoundInFeed.find('.stream-item-footer').before(attachmentsHTMLBuild);
 						}
 
 					// set favorite data
