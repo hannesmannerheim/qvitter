@@ -1177,6 +1177,10 @@ button#submit-login:hover {
 	position: relative;
 	width:290px;
 	margin-top:15px;
+	color:#fff;
+	font-size:12px;
+	padding:0 10px;
+	opacity:0.8;
 }
 
 #page-container {
