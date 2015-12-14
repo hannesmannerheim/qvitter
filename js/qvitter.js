@@ -513,19 +513,51 @@ if(!window.registrationsClosed) {
 			// ask api if nickname is ok, if no typing for 1 s
 			$('#signup-user-nickname-step2').on('keyup',function(){
 				clearTimeout(window.checkNicknameTimeout);
-				if($('#signup-user-nickname-step2').val().length>1 && /^[a-zA-Z0-9]+$/.test($('#signup-user-nickname-step2').val())) {
-					$('#signup-user-nickname-step2').addClass('nickname-taken');
+				var thisInputElement = $(this);
+				var thisValue = $(this).val();
+				if(thisValue.length>1 && /^[a-zA-Z0-9]+$/.test(thisValue)) {
+					thisInputElement.addClass('nickname-taken');
 					if($('.spinner-wrap').length==0) {
-						$('#signup-user-nickname-step2').after('<div class="spinner-wrap"><div class="spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>');
+						thisInputElement.after('<div class="spinner-wrap"><div class="spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>');
 						}
 					window.checkNicknameTimeout = setTimeout(function(){
-						$.get(window.apiRoot + 'check_nickname.json?nickname=' + encodeURIComponent($('#signup-user-nickname-step2').val()),function(data){
+						$.get(window.apiRoot + 'check_nickname.json?nickname=' + encodeURIComponent(thisValue),function(data){
 							$('.spinner-wrap').remove();
 							if(data==0) {
 								$('#signup-user-password2-step2').trigger('keyup'); // revalidates
 								}
 							else {
-								$('#signup-user-nickname-step2').removeClass('nickname-taken');
+								thisInputElement.removeClass('nickname-taken');
+								$('#signup-user-password2-step2').trigger('keyup');
+								}
+							});
+						},1000);
+					}
+				else {
+					$('.spinner-wrap').remove();
+					}
+				});
+
+			// ask api if email is in use, if no typing for 1 s
+			$('#signup-user-email-step2').on('keyup',function(){
+				clearTimeout(window.checkEmailTimeout);
+				var thisInputElement = $(this);
+				var thisValue = $(this).val();
+				if(thisValue.length>1 && validEmail(thisValue)) {
+					thisInputElement.addClass('email-in-use');
+					if($('.spinner-wrap').length==0) {
+						thisInputElement.after('<div class="spinner-wrap"><div class="spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>');
+						}
+					window.checkEmailTimeout = setTimeout(function(){
+						$.get(window.apiRoot + 'qvitter/check_email.json?email=' + encodeURIComponent(thisValue),function(data){
+							$('.spinner-wrap').remove();
+							if(data==1) {
+								$('#signup-user-password2-step2').trigger('keyup'); // revalidates
+								thisInputElement.after('<div class="fieldhelp email-in-use">' + window.sL.emailAlreadyInUse + '</div>');
+								}
+							else {
+								thisInputElement.removeClass('email-in-use');
+								thisInputElement.siblings('.fieldhelp.email-in-use').remove();
 								$('#signup-user-password2-step2').trigger('keyup');
 								}
 							});
@@ -539,13 +571,10 @@ if(!window.registrationsClosed) {
 
 			// validate on keyup
 			$('#popup-register input').on('keyup',function(){
-				if(validateRegisterForm($('#popup-register'))) {
-					if(!$('#signup-user-nickname-step2').hasClass('nickname-taken')) {
-						$('#signup-btn-step2').removeClass('disabled');
-						}
-					else {
-						$('#signup-btn-step2').addClass('disabled');
-						}
+				if(validateRegisterForm($('#popup-register'))
+				&& !$('#signup-user-nickname-step2').hasClass('nickname-taken')
+				&& !$('#signup-user-email-step2').hasClass('email-in-use')) {
+					$('#signup-btn-step2').removeClass('disabled');
 					}
 				else {
 					$('#signup-btn-step2').addClass('disabled');
@@ -580,7 +609,14 @@ if(!window.registrationsClosed) {
 							username: 		'none',
 							},
 						dataType:"json",
-						error: function(data){ console.log('error'); console.log(data); },
+						error: function(data){
+							if(typeof data.responseJSON != 'undefined' && typeof data.responseJSON.error != 'undefined') {
+								remove_spinner();
+								$('#popup-register input,#popup-register button').removeClass('disabled');
+								$('#signup-user-password2-step2').trigger('keyup'); // revalidate
+								showErrorMessage(data.responseJSON.error,$('#popup-register .modal-header'));
+								}
+							},
 						success: function(data) {
 							remove_spinner();
 							if(typeof data.error == 'undefined') {

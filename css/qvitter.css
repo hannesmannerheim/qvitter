@@ -128,7 +128,8 @@ button.shorten i,
 	overflow: hidden;
 	}
 #user-footer-inner .error-message,
-.inline-reply-queetbox .error-message {
+.inline-reply-queetbox .error-message,
+.modal-content .error-message {
 	float:none;
 	}
 .error-message pre code {
@@ -737,6 +738,9 @@ body.rtl .front-welcome-text {
 	width:290px;
 	float:left;
 	}
+body.rtl #login-register-container {
+	float: right;
+	}
 #login-content,
 .front-signup {
 	font-family: Arial,​sans-serif;
@@ -772,6 +776,7 @@ body.rtl .front-welcome-text {
 	position:relative;
 	margin-top:1px;
 	z-index:2000;
+	direction: ltr;
 	}
 .front-signup {
 	margin-top:10px;
@@ -816,7 +821,6 @@ body.rtl .front-welcome-text {
 	border-top-right-radius: 3px;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
-	box-shadow: 0 1px 0 #EEEEEE inset, 0 1px 0 #FFFFFF;
 	outline-color: #000000;
 	position: absolute;
 	display: block;
@@ -1159,9 +1163,18 @@ button#submit-login:hover {
     right: 3px;
     top: 6px;
     width: auto;
+	min-width: 50px;
+    text-align: left;
+	}
+.modal-body .front-signup .fieldhelp.email-in-use {
+    color: red;
+    font-size: 10px;
+    font-style: italic;
+    line-height: 10px;
 	}
 .modal-body .front-signup .signup-input-container input.invalid,
-.modal-body .front-signup .signup-input-container input.nickname-taken {
+.modal-body .front-signup .signup-input-container input.nickname-taken,
+.modal-body .front-signup .signup-input-container input.email-in-use {
 	background-color:pink;
 	}
 
@@ -1189,6 +1202,9 @@ button#submit-login:hover {
 	background-color:rgba(0,0,0,0.2);
 	margin-left:-459px;
 	opacity:0;
+	}
+body.rtl #page-container {
+	direction: rtl;
 	}
 
 #footer {
@@ -1290,6 +1306,10 @@ body.rtl #footer-spinner-container {
     right: 0;
     top: 0;
     width: 32px;
+	}
+body.rtl #history-container.menu-container a .chev-right {
+	right:auto;
+	left:0;
 	}
 #history-container.menu-container a .chev-right::before {
 	content: '\f097';
@@ -1586,7 +1606,7 @@ body.rtl #footer-spinner-container {
 	display: inline-block;
     font-size: 20px;
     line-height: 20px;
-    margin-left: 9px;
+    margin: 0 9px;
     opacity: 0.4;
     position: relative;
 	cursor:pointer;
@@ -1832,6 +1852,9 @@ background-repeat: no-repeat;
 	list-style-position: outside;
 	list-style-type: none;
 	min-height: 85px;
+	}
+.queet:not(.rtl) {
+	direction: ltr;
 	}
 .stream-item.user .queet {
 	cursor: auto;
@@ -2396,7 +2419,13 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	text-decoration: underline;
 	}
 .stream-item-header .created-at:before {
-	content:" · ";
+	content: "·";
+    display: inline-block;
+    margin-left: 4px;
+	}
+.queet.rtl .stream-item-header .created-at:before {
+	margin-right: 4px;
+	margin-left: 0;
 	}
 
 .queet-text {
@@ -2508,6 +2537,9 @@ ul.queet-actions li .icon {
 	position: relative;
 	}
 ul.queet-actions li:not(:first-child) .icon {
+	margin-left:26px;
+	}
+.queet.rtl ul.queet-actions .icon {
 	margin-left:26px;
 	}
 .queet.rtl ul.queet-actions li .icon {
@@ -5072,7 +5104,7 @@ body.rtl #top-compose {
 	margin-left:auto;
 	}
 
-body.rtl .dropdown-caret.right {
+body.rtl .topbar .dropdown-caret.right {
     right: auto;
     left: 10px;
 	}

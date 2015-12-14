@@ -155,5 +155,6 @@
 	"myListWithListName":"My list: {list-name}",
 	"listMembers":"Members",
 	"listSubscribers":"Subscribers",
-	"ERRORcouldNotFindList":"There is no such list."
+	"ERRORcouldNotFindList":"There is no such list.",
+	"emailAlreadyInUse":"Already in use"
 }

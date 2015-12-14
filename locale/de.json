@@ -156,5 +156,6 @@
 	"myListWithListName":"Meine Liste: {list-name}",
 	"listMembers":"Mitglieder",
 	"listSubscribers":"Abonnenten",
-	"ERRORcouldNotFindList":"Diese Liste gibt es nicht."
+	"ERRORcouldNotFindList":"Diese Liste gibt es nicht.",
+	"emailAlreadyInUse":"Already in use"
 }

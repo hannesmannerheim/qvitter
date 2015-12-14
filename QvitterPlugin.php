@@ -141,7 +141,8 @@ class QvitterPlugin extends Plugin {
     public function onRouterInitialized($m)
     {
 
-
+        $m->connect('api/qvitter/check_email.json',
+					array('action' => 'ApiQvitterCheckEmail'));
         $m->connect('api/qvitter/:nickname/lists/:id/subscribers.json',
                     array('action' => 'ApiQvitterListSubscribers',
                           'nickname' => '[a-zA-Z0-9]+',

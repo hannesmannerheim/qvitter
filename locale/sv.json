@@ -156,5 +156,6 @@
 	"myListWithListName":"Min lista: {list-name}",
 	"listMembers":"Listmedlemmar",
 	"listSubscribers":"Prenumeranter",
-	"ERRORcouldNotFindList":"Det finns ingen sådan lista."
+	"ERRORcouldNotFindList":"Det finns ingen sådan lista.",
+	"emailAlreadyInUse":"Används redan"
 }
