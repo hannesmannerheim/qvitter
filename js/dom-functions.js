@@ -734,6 +734,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				setLocation = false; // don't set location twice if we've already set it here
 				}
 
+			// update all queets times
+			updateAllQueetsTimes();
+
 			// also mark this stream as the current stream immediately, if a saved copy exists
 			addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
 

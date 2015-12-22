@@ -1697,16 +1697,7 @@ $(window).scroll(function() {
    · · · · · · · · · · · · · */
 
 var updateTimesInterval=self.setInterval(function(){
-	$('[data-created-at]').each(function(){
-		// if the element with the data-created-at doesn't have an a-child, we change the html of the element
-		if($(this).children('a').length==0){
-			$(this).html(parseTwitterDate($(this).attr('data-created-at')));
-			}
-		// otherwise the change the child's html
-		else {
-			$(this).children('a').html(parseTwitterDate($(this).attr('data-created-at')));
-			}
-		});
+	updateAllQueetsTimes();
 	},10000);
 
 
