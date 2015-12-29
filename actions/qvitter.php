@@ -88,7 +88,6 @@ class QvitterAction extends ApiAction
 		$instanceurl = common_path('', StatusNet::isHTTPS());
 
 
-
 		common_set_returnto(''); // forget this
 
 		// if this is a profile we add a link header for LRDD Discovery (see WebfingerPlugin.php)
@@ -201,9 +200,10 @@ class QvitterAction extends ApiAction
 					window.thisSiteThinksItIsHttpButIsActuallyHttps = <?php
 
                         // this is due to a crazy setup at quitter.se, sorry about that
-						if(isset($_SERVER['HTTPS'])
+                        $siteSSL = common_config('site', 'ssl');
+                        if(isset($_SERVER['HTTPS'])
 						&& $_SERVER['HTTPS'] != 'off'
-						&& substr($instanceurl,0,7) == 'http://') {
+						&& $siteSSL == 'never' ) {
                             $this_site_thinks_it_is_http_but_is_actually_https = true;
                             print 'true';
 							}

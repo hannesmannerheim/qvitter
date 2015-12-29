@@ -3731,12 +3731,6 @@ function uploadAttachment(e, thisUploadButton) {
 
 				var mediaurl = rsp.find('mediaurl').text();
 
-				// if this site is like quitter.se, we have to do this, otherwise
-				// gnusocial will not recognize the link to the image as a local attachment
-				if(window.thisSiteThinksItIsHttpButIsActuallyHttps) {
-					mediaurl = mediaurl.replace('https://','http://');
-					}
-
 				$('img.to-upload').attr('data-shorturl', mediaurl);
 				$('img.to-upload').addClass('uploaded');
 				$('img.to-upload').removeClass('to-upload');
