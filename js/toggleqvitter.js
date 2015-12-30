@@ -41,19 +41,26 @@
    · · · · · · · · · · · · · */
 
 
-if(qvitterEnabled) {
-	$('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter" title="' + toggleText + '"><a href="' + qvitterAllLink + '">' + toggleText + '</a></li>');
-	}
-else {
-	$('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter" title="' + toggleText + '"><a href="' + location.href + '">' + toggleText + '</a></li>');
+if ($.cookie('qvitter:enabled') === undefined && qvitterEnabledByDefault) {
+    if (qvitterEnabledByDefault) {
+        $.cookie('qvitter:enabled', 'true');
+        location.reload(true);
+    } else {
+        $.cookie('qvitter:enabled', 'false');
+        // we are already in classic view!
+    }
+} else {
+    $('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter" title="' + toggleText + '"><a href="' + location.href + '">' + toggleText + '</a></li>');
 
-	$('#toggleqvitter > a').click(function(e){
-		e.preventDefault();
-		$.get(toggleQvitterAPIURL,function(data){
-			if(data.success === true) {
-				window.location.href = qvitterAllLink;
-				}
-			});
+    if ($.cookie('qvitter:enabled') === 'false') {
+        $('#toggleqvitter > a').click(function(e){
+            e.preventDefault();
+            $.get(toggleQvitterAPIURL,function(data){
+                if(data.success === true) {
+                    location.reload(true);
+                    }
+                });
 
-		});
-	}
+        });
+    }
+}

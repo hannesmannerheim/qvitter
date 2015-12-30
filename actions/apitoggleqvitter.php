@@ -37,23 +37,8 @@
 
 if (!defined('GNUSOCIAL')) { exit(1); }
 
-class ApiToggleQvitterAction extends ApiAuthAction
+class ApiToggleQvitterAction extends ApiAction
 {
-
-    /**
-     * Take arguments for running
-     *
-     * @param array $args $_REQUEST args
-     *
-     * @return boolean success flag
-     */
-    protected function prepare(array $args=array())
-    {
-        parent::prepare($args);
-
-        return true;
-    }
-
     /**
      * Handle the request
      *
@@ -64,6 +49,15 @@ class ApiToggleQvitterAction extends ApiAuthAction
     protected function handle()
     {
         parent::handle();
+
+        if (!common_logged_in()) {
+            $state = isset($_COOKIE['qvitter:enabled'])
+                            ? $_COOKIE['qvitter:enabled'] === 'true'
+                            : false;
+            // switch states
+            common_set_cookie('qvitter:enabled', (!$state ? 'true' : 'false'));
+            $result['success'] = true;
+        } else {
 
         $user = common_current_user();
 		$profile = $user->getProfile();
@@ -94,6 +88,7 @@ class ApiToggleQvitterAction extends ApiAuthAction
         if(!$pref_saved) {
             $result['success'] = false;
             $result['error'] = 'Probably couldn\'t get topic from pref table';            
+        }
         }
 
         $this->initDocument('json');
