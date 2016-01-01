@@ -129,22 +129,6 @@ class QvitterPlugin extends Plugin {
     {
         // show qvitter link in the admin panel
         common_config_append('admin', 'panels', 'qvitteradm');
-
-        if (common_logged_in()) {
-            $qvitter_enabled = static::settings('enabledbydefault') ? 'true' : 'false';
-            if ($qvitter_enabled === 'true') {
-                // if qvitter is enabled by default but _not_ disabled by the user,
-                if (Profile::current()->getConfigPref('qvitter', 'disable_qvitter') == 0) {
-                    $qvitter_enabled = 'true';
-                }
-            } else {
-                // if qvitter is disabled by default and _enabled_ by the user,
-                if (Profile::current()->getConfigPref('qvitter', 'enable_qvitter') == 1) {;
-                    $qvitter_enabled = 'true';
-                }
-            }
-            common_set_cookie('qvitter:enabled', $qvitter_enabled); // remember this to avoid javascript redirect
-        }
     }
 
     // make sure we have a notifications table
@@ -248,6 +232,10 @@ class QvitterPlugin extends Plugin {
         // if we're logged in, and qvitter is _not_ enabled by default, reroute if the user enabled qvitter
         elseif(static::settings('enabledbydefault') === false && $qvitter_enabled_by_user == 1) {
             $this->hijack_ui = true;
+        }
+
+        if (common_logged_in()) {
+            common_set_cookie('qvitter:enabled', $this->hijack_ui?'true':'false'); // remember this to avoid javascript redirect
         }
 
 
@@ -405,12 +393,6 @@ class QvitterPlugin extends Plugin {
                                 ');
         $action->script($this->path('js/toggleqvitter.js').'?changed='.date('YmdHis',filemtime(QVITTERDIR.'/js/toggleqvitter.js')));
     }
-
-    function onEndLogout(ManagedAction $action) {
-        common_set_cookie('qvitter:enabled', '', time()-3600);
-    }
-
-
 
     /**
      * Menu item for Qvitter
