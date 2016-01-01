@@ -52,15 +52,13 @@ if ($.cookie('qvitter:enabled') === undefined && qvitterEnabledByDefault) {
 } else {
     $('#site_nav_global_primary').find('.nav').first().prepend('<li id="toggleqvitter" title="' + toggleText + '"><a href="' + location.href + '">' + toggleText + '</a></li>');
 
-    if ($.cookie('qvitter:enabled') === 'false') {
-        $('#toggleqvitter > a').click(function(e){
-            e.preventDefault();
-            $.get(toggleQvitterAPIURL,function(data){
-                if(data.success === true) {
-                    location.reload(true);
-                    }
-                });
+    $('#toggleqvitter > a').click(function(e){
+        e.preventDefault();
+        $.get(toggleQvitterAPIURL,function(data){
+            if(data.success === true) {
+                location.reload(true);
+                }
+            });
 
-        });
-    }
+    });
 }
