@@ -1550,7 +1550,7 @@ function addToFeed(feed, after, extraClasses) {
 		if(window.currentStreamObject.name == 'notifications') {
 
 			// don't show any notices with object_type "activity"
-			if(typeof obj.notice != 'undefined' && obj.notice !== null && obj.notice.is_activity === true) {
+			if(typeof obj.notice != 'undefined' && obj.notice !== null && obj.notice.is_post_verb === false) {
 				return true;
 				}
 
@@ -1861,7 +1861,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		}
 
 	// activity? (hidden with css)
-	if(obj.source == 'activity' || obj.is_activity === true) {
+	if(obj.source == 'activity' || obj.is_post_verb === false) {
 		extraClasses += ' activity always-hidden';
 
 		// because we had an xss issue with activities, the obj.statusnet_html of qvitter-deleted-activity-notices can contain unwanted html, so we escape, they are hidden anyway

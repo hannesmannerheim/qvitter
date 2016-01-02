@@ -832,7 +832,7 @@ function searchForUpdatedNoticeData(obj) {
 					// sometimes activity notices don't get the is_activity flag set to true
 					// maybe because they were in the process of being saved when
 					// we first got them
-					if(obj.is_activity) {
+					if(obj.is_post_verb === false) {
 						streamItemFoundInFeed.addClass('activity always-hidden');
 						}
 

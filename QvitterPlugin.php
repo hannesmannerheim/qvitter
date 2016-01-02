@@ -606,12 +606,7 @@ class QvitterPlugin extends Plugin {
 				}
 			}
 
-		if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity' || $notice->verb == 'delete') {
-			$twitter_status['is_activity'] = true;
-			}
-		else {
-			$twitter_status['is_activity'] = false;
-			}
+		$twitter_status['is_post_verb'] = ActivityUtils::compareVerbs(ActivityVerb::POST, array($notice->verb));
 
 		if(ActivityUtils::compareTypes($notice->verb, array('qvitter-delete-notice', 'delete'))) {
 			$twitter_status['qvitter_delete_notice'] = true;
