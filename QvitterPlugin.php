@@ -606,7 +606,7 @@ class QvitterPlugin extends Plugin {
 				}
 			}
 
-		$twitter_status['is_post_verb'] = ActivityUtils::compareVerbs(ActivityVerb::POST, array($notice->verb));
+		$twitter_status['is_post_verb'] = ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST));
 
 		if(ActivityUtils::compareTypes($notice->verb, array('qvitter-delete-notice', 'delete'))) {
 			$twitter_status['qvitter_delete_notice'] = true;
