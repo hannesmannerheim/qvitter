@@ -591,13 +591,15 @@ class QvitterPlugin extends Plugin {
         	}
 		$twitter_status['repeat_num'] = $repeatnum;
 
+		$twitter_status['is_post_verb'] = ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST));
+
         // some more metadata about notice
 		if($notice->is_local == '1') {
 			$twitter_status['is_local'] = true;
 			}
 		else {
 			$twitter_status['is_local'] = false;
-			if($notice->object_type != 'activity') {
+			if ($twitter_status['is_post_verb'] === true) {
                 try {
                     $twitter_status['external_url'] = $notice->getUrl(true);
                 } catch (InvalidUrlException $e) {
@@ -606,7 +608,6 @@ class QvitterPlugin extends Plugin {
 				}
 			}
 
-		$twitter_status['is_post_verb'] = ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST));
 
 		if(ActivityUtils::compareTypes($notice->verb, array('qvitter-delete-notice', 'delete'))) {
 			$twitter_status['qvitter_delete_notice'] = true;
