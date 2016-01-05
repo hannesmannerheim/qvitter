@@ -591,13 +591,15 @@ class QvitterPlugin extends Plugin {
         	}
 		$twitter_status['repeat_num'] = $repeatnum;
 
+		$twitter_status['is_post_verb'] = ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST));
+
         // some more metadata about notice
 		if($notice->is_local == '1') {
 			$twitter_status['is_local'] = true;
 			}
 		else {
 			$twitter_status['is_local'] = false;
-			if($notice->object_type != 'activity') {
+			if ($twitter_status['is_post_verb'] === true) {
                 try {
                     $twitter_status['external_url'] = $notice->getUrl(true);
                 } catch (InvalidUrlException $e) {
@@ -606,12 +608,6 @@ class QvitterPlugin extends Plugin {
 				}
 			}
 
-		if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity' || $notice->verb == 'delete') {
-			$twitter_status['is_activity'] = true;
-			}
-		else {
-			$twitter_status['is_activity'] = false;
-			}
 
 		if(ActivityUtils::compareTypes($notice->verb, array('qvitter-delete-notice', 'delete'))) {
 			$twitter_status['qvitter_delete_notice'] = true;
@@ -776,8 +772,8 @@ class QvitterPlugin extends Plugin {
                 }
  			}
 
-		// don't add notifications for activity type notices
-		if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
+		// don't add notifications for activity/non-post-verb notices
+		if($notice->source == 'activity' || !ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST))) {
 			return true;
 			}
 
