@@ -772,8 +772,8 @@ class QvitterPlugin extends Plugin {
                 }
  			}
 
-		// don't add notifications for activity type notices
-		if($notice->source == 'activity' || $notice->object_type == 'activity' || $notice->object_type == 'http://activitystrea.ms/schema/1.0/activity') {
+		// don't add notifications for activity/non-post-verb notices
+		if($notice->source == 'activity' || !ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST))) {
 			return true;
 			}
 
