@@ -936,6 +936,7 @@ function rememberStreamStateInLocalStorage() {
 		feed.find('.view-more-container-bottom').remove();
 		feed.find('.stream-item.conversation').remove();
 		feed.find('.expanded-content').remove();
+		feed.find('.temp-post').remove();
 		feed.find('.inline-reply-queetbox').remove();
 		feed.children('.stream-item').removeClass('not-seen');
 		feed.children('.stream-item').removeClass('selected-by-keyboard');
