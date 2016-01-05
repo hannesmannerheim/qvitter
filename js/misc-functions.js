@@ -940,7 +940,7 @@ function rememberStreamStateInLocalStorage() {
 		feed.children('.stream-item').removeClass('not-seen');
 		feed.children('.stream-item').removeClass('selected-by-keyboard');
 		feed.find('.show-full-conversation').remove();
-		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').addClass('visible');
+		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').removeClass('collapsing').addClass('visible');
 		var feedHtml = feed.html();
 		var profileCardHtml = $('#feed').siblings('.profile-card').outerHTML();
 		var streamData = {
