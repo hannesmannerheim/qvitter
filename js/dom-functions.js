@@ -1955,6 +1955,17 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		URItoUse += '-activity-notice';
 		}
 
+	// attachment html and attachment url's to hide
+	var attachmentBuild = buildAttachmentHTML(obj.attachments);
+	var statusnetHTML = $('<div/>').html(obj.statusnet_html);
+	$.each(statusnetHTML.find('a'),function(){
+		if(attachmentBuild.urlsToHide.indexOf($(this).text()) > -1) {
+			$(this).css('display','none');
+			}
+		});
+	statusnetHTML = statusnetHTML.html();
+
+
 	// external
 	var ostatusHtml = '';
 	if(obj.is_local === false) {
@@ -1988,8 +1999,8 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 											<a data-tooltip="' + parseTwitterLongDate(obj.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.id + '">' + queetTime + '</a>\
 										</small>\
 									</div>\
-									<div class="queet-text">' + $.trim(obj.statusnet_html) + '</div>\
-									' + buildAttachmentHTML(obj.attachments) + '\
+									<div class="queet-text">' + $.trim(statusnetHTML) + '</div>\
+									' + attachmentBuild.html + '\
 									<div class="stream-item-footer">\
 										' + queetActions + '\
 									</div>\
@@ -2016,12 +2027,57 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 
 function buildAttachmentHTML(attachments){
 	var attachment_html = '';
+	var quotedNoticeHTML = '';
 	var attachmentNum = 0;
+	var urlsToHide = [];
 	if(typeof attachments != "undefined") {
 		$.each(attachments, function(){
-			if(typeof this.thumb_url != 'undefined'
+
+			// quoted notices
+			if(typeof this.quoted_notice != 'undefined') {
+
+				var quotedContent = this.quoted_notice.content;
+
+				// quoted notice's attachments' thumb urls
+				var quotedAttachmentsHTML = '';
+				var quotedAttachmentsHTMLbefore = '';
+				var quotedAttachmentsHTMLafter = '';
+				if(typeof this.quoted_notice.attachments != 'undefined' && this.quoted_notice.attachments.length > 0) {
+					quotedAttachmentsHTML += '<div class="quoted-notice-attachments quoted-notice-attachments-num-' + this.quoted_notice.attachments.length  + '">'
+					$.each(this.quoted_notice.attachments,function(k,qAttach){
+						quotedAttachmentsHTML += '<div class="quoted-notice-img-container" style="background-image:url(\'' + qAttach.thumb_url + '\')"><img class="quoted-notice-img" src="' + qAttach.thumb_url + '" /></div>';
+						// remove attachment string from content
+						quotedContent = quotedContent.split(window.siteInstanceURL + 'attachment/' + qAttach.attachment_id).join('');
+						});
+					quotedAttachmentsHTML += '</div>';
+
+					// if there is only one attachment, it goes before, otherwise after
+					if(this.quoted_notice.attachments.length == 1) {
+						quotedAttachmentsHTMLbefore = quotedAttachmentsHTML;
+						}
+					else {
+						quotedAttachmentsHTMLafter = quotedAttachmentsHTML;
+						}
+					}
+
+				// hide the notice url in the queet text
+				urlsToHide.push(this.url);
+
+				quotedNoticeHTML += '<a href="' + window.siteInstanceURL + 'notice/' + this.quoted_notice.id + '" class="quoted-notice" data-notice-url=' + this.url + '>\
+										' + quotedAttachmentsHTMLbefore + '\
+										<div class="quoted-notice-header">\
+											<span class="quoted-notice-author-fullname">' + this.quoted_notice.fullname + '</span>\
+											<span class="quoted-notice-author-nickname">' + this.quoted_notice.nickname + '</span>\
+										</div>\
+										<div class="quoted-notice-body">' + $.trim(quotedContent) + '</div>\
+										' + quotedAttachmentsHTMLafter + '\
+									 </a>';
+				}
+
+			// if there's a local thumb_url we assume this is a image or video
+			else if(typeof this.thumb_url != 'undefined'
 			&& this.thumb_url !== null
-			&& isLocalURL(this.thumb_url)) { // if there's a local thumb_url we assume this is a image or video
+			&& isLocalURL(this.thumb_url)) {
 				var bigThumbW = 1000;
 				var bigThumbH = 3000;
 				if(bigThumbW > window.siteMaxThumbnailSize) {
@@ -2069,13 +2125,16 @@ function buildAttachmentHTML(attachments){
 					}
 
 				attachment_html = attachment_html + '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
+				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
 				attachmentNum++;
 				}
 			else if (this.mimetype == 'image/svg+xml') {
 				attachment_html = attachment_html + '<a style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
+				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
 				attachmentNum++;
 				}
 			});
 		}
-	return '<div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachment_html + '</div>';
+	return {html: '<div class="quoted-notices">' + quotedNoticeHTML + '</div><div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachment_html + '</div>',
+			urlsToHide: urlsToHide };
 	}

@@ -567,6 +567,66 @@ class QvitterPlugin extends Plugin {
             }
         }
 
+        // quoted notices
+        if (!empty($twitter_status['attachments'])) {
+            foreach ($twitter_status['attachments'] as &$attachment) {
+
+                $quoted_notice = false;
+
+                // if this attachment has an url this might be a notice url
+                if (isset($attachment['url'])) {
+                    $noticeurl = common_path('notice/', StatusNet::isHTTPS());
+                    $instanceurl = common_path('', StatusNet::isHTTPS());
+
+                    // local notice urls
+                    if(stristr($attachment['url'], $noticeurl)) {
+                        $possible_notice_id = str_replace($noticeurl,'',$attachment['url']);
+                        if(ctype_digit($possible_notice_id)) {
+                            $quoted_notice = Notice::getKV('id',$possible_notice_id);;
+                        }
+                    }
+                    // remote. but we don't want to lookup every url in the db,
+                    // so only do this if we have reason to believe this might
+                    // be a remote notice url
+                    elseif(!stristr($attachment['url'], $instanceurl) && stristr($attachment['url'],'/notice/')) {
+                        $quoted_notice = Notice::getKV('url',$attachment['url']);
+                    }
+
+                    // include the quoted notice in the attachment
+                    if($quoted_notice instanceof Notice) {
+                        $quoted_notice_author = Profile::getKV('id',$quoted_notice->profile_id);
+                        if($quoted_notice_author instanceof Profile) {
+                            $attachment['quoted_notice']['id'] = $quoted_notice->id;
+                            $attachment['quoted_notice']['content'] = $quoted_notice->content;
+                            $attachment['quoted_notice']['nickname'] = $quoted_notice_author->nickname;
+                            $attachment['quoted_notice']['fullname'] = $quoted_notice_author->fullname;
+                            $quoted_notice_attachments = $quoted_notice->attachments();
+                            foreach($quoted_notice_attachments as $q_attach) {
+                                if(is_object($q_attach)) {
+                                    try {
+                                        $qthumb = $q_attach->getThumbnail();
+                                        $thumb_url = File_thumbnail::url($qthumb->filename);
+                                        $attachment['quoted_notice']['attachments'][] = array('thumb_url'=>$thumb_url,
+                                                                                              'attachment_id'=>$q_attach->id);
+                                    } catch (Exception $e) {
+                                        common_debug('Qvitter: exception: '.$e.' – could not get thumbnail for attachment id='.$q_attach->id.' in quoted notice id='.$quoted_notice->id);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+                        try {
+                            $twitter_status['external_url'] = $notice->getUrl(true);
+                        } catch (InvalidUrlException $e) {
+                		    common_debug('Qvitter: No URL available for external notice: id='.$notice->id);
+                        }
+
+
 		// reply-to profile url
         try {
             $reply = $notice->getParent();

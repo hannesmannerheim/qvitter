@@ -2005,6 +2005,83 @@ body.rtl .queet.rtl .expanded-content {
 	display:block;
 	}
 
+.quoted-notices {
+	width:100%;
+	position:relative;
+}
+.quoted-notice {
+	width:100%;
+	border: 1px solid #eee;
+    border-radius: 4px;
+    cursor: pointer;
+	display: table;
+	table-layout: fixed;
+	padding: 12px;
+	box-sizing: border-box;
+	margin-top:12px;
+	color:#292f33 !important;
+	overflow: hidden;
+	}
+.stream-item:hover:not(.expanded) .quoted-notice  {
+	border: 1px solid #ddd;
+	}
+
+.quoted-notice-attachments {
+	width:100%;
+	position: relative;
+	overflow:hidden;
+	}
+.quoted-notice-attachments-num-1 {
+    height: 102px;
+    width: 102px;
+    margin-right: 12px;
+	float: left;
+	}
+
+.quoted-notice-img-container {
+    height: 102px;
+    width: 102px;
+	display: inline-block;
+	margin-right: 7px;
+	margin-top:7px;
+	background-size:cover;
+	background-repeat:no-repeat;
+	background-position: center;
+	}
+
+.quoted-notice-attachments-num-1 .quoted-notice-img-container {
+    height: 100%;
+    width: 100%;
+	margin:0;
+	}
+
+.quoted-notice-img {
+    height: 100%;
+    opacity: 0;
+    width: 100%;
+	}
+
+.quoted-notice-header {
+	line-height:20px;
+	margin-bottom:5px;
+	}
+.quoted-notice-author-fullname {
+	font-weight: bold;
+	}
+.quoted-notice-author-nickname {
+	font-size:13px;
+	color:#999;
+	}
+.quoted-notice-author-nickname::before {
+	content:"@";
+	}
+
+.quoted-notice-body	{
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	}
+
+
 .queet .queet-thumbs {
     -webkit-transition: max-height 0s linear;
     -moz-transition: max-height 0s linear;
@@ -2537,7 +2614,7 @@ ul.queet-actions li .icon {
 	position: relative;
 	}
 ul.queet-actions li:not(:first-child) .icon {
-	margin-left:26px;
+	margin-left:52px;
 	}
 .queet.rtl ul.queet-actions .icon {
 	margin-left:26px;

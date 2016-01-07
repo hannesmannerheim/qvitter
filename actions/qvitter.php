@@ -652,7 +652,9 @@ class QvitterAction extends ApiAction
 					span.inline-reply-caret,
 				    .stream-item.expanded .stream-item.first-visible-after-parent,
 					#popup-faq #faq-container p.indent,
-                    .post-to-group {
+                    .post-to-group,
+                    .quoted-notice:hover,
+                    .stream-item:hover:not(.expanded) .quoted-notice:hover {
 						border-color:/*LIGHTERBORDERCOLORSTART*/rgb(155,206,224)/*LIGHTERBORDERCOLOREND*/;
 						}
 					span.inline-reply-caret .caret-inner {
