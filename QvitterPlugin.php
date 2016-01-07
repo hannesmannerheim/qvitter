@@ -605,11 +605,15 @@ class QvitterPlugin extends Plugin {
                                 if(is_object($q_attach)) {
                                     try {
                                         $qthumb = $q_attach->getThumbnail();
-                                        $thumb_url = File_thumbnail::url($qthumb->filename);
+                                        if(method_exists('File_thumbnail','url')) {
+                                            $thumb_url = File_thumbnail::url($qthumb->filename);
+                                        } else {
+                                            $thumb_url = $qthumb->getUrl();
+                                        }
                                         $attachment['quoted_notice']['attachments'][] = array('thumb_url'=>$thumb_url,
                                                                                               'attachment_id'=>$q_attach->id);
                                     } catch (Exception $e) {
-                                        common_debug('Qvitter: exception: '.$e.' – could not get thumbnail for attachment id='.$q_attach->id.' in quoted notice id='.$quoted_notice->id);
+                                        common_debug('Qvitter: could not get thumbnail for attachment id='.$q_attach->id.' in quoted notice id='.$quoted_notice->id);
                                     }
                                 }
                             }
@@ -651,7 +655,13 @@ class QvitterPlugin extends Plugin {
         	}
 		$twitter_status['repeat_num'] = $repeatnum;
 
-		$twitter_status['is_post_verb'] = ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST));
+        // is this a post? (previously is_activity)
+        if(method_exists('ActivityUtils','compareVerbs')) {
+            $twitter_status['is_post_verb'] = ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST));
+            }
+        else {
+            $twitter_status['is_post_verb'] = ($notice->verb == ActivityVerb::POST ? true : false);
+            }
 
         // some more metadata about notice
 		if($notice->is_local == '1') {
