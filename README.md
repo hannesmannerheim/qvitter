@@ -91,4 +91,4 @@ for ideas about paths for the API extensions.
 Notes
 -----
 
-Qvitter is tested with the latest GNU social nightly and also an older version: GNU social version 1.1.1-alpha2 (7e47026085fa4f2071e694d9c3e3fe2aa5142135, 24 aug 2014).
+Qvitter is tested with the latest GNU social nightly

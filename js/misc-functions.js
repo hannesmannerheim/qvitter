@@ -850,6 +850,13 @@ function searchForUpdatedNoticeData(obj) {
 						streamItemFoundInFeed.attr('data-attachments',JSON.stringify(obj.attachments));
 						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
 						queetFoundInFeed.find('.queet-thumbs').remove();
+						queetFoundInFeed.find('.quoted-notices').remove();
+						// we might want to hide urls (rendered as attachments) in the queet text
+						$.each(queetFoundInFeed.find('.queet-text').find('a'),function(){
+							if(attachmentsHTMLBuild.urlsToHide.indexOf($(this).text()) > -1) {
+								$(this).css('display','none');
+								}
+							});
 						queetFoundInFeed.find('.stream-item-footer').before(attachmentsHTMLBuild.html);
 						}
 

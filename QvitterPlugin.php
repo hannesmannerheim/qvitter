@@ -578,9 +578,14 @@ class QvitterPlugin extends Plugin {
                     $noticeurl = common_path('notice/', StatusNet::isHTTPS());
                     $instanceurl = common_path('', StatusNet::isHTTPS());
 
+                    // remove protocol for the comparison below
+                    $noticeurl_wo_protocol = preg_replace('(^https?://)', '', $noticeurl);
+                    $instanceurl_wo_protocol = preg_replace('(^https?://)', '', $instanceurl);
+                    $attachment_url_wo_protocol = preg_replace('(^https?://)', '', $attachment['url']);
+
                     // local notice urls
-                    if(stristr($attachment['url'], $noticeurl)) {
-                        $possible_notice_id = str_replace($noticeurl,'',$attachment['url']);
+                    if(strpos($attachment_url_wo_protocol, $noticeurl_wo_protocol) === 0) {
+                        $possible_notice_id = str_replace($noticeurl_wo_protocol,'',$attachment_url_wo_protocol);
                         if(ctype_digit($possible_notice_id)) {
                             $quoted_notice = Notice::getKV('id',$possible_notice_id);;
                         }
@@ -588,7 +593,8 @@ class QvitterPlugin extends Plugin {
                     // remote. but we don't want to lookup every url in the db,
                     // so only do this if we have reason to believe this might
                     // be a remote notice url
-                    elseif(!stristr($attachment['url'], $instanceurl) && stristr($attachment['url'],'/notice/')) {
+                    // VERY INEFFICIENT!! maybe index the url column in the notice table?
+                    elseif(strpos($attachment_url_wo_protocol, $instanceurl_wo_protocol) !== 0 && stristr($attachment_url_wo_protocol,'/notice/')) {
                         $quoted_notice = Notice::getKV('url',$attachment['url']);
                     }
 
