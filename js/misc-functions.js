@@ -850,7 +850,7 @@ function searchForUpdatedNoticeData(obj) {
 						streamItemFoundInFeed.attr('data-attachments',JSON.stringify(obj.attachments));
 						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
 						queetFoundInFeed.find('.queet-thumbs').remove();
-						queetFoundInFeed.find('.stream-item-footer').before(attachmentsHTMLBuild);
+						queetFoundInFeed.find('.stream-item-footer').before(attachmentsHTMLBuild.html);
 						}
 
 					// set favorite data
