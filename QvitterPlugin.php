@@ -1111,7 +1111,9 @@ class QvitterPlugin extends Plugin {
             // loop through the groups guessed by gnu social's common_find_mentions() and correct them
             foreach($mentions as $mention_array_id=>$mention) {
                 foreach($correct_groups as $correct_groups_array_id=>$correct_group) {
-                    if($mention['mentioned'][0]->nickname == $correct_group->nickname
+                    if(isset($mention['mentioned'][0]->nickname)
+                    && isset($correct_group->nickname)
+                    && $mention['mentioned'][0]->nickname == $correct_group->nickname
                     && !isset($mentions[$mention_array_id]['corrected'])) {
                         $user_group_profile = Profile::getKV('id',$correct_group->profile_id);
                         $mentions[$mention_array_id]['mentioned'][0] = $user_group_profile;

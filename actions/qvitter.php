@@ -145,15 +145,18 @@ class QvitterAction extends ApiAction
 					if(stristr($group_id_or_name,'/id')) {
 						$group_id_or_name = substr($group_id_or_name, 0, strpos($group_id_or_name,'/id'));
 						$group = User_group::getKV('id', $group_id_or_name);
-						$group_name = $group->nickname;
-						$group_id = $group_id_or_name;
-						}
-					else {
+                        if($group instanceof User_group) {
+                            $group_name = $group->nickname;
+    						$group_id = $group_id_or_name;
+                        }
+					} else {
 						$group = Local_group::getKV('nickname', $group_id_or_name);
-						$group_id = $group->group_id;
-						$group_name = $group_id_or_name;
-						}
-					if(preg_match("/^[a-zA-Z0-9]+$/", $group_id_or_name) == 1) {
+                        if($group instanceof Local_group) {
+                            $group_id = $group->group_id;
+    						$group_name = $group_id_or_name;
+                        }
+					}
+					if(preg_match("/^[a-zA-Z0-9]+$/", $group_id_or_name) == 1 && isset($group_name) && isset($group_id)) {
                 ?>
 
 				<link rel="alternate" href="<?php echo htmlspecialchars(common_local_url('ApiTimelineGroup', array('id'=>$group_id, 'format'=>'as'))); ?>" type="application/stream+json" title="Notice feed for '<?php echo htmlspecialchars($group_name); ?>' group (Activity Streams JSON)" />
