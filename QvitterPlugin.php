@@ -606,9 +606,16 @@ class QvitterPlugin extends Plugin {
                     // remote. but we don't want to lookup every url in the db,
                     // so only do this if we have reason to believe this might
                     // be a remote notice url
-                    // VERY INEFFICIENT!! maybe index the url column in the notice table?
                     elseif(strpos($attachment_url_wo_protocol, $instanceurl_wo_protocol) !== 0 && stristr($attachment_url_wo_protocol,'/notice/')) {
                         $quoted_notice = Notice::getKV('url',$attachment['url']);
+                        // try with http<->https if no match. applies to quitter.se notices mostly
+                        if(!$quoted_notice instanceof Notice) {
+                            if(strpos($attachment['url'],'https://') === 0) {
+                                $quoted_notice = Notice::getKV('url',str_replace('https://','http://', $attachment['url']));
+                            } else {
+                                $quoted_notice = Notice::getKV('url',str_replace('http://','https://', $attachment['url']));
+                            }
+                        }
                     }
 
                     // include the quoted notice in the attachment
