@@ -129,11 +129,24 @@ class QvitterPlugin extends Plugin {
         common_config_append('admin', 'panels', 'qvitteradm');
     }
 
-    // make sure we have a notifications table
+
     function onCheckSchema()
     {
         $schema = Schema::get();
+
+        // make sure we have a notifications table
         $schema->ensureTable('qvitternotification', QvitterNotification::schemaDef());
+
+        // index the url column in the notice table
+        $notice_schemadef = $schema->getTableDef('notice');
+        if(!isset($notice_schemadef['indexes']['notice_url_idx'])) {
+            try {
+                $schema->createIndex('notice', 'url');
+            } catch (Exception $e) {
+                common_log(LOG_ERR, __METHOD__ . ': ' . $e->getMessage());
+            }
+        }
+
         return true;
     }
 
