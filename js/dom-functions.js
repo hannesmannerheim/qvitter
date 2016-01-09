@@ -1221,7 +1221,7 @@ function expand_queet(q,doScrolling) {
 function cleanUpAfterCollapseQueet(streamItem) {
 	var queet = streamItem.children('.queet');
 	streamItem.css('height','auto');
-	streamItem.children('.queet').css('margin-top','0');
+	queet.css('margin-top','0');
 	streamItem.removeClass('expanded');
 	streamItem.prev().removeClass('next-expanded');
 	streamItem.removeClass('collapsing');

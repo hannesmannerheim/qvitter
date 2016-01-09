@@ -943,8 +943,8 @@ function rememberStreamStateInLocalStorage() {
 		feed.children('.stream-item').removeClass('not-seen');
 		feed.children('.stream-item').removeClass('selected-by-keyboard');
 		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').removeClass('collapsing').addClass('visible');
-		$.each(feed, function(k,streamItem) {
-			cleanUpAfterCollapseQueet($(streamItem));
+		feed.children('.stream-item').each(function() {
+			cleanUpAfterCollapseQueet($(this));
 			});
 		var feedHtml = feed.html();
 		var profileCardHtml = $('#feed').siblings('.profile-card').outerHTML();
