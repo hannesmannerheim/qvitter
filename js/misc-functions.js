@@ -939,16 +939,13 @@ function rememberStreamStateInLocalStorage() {
 				}
 			});
 		var feed = $('<div/>').append(firstTwentyVisibleHTML);
-		feed.find('.view-more-container-top').remove();
-		feed.find('.view-more-container-bottom').remove();
-		feed.find('.stream-item.conversation').remove();
-		feed.find('.expanded-content').remove();
 		feed.find('.temp-post').remove();
-		feed.find('.inline-reply-queetbox').remove();
 		feed.children('.stream-item').removeClass('not-seen');
 		feed.children('.stream-item').removeClass('selected-by-keyboard');
-		feed.find('.show-full-conversation').remove();
 		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').removeClass('collapsing').addClass('visible');
+		$.each(feed, function(k,streamItem) {
+			cleanUpAfterCollapseQueet($(streamItem));
+			});
 		var feedHtml = feed.html();
 		var profileCardHtml = $('#feed').siblings('.profile-card').outerHTML();
 		var streamData = {
