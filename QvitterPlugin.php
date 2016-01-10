@@ -869,7 +869,13 @@ class QvitterPlugin extends Plugin {
  			}
 
 		// don't add notifications for activity/non-post-verb notices
-		if($notice->source == 'activity' || !ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST))) {
+        if(method_exists('ActivityUtils','compareVerbs')) {
+            $is_post_verb = ActivityUtils::compareVerbs($notice->verb, array(ActivityVerb::POST));
+            }
+        else {
+            $is_post_verb = ($notice->verb == ActivityVerb::POST ? true : false);
+            }
+        if($notice->source == 'activity' || !$is_post_verb) {
 			return true;
 			}
 
