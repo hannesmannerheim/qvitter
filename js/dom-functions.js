@@ -2120,9 +2120,13 @@ function buildAttachmentHTML(attachments){
 				else if(this.width > 1000) {
 					var img_url = this.large_thumb_url;
 					}
-				// no thumbnails for small images
-				else {
+				// no thumbnails for small local images
+				else if (this.url.indexOf(window.siteInstanceURL) === 0) {
 					var img_url = this.url;
+					}
+				// small thumbnail for small remote images					
+				else {
+					var img_url = this.thumb_url;
 					}
 
 				attachment_html = attachment_html + '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
