@@ -1964,8 +1964,36 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 			$(this).css('display','none');
 			}
 		});
+	// try to find a place in the queet-text for the quoted notices
+	var quotedNoticesNotFoundInQueetTextHTML = '';
+	var quoteURLfoundInQueetText = false;
+	$.each(attachmentBuild.quotedNotices,function(k,qoutedNotice){
+		if(typeof qoutedNotice.url != 'undefined') {
+			quoteURLfoundInQueetText = false;
+			$.each(statusnetHTML.find('a').not('.quoted-notice'), function(){
+				if($(this).attr('href') == qoutedNotice.url && $(this).css('display') != 'none') {
+					quoteURLfoundInQueetText = true;
+					$(this).css('display','none');
+					$(this).after(qoutedNotice.html);
+					// remove unnecessary line breaks, i.e. remove br between two quoted notices
+					if($(this).prev().is('br')) {
+						$(this).prev().remove();
+						}
+					return false; // break
+					}
+				});
+			if(quoteURLfoundInQueetText === false) {
+				console.log('not found: ' + qoutedNotice.html);
+				quotedNoticesNotFoundInQueetTextHTML += qoutedNotice.html;
+				}
+			}
+		});
 	statusnetHTML = statusnetHTML.html();
 
+	// quoted notices that we didn't find in the queet text is placed below the text
+	if(quotedNoticesNotFoundInQueetTextHTML.length > 0) {
+		attachmentBuild.html = '<div class="quoted-notices">' + quotedNoticesNotFoundInQueetTextHTML + '</div>' + attachmentBuild.html;
+		}
 
 	// external
 	var ostatusHtml = '';
@@ -2028,7 +2056,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 
 function buildAttachmentHTML(attachments){
 	var attachment_html = '';
-	var quotedNoticeHTML = '';
+	var quotedNotices = [];
 	var attachmentNum = 0;
 	var urlsToHide = [];
 	if(typeof attachments != "undefined") {
@@ -2061,18 +2089,17 @@ function buildAttachmentHTML(attachments){
 						}
 					}
 
-				// hide the notice url in the queet text
-				urlsToHide.push(this.url);
+				var quotedNoticeHTML = '<a href="' + window.siteInstanceURL + 'notice/' + this.quoted_notice.id + '" class="quoted-notice" data-notice-url=' + this.url + '>\
+											' + quotedAttachmentsHTMLbefore + '\
+											<div class="quoted-notice-header">\
+												<span class="quoted-notice-author-fullname">' + this.quoted_notice.fullname + '</span>\
+												<span class="quoted-notice-author-nickname">' + this.quoted_notice.nickname + '</span>\
+											</div>\
+											<div class="quoted-notice-body">' + $.trim(quotedContent) + '</div>\
+											' + quotedAttachmentsHTMLafter + '\
+										 </a>';
 
-				quotedNoticeHTML += '<a href="' + window.siteInstanceURL + 'notice/' + this.quoted_notice.id + '" class="quoted-notice" data-notice-url=' + this.url + '>\
-										' + quotedAttachmentsHTMLbefore + '\
-										<div class="quoted-notice-header">\
-											<span class="quoted-notice-author-fullname">' + this.quoted_notice.fullname + '</span>\
-											<span class="quoted-notice-author-nickname">' + this.quoted_notice.nickname + '</span>\
-										</div>\
-										<div class="quoted-notice-body">' + $.trim(quotedContent) + '</div>\
-										' + quotedAttachmentsHTMLafter + '\
-									 </a>';
+				quotedNotices.push({url: this.url, html: quotedNoticeHTML});
 				}
 
 			// if there's a local thumb_url we assume this is a image or video
@@ -2124,7 +2151,7 @@ function buildAttachmentHTML(attachments){
 				else if (this.url.indexOf(window.siteInstanceURL) === 0) {
 					var img_url = this.url;
 					}
-				// small thumbnail for small remote images					
+				// small thumbnail for small remote images
 				else {
 					var img_url = this.thumb_url;
 					}
@@ -2140,6 +2167,7 @@ function buildAttachmentHTML(attachments){
 				}
 			});
 		}
-	return {html: '<div class="quoted-notices">' + quotedNoticeHTML + '</div><div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachment_html + '</div>',
-			urlsToHide: urlsToHide };
+	return { html: '<div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachment_html + '</div>',
+			urlsToHide: urlsToHide,
+			quotedNotices: quotedNotices };
 	}
