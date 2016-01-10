@@ -1971,7 +1971,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		if(typeof qoutedNotice.url != 'undefined') {
 			quoteURLfoundInQueetText = false;
 			$.each(statusnetHTML.find('a').not('.quoted-notice'), function(){
-				if($(this).attr('href') == qoutedNotice.url && $(this).css('display') != 'none') {
+				if(removeProtocolFromUrl($(this).attr('href')) == removeProtocolFromUrl(qoutedNotice.url) && $(this).css('display') != 'none') {
 					quoteURLfoundInQueetText = true;
 					$(this).css('display','none');
 					$(this).after(qoutedNotice.html);
