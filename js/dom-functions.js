@@ -2134,6 +2134,11 @@ function buildAttachmentHTML(attachments){
 					youTubeClass = ' youtube';
 					}
 
+				// gif-class
+				var animatedGifClass = '';
+				if(typeof this.animated != 'undefined' && this.animated === true) {
+					var animatedGifClass = ' animated-gif';
+					}
 
 				// animated gifs always get default small non-animated thumbnail
 				if(this.animated === true) {
@@ -2156,7 +2161,7 @@ function buildAttachmentHTML(attachments){
 					var img_url = this.thumb_url;
 					}
 
-				attachment_html = attachment_html + '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
+				attachment_html = attachment_html + '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + animatedGifClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
 				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
 				attachmentNum++;
 				}
