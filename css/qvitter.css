@@ -2022,6 +2022,9 @@ body.rtl .queet.rtl .expanded-content {
 	color:#292f33 !important;
 	overflow: hidden;
 	}
+.quoted-notice:hover {
+	text-decoration: none !important;	
+	}
 .stream-item:hover:not(.expanded) .quoted-notice  {
 	border: 1px solid #ddd;
 	}
