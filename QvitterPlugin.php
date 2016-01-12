@@ -1254,7 +1254,16 @@ class QvitterPlugin extends Plugin {
             $avatar  = Avatar::getUploaded($profile);
             $origurl = $avatar->displayUrl();
         } catch (Exception $e) {
-            $origurl = $twitter_user['profile_image_url_profile_size'];
+
+            // ugly fix if avatar is missing in the db but exists on the server
+            $avatar_profile_size = Avatar::byProfile($profile, AVATAR_PROFILE_SIZE);
+            $maybe_original_avatar = str_replace('-'.AVATAR_PROFILE_SIZE.'-','-original-',$avatar_profile_size->filename);
+            error_log('maybe: '.$maybe_original_avatar);
+            if(file_exists(Avatar::path($maybe_original_avatar))) {
+                $origurl = common_path('avatar/', StatusNet::isHTTPS()).$maybe_original_avatar;
+            } else {
+                $origurl = $twitter_user['profile_image_url_profile_size'];
+            }
         }
         $twitter_user['profile_image_url_original'] = $origurl;
 
