@@ -1256,10 +1256,8 @@ class QvitterPlugin extends Plugin {
         } catch (Exception $e) {
 
             // ugly fix if avatar is missing in the db but exists on the server
-            $avatar_profile_size = Avatar::byProfile($profile, AVATAR_PROFILE_SIZE);
-            $wildcard_avatar = str_replace('-'.AVATAR_PROFILE_SIZE.'-','-*-',$avatar_profile_size->filename);
             $largest_avatar = array('name'=>false,'size'=>0);
-            foreach (glob('avatar/'.$wildcard_avatar) as $filename) {
+            foreach (glob('avatar/'.$profile->id.'-*') as $filename) {
                 $size = filesize($filename);
                 if($size > $largest_avatar['size']) {
                     $largest_avatar['size'] = $size;
