@@ -1257,13 +1257,21 @@ class QvitterPlugin extends Plugin {
 
             // ugly fix if avatar is missing in the db but exists on the server
             $avatar_profile_size = Avatar::byProfile($profile, AVATAR_PROFILE_SIZE);
-            $maybe_original_avatar = str_replace('-'.AVATAR_PROFILE_SIZE.'-','-original-',$avatar_profile_size->filename);
-            error_log('maybe: '.$maybe_original_avatar);
-            if(file_exists(Avatar::path($maybe_original_avatar))) {
-                $origurl = common_path('avatar/', StatusNet::isHTTPS()).$maybe_original_avatar;
+            $wildcard_avatar = str_replace('-'.AVATAR_PROFILE_SIZE.'-','-*-',$avatar_profile_size->filename);
+            $largest_avatar = array('name'=>false,'size'=>0);
+            foreach (glob('avatar/'.$wildcard_avatar) as $filename) {
+                $size = filesize($filename);
+                if($size > $largest_avatar['size']) {
+                    $largest_avatar['size'] = $size;
+                    $largest_avatar['name'] = $filename;
+                }
+            }
+            if($largest_avatar['size']>0) {
+                $origurl = common_path('', StatusNet::isHTTPS()).$largest_avatar['name'];
             } else {
                 $origurl = $twitter_user['profile_image_url_profile_size'];
             }
+
         }
         $twitter_user['profile_image_url_original'] = $origurl;
 
