@@ -942,6 +942,7 @@ function rememberStreamStateInLocalStorage() {
 		feed.find('.temp-post').remove();
 		feed.children('.stream-item').removeClass('not-seen');
 		feed.children('.stream-item').removeClass('selected-by-keyboard');
+		feed.find('.dropdown-menu').remove();
 		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').removeClass('collapsing').addClass('visible');
 		feed.children('.stream-item').each(function() {
 			cleanUpAfterCollapseQueet($(this));
