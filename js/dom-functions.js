@@ -2167,13 +2167,13 @@ function buildAttachmentHTML(attachments){
 
 				attachment_html = attachment_html + '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + animatedGifClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
 				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
-				urlsToHide.push(this.url);
+				// urlsToHide.push(this.url);
 				attachmentNum++;
 				}
 			else if (this.mimetype == 'image/svg+xml') {
 				attachment_html = attachment_html + '<a style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
 				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
-				urlsToHide.push(this.url);
+				// urlsToHide.push(this.url);
 				attachmentNum++;
 				}
 			});
