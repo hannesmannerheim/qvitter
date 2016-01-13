@@ -2776,7 +2776,7 @@ $('body').on('keydown', '.queet-box-syntax', function(e) {
 	if($(this).siblings('.mentions-suggestions').children('div').length > 0) {
 
 		// enter or tab
-		if (e.keyCode == '13' || e.keyCode == '9') {
+		if (!e.ctrlKey && (e.keyCode == '13' || e.keyCode == '9')) {
 			e.preventDefault();
 			useSelectedMention($(this));
 			}
