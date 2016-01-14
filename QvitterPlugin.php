@@ -216,11 +216,9 @@ class QvitterPlugin extends Plugin {
                     array('action' => 'qvitteradminsettings'));
         $m->connect('main/qlogin',
                     array('action' => 'qvitterlogin'));
-		URLMapperOverwrite::overwrite_variable($m, 'api/statuses/update.:format',
-								array('action' => 'ApiStatusesUpdate'),
-								array('format' => '(xml|json)'),
-								'ApiQvitterStatusesUpdate');
-
+        $m->connect('api/qvitter/statuses/update.:format',
+					array('action' => 'ApiQvitterStatusesUpdate'),
+					array('format' => '(xml|json)'));
 
 		// check if we should reroute UI to qvitter, and which home-stream the user wants (hide-replies or normal)
 		$scoped = Profile::current();

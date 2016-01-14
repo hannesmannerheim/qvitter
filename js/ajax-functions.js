@@ -500,7 +500,7 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
    · · · · · · · · · · · · · */
 
 function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, actionOnSuccess) {
-	$.ajax({ url: window.apiRoot + 'statuses/update.json',
+	$.ajax({ url: window.apiRoot + 'qvitter/statuses/update.json',
 		cache: false,
 		type: "POST",
 		data: {
