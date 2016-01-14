@@ -146,6 +146,8 @@ if (!defined('STATUSNET')) {
  */
 class ApiQvitterStatusesUpdateAction extends ApiStatusesUpdateAction
 {
+    var $media_ids = array();   // so we don't accidentally have an unset class variable
+
     /**
      * Handle the request Qvitter-style!
      *
@@ -212,6 +214,13 @@ class ApiQvitterStatusesUpdateAction extends ApiStatusesUpdateAction
                     // TRANS: Client error displayed when replying to a non-existing notice.
                     $this->clientError(_('Parent notice not found.'), 404);
                 }
+            }
+
+            common_debug(get_called_class().': parsed media_ids=='._ve($this->media_ids));
+            foreach($this->media_ids as $media_id) {
+                // FIXME: Validation on this... Worst case is that if someone sends bad media_ids then
+                // we'll fill the notice with non-working links, so no real harm, done, but let's fix.
+                $this->status .= ' ' . common_local_url('attachment', array('attachment' => $media_id));
             }
 
             $upload = null;
