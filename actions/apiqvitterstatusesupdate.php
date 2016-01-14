@@ -216,8 +216,7 @@ class ApiQvitterStatusesUpdateAction extends ApiStatusesUpdateAction
                 }
             }
 
-            common_debug(get_called_class().': parsed media_ids=='._ve($this->media_ids));
-            foreach($this->media_ids as $media_id) {
+            foreach(array_keys($this->media_ids) as $media_id) {
                 // FIXME: Validation on this... Worst case is that if someone sends bad media_ids then
                 // we'll fill the notice with non-working links, so no real harm, done, but let's fix.
                 $this->status .= ' ' . common_local_url('attachment', array('attachment' => $media_id));
