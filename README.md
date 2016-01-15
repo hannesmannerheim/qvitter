@@ -83,7 +83,7 @@ Qvitter uses GNU social's built in "twitter compatible" API. The API was designe
 compatible with Twitter's API v1.0. Some documentation is here: <http://skilledtests.com/wiki/Twitter-compatible_API>
 Twitter's API v1.1 documentation is also useful, but may be partly incorrect.
 
-Qvitter extends this API in a few undocumented ways. Check onRouterInitialized() in QvitterPlugin.php
+Qvitter extends this API in a few undocumented ways. See onRouterInitialized() in QvitterPlugin.php
 for ideas about paths for the API extensions.
 
 
