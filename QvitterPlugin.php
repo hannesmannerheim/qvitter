@@ -1220,7 +1220,7 @@ class QvitterPlugin extends Plugin {
         $versions[] = array('name' => 'Qvitter',
                             'version' => '5-alpha',
                             'author' => 'Hannes Mannerheim',
-                            'homepage' => 'https://github.com/hannesmannerheim/qvitter',
+                            'homepage' => 'https://git.gnu.io/h2p/Qvitter',
                             'rawdescription' => _m('User interface'));
         return true;
     }
