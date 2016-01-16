@@ -742,7 +742,11 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 			// maybe do something
 			if(typeof actionOnSuccess == 'function') {
+
 				actionOnSuccess();
+
+				// make sure page-container is visible
+				$('#page-container').css('opacity','1');				
 
 				// don't invoke actionOnSuccess later if we already invoked it here
 				actionOnSuccess = false;
@@ -934,6 +938,8 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			if(parseInt($('#feed').css('opacity'),10) == '0') {
 				$('#feed').animate({opacity:'1'},150);
 				}
+			// make sure page-container is visible
+			$('#page-container').css('opacity','1');
 
 			$('.reload-stream').show();
 			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');

@@ -917,7 +917,7 @@ function proceedLoggedIn() {
 	// set stream
 	setNewCurrentStream(getStreamFromUrl(),true,false,function(){
 		$('.language-dropdown').css('display','none');
-		$('#page-container').animate({opacity:'1'},200);
+		$('#page-container').css('opacity','1');
 		$('#search').fadeIn('slow');
 		$('#settingslink .dropdown-toggle').fadeIn('slow');
 		$('#top-compose').fadeIn('slow');
