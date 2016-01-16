@@ -718,6 +718,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 					});
 				}
 
+			// hide dublicate repeats, only show the first/oldest instance of a notice
+			oldStreamState = hideAllButOldestInstanceOfStreamItem(oldStreamState);
+
 			// show full notice text for all cached notices, if we have it in cache
 			$.each(oldStreamState.children('.stream-item'),function(){
 				getFullUnshortenedHtmlForQueet($(this),true);
@@ -746,7 +749,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				actionOnSuccess();
 
 				// make sure page-container is visible
-				$('#page-container').css('opacity','1');				
+				$('#page-container').css('opacity','1');
 
 				// don't invoke actionOnSuccess later if we already invoked it here
 				actionOnSuccess = false;
@@ -1773,6 +1776,12 @@ function addToFeed(feed, after, extraClasses) {
 
 			// if repeat-notice doesn't already exist in feed
 			if($('#stream-item-' + obj.id).length == 0) {
+
+				// if the repeated notice already exist in feed, we add this, but hidden
+				if($('.stream-item[data-quitter-id="' + obj.retweeted_status.id + '"]').length > 0) {
+					extraClassesThisRun += ' hidden-repeat';
+					}
+
 				var queetHtml = buildQueetHtml(obj.retweeted_status, obj.id, extraClassesThisRun, obj);
 
 				if(after) {

@@ -343,7 +343,7 @@ function isLocalURL(url) {
    · · · · · · · · · */
 
 function maybeShowTheNewQueetsBar() {
-	var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.always-hidden)').length;
+	var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.always-hidden):not(.hidden-repeat)').length;
 	if(new_queets_num > 0) {
 
 		$('#new-queets-bar').parent().removeClass('hidden');
@@ -941,6 +941,7 @@ function rememberStreamStateInLocalStorage() {
 		var feed = $('<div/>').append(firstTwentyVisibleHTML);
 		feed.find('.temp-post').remove();
 		feed.children('.stream-item').removeClass('not-seen');
+		feed.children('.stream-item').removeClass('hidden-repeat'); // this means we need hide repeats when adding cached notices to feed later
 		feed.children('.stream-item').removeClass('selected-by-keyboard');
 		feed.find('.dropdown-menu').remove();
 		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').removeClass('collapsing').addClass('visible');
@@ -958,6 +959,24 @@ function rememberStreamStateInLocalStorage() {
 		}
 	}
 
+
+/* ·
+   ·
+   ·   Hide all instances (repeats) of a notice but the first/oldest one
+   ·
+   ·   @param streamItems: jQuery object with stream items as children
+   ·
+   · · · · · · · · · */
+
+function hideAllButOldestInstanceOfStreamItem(streamItemContainer) {
+	streamItemContainer.children('.stream-item').each(function(){
+		// if this stream item have siblings _after_ it, with the same id, hide it!
+		if($(this).nextAll('.stream-item[data-quitter-id="' + $(this).attr('data-quitter-id') + '"]').length > 0) {
+			$(this).addClass('hidden-repeat');
+			}
+		});
+	return streamItemContainer;
+	}
 
 
 

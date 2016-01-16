@@ -1706,6 +1706,7 @@ body.rtl #history-container.menu-container a .chev-right {
 	overflow:hidden;
 	}
 .stream-item.hidden,
+.stream-item.hidden-repeat,
 .stream-item.always-hidden {
 	display:none;
 	}
@@ -2023,7 +2024,7 @@ body.rtl .queet.rtl .expanded-content {
 	overflow: hidden;
 	}
 .quoted-notice:hover {
-	text-decoration: none !important;	
+	text-decoration: none !important;
 	}
 .stream-item:hover:not(.expanded) .quoted-notice  {
 	border: 1px solid #ddd;
