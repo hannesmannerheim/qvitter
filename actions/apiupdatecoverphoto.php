@@ -1,14 +1,14 @@
 <?php
  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ·                                                                             · 
+  ·                                                                             ·
   ·  Update the cover photo                                                     ·
-  ·                                                                             ·         
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
+  ·                                                                             ·
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
   ·                                                                             ·
-  ·              http://github.com/hannesmannerheim/qvitter                     ·
+  ·                      https://git.gnu.io/h2p/Qvitter                         ·
   ·                                                                             ·
   ·                                                                             ·
   ·                                                                             ·
@@ -17,9 +17,9 @@
   ·                                 (____/                                      ·
   ·                                          (o<                                ·
   ·                                   o> \\\\_\                                 ·
-  ·                                 \\)   \____)                                ·   
+  ·                                 \\)   \____)                                ·
   ·                                                                             ·
-  ·                                                                             ·  
+  ·                                                                             ·
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
   ·  the Free Software Foundation,  either version three of the License or (at  ·
@@ -34,7 +34,7 @@
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
-  ·                                                                             · 
+  ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 
@@ -63,8 +63,8 @@ class ApiUpdateCoverPhotoAction extends ApiAuthAction
         $this->cropH = $this->trimmed('cropH');
         $this->cropX = $this->trimmed('cropX');
         $this->cropY = $this->trimmed('cropY');
-        $this->img   = $this->trimmed('img');        
-        
+        $this->img   = $this->trimmed('img');
+
         return true;
     }
 
@@ -87,7 +87,7 @@ class ApiUpdateCoverPhotoAction extends ApiAuthAction
 			$base64img_mime = 'image/png';
 			}
 		$base64img = str_replace('data:image/jpeg;base64,', '', $base64img);
-		$base64img = str_replace('data:image/png;base64,', '', $base64img); 			 			
+		$base64img = str_replace('data:image/png;base64,', '', $base64img);
 		$base64img = str_replace(' ', '+', $base64img);
 		$base64img_hash = md5($base64img);
 		$base64img = base64_decode($base64img);
@@ -98,13 +98,13 @@ class ApiUpdateCoverPhotoAction extends ApiAuthAction
 		$base64img_mimetype = MediaFile::getUploadedMimeType($base64img_path, $base64img_filename);
 		$mediafile = new MediaFile($profile, $base64img_filename, $base64img_mimetype);
  		$imagefile = new ImageFile($mediafile->fileRecord->id, File::path($mediafile->filename));
-  		$imagefile->resizeTo(File::path($mediafile->filename), array('width'=>$this->cropW, 'height'=>$this->cropH, 'x'=>$this->cropX, 'y'=>$this->cropY, 'w'=>$this->cropW, 'h'=>$this->cropH));			
+  		$imagefile->resizeTo(File::path($mediafile->filename), array('width'=>$this->cropW, 'height'=>$this->cropH, 'x'=>$this->cropX, 'y'=>$this->cropY, 'w'=>$this->cropW, 'h'=>$this->cropH));
 		$result['url'] = File::url($mediafile->filename);
-		
-		Profile_prefs::setData($profile, 'qvitter', 'cover_photo', $result['url']);			
-					
+
+		Profile_prefs::setData($profile, 'qvitter', 'cover_photo', $result['url']);
+
         $this->initDocument('json');
         $this->showJsonObjects($result);
-        $this->endDocument('json');		
+        $this->endDocument('json');
     }
 }

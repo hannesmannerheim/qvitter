@@ -10,7 +10,7 @@
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
   ·                                                                             ·
-  ·              http://github.com/hannesmannerheim/qvitter                     ·
+  ·                      https://git.gnu.io/h2p/Qvitter                         ·
   ·                                                                             ·
   ·                                                                             ·
   ·                                                                             ·
@@ -169,7 +169,7 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
             $this->since_id,
             $this->max_id
         );
-        
+
         if(!empty($group)) {
             while ($group->fetch()) {
                 $groups[] = clone($group);

@@ -1,11 +1,11 @@
 <?php
 
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+ /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
   ·                                                                             ·
-  ·              http://github.com/hannesmannerheim/qvitter                     ·
+  ·                      https://git.gnu.io/h2p/Qvitter                         ·
   ·                                                                             ·
   ·                                                                             ·
   ·                                 <o)                                         ·
@@ -15,7 +15,7 @@
   ·                                   o> \\\\_\                                 ·
   ·                                 \\)   \____)                                ·
   ·                                                                             ·
-  ·                                                                             ·    
+  ·                                                                             ·
   ·                                                                             ·
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
@@ -31,7 +31,7 @@
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
-  ·                                                                             · 
+  ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 if (!defined('GNUSOCIAL')) { exit(1); }
@@ -106,7 +106,7 @@ class QvitterLoginAction extends FormAction
         }
 
         common_real_login(true);
-        $this->updateScopedProfile(); 
+        $this->updateScopedProfile();
 
         if ($this->boolean('rememberme')) {
             common_rememberme($user);

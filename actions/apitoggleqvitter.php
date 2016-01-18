@@ -5,7 +5,7 @@
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
   ·                                                                             ·
-  ·              http://github.com/hannesmannerheim/qvitter                     ·
+  ·                      https://git.gnu.io/h2p/Qvitter                         ·
   ·                                                                             ·
   ·                                                                             ·
   ·                                 <o)                                         ·
@@ -93,7 +93,7 @@ class ApiToggleQvitterAction extends ApiAuthAction
 
         if(!$pref_saved) {
             $result['success'] = false;
-            $result['error'] = 'Probably couldn\'t get topic from pref table';            
+            $result['error'] = 'Probably couldn\'t get topic from pref table';
         }
 
         $this->initDocument('json');

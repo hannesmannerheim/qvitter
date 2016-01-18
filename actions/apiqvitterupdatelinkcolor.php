@@ -1,11 +1,11 @@
 <?php
 
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+ /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
   ·                                                                             ·
-  ·              http://github.com/hannesmannerheim/qvitter                     ·
+  ·                      https://git.gnu.io/h2p/Qvitter                         ·
   ·                                                                             ·
   ·                                                                             ·
   ·                                 <o)                                         ·
@@ -15,7 +15,7 @@
   ·                                   o> \\\\_\                                 ·
   ·                                 \\)   \____)                                ·
   ·                                                                             ·
-  ·                                                                             ·    
+  ·                                                                             ·
   ·                                                                             ·
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
@@ -31,10 +31,10 @@
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
-  ·                                                                             · 
+  ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
-  
-  
+
+
 if (!defined('GNUSOCIAL')) { exit(1); }
 
 class ApiQvitterUpdateLinkColorAction extends ApiAuthAction
@@ -72,12 +72,12 @@ class ApiQvitterUpdateLinkColorAction extends ApiAuthAction
     protected function handle()
     {
         parent::handle();
-    
+
         $validhex = preg_match('/^[a-f0-9]{6}$/i',$this->linkcolor);
         if ($validhex === false || $validhex == 0) {
             $this->clientError(_('Not a valid hex color.'), 400);
         }
-    
+
         // save the new color
 		Profile_prefs::setData($this->scoped, 'theme', 'linkcolor', $this->linkcolor);
 

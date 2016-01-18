@@ -1,11 +1,11 @@
 <?php
 
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·  
+ /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
   ·                                                                             ·
-  ·              http://github.com/hannesmannerheim/qvitter                     ·
+  ·                      https://git.gnu.io/h2p/Qvitter                         ·
   ·                                                                             ·
   ·                                                                             ·
   ·                                 <o)                                         ·
@@ -15,7 +15,7 @@
   ·                                   o> \\\\_\                                 ·
   ·                                 \\)   \____)                                ·
   ·                                                                             ·
-  ·                                                                             ·    
+  ·                                                                             ·
   ·                                                                             ·
   ·  Qvitter is free  software:  you can  redistribute it  and / or  modify it  ·
   ·  under the  terms of the GNU Affero General Public License as published by  ·
@@ -31,7 +31,7 @@
   ·  along with Qvitter. If not, see <http://www.gnu.org/licenses/>.            ·
   ·                                                                             ·
   ·  Contact h@nnesmannerhe.im if you have any questions.                       ·
-  ·                                                                             · 
+  ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 
@@ -43,7 +43,7 @@ class PublicAndExternalNoticeStream extends ScopingNoticeStream
 {
     function __construct($profile=null)
     {
-        
+
         parent::__construct(new CachingNoticeStream(new RawPublicAndExternalNoticeStream(),
                                                     'publicAndExternal'),
                             $profile);
@@ -69,7 +69,7 @@ class RawPublicAndExternalNoticeStream extends NoticeStream
 
 		$notice->whereAdd('is_local !='. Notice::LOCAL_NONPUBLIC);
 		$notice->whereAdd('is_local !='. Notice::GATEWAY);
-		$notice->whereAdd('repeat_of IS NULL');		
+		$notice->whereAdd('repeat_of IS NULL');
 
         Notice::addWhereSinceId($notice, $since_id);
         Notice::addWhereMaxId($notice, $max_id);
@@ -84,7 +84,7 @@ class RawPublicAndExternalNoticeStream extends NoticeStream
 
         $notice->free();
         $notice = NULL;
-		
+
         return $ids;
     }
 }
