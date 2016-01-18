@@ -1279,7 +1279,9 @@ function queetBoxPopUpHtml() {
    ·
    · · · · · · · · · */
 
-function replyFormHtml(q,qid) {
+function replyFormHtml(streamItem,qid) {
+
+	var q = streamItem.children('.queet');
 
     // if we have cached text in localstorage
 	var data = localStorageObjectCache_GET('queetBoxInput','queet-box-' + qid);
@@ -1287,33 +1289,55 @@ function replyFormHtml(q,qid) {
         var cachedText = encodeURIComponent(data);
 		}
 
-    // get all @:s
-	var user_screen_name = q.children('.queet').find('.screen-name').html().substring(1);
-	var user_screen_name_html = '<a>@' + user_screen_name + '</a>';
-	var user_screen_name_text = '@' + user_screen_name;
-	var reply_to_screen_name = '';
-	var reply_to_screen_name_html = '';
-	var reply_to_screen_name_text = '';
-	if(q.attr('data-in-reply-to-screen-name').length>0 // not if not a reply
-	&& q.attr('data-in-reply-to-screen-name') != $('#user-screen-name').html() // not if it's me
-	&& q.attr('data-in-reply-to-screen-name') != user_screen_name // not same screen name twice
-		) {
-		reply_to_screen_name = q.attr('data-in-reply-to-screen-name');
-		reply_to_screen_name_html = '&nbsp;<a>@' + reply_to_screen_name + '</a>';
-		reply_to_screen_name_text = ' @' + reply_to_screen_name;
+	var screenNamesToAdd = {};
+
+	// add the screen name to the one we're replying to (if it's not me)
+	if(!thisIsALinkToMyProfile(q.find('.account-group').attr('href'))) {
+		var replyToScreenName = q.find('.account-group span.screen-name').html().replace('@','');
+		screenNamesToAdd[q.find('.account-group').attr('href')] = replyToScreenName;
 		}
-	var more_reply_tos = '';
-	var more_reply_tos_text = '';
-	$.each(q.children('.queet').find('.queet-text').find('.mention'),function(key,obj){
-		var thisMention = $(obj).html().replace('@','');
-		if(thisMention != user_screen_name && thisMention != reply_to_screen_name && thisMention != $('#user-screen-name').html()) {
-			more_reply_tos = more_reply_tos + '&nbsp;<a>@' + thisMention + '</a>';
-			more_reply_tos_text = more_reply_tos_text + ' @' + thisMention;
+
+	// add the screen name to the one who the one we're replying to is replying to (if it's not me)
+	if(q.find('i.addressees > span.reply-to').length > 0
+	&& !thisIsALinkToMyProfile(q.find('i.addressees > span.reply-to > a').attr('href'))) {
+		var replyToScreenName = q.find('i.addressees > span.reply-to > a').html().replace('@','');
+		if(typeof screenNamesToAdd[q.find('i.addressees > span.reply-to > a').attr('href')] == 'undefined') {
+			screenNamesToAdd[q.find('i.addressees > span.reply-to > a').attr('href')] = replyToScreenName;
+			}
+		}
+
+    // get all other mentions (if it's not me)
+	$.each(q.find('.queet-text').find('.mention'),function(key,obj){
+		if(!thisIsALinkToMyProfile($(obj).attr('href'))) {
+			if(typeof screenNamesToAdd[$(obj).attr('href')] == 'undefined') {
+				var thisMention = $(obj).html().replace('@','');
+				screenNamesToAdd[$(obj).attr('href')] = thisMention;
+				}
 			}
 		});
 
-	var startText = window.sL.replyTo + ' ' + user_screen_name_html + reply_to_screen_name_html + more_reply_tos + '&nbsp;<br>';
-    var repliesText = user_screen_name_text + reply_to_screen_name_text + more_reply_tos_text + '&nbsp;';
+	// build reply/rant strings
+	var repliesText = '';
+	if(Object.keys(screenNamesToAdd).length < 1
+	&& q.find('strong.name').attr('data-user-id') == window.loggedIn.id) {
+		if(streamItem.attr('data-in-reply-to-status-id') == 'null' || streamItem.attr('data-in-reply-to-status-id') == 'false' || streamItem.attr('data-in-reply-to-status-id') == 'undefined' || streamItem.attr('data-in-reply-to-status-id') == '') {
+			var startText = window.sL.startRant + ' ';
+			}
+		else {
+			var startText = window.sL.continueRant + ' ';
+			}
+		}
+	else {
+		var startText = window.sL.replyTo + ' ';
+		var repliesArray = [];
+		$.each(screenNamesToAdd, function(url,screenName){
+			repliesArray.push(screenName);
+			});
+		if(repliesArray.length>0) {
+			startText = '<a>@' + repliesArray.join('</a>&nbsp;<a>@') + '</a>&nbsp;<br>';
+			repliesText = '@' + repliesArray.join(' @') + '&nbsp;';
+			}
+		}
 
 	startText = encodeURIComponent(startText);
 	repliesText = encodeURIComponent(repliesText);
@@ -1595,10 +1619,7 @@ function addToFeed(feed, after, extraClasses) {
 																	' + obj.from_profile.name + '\
 																</strong>\
 															</a> \
-															' + window.sL.xFavedYourQueet + '\
-															<small class="created-at" data-created-at="' + obj.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.created_at) + '">\
-																' + notificationTime + '\
-															</small>\
+															' + window.sL.xFavedYourQueet + '<small class="created-at" data-created-at="' + obj.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.created_at) + '"> <a>' + notificationTime + '</a></small>\
 														</div>\
 														<div class="small-grey-notice">\
 															<a data-created-at="' + obj.notice.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.notice.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">\
@@ -1624,10 +1645,7 @@ function addToFeed(feed, after, extraClasses) {
 																	' + obj.from_profile.name + '\
 																</strong>\
 															</a> \
-															' + window.sL.xRepeatedYourQueet + '\
-															<small class="created-at" data-created-at="' + obj.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.created_at) + '">\
-																' + notificationTime + '\
-															</small>\
+															' + window.sL.xRepeatedYourQueet + '<small class="created-at" data-created-at="' + obj.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.created_at) + '"> <a>' + notificationTime + '</a></small>\
 														</div>\
 														<div class="small-grey-notice">\
 															<a data-created-at="' + obj.notice.created_at + '" data-tooltip="' + parseTwitterLongDate(obj.notice.created_at) + '" href="' + window.siteInstanceURL + 'notice/' + obj.notice.id + '">\
@@ -1657,10 +1675,7 @@ function addToFeed(feed, after, extraClasses) {
 																	' + obj.from_profile.name + '\
 																</strong>\
 															</a> \
-															' + window.sL.xStartedFollowingYou + '\
-															<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '">\
-																' + notificationTime + '\
-															</small>\
+															' + window.sL.xStartedFollowingYou + '<small class="created-at" data-created-at="' + obj.created_at + '" title="' + obj.created_at + '"> <a>' + notificationTime + '</a></small>\
 														</div>\
 													</div>\
 												</div>\
@@ -1683,40 +1698,7 @@ function addToFeed(feed, after, extraClasses) {
 			// only if not user is already in stream
 			if($('#stream-item-' + obj.id).length == 0) {
 
-				obj.description = obj.description || '';
-
-				// external
-				var ostatusHtml = '';
-				if(obj.is_local === false) {
-					ostatusHtml = '<a target="_blank" title="' + window.sL.goToTheUsersRemoteProfile + '" class="ostatus-link" href="' + obj.statusnet_profile_url + '"></a>';
-					}
-
-				// rtl or not
-				var rtlOrNot = '';
-				if($('body').hasClass('rtl')) {
-					rtlOrNot = 'rtl';
-					}
-
-				// show user actions
-				var followingClass = '';
-				if(obj.following) {
-					followingClass = 'following';
-					}
-				var followButton = '';
-				if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
-				   && window.loggedIn.id != obj.id) {	// not if this is me
-					if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users
-						var followButton = '<div class="user-actions">\
-												<button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '">\
-													<span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span>\
-													<span class="button-text following-text">' + window.sL.userFollowing + '</span>\
-													<span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span>\
-												</button>\
-											</div>';
-						}
-					}
-
-				var userHtml = '<div id="stream-item-' + obj.id + '" class="stream-item user"><div class="queet ' + rtlOrNot + '">' + followButton + '<div class="queet-content"><div class="stream-item-header"><a class="account-group" href="' + obj.statusnet_profile_url + '" data-user-id="' + obj.id + '"><img class="avatar profile-size" src="' + obj.profile_image_url_profile_size + '" data-user-id="' + obj.id + '" /><strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> <span class="screen-name" data-user-id="' + obj.id + '">@' + obj.screen_name + '</span></a>' + ostatusHtml + '</div><div class="queet-text">' + obj.description + '</div></div></div></div>';
+				var userHtml = buildUserStreamItemHtml(obj);
 
 				if(after) {
 					$('#' + after).after(userHtml);
@@ -1839,6 +1821,69 @@ function addToFeed(feed, after, extraClasses) {
 		rememberStreamStateInLocalStorage();
 		}
 	$('.stream-selection').removeAttr('data-current-user-stream-name'); // don't remeber user feeds
+	}
+
+
+
+/* ·
+   ·
+   ·   Build HTML for a user stream item from an object
+   ·
+   ·   @param obj: a user object
+   ·
+   · · · · · · · · · · · · · */
+
+function buildUserStreamItemHtml(obj) {
+
+	obj.description = obj.description || '';
+
+	// external
+	var ostatusHtml = '';
+	if(obj.is_local === false) {
+		ostatusHtml = '<a target="_blank" title="' + window.sL.goToTheUsersRemoteProfile + '" class="ostatus-link" href="' + obj.statusnet_profile_url + '"></a>';
+		}
+
+	// rtl or not
+	var rtlOrNot = '';
+	if($('body').hasClass('rtl')) {
+		rtlOrNot = 'rtl';
+		}
+
+	// show user actions
+	var followingClass = '';
+	if(obj.following) {
+		followingClass = 'following';
+		}
+	var followButton = '';
+	if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
+	   && window.loggedIn.id != obj.id) {	// not if this is me
+		if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users
+			var followButton = '<div class="user-actions">\
+									<button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '">\
+										<span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span>\
+										<span class="button-text following-text">' + window.sL.userFollowing + '</span>\
+										<span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span>\
+									</button>\
+								</div>';
+			}
+		}
+
+	return '<div id="stream-item-' + obj.id + '" class="stream-item user">\
+				<div class="queet ' + rtlOrNot + '">\
+					' + followButton + '\
+					<div class="queet-content">\
+						<div class="stream-item-header">\
+							<a class="account-group" href="' + obj.statusnet_profile_url + '" data-user-id="' + obj.id + '">\
+								<img class="avatar profile-size" src="' + obj.profile_image_url_profile_size + '" data-user-id="' + obj.id + '" />\
+								<strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> \
+								<span class="screen-name" data-user-id="' + obj.id + '">@' + obj.screen_name + '</span>\
+							</a>\
+							' + ostatusHtml + '\
+						</div>\
+						<div class="queet-text">' + obj.description + '</div>\
+					</div>\
+				</div>\
+			</div>';
 	}
 
 

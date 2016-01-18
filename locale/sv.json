@@ -159,5 +159,7 @@
 	"ERRORcouldNotFindList":"Det finns ingen sådan lista.",
 	"emailAlreadyInUse":"Används redan",
 	"addEditLanguageLink":"Hjälp till att översätta {site-title} till ett annat språk",
-	"onlyPartlyTranslated":"Bara {percent}% av gränssnittet är översatt till svenska. Du kan hjälpa till med översättningen på <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitters hemsida</a>"
+	"onlyPartlyTranslated":"Bara {percent}% av gränssnittet är översatt till svenska. Du kan hjälpa till med översättningen på <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitters hemsida</a>",
+	"startRant":"Påbörja en harang",
+	"continueRant":"Fortsätt harangen"
 }

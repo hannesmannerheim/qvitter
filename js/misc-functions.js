@@ -683,6 +683,33 @@ function removeProtocolFromUrl(url) {
 	}
 
 
+/* ·
+   ·
+   ·  Is this url a link to my profile?
+   ·
+   · · · · · · · · · */
+
+function thisIsALinkToMyProfile(url) {
+	if(typeof url == 'undefined') {
+		return false;
+		}
+	if(!window.loggedIn) {
+		return false;
+		}
+	if(url.slice(-1) == '/') { // remove trailing '/'
+		url = url.slice(0,-1);
+		}
+	var urlWithoutProtocol = removeProtocolFromUrl(url);
+	if(removeProtocolFromUrl(window.loggedIn.statusnet_profile_url) == urlWithoutProtocol) {
+		return true;
+		}
+	var userIdUrlWithoutProtocol = removeProtocolFromUrl(window.siteInstanceURL) + 'user/' + window.loggedIn.id;
+	if(userIdUrlWithoutProtocol == urlWithoutProtocol) {
+		return true;
+		}
+	return false;
+	}
+
 
 /* ·
    ·

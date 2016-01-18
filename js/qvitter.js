@@ -2437,7 +2437,7 @@ $('body').on('click', '.queet-toolbar button',function () {
 
 		var queetTempText = replaceHtmlSpecialChars(queetText.replace(/\n/g,'<br>')); // no xss
 		queetTempText = queetTempText.replace(/&lt;br&gt;/g,'<br>'); // but preserve line breaks
-		var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at">posting</small></div><div class="queet-text">' + queetTempText + '</div><div class="stream-item-footer"><ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li><li class="action-del-container"><a class="with-icn"><span class="icon sm-trash" title="' + window.sL.deleteVerb + '"></span></a></li></i></li><li class="action-fav-container"><a class="with-icn"><span class="icon sm-fav" title="' + window.sL.favoriteVerb + '"></span></a></li></ul></div></div></div></div>';
+		var queetHtml = '<div id="' + tempPostId + '" class="stream-item conversation temp-post" style="opacity:1"><div class="queet"><span class="dogear"></span><div class="queet-content"><div class="stream-item-header"><a class="account-group"><img class="avatar" src="' + $('#user-avatar').attr('src') + '" /><strong class="name">' + $('#user-name').html() + '</strong> <span class="screen-name">@' + $('#user-screen-name').html() + '</span></a><small class="created-at"> ' + window.sL.posting + '</small></div><div class="queet-text">' + queetTempText + '</div><div class="stream-item-footer"><ul class="queet-actions"><li class="action-reply-container"><a class="with-icn"><span class="icon sm-reply" title="' + window.sL.replyVerb + '"></span></a></li><li class="action-del-container"><a class="with-icn"><span class="icon sm-trash" title="' + window.sL.deleteVerb + '"></span></a></li></i></li><li class="action-fav-container"><a class="with-icn"><span class="icon sm-fav" title="' + window.sL.favoriteVerb + '"></span></a></li></ul></div></div></div></div>';
 		queetHtml = detectRTL(queetHtml);
 
 		// popup reply
@@ -2462,16 +2462,22 @@ $('body').on('click', '.queet-toolbar button',function () {
 		// if the queet is in conversation, add it to parent's conversation
 		if($('.stream-item.replying-to').length > 0 && $('.stream-item.replying-to').hasClass('conversation')) {
 			var insertedTempQueet = $(queetHtml).appendTo($('.stream-item.replying-to').parent());
+			findAndMarkLastVisibleInConversation($('.stream-item.replying-to').parent());
+			insertedTempQueet.parent().children('.view-more-container-bottom').remove(); // remove any view-more-container-bottom:s, they only cause trouble at this point
 			tempQueetInsertedInConversation = true;
 			}
 		// if the queet is expanded, add it to its conversation
 		else if($('.stream-item.replying-to').length > 0 && $('.stream-item.replying-to').hasClass('expanded')) {
 			var insertedTempQueet = $(queetHtml).appendTo($('.stream-item.replying-to'));
+			findAndMarkLastVisibleInConversation($('.stream-item.replying-to'));
+			insertedTempQueet.parent().children('.view-more-container-bottom').remove(); // remove any view-more-container-bottom:s, they only cause trouble at this point
 			tempQueetInsertedInConversation = true;
 			}
 		// maybe the replying-to class is missing but we still have a suiting place to add it
 		else if($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]').length > 0) {
 			var insertedTempQueet = $(queetHtml).appendTo($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]'));
+			findAndMarkLastVisibleInConversation($('.stream-item.expanded[data-quitter-id="' + in_reply_to_status_id + '"]'));
+			insertedTempQueet.parent().children('.view-more-container-bottom').remove(); // remove any view-more-container-bottom:s, they only cause trouble at this point
 			tempQueetInsertedInConversation = true;
 			}
 		// if we can't find a proper place, add it to top and remove conversation class
@@ -2528,7 +2534,24 @@ $('body').on('click', '.queet-toolbar button',function () {
 					}
 				}
 			else {
-				insertedTempQueet.after(queetHtml);
+				var newInsertedQueet = $(queetHtml).insertBefore(insertedTempQueet);
+				findAndMarkLastVisibleInConversation(insertedTempQueet.parent());
+
+				// make ranting easier, move the reply-form to this newly created notice
+				// if we have not started writing in it, or if it's missing
+				// only if this is an expanded conversation
+				// and only if we're ranting, i.e. no replies the queetbox
+				var parentQueetBox = insertedTempQueet.parent().find('.inline-reply-queetbox');
+				if(parentQueetBox.length == 0
+				|| parentQueetBox.children('.syntax-middle').css('display') == 'none') {
+					if(insertedTempQueet.parent().hasClass('expanded') || insertedTempQueet.parent().hasClass('conversation')) {
+						console.log(parentQueetBox.attr('data-replies-text'));
+						if(parentQueetBox.children('.queet-box').attr('data-replies-text') == '') {
+							insertedTempQueet.parent().find('.inline-reply-queetbox').remove();
+							newInsertedQueet.children('.queet').append(replyFormHtml(newInsertedQueet,newInsertedQueet.attr('data-quitter-id')));
+							}
+						}
+					}
 				}
 
 			// remove temp queet
@@ -2629,13 +2652,14 @@ $('body').on('click contextmenu','.queet-box-syntax',function () {
 		$(this)[0].addEventListener("paste", stripHtmlFromPaste);
 		if(typeof $(this).attr('data-replies-text') != 'undefined') {
 			$(this).html(decodeURIComponent($(this).attr('data-replies-text')));
-			var repliesLen = decodeURIComponent($(this).attr('data-replies-text')).length-5;
+			var repliesLen = decodeURIComponent($(this).attr('data-replies-text')).replace('&nbsp;',' ').length;
 			setSelectionRange($(this)[0], repliesLen, repliesLen);
 			}
 		else {
 			$(this).html('');
 			}
 		$(this).trigger('input');
+		$(this).closest('.stream-item').addClass('replying-to');
 		}
 	});
 $('body').on('mousedown','.syntax-two',function () {
@@ -2687,6 +2711,7 @@ $('body').on('blur','.queet-box-syntax',function (e) {
 	});
 
 function collapseQueetBox(qB) {
+	qB.closest('.stream-item').removeClass('replying-to');
 	qB.siblings('.upload-image-container').remove();
 	qB.siblings('.syntax-middle').css('display','none');
 	qB.siblings('.syntax-two').css('display','none');
