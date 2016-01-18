@@ -157,5 +157,7 @@
 	"listMembers":"Members",
 	"listSubscribers":"Subscribers",
 	"ERRORcouldNotFindList":"There is no such list.",
-	"emailAlreadyInUse":"Already in use"
+	"emailAlreadyInUse":"Already in use",
+	"addEditLanguageLink":"Help translate {site-title} to another language",
+	"onlyPartlyTranslated":"{site-title} is only partly translated to <em>{language-name}</em> ({percent}%). You can help complete the translation at <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter's repository homepage</a>"
 }

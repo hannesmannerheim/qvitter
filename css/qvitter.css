@@ -113,7 +113,8 @@ button.shorten i,
 	background-size: 500px 1329px;
 	}
 
-.error-message {
+.error-message,
+.language-error-message {
 	float: right;
     font-size: 14px;
     line-height: 18px;
@@ -126,6 +127,11 @@ button.shorten i,
 	box-sizing: border-box;
 	margin-bottom: 5px;
 	overflow: hidden;
+	}
+.language-error-message {
+	float:none;
+	background-color: rgba(255, 255, 255, 0.8);
+	max-width: 100%;
 	}
 #user-footer-inner .error-message,
 .inline-reply-queetbox .error-message,
@@ -142,7 +148,13 @@ body.rtl .error-message {
     margin-right: auto;
 	text-align: right;
 	}
-.error-message::before {
+body.rtl .language-error-message {
+    margin-left: -1px;
+    margin-right: auto;
+	text-align: right;
+	}
+.error-message::before,
+.language-error-message::before {
 	content:'\f188';
 	font-family:'FontAwesome';
 	position: absolute;
@@ -155,7 +167,15 @@ body.rtl .error-message {
 	top: 0;
 	opacity: 0.8;
 	}
+.language-error-message::before {
+	content:'\f129';
+	}
+
 body.rtl .error-message::before {
+	left: auto;
+	right:0;
+	}
+body.rtl .language-error-message::before {
 	left: auto;
 	right:0;
 	}
@@ -168,9 +188,6 @@ body.rtl .error-message::before {
 	height:38px;
 	background-position:-29px -495px;
 	cursor: pointer;
-	border-radius: 5px;
-    border-right: 4px solid pink;
-	border-left: 4px solid pink;
 	}
 body.rtl .discard-error-message {
 	right:auto;
@@ -480,6 +497,11 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     text-shadow: none;
     white-space: nowrap;
     text-decoration: none;
+	}
+.dropdown-menu li.fullwidth:not(.dropdown-caret) a {
+	white-space: normal;
+    width: 100%;
+	box-sizing:border-box;
 	}
 .dropdown-menu li:not(.dropdown-caret) a:hover {
     color: #FFFFFF;

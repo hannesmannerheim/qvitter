@@ -79,8 +79,14 @@ window.onpopstate = function(event) {
    · · · · · · · · · · · · · */
 
 $('body').on('click','.discard-error-message',function(){
+
+	// don't nag on people
+	if($(this).parent().hasClass('language-error-message')) {
+		localStorageObjectCache_STORE('languageErrorMessageDiscarded',$(this).parent().attr('data-language-name'), true);
+		}
+
 	$(this).addClass('clicked');
-	$(this).closest('.error-message').slideUp(100,function(){
+	$(this).closest('.error-message, .language-error-message').slideUp(100,function(){
 		$(this).remove();
 		});
 	});
@@ -723,46 +729,60 @@ $(window).load(function() {
 
 	// check that the language is available,
 	if(typeof window.availableLanguages[window.selectedLanguage] == 'undefined') {
+		var similarLanguageFound = false;
 		// if not there might be a base language, e.g. "sv" instead of "sv_se"
-		if(typeof window.availableLanguages[window.selectedLanguage.substring(0,2)] != 'undefined') {
-			window.selectedLanguage = window.selectedLanguage.substring(0,2);
+		if(window.selectedLanguage.indexOf('_') > -1
+		&& typeof window.availableLanguages[window.selectedLanguage.substring(0,window.selectedLanguage.indexOf('_'))] != 'undefined') {
+			window.selectedLanguage = window.selectedLanguage.substring(0,window.selectedLanguage.indexOf('_'));
+			similarLanguageFound = true;
 			}
 		else {
 			// there's also a chance there no base language, but a similar country specific language that we can use (rather than english)
-			var similarLanguageFound = false;
+			if(window.selectedLanguage.indexOf('_') > -1) {
+				var baseLan = window.selectedLanguage.indexOf('_');
+				}
+			else {
+				var baseLan = window.selectedLanguage;
+				}
 			$.each(window.availableLanguages, function(lanCode,lanData){
-				if(lanCode.substring(0,2) == window.selectedLanguage.substring(0,2)) {
+				if(lanCode.substring(0,lanCode.indexOf('_')) == baseLan) {
 					window.selectedLanguage = lanCode;
 					similarLanguageFound = true;
 					return false;
 					}
 				});
-			// if we can't find a similar language, go with english
-			if(similarLanguageFound === false) {
-				window.selectedLanguage = 'en';
-				}
+			}
+		// if we can't find a similar language, go with english
+		if(similarLanguageFound === false) {
+			window.selectedLanguage = 'en';
 			}
 		}
 
-	// if we already have this version of this language in localstorage, we
-	// use that cached version. we do this because $.ajax doesn't respect caching, it seems
-	var cacheData = localStorageObjectCache_GET('languageData',window.availableLanguages[window.selectedLanguage]);
-	if(cacheData) {
-		proceedToSetLanguageAndLogin(cacheData);
+	// english is always available
+	if(window.selectedLanguage == 'en') {
+		proceedToSetLanguageAndLogin(window.englishLanguageData);
 		}
 	else {
-		$.ajax({
-			dataType: "json",
-			url: window.fullUrlToThisQvitterApp + 'locale/' + window.availableLanguages[window.selectedLanguage],
-			error: function(data){console.log(data)},
-			success: function(data) {
+		// if we already have this version of this language in localstorage, we
+		// use that cached version. we do this because $.ajax doesn't respect caching, it seems
+		var cacheData = localStorageObjectCache_GET('languageData',window.availableLanguages[window.selectedLanguage]);
+		if(cacheData) {
+			proceedToSetLanguageAndLogin(cacheData);
+			}
+		else {
+			$.ajax({
+				dataType: "json",
+				url: window.fullUrlToThisQvitterApp + 'locale/' + window.availableLanguages[window.selectedLanguage],
+				error: function(data){console.log(data)},
+				success: function(data) {
 
-				// store this response in localstorage
-				localStorageObjectCache_STORE('languageData',window.availableLanguages[window.selectedLanguage], data);
+					// store this response in localstorage
+					localStorageObjectCache_STORE('languageData',window.availableLanguages[window.selectedLanguage], data);
 
-				proceedToSetLanguageAndLogin(data);
-				}
-			});
+					proceedToSetLanguageAndLogin(data);
+					}
+				});
+			}
 		}
 	});
 
@@ -796,6 +816,29 @@ function proceedToSetLanguageAndLogin(data){
 		window.sL[k] = v.replace(/{site-title}/g,window.siteTitle);
 		});
 
+	// suggest user to help translate if their browsers language does't exist
+	if(typeof window.availableLanguages[window.usersLanguageCode] == 'undefined' && !localStorageObjectCache_GET('languageErrorMessageDiscarded',window.usersLanguageNameInEnglish)) { // but don't nag
+		$('#page-container').prepend('<div class="language-error-message" data-language-name="' + window.usersLanguageNameInEnglish + '">' + window.siteTitle + ' is not availible in your language (' + replaceHtmlSpecialChars(window.usersLanguageNameInEnglish) + '). Visit <a href="https://git.gnu.io/h2p/Qvitter/tree/master/locale">Qvitter\'s repository homepage</a> if you want to help us to translate the interface. <span class="discard-error-message"></span></div>');
+		}
+
+	// if selected language is too similar to english, we display a message telling people to help with the translation
+	if(window.sL.languageName != 'English') {
+		var numberOfStringsSameAsEnglish = 0;
+		var totalStrings = 0;
+		$.each(window.sL,function(k,v){
+			if(v == window.englishLanguageData[k]) {
+				numberOfStringsSameAsEnglish++;
+				}
+			totalStrings++;
+			});
+		numberOfStringsSameAsEnglish = Math.max(0, numberOfStringsSameAsEnglish-20); totalStrings = Math.max(0, totalStrings-20); // ~20 strings, e.g. shortened months, is often same in many languages
+		var percentTranslated = parseInt((1-(numberOfStringsSameAsEnglish/totalStrings))*100,10);
+		if(percentTranslated < 95) {
+			if(!localStorageObjectCache_GET('languageErrorMessageDiscarded',window.sL.languageName)) { // but don't nag
+				$('#page-container').prepend('<div class="language-error-message" data-language-name="' + window.sL.languageName + '">' + window.sL.onlyPartlyTranslated.replace('{percent}',percentTranslated).replace('{language-name}',window.sL.languageName) + '<span class="discard-error-message"></span></div>');
+				}
+			}
+		}
 
 	// set some static strings
 	if(window.customWelcomeText !== false && typeof window.customWelcomeText[window.selectedLanguage] != 'undefined') {
@@ -846,6 +889,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('.stream-selection.public-and-external-timeline').prepend(window.sL.publicAndExtTimeline)
 	$('#search-query').attr('placeholder',window.sL.searchVerb);
 	$('#faq-link').html(window.sL.FAQ);
+	$('#add-edit-language-link').html(window.sL.addEditLanguageLink);
 	$('#shortcuts-link').html(window.sL.keyboardShortcuts);
 	$('#invite-link').html(window.sL.inviteAFriend);
 	$('#classic-link').html(window.sL.classicInterface);

@@ -157,5 +157,7 @@
 	"listMembers":"Listmedlemmar",
 	"listSubscribers":"Prenumeranter",
 	"ERRORcouldNotFindList":"Det finns ingen sådan lista.",
-	"emailAlreadyInUse":"Används redan"
+	"emailAlreadyInUse":"Används redan",
+	"addEditLanguageLink":"Hjälp till att översätta {site-title} till ett annat språk",
+	"onlyPartlyTranslated":"Bara {percent}% av gränssnittet är översatt till svenska. Du kan hjälpa till med översättningen på <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitters hemsida</a>"
 }

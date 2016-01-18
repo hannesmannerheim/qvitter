@@ -196,7 +196,10 @@ class QvitterAction extends ApiAction
 					for the JavaScript code in this page.
 					*/
 
-					window.defaultAvatarStreamSize = <?php print json_encode(Avatar::defaultImage(AVATAR_STREAM_SIZE)) ?>;
+                    window.usersLanguageCode = <?php print json_encode(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)) ?>;
+                    window.usersLanguageNameInEnglish = <?php print json_encode(Locale::getDisplayLanguage(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 'en')) ?>;
+                    window.englishLanguageData = <?php print file_get_contents($qvitterpath.'/locale/en.json'); ?>;
+                    window.defaultAvatarStreamSize = <?php print json_encode(Avatar::defaultImage(AVATAR_STREAM_SIZE)) ?>;
                     window.defaultAvatarProfileSize = <?php print json_encode(Avatar::defaultImage(AVATAR_PROFILE_SIZE)) ?>;
 					window.textLimit = <?php print json_encode((int)common_config('site','textlimit')) ?>;
 					window.registrationsClosed = <?php print json_encode($registrationsclosed) ?>;
@@ -387,6 +390,8 @@ class QvitterAction extends ApiAction
 							}
 
 						?>
+                        <li class="fullwidth language dropdown-divider"></li>
+                        <li class="fullwidth"><a href="https://git.gnu.io/h2p/Qvitter/tree/master/locale" target="_blank" id="add-edit-language-link"></a></li>
 					</ul>
 					<div class="global-nav">
 						<div class="global-nav-inner">
@@ -419,6 +424,8 @@ class QvitterAction extends ApiAction
 												}
 
 											?>
+                                            <li class="fullwidth language dropdown-divider"></li>
+                                            <li class="fullwidth"><a href="https://git.gnu.io/h2p/Qvitter/tree/master/locale" target="_blank" id="add-edit-language-link"></a></li>
 										</ul>
 									</li>
 								</ul>

@@ -222,7 +222,8 @@ function checkLocalStorage() {
 				'fullQueetHtml',
 				'selectedLanguage',
 				'queetBoxInput',
-				'streamState'
+				'streamState',
+				'languageErrorMessageDiscarded'
 				];
 			var thisDataType = k.substring(0,k.indexOf('-'));
 			if($.inArray(thisDataType, validDataTypes) == -1 || k.indexOf('-') == -1) {
