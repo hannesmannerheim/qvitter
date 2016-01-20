@@ -2168,10 +2168,11 @@ function buildAttachmentHTML(attachments){
 				quotedNotices.push({url: this.url, html: quotedNoticeHTML});
 				}
 
-			// if we have oembed data
+			// if we have oembed data (but not for youtube, we handle that later)
 			else if(typeof this.oembed != 'undefined'
 			&& this.oembed !== false
-			&& this.oembed.title !== null) {
+			&& this.oembed.title !== null
+			&& this.oembed.provider != 'YouTube') {
 
 				var oembedImage = '';
 				// not if stripped from html it's the same as the title (wordpress does this..)
