@@ -521,12 +521,13 @@ class QvitterPlugin extends Plugin {
                             if($oembed instanceof File_oembed) {
                                 $oembed_html = str_replace('&lt;!--//--&gt;','',$oembed->html); // trash left of wordpress' javascript after htmLawed removed the tags
                                 $oembed_html = str_replace('&#8230;','...',$oembed_html); // ellipsis is sometimes stored as html in db, for some reason
-                                $oembed_html = strip_tags($oembed_html);
+                                $oembed_html = strip_tags(html_entity_decode($oembed_html)); // sometimes we have html charachters that we want to decode and then strip
+                                $oembed_title = strip_tags(html_entity_decode($oembed->title)); 
                                 $attachment_url_to_id[$enclosure_o->url]['oembed'] = array(
                                     'provider'=> $oembed->provider,
                                     'provider_url'=> $oembed->provider_url,
                                     'oembedHTML'=> $oembed_html,
-                                    'title'=> $oembed->title,
+                                    'title'=> $oembed_title,
                                     'author_url'=> $oembed->author_url
                                 );
                             } else {
