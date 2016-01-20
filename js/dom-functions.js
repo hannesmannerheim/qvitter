@@ -2182,20 +2182,14 @@ function buildAttachmentHTML(attachments){
 
 				var oembedBody = '';
 
-				try {
-					var oembedStrippedHTML = $.trim($('<div>' + this.oembed.oembedHTML + '</div>').text().replace('<!--//-->',''));
-					}
-				catch(e) {
-					var oembedStrippedHTML = '';
-					}
-				// not if stripped from html it's the same as the title (wordpress does this..)
+				// not if html it's the same as the title (wordpress does this..)
 				if(this.oembed.oembedHTML !== null
-				&& oembedStrippedHTML.length > 0
-				&& oembedStrippedHTML != $.trim(this.oembed.title)) {
-					if(oembedStrippedHTML.length > 160) {
-						oembedStrippedHTML = oembedStrippedHTML.substring(0,250) + '…';
+				&& this.oembed.oembedHTML.length > 0
+				&& $.trim(this.oembed.oembedHTML) != $.trim(this.oembed.title)) {
+					if(this.oembed.oembedHTML.length > 200) {
+						this.oembed.oembedHTML = this.oembed.oembedHTML.substring(0,200) + '…';
 						}
-					oembedBody = oembedStrippedHTML;
+					oembedBody = this.oembed.oembedHTML;
 					}
 
 				if(this.oembed.provider === null) {
