@@ -2213,7 +2213,7 @@ function buildAttachmentHTML(attachments){
 									</div>\
 									<div class="oembed-item-body">' + oembedBody + '</div>\
 									<div class="oembed-item-footer">\
-										<span class="oembed-item-provider">' + this.oembed.provider + '</span>\
+										<span class="oembed-item-provider">' + oembedProvider + '</span>\
 										<span class="oembed-item-provider-url">' + oembedProviderURL + '</span>\
 									</div>\
 								 </a>';

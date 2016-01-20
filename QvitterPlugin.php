@@ -520,7 +520,7 @@ class QvitterPlugin extends Plugin {
                                 $attachment_url_to_id[$enclosure_o->url]['oembed'] = array(
                                     'provider'=> $oembed->provider,
                                     'provider_url'=> $oembed->provider_url,
-                                    'oembedHTML'=> $oembed->html,
+                                    'oembedHTML'=> strip_tags($oembed->html),
                                     'title'=> $oembed->title,
                                     'author_url'=> $oembed->author_url
                                 );

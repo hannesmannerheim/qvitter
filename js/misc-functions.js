@@ -1174,7 +1174,6 @@ function iterateRecursiveReplaceHtmlSpecialChars(obj) {
 				}
 			else if(typeof obj[property] == 'string'
 			&& property != 'statusnet_html'
-			&& property != 'oembedHTML' // this is hopefully purified by gnusocial
 			&& property != 'source') {
 				obj[property] = replaceHtmlSpecialChars(obj[property]);
 				}
