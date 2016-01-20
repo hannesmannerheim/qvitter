@@ -153,9 +153,8 @@ class QvitterPlugin extends Plugin {
 	// route/reroute urls
     public function onRouterInitialized($m)
     {
-        $m->connect('api/qvitter/oembed_notice/:id.:format',
+        $m->connect('services/oembed.:format',
                     array('action' => 'apiqvitteroembednotice',
-                          'id' => '[0-9]+',
                           'format' => '(xml|json)'));
         $m->connect('api/qvitter/check_email.json',
 					array('action' => 'ApiQvitterCheckEmail'));

@@ -43,9 +43,8 @@ if (!defined('GNUSOCIAL')) { exit(1); }
 
 class ApiQvitterOembedNoticeAction extends ApiAction
 {
-
-    var $id = null;
     var $format = null;
+    var $url = null;
 
     /**
      * Take arguments for running
@@ -58,8 +57,8 @@ class ApiQvitterOembedNoticeAction extends ApiAction
     {
         parent::prepare($args);
 
-		$this->id = $this->arg('id');
         $this->format = $this->arg('format');
+        $this->url = $this->arg('url');
 
         return true;
     }
@@ -75,7 +74,23 @@ class ApiQvitterOembedNoticeAction extends ApiAction
     {
         parent::handle();
 
-		$notice = Notice::getKV('id',$this->id);
+        $noticeurl = common_path('notice/', StatusNet::isHTTPS());
+        $instanceurl = common_path('', StatusNet::isHTTPS());
+
+        // remove protocol for the comparison below
+        $noticeurl_wo_protocol = preg_replace('(^https?://)', '', $noticeurl);
+        $instanceurl_wo_protocol = preg_replace('(^https?://)', '', $instanceurl);
+        $url_wo_protocol = preg_replace('(^https?://)', '', $this->url);
+
+        // find local notice
+        if(strpos($url_wo_protocol, $noticeurl_wo_protocol) === 0) {
+            $possible_notice_id = str_replace($noticeurl_wo_protocol,'',$url_wo_protocol);
+            if(ctype_digit($possible_notice_id)) {
+                $notice = Notice::getKV('id',$possible_notice_id);;
+            } else {
+                $this->clientError("Notice not found.", 404);
+            }
+        }
 
 		if(!$notice instanceof Notice){
 			// TRANS: Client error displayed in oEmbed action when notice not found.
