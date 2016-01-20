@@ -1155,7 +1155,7 @@ function expand_queet(q,doScrolling) {
 					}
 				catch(e) {
 					var attachmentsParsed = false;
-					console.log('could not parse attachment data when expanding the notice');
+					console.log('could not parse attachment data when expanding the notice: ' + e);
 					}
 				if(attachmentsParsed !== false) {
 					$.each(attachmentsParsed, function() {
@@ -2119,9 +2119,11 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
    · · · · · · · · · · · · · */
 
 function buildAttachmentHTML(attachments){
-	var attachment_html = '';
+	var attachmentHTML = '';
+	var oembedHTML = '';
 	var quotedNotices = [];
 	var attachmentNum = 0;
+	var oembedNum = 0;
 	var urlsToHide = [];
 	if(typeof attachments != "undefined") {
 		$.each(attachments, function(){
@@ -2153,7 +2155,7 @@ function buildAttachmentHTML(attachments){
 						}
 					}
 
-				var quotedNoticeHTML = '<a href="' + window.siteInstanceURL + 'notice/' + this.quoted_notice.id + '" class="quoted-notice" data-notice-url=' + this.url + '>\
+				var quotedNoticeHTML = '<a href="' + window.siteInstanceURL + 'notice/' + this.quoted_notice.id + '" class="quoted-notice" data-notice-url="' + this.url + '">\
 											' + quotedAttachmentsHTMLbefore + '\
 											<div class="quoted-notice-header">\
 												<span class="quoted-notice-author-fullname">' + this.quoted_notice.fullname + '</span>\
@@ -2166,6 +2168,57 @@ function buildAttachmentHTML(attachments){
 				quotedNotices.push({url: this.url, html: quotedNoticeHTML});
 				}
 
+			// if we have oembed data
+			else if(typeof this.oembed != 'undefined'
+			&& this.oembed !== false
+			&& this.oembed.title !== null) {
+
+				var oembedImage = '';
+				// not if stripped from html it's the same as the title (wordpress does this..)
+				if(typeof this.thumb_url != 'undefined' && this.thumb_url !== null) {
+					oembedImage = '<div class="oembed-img-container" style="background-image:url(\'' + this.thumb_url + '\')"><img class="oembed-img" src="' + this.thumb_url + '" /></div>';
+					}
+
+				var oembedBody = '';
+
+				try {
+					var oembedStrippedHTML = $.trim($('<div>' + this.oembed.oembedHTML + '</div>').text().replace('<!--//-->',''));
+					}
+				catch(e) {
+					var oembedStrippedHTML = '';
+					}
+				// not if stripped from html it's the same as the title (wordpress does this..)
+				if(this.oembed.oembedHTML !== null
+				&& oembedStrippedHTML.length > 0
+				&& oembedStrippedHTML != $.trim(this.oembed.title)) {
+					if(oembedStrippedHTML.length > 160) {
+						oembedStrippedHTML = oembedStrippedHTML.substring(0,250) + '…';
+						}
+					oembedBody = oembedStrippedHTML;
+					}
+
+				if(this.oembed.provider === null) {
+					var oembedProvider = this.url;
+					var oembedProviderURL = '';
+					}
+				else {
+					var oembedProvider = this.oembed.provider;
+					var oembedProviderURL = removeProtocolFromUrl(this.oembed.provider_url);
+					}
+
+				oembedHTML += '<a href="' + this.url + '" class="oembed-item">\
+									' + oembedImage + '\
+									<div class="oembed-item-header">\
+										<span class="oembed-item-title">' + this.oembed.title + '</span>\
+									</div>\
+									<div class="oembed-item-body">' + oembedBody + '</div>\
+									<div class="oembed-item-footer">\
+										<span class="oembed-item-provider">' + this.oembed.provider + '</span>\
+										<span class="oembed-item-provider-url">' + oembedProviderURL + '</span>\
+									</div>\
+								 </a>';
+				oembedNum++;
+				}
 			// if there's a local thumb_url we assume this is a image or video
 			else if(typeof this.thumb_url != 'undefined'
 			&& this.thumb_url !== null
@@ -2225,20 +2278,19 @@ function buildAttachmentHTML(attachments){
 					var img_url = this.thumb_url;
 					}
 
-				attachment_html = attachment_html + '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + animatedGifClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
+				attachmentHTML += '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + animatedGifClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
 				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
-				// urlsToHide.push(this.url);
 				attachmentNum++;
 				}
 			else if (this.mimetype == 'image/svg+xml') {
-				attachment_html = attachment_html + '<a style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
+				attachmentHTML += '<a style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
 				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
-				// urlsToHide.push(this.url);
 				attachmentNum++;
 				}
 			});
 		}
-	return { html: '<div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachment_html + '</div>',
+	return { html: '<div class="oembed-data oembed-num-' + oembedNum + '">' + oembedHTML + '</div><div class="queet-thumbs thumb-num-' + attachmentNum + '">' + attachmentHTML + '</div>',
 			urlsToHide: urlsToHide,
-			quotedNotices: quotedNotices };
+			quotedNotices: quotedNotices
+		};
 	}

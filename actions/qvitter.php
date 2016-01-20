@@ -87,6 +87,12 @@ class QvitterAction extends ApiAction
 		$attachmentroot = common_path('attachment/', StatusNet::isHTTPS());
 		$instanceurl = common_path('', StatusNet::isHTTPS());
 
+        // user's browser's language setting
+        $user_browser_language = 'en'; // use english if we can't find the browser language
+        if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            $user_browser_language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+            }
+
 
 		common_set_returnto(''); // forget this
 
@@ -196,8 +202,8 @@ class QvitterAction extends ApiAction
 					for the JavaScript code in this page.
 					*/
 
-                    window.usersLanguageCode = <?php print json_encode(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2)) ?>;
-                    window.usersLanguageNameInEnglish = <?php print json_encode(Locale::getDisplayLanguage(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), 'en')) ?>;
+                    window.usersLanguageCode = <?php print json_encode($user_browser_language) ?>;
+                    window.usersLanguageNameInEnglish = <?php print json_encode(Locale::getDisplayLanguage($user_browser_language, 'en')) ?>;
                     window.englishLanguageData = <?php print file_get_contents($qvitterpath.'/locale/en.json'); ?>;
                     window.defaultAvatarStreamSize = <?php print json_encode(Avatar::defaultImage(AVATAR_STREAM_SIZE)) ?>;
                     window.defaultAvatarProfileSize = <?php print json_encode(Avatar::defaultImage(AVATAR_PROFILE_SIZE)) ?>;
@@ -664,7 +670,8 @@ class QvitterAction extends ApiAction
 					#popup-faq #faq-container p.indent,
                     .post-to-group,
                     .quoted-notice:hover,
-                    .stream-item:hover:not(.expanded) .quoted-notice:hover {
+                    .stream-item:hover:not(.expanded) .quoted-notice:hover,
+                    .stream-item:hover:not(.expanded) .oembed-item:hover {
 						border-color:/*LIGHTERBORDERCOLORSTART*/rgb(155,206,224)/*LIGHTERBORDERCOLOREND*/;
 						}
 					span.inline-reply-caret .caret-inner {

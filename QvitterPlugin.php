@@ -513,6 +513,22 @@ class QvitterPlugin extends Plugin {
                     try {
 						$enclosure_o = $attachment->getEnclosure();
 
+                        // Oembed
+                        if(array_key_exists('Oembed', StatusNet::getActivePlugins())) {
+                            $oembed = File_oembed::getKV('file_id',$attachment->id);
+                            if($oembed instanceof File_oembed) {
+                                $attachment_url_to_id[$enclosure_o->url]['oembed'] = array(
+                                    'provider'=> $oembed->provider,
+                                    'provider_url'=> $oembed->provider_url,
+                                    'oembedHTML'=> $oembed->html,
+                                    'title'=> $oembed->title,
+                                    'author_url'=> $oembed->author_url
+                                );
+                            } else {
+                                $attachment_url_to_id[$enclosure_o->url]['oembed'] = false;
+                            }
+                        }
+
                         // add id to all attachments
                         $attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
 
@@ -536,11 +552,10 @@ class QvitterPlugin extends Plugin {
 							$image = ImageFile::fromFileObject($attachment);
 							if($image->animated == 1) {
 								$attachment_url_to_id[$enclosure_o->url]['animated'] = true;
-							}
-							else {
+							} else {
 								$attachment_url_to_id[$enclosure_o->url]['animated'] = false;
 							}
-						}
+                        }
 
                     // this applies to older versions of gnu social, i think
 					} catch (ServerException $e) {
@@ -648,11 +663,11 @@ class QvitterPlugin extends Plugin {
         }
 
 
-                        try {
-                            $twitter_status['external_url'] = $notice->getUrl(true);
-                        } catch (InvalidUrlException $e) {
-                		    common_debug('Qvitter: No URL available for external notice: id='.$notice->id);
-                        }
+        try {
+            $twitter_status['external_url'] = $notice->getUrl(true);
+        } catch (InvalidUrlException $e) {
+		    common_debug('Qvitter: No URL available for external notice: id='.$notice->id);
+        }
 
 
 		// reply-to profile url

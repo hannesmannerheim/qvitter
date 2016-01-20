@@ -1820,7 +1820,9 @@ $('body').on('click','#new-queets-bar',function(){
    · · · · · · · · · · · · · */
 
 $('body').on('click','.queet',function (event) {
-	if(!$(event.target).is('\
+	if(typeof $(this).attr('href') == 'undefined'
+	&& $(event.target).closest('a').length == 0
+	&& !$(event.target).is('\
 			a,\
 			video,\
 			.cm-mention,\
@@ -2545,7 +2547,6 @@ $('body').on('click', '.queet-toolbar button',function () {
 				if(parentQueetBox.length == 0
 				|| parentQueetBox.children('.syntax-middle').css('display') == 'none') {
 					if(insertedTempQueet.parent().hasClass('expanded') || insertedTempQueet.parent().hasClass('conversation')) {
-						console.log(parentQueetBox.attr('data-replies-text'));
 						if(parentQueetBox.children('.queet-box').attr('data-replies-text') == '') {
 							insertedTempQueet.parent().find('.inline-reply-queetbox').remove();
 							newInsertedQueet.children('.queet').append(replyFormHtml(newInsertedQueet,newInsertedQueet.attr('data-quitter-id')));
@@ -3196,7 +3197,7 @@ $('body').keyup(function (e) {
 			// reply to queet on 'r'
 			else if(e.which == 82) {
 				if(selectedQueet.hasClass('expanded')) {
-					selectedQueet.children('.queet').find('.queet-box-syntax').click();
+					selectedQueet.find('.queet-box-syntax').click();
 					}
 				else {
 					selectedQueet.children('.queet').find('.icon.sm-reply').click();

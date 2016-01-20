@@ -676,6 +676,12 @@ function guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(profileUrl, ni
    · · · · · · · · · */
 
 function removeProtocolFromUrl(url) {
+	if(typeof url == 'undefined'
+	|| url === null
+	|| url === false
+	|| url == '') {
+		return '';
+		}
 	if(url.indexOf('://') == -1) {
 		return url;
 		}
@@ -878,7 +884,7 @@ function searchForUpdatedNoticeData(obj) {
 						streamItemFoundInFeed.attr('data-attachments',JSON.stringify(obj.attachments));
 						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
 						queetFoundInFeed.find('.queet-thumbs').remove();
-						queetFoundInFeed.find('.quoted-notices').remove();
+						queetFoundInFeed.find('.oembed-data').remove();
 						// we might want to hide urls (rendered as attachments) in the queet text
 						$.each(queetFoundInFeed.find('.queet-text').find('a'),function(){
 							if(attachmentsHTMLBuild.urlsToHide.indexOf($(this).text()) > -1) {
@@ -936,6 +942,7 @@ function slideUpAndRemoveStreamItem(streamItem,callback) {
 			$(this).css('height',$(this).height() + 'px');
 			$(this).animate({height:'0px'},500,'linear',function(){
 				$(this).addClass('deleted always-hidden');
+				rememberStreamStateInLocalStorage();
 				if(typeof callback == 'function') {
 					callback();
 					}
@@ -1165,7 +1172,10 @@ function iterateRecursiveReplaceHtmlSpecialChars(obj) {
 			if (typeof obj[property] == "object") {
 				iterateRecursiveReplaceHtmlSpecialChars(obj[property]);
 				}
-			else if(typeof obj[property] == 'string' && property != 'statusnet_html' && property != 'source') {
+			else if(typeof obj[property] == 'string'
+			&& property != 'statusnet_html'
+			&& property != 'oembedHTML' // this is hopefully purified by gnusocial
+			&& property != 'source') {
 				obj[property] = replaceHtmlSpecialChars(obj[property]);
 				}
 			}
