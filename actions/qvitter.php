@@ -174,7 +174,23 @@ class QvitterAction extends ApiAction
 						}
 					}
 
-
+                // oembed discovery for local notices
+                if(substr($_SERVER['REQUEST_URI'],0,8) == '/notice/'
+                && $this->arg('notice')
+                && array_key_exists('Oembed', StatusNet::getActivePlugins())) {
+                    $notice = Notice::getKV('id', $this->arg('notice'));
+                    if($notice instanceof Notice) {
+                        if ($notice->isLocal()) {
+                            try {
+                                $notice_url = $notice->getUrl();
+                                print '<link title="oEmbed" href="'.common_local_url('apiqvitteroembednotice', array('id' => $notice->id, 'format'=>'json')).'?url='.urlencode($notice_url).'" type="application/json+oembed" rel="alternate">';
+                                print '<link title="oEmbed" href="'.common_local_url('apiqvitteroembednotice', array('id' => $notice->id, 'format'=>'xml')).'?url='.urlencode($notice_url).'" type="application/xml+oembed" rel="alternate">';
+                            } catch (Exception $e) {
+                                //
+                            }
+                        }
+                    }
+                }
 
 				?>
 				<script>
@@ -563,7 +579,6 @@ class QvitterAction extends ApiAction
                         // adds temporary support for microformats and linkbacks on the notice page
                     	if(substr($_SERVER['REQUEST_URI'],0,8) == '/notice/' && $this->arg('notice')) {
                     		echo '<ol class="notices xoxo">';
-                            $notice = Notice::getKV('id', $this->arg('notice'));
                             if($notice instanceof Notice) {
                     			$widget = new NoticeListItem($notice, $this);
                     			$widget->show();
