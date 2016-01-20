@@ -891,7 +891,7 @@ function searchForUpdatedNoticeData(obj) {
 								$(this).css('display','none');
 								}
 							});
-						queetFoundInFeed.find('.stream-item-footer').before(attachmentsHTMLBuild.html);
+						queetFoundInFeed.find('.queet-text').after(attachmentsHTMLBuild.html);
 						}
 
 					// set favorite data
