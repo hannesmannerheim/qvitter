@@ -330,23 +330,26 @@ function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,targetElement,ca
 				// hovers the element for, say, 200ms we ask the server if the link could be a remote profile
 				setTimeout(function(){
 					if(targetElement.is(":hover")) {
-						window.userArrayLastRetrieved[maybeProfileUrl] = timeNow;
-						getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent(maybeProfileUrl),function(data){
-							if(data && data.external !== null) {
+						// don't try this if we already tried it less than a minute ago
+						if((typeof window.userArrayLastRetrieved[maybeProfileUrl] == 'undefined') || (timeNow - window.userArrayLastRetrieved[maybeProfileUrl]) > 60000) {
+							window.userArrayLastRetrieved[maybeProfileUrl] = timeNow;
+							getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent(maybeProfileUrl),function(data){
+								if(data && data.external !== null) {
 
-								// we want hover cards to appear _at least_ 600ms after hover (see below)
-								var timeAfterServerQuery = new Date().getTime();
-								var queryTime = timeAfterServerQuery-timeNow;
-								if(queryTime<600) {
-									var timeOut = 600-queryTime;
-									}
-								else {
-									var timeOut = 0;
-									}
+									// we want hover cards to appear _at least_ 600ms after hover (see below)
+									var timeAfterServerQuery = new Date().getTime();
+									var queryTime = timeAfterServerQuery-timeNow;
+									if(queryTime<600) {
+										var timeOut = 600-queryTime;
+										}
+									else {
+										var timeOut = 0;
+										}
 
-								callback(data,timeOut);
-								}
-							});
+									callback(data,timeOut);
+									}
+								});
+							}
 						}
 					},200);
 				}
