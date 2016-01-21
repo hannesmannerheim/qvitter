@@ -2028,6 +2028,12 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 				}
 			});
 		});
+
+	// if statusnetHTML is contains <p>:s, unwrap those (diaspora..)
+	statusnetHTML.children('p').each(function(){
+		$(this).contents().unwrap();
+		});
+
 	// find a place in the queet-text for the quoted notices
 	statusnetHTML = placeQuotedNoticesInQueetText(attachmentBuild.quotedNotices, statusnetHTML);
 	statusnetHTML = statusnetHTML.html();
@@ -2099,7 +2105,7 @@ function placeQuotedNoticesInQueetText(quotedNotices,queetText) {
 				quoteLinkFound = queetText.find('a[data-quote-url*="' + removeProtocolFromUrl(qoutedNotice.url) + '"]');
 				}
 			if(quoteLinkFound.length>0) {
-				quoteLinkFound.each(function(){
+				$.each(quoteLinkFound,function(){
 					$(this).addClass(qoutedNotice.class);
 					$(this).attr('href',qoutedNotice.href);
 					$(this).attr('data-quote-url',qoutedNotice.url);
@@ -2187,15 +2193,13 @@ function buildAttachmentHTML(attachments){
 			&& this.oembed.provider == 'Twitter') {
 
 				var twitterHTML =  '<div class="oembed-item-header">\
-											<span class="oembed-item-title">\
-												' + this.oembed.author_name + '\
-												<span class="oembed-twitter-username">' + this.oembed.title + '</span>\
-											</span>\
-										</div>\
-										<div class="oembed-item-body">' + this.oembed.oembedHTML + '</div>\
-										<div class="oembed-item-footer">\
-											<span class="oembed-item-provider">' + this.oembed.provider + '</span>\
-										</div>';
+										<span class="oembed-item-title">' + this.oembed.author_name + '</span>\
+										<span class="oembed-twitter-username">' + this.oembed.title + '</span>\
+									</div>\
+									<div class="oembed-item-body">' + this.oembed.oembedHTML + '</div>\
+									<div class="oembed-item-footer">\
+										<span class="oembed-item-provider">' + this.oembed.provider + '</span>\
+									</div>';
 				quotedNotices.push({
 					url: this.url,
 					html: twitterHTML,
