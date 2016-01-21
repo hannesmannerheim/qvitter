@@ -220,7 +220,7 @@ class QvitterAction extends ApiAction
 
                     window.usersLanguageCode = <?php print json_encode($user_browser_language) ?>;
                     window.usersLanguageNameInEnglish = <?php print json_encode(Locale::getDisplayLanguage($user_browser_language, 'en')) ?>;
-                    window.englishLanguageData = <?php print file_get_contents($qvitterpath.'/locale/en.json'); ?>;
+                    window.englishLanguageData = <?php print file_get_contents(QVITTERDIR.'/locale/en.json'); ?>;
                     window.defaultAvatarStreamSize = <?php print json_encode(Avatar::defaultImage(AVATAR_STREAM_SIZE)) ?>;
                     window.defaultAvatarProfileSize = <?php print json_encode(Avatar::defaultImage(AVATAR_PROFILE_SIZE)) ?>;
 					window.textLimit = <?php print json_encode((int)common_config('site','textlimit')) ?>;
