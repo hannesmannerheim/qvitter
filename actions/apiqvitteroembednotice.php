@@ -108,15 +108,37 @@ class ApiQvitterOembedNoticeAction extends ApiAction
         $oembed['version']='1.0';
         $oembed['provider_name']=common_config('site', 'name');
         $oembed['provider_url']=common_root_url();
+        $oembed['type']='link';
 
 		// TRANS: oEmbed title. %1$s is the author name, %2$s is the creation date.
-		$oembed['title'] = sprintf(_('%1$s\'s status on %2$s'),
-			$authorname,
-			common_exact_date($notice->created));
+		$oembed['title'] = ApiAction::dateTwitter($notice->created).' (Qvitter)';
 		$oembed['author_name']=$authorname;
 		$oembed['author_url']=$profile->profileurl;
 		$oembed['url']=$notice->getUrl();
 		$oembed['html']=$notice->getRendered();
+
+        // maybe add thumbnail
+        $attachments = $notice->attachments();
+        if (!empty($attachments)) {
+            foreach ($attachments as $attachment) {
+				if(is_object($attachment)) {
+                    try {
+                        $thumb = $attachment->getThumbnail();
+					} catch (ServerException $e) {
+                        //
+                    }
+                    if(method_exists('File_thumbnail','url')) {
+                        try {
+                            $thumb_url = File_thumbnail::url($thumb->filename);
+                            $oembed['thumbnail_url'] = $thumb_url;
+                            break; // only first one
+                        } catch (ClientException $e) {
+                            //
+                        }
+                    }
+                }
+            }
+        }
 
         if($this->format == 'json') {
             $this->initDocument('json');

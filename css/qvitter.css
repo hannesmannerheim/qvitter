@@ -2132,7 +2132,7 @@ body.rtl .queet.rtl .expanded-content {
     text-overflow: ellipsis;
     white-space: nowrap;
 	}
-.oembed-twitter-username {
+.oembed-username {
 	font-size:13px;
 	color:#999;
 	font-weight:normal;
