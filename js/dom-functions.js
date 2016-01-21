@@ -1149,14 +1149,17 @@ function expand_queet(q,doScrolling) {
 				}
 
 			// show certain attachments in expanded content
-			if(q.attr('data-attachments') != 'undefined') {
+			if(q.children('script.attachment-json').length > 0
+			&& q.children('script.attachment-json').text() != 'undefined') {
 				try {
-					var attachmentsParsed = JSON.parse(q.attr('data-attachments'));
+					var attachmentsParsed = JSON.parse(q.children('script.attachment-json').text());
 					}
 				catch(e) {
 					var attachmentsParsed = false;
-					console.log('could not parse attachment data when expanding the notice: ' + e);
+					console.log('could not parse attachment json when expanding the notice: ' + e);
+					console.log("attachment-json: " + q.children('script.attachment-json').text());
 					}
+
 				if(attachmentsParsed !== false) {
 					$.each(attachmentsParsed, function() {
 
@@ -2053,7 +2056,6 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 						id="' + idPrepend + 'stream-item-' + idInStream + '" \
 						data-uri="' + URItoUse + '" \
 						class="stream-item notice ' + extraClasses + '" \
-						data-attachments=\'' + JSON.stringify(obj.attachments) + '\'\
 						data-source="' + escape(obj.source) + '" \
 						data-quitter-id="' + obj.id + '" \
 						data-conversation-id="' + obj.statusnet_conversation_id + '" \
@@ -2062,6 +2064,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"\
 						' + requeetedByMe + '>\
 							<div class="queet" id="' + idPrepend + 'q-' + idInStream + '"' + blockingTooltip  + '>\
+								<script class="attachment-json" type="application/json">' + JSON.stringify(obj.attachments) + '</script>\
 								' + requeetHtml + '\
 								' + ostatusHtml + '\
 								<div class="queet-content">\
@@ -2227,14 +2230,15 @@ function buildAttachmentHTML(attachments){
 
 				var oembedBody = '';
 
-				// not if html it's the same as the title (wordpress does this..)
+				// don't add body if html it's too similar (80%) to the title (wordpress does this..)
 				if(this.oembed.oembedHTML !== null
-				&& this.oembed.oembedHTML.length > 0
-				&& $.trim(this.oembed.oembedHTML) != $.trim(this.oembed.title)) {
+				&& this.oembed.oembedHTML.length > 0) {
 					if(this.oembed.oembedHTML.length > 200) {
 						this.oembed.oembedHTML = this.oembed.oembedHTML.substring(0,200) + '…';
 						}
-					oembedBody = this.oembed.oembedHTML;
+					if(stringSimilarity(this.oembed.oembedHTML,this.oembed.title.substring(0,200)) < 80) {
+						oembedBody = this.oembed.oembedHTML;
+						}
 					}
 
 				if(this.oembed.provider === null) {

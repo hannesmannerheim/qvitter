@@ -880,8 +880,13 @@ function searchForUpdatedNoticeData(obj) {
 						}
 
 					// attachments might have been added/changed/have had time to be processed
-					if(streamItemFoundInFeed.attr('data-attachments') != JSON.stringify(obj.attachments)) {
-						streamItemFoundInFeed.attr('data-attachments',JSON.stringify(obj.attachments));
+					if(queetFoundInFeed.children('script.attachment-json').text() != JSON.stringify(obj.attachments)) {
+						if(queetFoundInFeed.children('script.attachment-json').length == 0) {
+							queetFoundInFeed.prepend('<script class="attachment-json" type="application/json">' + JSON.stringify(obj.attachments) + '</script>');
+							}
+						else {
+							queetFoundInFeed.children('script.attachment-json').text(JSON.stringify(obj.attachments));
+							}
 						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
 						queetFoundInFeed.find('.queet-thumbs').remove();
 						queetFoundInFeed.find('.oembed-data').remove();
@@ -1030,17 +1035,19 @@ function getFullUnshortenedHtmlForQueet(streamItem, cacheOnly) {
 	var queetId = streamItem.attr('data-quitter-id');
 	var attachmentMore = queet.find('span.attachment.more');
 	// only if actually shortened
-	if(attachmentMore.length>0 && streamItem.attr('data-attachments') != 'undefined') {
+	if(attachmentMore.length>0
+	&& queet.children('script.attachment-json').length > 0
+	&& queet.children('script.attachment-json').text() != 'undefined') {
 		// first try localstorage cache
 		var cacheData = localStorageObjectCache_GET('fullQueetHtml',queetId);
 		if(cacheData) {
 			queet.find('.queet-text').html(cacheData);
 			queet.outerHTML(detectRTL(queet.outerHTML()));
 			}
-		// then try static html file attachment, that we should have in an array in a data-attachments attribute
+		// then try static html file attachment, that we should have in the attachment-json script element
 		else if(cacheOnly === false){
 			var attachmentId = attachmentMore.attr('data-attachment-id');
-			$.each(JSON.parse(streamItem.attr('data-attachments')), function(k,attachment) {
+			$.each(JSON.parse(queet.children('script.attachment-json').text()), function(k,attachment) {
 				if(attachment.id == attachmentId) {
 					$.get(attachment.url,function(data){
 						if(data) {
@@ -2160,3 +2167,89 @@ function youTubeEmbedLinkFromURL(url) {
 		return '//www.youtube.com/embed/' + youtubeId;
 		}
 	}
+
+
+
+/* ·
+   ·
+   ·   String similarity
+   ·
+   ·   @params string1, string2:
+   ·   @returns (int) percent similarity
+   ·
+   · · · · · · · · · · · · · */
+
+function stringSimilarity(string1, string2) {
+
+	if(typeof string1 != 'string' || typeof string2 != 'string') {
+		return 0;
+		}
+
+	// trim and strip html tags
+	string1 = $('<div/>').html($.trim(string1)).text();
+	string2 = $('<div/>').html($.trim(string2)).text();
+
+	var longestStringLength = string1.length;
+	if(string2.length>string1.length) {
+		longestStringLength = string2.length;
+	}
+
+	var distanceArray = levenshteinenator(string1, string2);
+	var distance = distanceArray[distanceArray.length-1][distanceArray[distanceArray.length-1].length-1];
+
+	var percentSimilarity = 100-Math.round(distance/longestStringLength*100);
+
+	return percentSimilarity;
+	}
+
+// from http://andrew.hedges.name/experiments/levenshtein/
+var levenshteinenator = (function () {
+
+	/**
+	 * @param String a
+	 * @param String b
+	 * @return Array
+	 */
+	function levenshteinenator(a, b) {
+		var cost;
+		var m = a.length;
+		var n = b.length;
+
+		// make sure a.length >= b.length to use O(min(n,m)) space, whatever that is
+		if (m < n) {
+			var c = a; a = b; b = c;
+			var o = m; m = n; n = o;
+		}
+
+		var r = []; r[0] = [];
+		for (var c = 0; c < n + 1; ++c) {
+			r[0][c] = c;
+		}
+
+		for (var i = 1; i < m + 1; ++i) {
+			r[i] = []; r[i][0] = i;
+			for ( var j = 1; j < n + 1; ++j ) {
+				cost = a.charAt( i - 1 ) === b.charAt( j - 1 ) ? 0 : 1;
+				r[i][j] = minimator( r[i-1][j] + 1, r[i][j-1] + 1, r[i-1][j-1] + cost );
+			}
+		}
+
+		return r;
+	}
+
+	/**
+	 * Return the smallest of the three numbers passed in
+	 * @param Number x
+	 * @param Number y
+	 * @param Number z
+	 * @return Number
+	 */
+	function minimator(x, y, z) {
+		if (x <= y && x <= z) return x;
+		if (y <= x && y <= z) return y;
+		return z;
+	}
+
+	return levenshteinenator;
+
+}());

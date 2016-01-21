@@ -1942,7 +1942,8 @@ background-repeat: no-repeat;
 body.rtl .queet.rtl .expanded-content {
 	direction:rtl;
 	}
-.stream-item.expanded > div:first-child {
+.stream-item.expanded > div:first-child,
+.stream-item.expanded > div:first-child > .queet {
 	border-top-left-radius:6px;
 	border-top-right-radius:6px;
 	}
