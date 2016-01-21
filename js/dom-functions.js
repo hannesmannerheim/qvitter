@@ -2038,6 +2038,11 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 	statusnetHTML = placeQuotedNoticesInQueetText(attachmentBuild.quotedNotices, statusnetHTML);
 	statusnetHTML = statusnetHTML.html();
 
+	// remove trailing <br>s from queet text
+	while (statusnetHTML.slice(-4) == '<br>') {
+		statusnetHTML = statusnetHTML.slice(0,-4);
+		}
+
 	// external
 	var ostatusHtml = '';
 	if(obj.is_local === false) {
