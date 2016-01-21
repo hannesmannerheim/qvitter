@@ -2050,7 +2050,8 @@ body.rtl .queet.rtl .expanded-content {
 .oembed-item {
 	padding:0;
 	}
-.quoted-notice:hover {
+.quoted-notice:hover,
+.oembed-item:hover {
 	text-decoration: none !important;
 	}
 .stream-item:hover:not(.expanded) .quoted-notice ,
@@ -2129,6 +2130,11 @@ body.rtl .queet.rtl .expanded-content {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+	}
+.oembed-twitter-username {
+	font-size:13px;
+	color:#999;
+	font-weight:normal;
 	}
 .oembed-item-body {
     display: -webkit-box;

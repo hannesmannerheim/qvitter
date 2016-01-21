@@ -885,6 +885,7 @@ function searchForUpdatedNoticeData(obj) {
 						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
 						queetFoundInFeed.find('.queet-thumbs').remove();
 						queetFoundInFeed.find('.oembed-data').remove();
+						placeQuotedNoticesInQueetText(attachmentsHTMLBuild.quotedNotices,queetFoundInFeed.find('.queet-text'));
 						// we might want to hide urls (rendered as attachments) in the queet text
 						$.each(queetFoundInFeed.find('.queet-text').find('a'),function(){
 							if(attachmentsHTMLBuild.urlsToHide.indexOf($(this).text()) > -1) {

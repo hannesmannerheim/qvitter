@@ -2028,36 +2028,9 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 				}
 			});
 		});
-	// try to find a place in the queet-text for the quoted notices
-	var quotedNoticesNotFoundInQueetTextHTML = '';
-	var quoteURLfoundInQueetText = false;
-	$.each(attachmentBuild.quotedNotices,function(k,qoutedNotice){
-		if(typeof qoutedNotice.url != 'undefined') {
-			quoteURLfoundInQueetText = false;
-			$.each(statusnetHTML.find('a').not('.quoted-notice'), function(){
-				if(removeProtocolFromUrl($(this).attr('href')) == removeProtocolFromUrl(qoutedNotice.url) && $(this).css('display') != 'none') {
-					quoteURLfoundInQueetText = true;
-					$(this).css('display','none');
-					$(this).after(qoutedNotice.html);
-					// remove unnecessary line breaks, i.e. remove br between two quoted notices
-					if($(this).prev().is('br')) {
-						$(this).prev().remove();
-						}
-					return false; // break
-					}
-				});
-			if(quoteURLfoundInQueetText === false) {
-				console.log('not found: ' + qoutedNotice.html);
-				quotedNoticesNotFoundInQueetTextHTML += qoutedNotice.html;
-				}
-			}
-		});
+	// find a place in the queet-text for the quoted notices
+	statusnetHTML = placeQuotedNoticesInQueetText(attachmentBuild.quotedNotices, statusnetHTML);
 	statusnetHTML = statusnetHTML.html();
-
-	// quoted notices that we didn't find in the queet text is placed below the text
-	if(quotedNoticesNotFoundInQueetTextHTML.length > 0) {
-		attachmentBuild.html = '<div class="quoted-notices">' + quotedNoticesNotFoundInQueetTextHTML + '</div>' + attachmentBuild.html;
-		}
 
 	// external
 	var ostatusHtml = '';
@@ -2108,6 +2081,43 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 	}
 
 
+/* ·
+   ·
+   ·  Place quoted notices in the queet text
+   ·
+   ·  @param quotedNotices: object returned by buildAttachmentHTML()
+   ·  @param queetText: jQuery object for queet text
+   ·
+   · · · · · · · · · */
+
+function placeQuotedNoticesInQueetText(quotedNotices,queetText) {
+	$.each(quotedNotices,function(k,qoutedNotice){
+		if(typeof qoutedNotice.url != 'undefined') {
+			var quoteLinkFound = queetText.find('a[href*="' + removeProtocolFromUrl(qoutedNotice.url) + '"]');
+			// if we can't found it in a href, we might find it in data-quote-url attribute!
+			if(quoteLinkFound.length==0) {
+				quoteLinkFound = queetText.find('a[data-quote-url*="' + removeProtocolFromUrl(qoutedNotice.url) + '"]');
+				}
+			if(quoteLinkFound.length>0) {
+				quoteLinkFound.each(function(){
+					$(this).addClass(qoutedNotice.class);
+					$(this).attr('href',qoutedNotice.href);
+					$(this).attr('data-quote-url',qoutedNotice.url);
+					$(this).html(qoutedNotice.html);
+					// remove unnecessary line breaks, i.e. remove br between two quoted notices
+					if($(this).prev().is('br')) {
+						$(this).prev().remove();
+						}
+					if(!$(this).next().is('br')) {
+						$(this).after('<br>');
+						}
+					});
+				}
+			}
+		});
+	return queetText;
+	}
+
 
 
 /* ·
@@ -2155,24 +2165,50 @@ function buildAttachmentHTML(attachments){
 						}
 					}
 
-				var quotedNoticeHTML = '<a href="' + window.siteInstanceURL + 'notice/' + this.quoted_notice.id + '" class="quoted-notice" data-notice-url="' + this.url + '">\
-											' + quotedAttachmentsHTMLbefore + '\
-											<div class="quoted-notice-header">\
-												<span class="quoted-notice-author-fullname">' + this.quoted_notice.fullname + '</span>\
-												<span class="quoted-notice-author-nickname">' + this.quoted_notice.nickname + '</span>\
-											</div>\
-											<div class="quoted-notice-body">' + $.trim(quotedContent) + '</div>\
-											' + quotedAttachmentsHTMLafter + '\
-										 </a>';
+				var quotedNoticeHTML = quotedAttachmentsHTMLbefore + '\
+										<div class="quoted-notice-header">\
+											<span class="quoted-notice-author-fullname">' + this.quoted_notice.fullname + '</span>\
+											<span class="quoted-notice-author-nickname">' + this.quoted_notice.nickname + '</span>\
+										</div>\
+										<div class="quoted-notice-body">' + $.trim(quotedContent) + '</div>\
+										' + quotedAttachmentsHTMLafter;
 
-				quotedNotices.push({url: this.url, html: quotedNoticeHTML});
+				quotedNotices.push({
+					url: this.url,
+					html: quotedNoticeHTML,
+					href: window.siteInstanceURL + 'notice/' + this.quoted_notice.id,
+					class:'quoted-notice'
+					});
 				}
 
-			// if we have oembed data (but not for youtube, we handle that later)
+			// if we have Twitter oembed data, we add is as quotes
+			else if(typeof this.oembed != 'undefined'
+			&& this.oembed !== false
+			&& this.oembed.provider == 'Twitter') {
+
+				var twitterHTML =  '<div class="oembed-item-header">\
+											<span class="oembed-item-title">\
+												' + this.oembed.author_name + '\
+												<span class="oembed-twitter-username">' + this.oembed.title + '</span>\
+											</span>\
+										</div>\
+										<div class="oembed-item-body">' + this.oembed.oembedHTML + '</div>\
+										<div class="oembed-item-footer">\
+											<span class="oembed-item-provider">' + this.oembed.provider + '</span>\
+										</div>';
+				quotedNotices.push({
+					url: this.url,
+					html: twitterHTML,
+					href: this.url,
+					class:'oembed-item'
+					});
+				}
+			// if we have other oembed data (but not for photos and youtube, we handle those later)
 			else if(typeof this.oembed != 'undefined'
 			&& this.oembed !== false
 			&& this.oembed.title !== null
-			&& this.oembed.provider != 'YouTube') {
+			&& this.oembed.provider != 'YouTube'
+			&& this.oembed.type != 'photo') {
 
 				var oembedImage = '';
 				// not if stripped from html it's the same as the title (wordpress does this..)

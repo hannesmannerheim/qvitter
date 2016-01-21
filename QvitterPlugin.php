@@ -520,14 +520,23 @@ class QvitterPlugin extends Plugin {
                             $oembed = File_oembed::getKV('file_id',$attachment->id);
                             if($oembed instanceof File_oembed) {
                                 $oembed_html = str_replace('&lt;!--//--&gt;','',$oembed->html); // trash left of wordpress' javascript after htmLawed removed the tags
+                                if($oembed->provider == 'Twitter' && strstr($oembed_html, '<div>&mdash;')) {
+                                    $oembed_html = substr($oembed_html,0,strpos($oembed_html, '<div>&mdash;')); // remove user data from twitter oembed html (we have it in )
+                                    $twitter_username = substr($oembed->html,strpos($oembed->html, '<div>&mdash;')+12);
+                                    $twitter_username = substr($twitter_username, strpos($twitter_username,'(@')+1);
+                                    $twitter_username = substr($twitter_username, 0,strpos($twitter_username,')'));
+                                    $oembed->title = $twitter_username;
+                                    }
                                 $oembed_html = str_replace('&#8230;','...',$oembed_html); // ellipsis is sometimes stored as html in db, for some reason
                                 $oembed_html = strip_tags(html_entity_decode($oembed_html)); // sometimes we have html charachters that we want to decode and then strip
-                                $oembed_title = strip_tags(html_entity_decode($oembed->title)); 
+                                $oembed_title = strip_tags(html_entity_decode($oembed->title));
                                 $attachment_url_to_id[$enclosure_o->url]['oembed'] = array(
+                                    'type'=> $oembed->type,
                                     'provider'=> $oembed->provider,
                                     'provider_url'=> $oembed->provider_url,
                                     'oembedHTML'=> $oembed_html,
                                     'title'=> $oembed_title,
+                                    'author_name'=> $oembed->author_name,
                                     'author_url'=> $oembed->author_url
                                 );
                             } else {

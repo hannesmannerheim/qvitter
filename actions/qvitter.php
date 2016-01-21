@@ -685,6 +685,7 @@ class QvitterAction extends ApiAction
 					#popup-faq #faq-container p.indent,
                     .post-to-group,
                     .quoted-notice:hover,
+                    .oembed-item:hover,
                     .stream-item:hover:not(.expanded) .quoted-notice:hover,
                     .stream-item:hover:not(.expanded) .oembed-item:hover {
 						border-color:/*LIGHTERBORDERCOLORSTART*/rgb(155,206,224)/*LIGHTERBORDERCOLOREND*/;
