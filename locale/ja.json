@@ -161,5 +161,7 @@
 	"addEditLanguageLink":"{site-title}を他の言語に翻訳するのを手伝ってください",
 	"onlyPartlyTranslated":"{site-title}は<em>{language-name}</em>へ部分的({percent}%)にしか翻訳されていません。<a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitterのリポジトリホームページ</a>にて翻訳を手伝うことができます。",
 	"startRant":"連投する",
-	"continueRant":"連投を続ける"
+	"continueRant":"連投を続ける",
+	"hideEmbeddedInTimeline":"Hide embedded content in this timeline",
+	"hideQuotesInTimeline":"Hide quotes in this timeline"
 }
