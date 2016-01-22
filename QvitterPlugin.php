@@ -547,6 +547,10 @@ class QvitterPlugin extends Plugin {
                         // add id to all attachments
                         $attachment_url_to_id[$enclosure_o->url]['id'] = $attachment->id;
 
+                        // add an attachment version to all attachments
+                        // this means we can force all cached attachments to update, if we change this
+                        $attachment_url_to_id[$enclosure_o->url]['version'] = '1.2';
+
                         // add data about thumbnails
                         $thumb = $attachment->getThumbnail();
 						$large_thumb = $attachment->getThumbnail(1000,3000,false);
@@ -654,6 +658,7 @@ class QvitterPlugin extends Plugin {
                             $attachment['quoted_notice']['content'] = $quoted_notice->content;
                             $attachment['quoted_notice']['nickname'] = $quoted_notice_author->nickname;
                             $attachment['quoted_notice']['fullname'] = $quoted_notice_author->fullname;
+                            $attachment['quoted_notice']['is_local'] = $quoted_notice_author->isLocal();
                             $quoted_notice_attachments = $quoted_notice->attachments();
                             foreach($quoted_notice_attachments as $q_attach) {
                                 if(is_object($q_attach)) {

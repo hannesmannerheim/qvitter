@@ -132,6 +132,7 @@ function pathToStreamRouter(path) {
 		id: false,					// if we can read a id number string from the path, add it to this property
         maxIdOrPage: 'maxId',		// whether this stream uses 'maxId' or 'page' for paging (maxId is default)
 		menu: false,				// optional menu in the header
+		callbacks: false,			// functions to run after this timeline is loaded to feed-body
 		type: 'notices'				// notices, notifications, users, groups, lists etc. notices is default
 		};
 
@@ -141,6 +142,28 @@ function pathToStreamRouter(path) {
         streamObject.name = 'public timeline';
 		streamObject.streamHeader = window.sL.publicTimeline;
 		streamObject.stream = 'statuses/public_timeline.json';
+		if(window.loggedIn !== false) {
+			streamObject.menu = [
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
+				];
+			}
 		return streamObject;
 		}
 
@@ -150,6 +173,28 @@ function pathToStreamRouter(path) {
 		streamObject.name = 'public and external timeline';
 		streamObject.streamHeader = window.sL.publicAndExtTimeline;
 		streamObject.stream = 'statuses/public_and_external_timeline.json';
+		if(window.loggedIn !== false) {
+			streamObject.menu = [
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
+				];
+			}
 		return streamObject;
 		}
 
@@ -168,6 +213,28 @@ function pathToStreamRouter(path) {
             streamObject.stream = 'search.json?q=' + searchQuery;
             streamObject.id = searchQuery;
             streamObject.maxIdOrPage = 'page';
+			if(window.loggedIn !== false) {
+				streamObject.menu = [
+					{
+						type: 'profile-prefs-toggle',
+						namespace: 'qvitter',
+						topic: 'hide_embedded_in_timeline:' + streamObject.path,
+						label: window.sL.hideEmbeddedInTimeline,
+						callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+						},
+					{
+						type: 'profile-prefs-toggle',
+						namespace: 'qvitter',
+						topic: 'hide_quotes_in_timeline:' + streamObject.path,
+						label: window.sL.hideQuotesInTimeline,
+						callback: 'showOrHideQuotesInTimelineFromProfilePref'
+						}
+					];
+				streamObject.callbacks = [
+					'showOrHideEmbeddedContentInTimelineFromProfilePref',
+					'showOrHideQuotesInTimelineFromProfilePref'
+					];
+				}
 			return streamObject;
 			}
 		}
@@ -193,6 +260,28 @@ function pathToStreamRouter(path) {
         streamObject.streamHeader = '#' + replaceHtmlSpecialChars(pathSplit[1]);
         streamObject.id = pathSplit[1];
 		streamObject.stream = 'statusnet/tags/timeline/' + streamObject.id + '.json';
+		if(window.loggedIn !== false) {
+			streamObject.menu = [
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
+				];
+			}
 		return streamObject;
 		}
 
@@ -243,6 +332,28 @@ function pathToStreamRouter(path) {
         streamObject.nickname = pathSplit[1];
         streamObject.streamHeader = '!' + replaceHtmlSpecialChars(pathSplit[1]);
 		streamObject.stream = 'statusnet/groups/timeline/' + streamObject.nickname + '.json';
+		if(window.loggedIn !== false) {
+			streamObject.menu = [
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
+				];
+			}
 		return streamObject;
 		}
 
@@ -289,19 +400,40 @@ function pathToStreamRouter(path) {
 		if(window.loggedIn.screen_name == streamObject.nickname) {
 			streamObject.stream = 'statuses/friends_timeline.json';
             streamObject.streamSubHeader = window.sL.timeline;
+			streamObject.menu = [
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_replies',
+					label: window.sL.hideRepliesToPeopleIDoNotFollow
+					},
+				{
+					type: 'divider'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
+				];
 			}
 		else {
 			streamObject.stream = 'statuses/friends_timeline.json?screen_name=' + streamObject.nickname + '&withuserarray=1';
             streamObject.parentPath = streamObject.nickname;
 			}
-		streamObject.menu = [
-			{
-				type: 'profile-prefs-toggle',
-				namespace: 'qvitter',
-				topic: 'hide_replies',
-				label: window.sL.hideRepliesToPeopleIDoNotFollow
-				}
-			];
 		return streamObject;
 		}
 
@@ -318,6 +450,28 @@ function pathToStreamRouter(path) {
             streamObject.parentPath = streamObject.nickname;
 			streamObject.stream = 'statuses/mentions.json?screen_name=' + streamObject.nickname + '&withuserarray=1';
             streamObject.streamSubHeader = '<div class="queet-streams"><a class="queet-stream queets" href="' + window.siteInstanceURL + streamObject.nickname + '">' + window.sL.notices + '</a> /</div>' + window.sL.mentions + '<div class="queet-streams">/ <a class="queet-stream favorites" href="' + window.siteInstanceURL + streamObject.nickname + '/favorites">' + window.sL.favoritesNoun + '</a></div>';
+			}
+		if(window.loggedIn !== false) {
+			streamObject.menu = [
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
+				];
 			}
 		return streamObject;
 		}
@@ -344,27 +498,52 @@ function pathToStreamRouter(path) {
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					},
+				{
+					type: 'divider'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
 					topic: 'disable_notify_replies_and_mentions',
-					label: window.sL.notifyRepliesAndMentions
+					label: window.sL.notifyRepliesAndMentions,
+					callback: 'reloadCurrentStream'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_favs',
-					label: window.sL.notifyFavs
+					label: window.sL.notifyFavs,
+					callback: 'reloadCurrentStream'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_repeats',
-					label: window.sL.notifyRepeats
+					label: window.sL.notifyRepeats,
+					callback: 'reloadCurrentStream'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_follows',
-					label: window.sL.notifyFollows
+					label: window.sL.notifyFollows,
+					callback: 'reloadCurrentStream'
 					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
 				];
 			}
 		return streamObject;
@@ -383,6 +562,28 @@ function pathToStreamRouter(path) {
 			streamObject.stream = 'favorites.json?screen_name=' + streamObject.nickname + '&withuserarray=1';
             streamObject.streamHeader = '@' + replaceHtmlSpecialChars(streamObject.nickname);
             streamObject.streamSubHeader = '<div class="queet-streams"><a class="queet-stream queets" href="' + window.siteInstanceURL + streamObject.nickname + '">' + window.sL.notices + '</a> / <a class="queet-stream mentions" href="' + window.siteInstanceURL + streamObject.nickname + '/replies">' + window.sL.mentions + '</a> /</div>' + window.sL.favoritesNoun;
+			}
+		if(window.loggedIn !== false) {
+			streamObject.menu = [
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
+				];
 			}
 		return streamObject;
 		}
@@ -439,6 +640,28 @@ function pathToStreamRouter(path) {
 		else {
 			streamObject.streamHeader = window.sL.nicknamesListWithListName.replace('{list-name}',streamObject.nickname).replace('{nickname}',pathSplit[0]);
 			streamObject.streamSubHeader = window.sL.nicknamesListWithListName.replace('{list-name}',streamObject.nickname).replace('{nickname}',pathSplit[0]) + '<div class="queet-streams">/ <a class="queet-stream list-members" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname + '/tagged">' + window.sL.listMembers + '</a> / <a class="queet-stream list-subscribers" href="' + window.siteInstanceURL + pathSplit[0] + '/all/' + streamObject.nickname  + '/subscribers">' + window.sL.listSubscribers + '</a></div>';
+			}
+		if(window.loggedIn !== false) {
+			streamObject.menu = [
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_embedded_in_timeline:' + streamObject.path,
+					label: window.sL.hideEmbeddedInTimeline,
+					callback: 'showOrHideEmbeddedContentInTimelineFromProfilePref'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_quotes_in_timeline:' + streamObject.path,
+					label: window.sL.hideQuotesInTimeline,
+					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					}
+				];
+			streamObject.callbacks = [
+				'showOrHideEmbeddedContentInTimelineFromProfilePref',
+				'showOrHideQuotesInTimelineFromProfilePref'
+				];
 			}
 		return streamObject;
 		}

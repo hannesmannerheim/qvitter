@@ -161,5 +161,7 @@
 	"addEditLanguageLink":"Help translate {site-title} to another language",
 	"onlyPartlyTranslated":"{site-title} is only partly translated to <em>{language-name}</em> ({percent}%). You can help complete the translation at <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter's repository homepage</a>",
 	"startRant":"Start a rant",
-	"continueRant":"Continue the rant"
+	"continueRant":"Continue the rant",
+	"hideEmbeddedInTimeline":"Ocultar contenido incrustado en esta línea temporal",
+	"hideQuotesInTimeline":"Ocultar citas en esta línea temporal"
 }

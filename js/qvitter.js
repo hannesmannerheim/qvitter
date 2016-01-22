@@ -1296,10 +1296,84 @@ $('body').on('click','.row-type-profile-prefs-toggle',function(e){
 				window.qvitterProfilePrefs[prefTopic] = '0';
 				}
 
+			// run callback
+			if(typeof thisToggle.attr('data-profile-pref-callback') != 'undefined'
+			&& thisToggle.attr('data-profile-pref-state') != 'undefined'
+			&& typeof window[thisToggle.attr('data-profile-pref-callback')] == 'function') {
+				window[thisToggle.attr('data-profile-pref-callback')]();
+				}
 			}
 		});
 
 	});
+
+
+/* ·
+   ·
+   ·   Mark all notifications as seen
+   ·
+   · · · · · · · · · · · · · */
+
+function markAllNotificationsAsSeen(arg,callback) {
+	display_spinner();
+	getFromAPI('qvitter/mark_all_notifications_as_seen.json',function(data){
+		if(data === false) {
+			showErrorMessage(window.sL.ERRORfailedMarkingAllNotificationsAsRead);
+			callback(true);
+			}
+		else {
+			helloAPI(function(){
+				$('.stream-item').removeClass('not-seen');
+				$('#new-queets-bar').trigger('click'); // show any hidden notifications (this will also remove the dropdown menu)
+				remove_spinner();
+				callback(true);
+				});
+			}
+		});
+
+	}
+
+/* ·
+   ·
+   ·   Show or hide embedded content in timeline?
+   ·
+   · · · · · · · · · · · · · */
+
+function showOrHideEmbeddedContentInTimelineFromProfilePref() {
+	if(typeof window.qvitterProfilePrefs['hide_embedded_in_timeline:' + window.currentStreamObject.path] != 'undefined') {
+		var showHide = window.qvitterProfilePrefs['hide_embedded_in_timeline:' + window.currentStreamObject.path];
+		if(parseInt(showHide,10) == 1) {
+			$('#feed-body').addClass('embedded-content-hidden-by-user');
+			}
+		else {
+			$('#feed-body').removeClass('embedded-content-hidden-by-user');
+			}
+		}
+	else {
+		$('#feed-body').removeClass('embedded-content-hidden-by-user');
+		}
+	}
+
+/* ·
+   ·
+   ·   Show or hide quotes in timeline?
+   ·
+   · · · · · · · · · · · · · */
+
+function showOrHideQuotesInTimelineFromProfilePref() {
+	if(typeof window.qvitterProfilePrefs['hide_quotes_in_timeline:' + window.currentStreamObject.path] != 'undefined') {
+		var showHide = window.qvitterProfilePrefs['hide_quotes_in_timeline:' + window.currentStreamObject.path];
+		if(parseInt(showHide,10) == 1) {
+			$('#feed-body').addClass('quotes-hidden-by-user');
+			}
+		else {
+			$('#feed-body').removeClass('quotes-hidden-by-user');
+			}
+		}
+	else {
+		$('#feed-body').removeClass('quotes-hidden-by-user');
+		}
+	}
 
 
 
@@ -2631,9 +2705,12 @@ $('body').on('click','button.shorten',function () {
    ·
    · · · · · · · · · · · · · */
 $('body').on('click','.reload-stream',function () {
-	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,false);
+	reloadCurrentStream();
 	});
-
+// can be used a callback too, e.g. from profile pref toggles
+function reloadCurrentStream() {
+	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,false);
+	}
 
 /* ·
    ·

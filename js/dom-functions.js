@@ -97,7 +97,8 @@ function getMenu(menuArray) {
 					'data-menu-row-type': this.type,
 					'data-profile-prefs-topic': this.topic,
 					'data-profile-prefs-namespace': this.namespace,
-					'data-profile-pref-state': prefEnabledOrDisabled
+					'data-profile-pref-state': prefEnabledOrDisabled,
+					'data-profile-pref-callback': this.callback
 					});
 				}
 			}
@@ -743,14 +744,23 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			// also mark this stream as the current stream immediately, if a saved copy exists
 			addStreamToHistoryMenuAndMarkAsCurrent(streamObject);
 
+			// make sure page-container and feed is visible
+			$('#page-container').css('opacity','1');
+			$('#feed').css('opacity','1');
+
+			// run callbacks for this stream
+			if(streamObject.callbacks !== false) {
+				$.each(streamObject.callbacks, function(){
+					if(typeof window[this] == 'function') {
+						window[this]();
+						}
+					});
+				}
+
 			// maybe do something
 			if(typeof actionOnSuccess == 'function') {
 
 				actionOnSuccess();
-
-				// make sure page-container and feed is visible
-				$('#page-container').css('opacity','1');
-				$('#feed').css('opacity','1');
 
 				// don't invoke actionOnSuccess later if we already invoked it here
 				actionOnSuccess = false;
@@ -940,6 +950,15 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			// make sure page-container is visible
 			$('#page-container').css('opacity','1');
 			$('#feed').css('opacity','1');
+
+			// run callbacks for this stream
+			if(streamObject.callbacks !== false) {
+				$.each(streamObject.callbacks, function(){
+					if(typeof window[this] == 'function') {
+						window[this]();
+						}
+					});
+				}
 
 			$('.reload-stream').show();
 			$('body').removeClass('loading-older');$('body').removeClass('loading-newer');
@@ -2024,7 +2043,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 			var urlToHideWithoutProtocol = removeProtocolFromUrl(urlToHide);
 			if(urlToHideWithoutProtocol == removeProtocolFromUrl($(aElement).attr('href'))
 			|| urlToHideWithoutProtocol == removeProtocolFromUrl($(aElement).text())) {
-				$(aElement).css('display','none');
+				$(aElement).addClass('hidden-embedded-link-in-queet-text')
 				}
 			});
 		});
@@ -2094,7 +2113,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 
 /* ·
    ·
-   ·  Place quoted notices in the queet text
+   ·  Place or update quoted notices in the queet text
    ·
    ·  @param quotedNotices: object returned by buildAttachmentHTML()
    ·  @param queetText: jQuery object for queet text
@@ -2104,23 +2123,42 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 function placeQuotedNoticesInQueetText(quotedNotices,queetText) {
 	$.each(quotedNotices,function(k,qoutedNotice){
 		if(typeof qoutedNotice.url != 'undefined') {
-			var quoteLinkFound = queetText.find('a[href*="' + removeProtocolFromUrl(qoutedNotice.url) + '"]');
+			var quoteLinkFound = queetText.find('a[href*="' + removeProtocolFromUrl(qoutedNotice.url) + '"]:not(.quote-link-container)');
 			// if we can't found it in a href, we might find it in data-quote-url attribute!
 			if(quoteLinkFound.length==0) {
-				quoteLinkFound = queetText.find('a[data-quote-url*="' + removeProtocolFromUrl(qoutedNotice.url) + '"]');
+				quoteLinkFound = queetText.find('a[data-quote-url*="' + removeProtocolFromUrl(qoutedNotice.url) + '"]:not(.quote-link-container)');
 				}
 			if(quoteLinkFound.length>0) {
 				$.each(quoteLinkFound,function(){
-					$(this).addClass(qoutedNotice.class);
-					$(this).attr('href',qoutedNotice.href);
-					$(this).attr('data-quote-url',qoutedNotice.url);
-					$(this).html(qoutedNotice.html);
-					// remove unnecessary line breaks, i.e. remove br between two quoted notices
-					if($(this).prev().is('br')) {
-						$(this).prev().remove();
+
+					// restore old style links (this can be removed later)
+					if($(this).children('.quoted-notice-header, .oembed-item-header').length>0) {
+						$(this).html($(this).attr('href'));
+						$(this).removeAttr('style');
+						$(this).removeClass('quoted-notice');
+						$(this).removeClass('oembed-item');
 						}
-					if(!$(this).next().is('br')) {
-						$(this).after('<br>');
+
+					// place a container if we don't have it
+					if(!$(this).next().is('.quote-link-container')) {
+						$(this).after('<a class="quote-link-container"></a>');
+						}
+
+					// update the link and the (maybe newly added) quote container after the link
+					if($(this).next().is('.quote-link-container')) {
+						$(this).addClass('hidden-quote-link-in-queet-text');
+						$(this).attr('data-quote-url',qoutedNotice.url);
+						$(this).next().addClass(qoutedNotice.class);
+						$(this).next().attr('href',qoutedNotice.href);
+						$(this).next().html(qoutedNotice.html);
+
+						// remove unnecessary line breaks, i.e. remove br between two quoted notices
+						if($(this).prev().is('br')) {
+							$(this).prev().remove();
+							}
+						if(!$(this).next().next().is('br')) {
+							$(this).next().after('<br>');
+							}
 						}
 					});
 				}

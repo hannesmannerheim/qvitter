@@ -894,7 +894,8 @@ function searchForUpdatedNoticeData(obj) {
 						// we might want to hide urls (rendered as attachments) in the queet text
 						$.each(queetFoundInFeed.find('.queet-text').find('a'),function(){
 							if(attachmentsHTMLBuild.urlsToHide.indexOf($(this).text()) > -1) {
-								$(this).css('display','none');
+								$(this).removeAttr('style'); // temporary fix
+								$(this).addClass('hidden-embedded-link-in-queet-text');
 								}
 							});
 						queetFoundInFeed.find('.queet-text').after(attachmentsHTMLBuild.html);
@@ -1134,32 +1135,6 @@ function displayOrHideUnreadNotifications(notifications) {
 			}
 
 	}
-
-/* ·
-   ·
-   ·   Mark all notifications as seen
-   ·
-   · · · · · · · · · · · · · */
-
-function markAllNotificationsAsSeen(arg,callback) {
-	display_spinner();
-	getFromAPI('qvitter/mark_all_notifications_as_seen.json',function(data){
-		if(data === false) {
-			showErrorMessage(window.sL.ERRORfailedMarkingAllNotificationsAsRead);
-			callback(true);
-			}
-		else {
-			helloAPI(function(){
-				$('.stream-item').removeClass('not-seen');
-				$('#new-queets-bar').trigger('click'); // show any hidden notifications (this will also remove the dropdown menu)
-				remove_spinner();
-				callback(true);
-				});
-			}
-		});
-
-	}
-
 
 
 /* ·

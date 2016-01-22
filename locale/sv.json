@@ -161,5 +161,7 @@
 	"addEditLanguageLink":"Hjälp till att översätta {site-title} till ett annat språk",
 	"onlyPartlyTranslated":"Bara {percent}% av gränssnittet är översatt till svenska. Du kan hjälpa till med översättningen på <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitters hemsida</a>",
 	"startRant":"Påbörja en harang",
-	"continueRant":"Fortsätt harangen"
+	"continueRant":"Fortsätt harangen",
+	"hideEmbeddedInTimeline":"Dölj inbäddat innehåll i detta flöde",
+	"hideQuotesInTimeline":"Dölj citat i detta flöde"
 }

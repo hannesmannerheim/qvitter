@@ -2451,6 +2451,19 @@ body.rtl .queet.rtl .expanded-content {
 	}
 
 
+#feed-body.embedded-content-hidden-by-user .queet-content > .oembed-data,
+#feed-body.embedded-content-hidden-by-user .queet-content > .queet-thumbs,
+#feed-body.quotes-hidden-by-user .queet-text .quote-link-container,
+.queet-text a.hidden-embedded-link-in-queet-text,
+.queet-text a.hidden-quote-link-in-queet-text {
+	display:none;
+	}
+#feed-body.embedded-content-hidden-by-user .queet-text a.hidden-embedded-link-in-queet-text,
+#feed-body.quotes-hidden-by-user .queet-text a.hidden-quote-link-in-queet-text {
+	display:inline;
+	}
+
+
 .stream-item.activity .created-at a {
     display:none;
 	}
