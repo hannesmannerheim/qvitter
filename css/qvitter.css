@@ -498,7 +498,8 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     white-space: nowrap;
     text-decoration: none;
 	}
-.quitter-settings.dropdown-menu li.fullwidth:not(.dropdown-caret) a {
+.quitter-settings.dropdown-menu li.fullwidth:not(.dropdown-caret) a,
+#stream-menu-cog .dropdown-menu li.fullwidth:not(.dropdown-caret) a {
 	white-space: normal;
     width: 100%;
 	box-sizing:border-box;
