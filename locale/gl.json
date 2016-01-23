@@ -162,6 +162,6 @@
 	"onlyPartlyTranslated":"{site-title} is only partly translated to <em>{language-name}</em> ({percent}%). You can help complete the translation at <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter's repository homepage</a>",
 	"startRant":"Start a rant",
 	"continueRant":"Continue the rant",
-	"hideEmbeddedInTimeline":"Hide embedded content in this timeline",
-	"hideQuotesInTimeline":"Hide quotes in this timeline"
+	"hideEmbeddedInTimeline":"Ocultar contido incrustado nesta liña temporal",
+	"hideQuotesInTimeline":"Ocultar citas nesta liña temporal"
 }
