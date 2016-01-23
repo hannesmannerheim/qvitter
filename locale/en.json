@@ -138,7 +138,7 @@
 	"ERRORcouldNotFindGroupWithNickname":"Could not find a group with nickname \"{nickname}\" on this server",
 	"ERRORcouldNotFindPage":"Could not find that page.",
 	"ERRORnoticeRemoved": "This notice has been removed.",
-	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connecton. Please try again later!",
+	"ERRORnoContactWithServer": "Can not establish a connection to the server. The server could be overloaded, or there might be a problem with your internet connection. Please try again later!",
 	"ERRORattachmentUploadFailed": "The upload failed. The format might be unsupported or the size too large.",
 	"hideRepliesToPeopleIDoNotFollow":"Hide replies to people I don't follow",
 	"markAllNotificationsAsSeen":"Mark all notifications as seen",
