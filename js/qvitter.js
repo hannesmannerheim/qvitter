@@ -3874,10 +3874,10 @@ function uploadAttachment(e, thisUploadButton) {
 			if (rsp.attr('stat') == 'ok') {
 
 				// maybe add thumbnail below queet box
-				if($(data).find('atom\\:link').length>0) {
-					var mimeType = $(data).find('atom\\:link').attr('type');
+				if($(data).find('atom\\:link,link').length>0) {
+					var mimeType = $(data).find('atom\\:link,link').attr('type');
 					if(mimeType.indexOf('image/') == 0) {
-						var imgUrl = $(data).find('atom\\:link').attr('href');
+						var imgUrl = $(data).find('atom\\:link,link').attr('href');
 						thisUploadButton.closest('.queet-toolbar').before('<span class="upload-image-container"><img class="to-upload" src="' + imgUrl +  '" /></span>');
 						}
 					}
