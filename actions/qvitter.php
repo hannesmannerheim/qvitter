@@ -446,8 +446,6 @@ class QvitterAction extends ApiAction
 												}
 
 											?>
-                                            <li class="fullwidth language dropdown-divider"></li>
-                                            <li class="fullwidth"><a href="https://git.gnu.io/h2p/Qvitter/tree/master/locale" target="_blank" id="add-edit-language-link"></a></li>
 										</ul>
 									</li>
 								</ul>
