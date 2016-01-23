@@ -481,8 +481,8 @@ $('body').on('mouseleave','#what-is-federation',function(){
    ·
    · · · · · · · · · · · · · */
 $('body').on('click','.global-nav',function(e) {
-	if($(e.target).is('.global-nav')) {
-		$('html').scrollTop(0);
+	if($(e.target).hasClass('global-nav')) {
+		$(window).scrollTop(0);
 		}
 	});
 
