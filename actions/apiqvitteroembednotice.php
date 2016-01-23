@@ -127,7 +127,7 @@ class ApiQvitterOembedNoticeAction extends ApiAction
 					} catch (ServerException $e) {
                         //
                     }
-                    if(method_exists('File_thumbnail','url')) {
+                    if(!empty($thumb) && method_exists('File_thumbnail','url')) {
                         try {
                             $thumb_url = File_thumbnail::url($thumb->filename);
                             $oembed['thumbnail_url'] = $thumb_url;
