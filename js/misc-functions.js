@@ -833,6 +833,7 @@ function updateUserDataInStream() {
 
 window.knownDeletedNotices = new Object();
 function searchForUpdatedNoticeData(obj) {
+	var streamItemsUpdated = false;
 	for (var property in obj) {
 		if (obj.hasOwnProperty(property)) {
 			if (typeof obj[property] == "object") {
@@ -849,12 +850,14 @@ function searchForUpdatedNoticeData(obj) {
 					window.knownDeletedNotices[uriToHide] = true;
 	                var streamItemToHide = $('.stream-item[data-uri="' + uriToHide + '"]');
 					slideUpAndRemoveStreamItem(streamItemToHide);
+					streamItemsUpdated = true;
 					}
 				// if this is not a delete notice it means the notice exists and is not deleted,
 				// correct any notices that are marked as unrepeated, they might have
 				// been marked like that by mistake (i.e. a bug...)
 				else if(streamItemFoundInFeed.hasClass('unrepeated')) {
 					streamItemFoundInFeed.removeClass('unrepeated always-hidden');
+					streamItemsUpdated = true;
 					}
 
 				// ordinary notices
@@ -868,6 +871,7 @@ function searchForUpdatedNoticeData(obj) {
 					// we first got them
 					if(obj.is_post_verb === false) {
 						streamItemFoundInFeed.addClass('activity always-hidden');
+						streamItemsUpdated = true;
 						}
 
 					// update the avatar row if the queet is expanded and the numbers are not the same
@@ -888,6 +892,10 @@ function searchForUpdatedNoticeData(obj) {
 							queetFoundInFeed.children('script.attachment-json').text(JSON.stringify(obj.attachments));
 							}
 						var attachmentsHTMLBuild = buildAttachmentHTML(obj.attachments);
+						var thumbsIsHidden = false;
+						if(queetFoundInFeed.find('.queet-thumbs').hasClass('hide-thumbs')) {
+							var thumbsIsHidden = true;
+							}
 						queetFoundInFeed.find('.queet-thumbs').remove();
 						queetFoundInFeed.find('.oembed-data').remove();
 						placeQuotedNoticesInQueetText(attachmentsHTMLBuild.quotedNotices,queetFoundInFeed.find('.queet-text'));
@@ -899,6 +907,10 @@ function searchForUpdatedNoticeData(obj) {
 								}
 							});
 						queetFoundInFeed.find('.queet-text').after(attachmentsHTMLBuild.html);
+						if(thumbsIsHidden) {
+							queetFoundInFeed.find('.queet-thumbs').addClass('hide-thumbs');
+							}
+						streamItemsUpdated = true;
 						}
 
 					// set favorite data
@@ -908,11 +920,13 @@ function searchForUpdatedNoticeData(obj) {
 						streamItemFoundInFeed.addClass('favorited');
 						queetFoundInFeed.find('.action-fav-container').children('.with-icn').addClass('done');
 						queetFoundInFeed.find('.action-fav-container').find('.icon.sm-fav').attr('data-tooltip',window.sL.favoritedVerb);
+						streamItemsUpdated = true;
 						}
 					else {
 						streamItemFoundInFeed.removeClass('favorited');
 						queetFoundInFeed.find('.action-fav-container').children('.with-icn').removeClass('done');
 						queetFoundInFeed.find('.action-fav-container').find('.icon.sm-fav').attr('data-tooltip',window.sL.favoriteVerb);
+						streamItemsUpdated = true;
 						}
 
 					// set repeat data
@@ -923,16 +937,21 @@ function searchForUpdatedNoticeData(obj) {
 						queetFoundInFeed.find('.action-rt-container').children('.with-icn').addClass('done');
 						queetFoundInFeed.find('.action-rt-container').find('.icon.sm-rt').attr('data-tooltip',window.sL.requeetedVerb);
 						streamItemFoundInFeed.attr('data-requeeted-by-me-id',obj.repeated_id);
+						streamItemsUpdated = true;
 						}
 					else {
 						streamItemFoundInFeed.removeClass('requeeted');
 						queetFoundInFeed.find('.action-rt-container').children('.with-icn').removeClass('done');
 						queetFoundInFeed.find('.action-rt-container').find('.icon.sm-rt').attr('data-tooltip',window.sL.requeetVerb);
 						streamItemFoundInFeed.removeAttr('data-requeeted-by-me-id');
+						streamItemsUpdated = true;
 						}
 					}
 				}
 			}
+		}
+	if(streamItemsUpdated) {
+		rememberStreamStateInLocalStorage();
 		}
 	}
 
