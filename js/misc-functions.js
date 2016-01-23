@@ -951,7 +951,10 @@ function searchForUpdatedNoticeData(obj) {
 			}
 		}
 	if(streamItemsUpdated) {
-		rememberStreamStateInLocalStorage();
+		// TODO, create a queue that runs with setInterval instead, say every 5 s,
+		// that way we can run rememberStreamStateInLocalStorage() in the background,
+		// and don't slow down stream change etc
+		// rememberStreamStateInLocalStorage();
 		}
 	}
 
