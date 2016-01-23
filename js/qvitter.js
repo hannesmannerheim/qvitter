@@ -2895,7 +2895,10 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 			}
 		});
 
-	currentVal = currentVal.replace(/&nbsp;<span/g,' <span'); // safari fix
+	// safari fix
+	if(typeof bowser.safari != 'undefined') {
+		currentVal = currentVal.replace(/&nbsp;<span/g,' <span');
+		}
 
 	$(this).siblings('.syntax-middle').html(currentVal);
 	});
