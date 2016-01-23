@@ -486,7 +486,6 @@ class QvitterPlugin extends Plugin {
     function onNoticeSimpleStatusArray($notice, &$twitter_status, $scoped)
     {
 
-
     	// groups
 		$notice_groups = $notice->getGroups();
 		$group_addressees = false;
@@ -528,7 +527,7 @@ class QvitterPlugin extends Plugin {
                                     $oembed->title = $twitter_username;
                                     }
                                 $oembed_html = str_replace('&#8230;','...',$oembed_html); // ellipsis is sometimes stored as html in db, for some reason
-                                $oembed_html = substr(trim(strip_tags(html_entity_decode($oembed_html,ENT_QUOTES))),0,250); // sometimes we have html charachters that we want to decode and then strip
+                                $oembed_html = mb_substr(trim(strip_tags(html_entity_decode($oembed_html,ENT_QUOTES))),0,250); // sometimes we have html charachters that we want to decode and then strip
                                 $oembed_title = trim(strip_tags(html_entity_decode($oembed->title,ENT_QUOTES)));
                                 $oembed_provider = trim(strip_tags(html_entity_decode($oembed->provider,ENT_QUOTES)));
                                 $oembed_author_name = trim(strip_tags(html_entity_decode($oembed->author_name,ENT_QUOTES)));
