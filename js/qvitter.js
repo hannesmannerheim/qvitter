@@ -481,8 +481,8 @@ $('body').on('mouseleave','#what-is-federation',function(){
    ·
    · · · · · · · · · · · · · */
 $('body').on('click','.global-nav',function(e) {
-	if($(e.target).is('.global-nav')) {
-		$('html').scrollTop(0);
+	if($(e.target).hasClass('global-nav')) {
+		$(window).scrollTop(0);
 		}
 	});
 
@@ -2895,7 +2895,10 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 			}
 		});
 
-	currentVal = currentVal.replace(/&nbsp;<span/g,' <span'); // safari fix
+	// safari fix
+	if(typeof bowser.safari != 'undefined') {
+		currentVal = currentVal.replace(/&nbsp;<span/g,' <span');
+		}
 
 	$(this).siblings('.syntax-middle').html(currentVal);
 	});
