@@ -1155,10 +1155,7 @@ function expand_queet(q,doScrolling) {
 			if(q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').length == 1) {
 				var youtubeURL = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').children('.attachment-thumb').attr('data-full-image-url');
 				if(q.children('.queet').find('.expanded-content').children('.media').children('iframe[src="' + youTubeEmbedLinkFromURL(youtubeURL) + '"]').length < 1) { // not if already showed
-					// hide video thumbnail if it's the only one
-					if(q.children('.queet').find('.queet-thumbs').children('.thumb-container').length < 2) {
-						q.children('.queet').find('.queet-thumbs').addClass('hide-thumbs');
-						}
+					q.children('.queet').find('.queet-thumbs').addClass('hide-thumbs');
 					// show video
 					q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="510" height="315" src="' + youTubeEmbedLinkFromURL(youtubeURL) + '" frameborder="0" allowfullscreen></iframe></div>');
 					}
