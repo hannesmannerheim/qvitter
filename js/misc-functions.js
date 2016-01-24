@@ -802,7 +802,7 @@ function updateUserDataInStream() {
 
 			// cover photos
 			$.each($('.profile-header-inner[data-user-id="' + userArray.local.id + '"]'),function(){
-				if($(this).css('background-image') != 'url("' + userArray.local.cover_photo + '")') {
+				if($(this).css('background-image') != 'url("' + userArray.local.cover_photo + '")' && userArray.local.cover_photo != false) {
 					$(this).css('background-image','url("' + userArray.local.cover_photo + '")');
 					}
 				});
