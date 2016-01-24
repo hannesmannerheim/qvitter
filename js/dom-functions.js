@@ -2145,6 +2145,7 @@ function placeQuotedNoticesInQueetText(quotedNotices,queetText) {
 					if($(this).next().is('.quote-link-container')) {
 						$(this).addClass('hidden-quote-link-in-queet-text');
 						$(this).attr('data-quote-url',qoutedNotice.url);
+						$(this).next().attr('data-quote-url',qoutedNotice.url);
 						$(this).next().addClass(qoutedNotice.class);
 						$(this).next().attr('href',qoutedNotice.href);
 						$(this).next().html(qoutedNotice.html);
@@ -2370,13 +2371,16 @@ function buildAttachmentHTML(attachments){
 					var img_url = this.thumb_url;
 					}
 
-				attachmentHTML += '<a style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + animatedGifClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
-				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
+				var urlToHide = window.siteInstanceURL + 'attachment/' + this.id;
+
+				attachmentHTML += '<a data-local-attachment-url="' + urlToHide + '" style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + animatedGifClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
+				urlsToHide.push(urlToHide); // hide this attachment url from the queet text
 				attachmentNum++;
 				}
 			else if (this.mimetype == 'image/svg+xml') {
-				attachmentHTML += '<a style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
-				urlsToHide.push(window.siteInstanceURL + 'attachment/' + this.id); // hide this attachment url from the queet text
+				var urlToHide = window.siteInstanceURL + 'attachment/' + this.id;
+				attachmentHTML += '<a data-local-attachment-url="' + urlToHide + '" style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
+				urlsToHide.push(urlToHide); // hide this attachment url from the queet text
 				attachmentNum++;
 				}
 			});

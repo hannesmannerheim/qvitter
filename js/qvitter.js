@@ -138,8 +138,43 @@ $('body').on({
 
 		// regular tooltips
 		if($(e.target).is('[data-tooltip]')) {
+
+			var tooltipClass = '';
+
 			tooltip_data = $(e.target).attr('data-tooltip');
-			var tooltipElement = $('<div class="tooltip" lang="' + window.selectedLanguage + '">' + tooltip_data + '</div>');
+
+			// if embedded content is hidden, we show it in tooltips
+			if($('#feed-body').hasClass('embedded-content-hidden-by-user')
+			&& !$(e.target).is('.oembed-item')
+			&& $(e.target).closest('.queet').length > 0
+			&& $(e.target).closest('.queet').find('.oembed-item[href="' + $(e.target).attr('href') + '"]').length > 0) {
+				tooltip_data = $(e.target).closest('.queet').find('.oembed-item[href="' + $(e.target).attr('href') + '"]').html();
+				tooltipClass = 'oembed';
+				}
+			else if($('#feed-body').hasClass('embedded-content-hidden-by-user')
+			&& !$(e.target).is('.attachment-thumb')
+			&& $(e.target).closest('.queet').length > 0
+			&& $(e.target).text().indexOf('/attachment/') > -1) {
+				// local attachments has /attachment/-url in its href attribute
+				if($(e.target).closest('.queet').find('.thumb-container[data-local-attachment-url="' + $(e.target).attr('href') + '"]').length>0) {
+					tooltip_data = $(e.target).closest('.queet').find('.thumb-container[data-local-attachment-url="' + $(e.target).attr('href') + '"]').outerHTML();
+					tooltipClass = 'thumb';
+					}
+				// remote attachments are identified by full url
+				else if($(e.target).closest('.queet').find('.thumb-container[href="' + $(e.target).attr('data-tooltip') + '"]').length>0) {
+					tooltip_data = $(e.target).closest('.queet').find('.thumb-container[href="' + $(e.target).attr('data-tooltip') + '"]').outerHTML();
+					tooltipClass = 'thumb';
+					}
+				}
+			else if($('#feed-body').hasClass('quotes-hidden-by-user')
+			&& !$(e.target).is('.quote-link-container')
+			&& $(e.target).is('[data-quote-url]')
+			&& $(e.target).closest('.queet-text').find('.quote-link-container[data-quote-url="' + $(e.target).attr('data-quote-url') + '"]').length > 0) {
+				tooltip_data = $(e.target).closest('.queet-text').find('.quote-link-container[data-quote-url="' + $(e.target).attr('data-quote-url') + '"]').html();
+				tooltipClass = 'quote';
+				}
+
+			var tooltipElement = $('<div class="tooltip ' + tooltipClass + '" lang="' + window.selectedLanguage + '">' + tooltip_data + '</div>');
 			var tooltipCaret = $('<div class="tooltip-caret"></div>');
 			$('body').prepend(tooltipElement);
 			$('body').prepend(tooltipCaret);
