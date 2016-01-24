@@ -404,7 +404,7 @@ function alignTooltipTohoveredElement(tooltipElement,tooltipCaret,hovered) {
 	// tooltip at top
 	else {
 		var tooltipCaretPosX = targetPosX+targetWidth/2-5;
-		var tooltipCaretPosY = targetPosY-7;
+		var tooltipCaretPosY = targetPosY-8;
 
 		// caret always directly on top of element
 		tooltipCaret.css('left',tooltipCaretPosX + 'px');
