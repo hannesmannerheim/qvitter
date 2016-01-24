@@ -119,24 +119,6 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
 			return true;
 			}
 
-		// if we don't know about this user, or the user has changed nickname
-		// if profile url ends with '/' this is probably an unknown single user instance
-		if(substr($profileurl, -1)==='/') {
-			$instanceurl = $profileurl;
-			$user_id_or_nickname = 1;
-			}
-
-		// multi user instance
-		else {
-			$user_id_or_nickname = substr($profileurl, strrpos($profileurl, '/')+1);
-			$instanceurl = substr($profileurl, 0, strrpos($profileurl, '/'));
-			}
-		$external_profile = $this->getProfileFromExternalInstance($instanceurl,$user_id_or_nickname);
-		if(!isset($external_profile->statusnet_profile_url)) {
-			return true;
-			}
-		$this->profile->external = $external_profile;
-
 		return true;
 
     }
@@ -154,9 +136,13 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
     {
         parent::handle();
 
-        $this->initDocument('json');
-		$this->showJsonObjects($this->profile);
-        $this->endDocument('json');
+        if(is_null($this->profile->local) && is_null($this->profile->external)) {
+            $this->clientError(_('List not found.'), 404);
+        } else {
+            $this->initDocument('json');
+        	$this->showJsonObjects($this->profile);
+            $this->endDocument('json');
+        }
     }
 
     /**
