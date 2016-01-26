@@ -578,7 +578,7 @@ class QvitterPlugin extends Plugin {
                         }
 
                     // this applies to older versions of gnu social, i think
-					} catch (ServerException $e) {
+					} catch (Exception $e) {
 						$thumb = File_thumbnail::getKV('file_id', $attachment->id);
 						if ($thumb instanceof File_thumbnail) {
                             $thumb_url = $thumb->getUrl();
