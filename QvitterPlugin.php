@@ -519,9 +519,10 @@ class QvitterPlugin extends Plugin {
                             $oembed = File_oembed::getKV('file_id',$attachment->id);
                             if($oembed instanceof File_oembed) {
                                 $oembed_html = str_replace('&lt;!--//--&gt;','',$oembed->html); // trash left of wordpress' javascript after htmLawed removed the tags
-                                if($oembed->provider == 'Twitter' && strstr($oembed_html, '<div>&mdash;')) {
-                                    $oembed_html = substr($oembed_html,0,strpos($oembed_html, '<div>&mdash;')); // remove user data from twitter oembed html (we have it in )
-                                    $twitter_username = substr($oembed->html,strpos($oembed->html, '<div>&mdash;')+12);
+error_log('$oembed_html: '.$oembed_html);
+                                if($oembed->provider == 'Twitter' && strstr($oembed_html, '>&mdash; '.$oembed->author_name)) {
+                                    $oembed_html = substr($oembed_html,0,strpos($oembed_html, '>&mdash; '.$oembed->author_name)+1); // remove user data from twitter oembed html (we have it in )
+                                    $twitter_username = substr($oembed->html,strpos($oembed->html, '>&mdash; '.$oembed->author_name)+strlen('>&mdash; '.$oembed->author_name));
                                     $twitter_username = substr($twitter_username, strpos($twitter_username,'(@')+1);
                                     $twitter_username = substr($twitter_username, 0,strpos($twitter_username,')'));
                                     $oembed->title = $twitter_username;
