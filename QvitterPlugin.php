@@ -197,6 +197,12 @@ class QvitterPlugin extends Plugin {
 						  'id' => Nickname::INPUT_FMT));
 		$m->connect('api/account/update_profile_banner.json',
 					array('action' => 'ApiAccountUpdateProfileBanner'));
+		$m->connect('api/saved_searches/list.json',
+					array('action' => 'ApiSavedSearchesList'));
+		$m->connect('api/trends/place.json',
+					array('action' => 'ApiTrendsPlace'));
+		$m->connect('api/activity/about_me/unread.json',
+					array('action' => 'ApiActivityAboutMeUnread'));
 		$m->connect('api/qvitter/update_background_image.json',
 					array('action' => 'ApiUpdateBackgroundImage'));
 		$m->connect('api/qvitter/update_avatar.json',
