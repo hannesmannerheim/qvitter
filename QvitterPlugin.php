@@ -195,8 +195,8 @@ class QvitterPlugin extends Plugin {
 		$m->connect('api/qvitter/allfollowing/:id.json',
 					array('action' => 'apiqvitterallfollowing',
 						  'id' => Nickname::INPUT_FMT));
-		$m->connect('api/qvitter/update_cover_photo.json',
-					array('action' => 'ApiUpdateCoverPhoto'));
+		$m->connect('api/account/update_profile_banner.json',
+					array('action' => 'ApiAccountUpdateProfileBanner'));
 		$m->connect('api/qvitter/update_background_image.json',
 					array('action' => 'ApiUpdateBackgroundImage'));
 		$m->connect('api/qvitter/update_avatar.json',
