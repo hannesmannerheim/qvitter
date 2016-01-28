@@ -657,6 +657,11 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 		weAreReloading = true;
 		}
 
+	// show hidden items when we reload
+	if(weAreReloading) {
+		$('#feed-body').children('.stream-item').removeClass('hidden');
+		}
+
 	// remember the most recent stream object
 	window.currentStreamObject = streamObject;
 
@@ -2256,8 +2261,10 @@ function buildAttachmentHTML(attachments){
 			&& this.oembed.type != 'photo') {
 
 				var oembedImage = '';
-				// not if stripped from html it's the same as the title (wordpress does this..)
-				if(typeof this.thumb_url != 'undefined' && this.thumb_url !== null) {
+				// only local images
+				if(typeof this.thumb_url != 'undefined'
+				&& this.thumb_url !== null
+				&& isLocalURL(this.thumb_url)) {
 					oembedImage = '<div class="oembed-img-container" style="background-image:url(\'' + this.thumb_url + '\')"><img class="oembed-img" src="' + this.thumb_url + '" /></div>';
 					}
 

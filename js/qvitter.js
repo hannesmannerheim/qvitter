@@ -165,6 +165,15 @@ $('body').on({
 					tooltip_data = $(e.target).closest('.queet').find('.thumb-container[href="' + $(e.target).attr('data-tooltip') + '"]').outerHTML();
 					tooltipClass = 'thumb';
 					}
+				// sometimes the attachment link in the queet text does not give us any clue to
+				// which attachment it is referring to. but if it is the only link and there is
+				// exactly one attachment, we can safely assume that the link is referring to
+				// that attachment
+				else if($(e.target).closest('.queet').find('.thumb-container').length == 1
+					&& $(e.target).closest('.queet-text').find('a.attachment').length == 1) {
+					tooltip_data = $(e.target).closest('.queet').find('.thumb-container').outerHTML();
+					tooltipClass = 'thumb';
+					}
 				}
 			else if($('#feed-body').hasClass('quotes-hidden-by-user')
 			&& !$(e.target).is('.quote-link-container')
@@ -2461,12 +2470,12 @@ $('body').on('click','.action-reply-container',function(){
 	var queetHtmlWithoutFooter = $queetHtml.html();
 	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.children('.queet').find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
 
+	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
+
 	// fix the width of the queet box, otherwise the syntax highlighting break
 	var queetBox = $('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.inline-reply-queetbox');
 	var queetBoxWidth = queetBox.width()-20;
 	queetBox.children('.queet-box-syntax, .syntax-middle, .syntax-two').width(queetBoxWidth);
-
-	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
 
 	maybePrefillQueetBoxWithCachedText(queetBox.children('.queet-box'));
 	});
@@ -3582,17 +3591,29 @@ $('body').on('click','.crop-and-save-button',function(){
 
 		// if this is the cover photo
 		if($('#edit-profile-popup .jwc_frame.cover-photo-to-crop').length>0) {
-			$.ajax({ url: window.apiRoot + 'qvitter/update_cover_photo.json',
-				type: "POST",
-				data: {
-					cropH: 	window.jwc.result.cropH,
-					cropW: 	window.jwc.result.cropW,
-					cropX:	window.jwc.result.cropX,
-					cropY: 	window.jwc.result.cropY,
-					img:	$('#cover-photo-to-crop').attr('src')
+
+			var coverImgFormData = new FormData();
+			coverImgFormData.append('banner', $('#cover-photo-input')[0].files[0]);
+			coverImgFormData.append('height', window.jwc.result.cropH);
+			coverImgFormData.append('width', window.jwc.result.cropW);
+			coverImgFormData.append('offset_left', window.jwc.result.cropX);
+			coverImgFormData.append('offset_top', window.jwc.result.cropY);
+
+			$.ajax({
+				url:         window.apiRoot + 'account/update_profile_banner.json',
+				type:        "POST",
+				data:        coverImgFormData,
+				processData: false,
+				contentType: false,
+				cache:       false,
+				dataType:    "json",
+				error: function(data){
+					console.log('error saving profile banner'); console.log(data);
+					$('.crop-and-save-button').removeAttr('disabled');
+					$('.crop-and-save-button').removeClass('disabled');
+					cleanUpAfterCropping();
+					remove_spinner();
 					},
-				dataType:"json",
-				error: function(data){ console.log('error'); console.log(data); },
 				success: function(data) {
 					remove_spinner();
 					if(typeof data.error == 'undefined') {
@@ -3744,8 +3765,6 @@ function coverPhotoAndAvatarSelectAndCrop(e, coverOrAvatar) {
 	if(coverOrAvatar == 'upload-cover-photo') {
 		var targetWidth = 588;
 		var targetHeight = 260;
-		var maxWidth = 1040;
-		var minWidth = 1040;
 		var cropId = 'cover-photo-to-crop';
 		}
 	else if(coverOrAvatar == 'upload-avatar') {
