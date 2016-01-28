@@ -38,8 +38,6 @@ if (!defined('STATUSNET') && !defined('LACONICA')) {
     exit(1);
 }
 
-require_once INSTALLDIR.'/extlib/htmLawed/htmLawed.php';
-
 
 class QvitterAdminSettingsAction extends AdminPanelAction
 {
@@ -116,15 +114,6 @@ class QvitterAdminSettingsAction extends AdminPanelAction
                 _('Maximum length for the sidebar notice is 21844 characters.')
             );
         }
-
-        // scrub HTML input
-
-        $config = array(
-            'safe' => 1,
-            'deny_attribute' => 'on*'
-        );
-
-        $qvitterNotice = htmLawed($qvitterNotice, $config);
     }
 }
 
