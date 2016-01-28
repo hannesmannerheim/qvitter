@@ -519,7 +519,6 @@ class QvitterPlugin extends Plugin {
                             $oembed = File_oembed::getKV('file_id',$attachment->id);
                             if($oembed instanceof File_oembed) {
                                 $oembed_html = str_replace('&lt;!--//--&gt;','',$oembed->html); // trash left of wordpress' javascript after htmLawed removed the tags
-error_log('$oembed_html: '.$oembed_html);
                                 if($oembed->provider == 'Twitter' && strstr($oembed_html, '>&mdash; '.$oembed->author_name)) {
                                     $oembed_html = substr($oembed_html,0,strpos($oembed_html, '>&mdash; '.$oembed->author_name)+1); // remove user data from twitter oembed html (we have it in )
                                     $twitter_username = substr($oembed->html,strpos($oembed->html, '>&mdash; '.$oembed->author_name)+strlen('>&mdash; '.$oembed->author_name));
@@ -759,6 +758,11 @@ error_log('$oembed_html: '.$oembed_html);
 
         $twitter_user['cover_photo'] = Profile_prefs::getConfigData($profile, 'qvitter', 'cover_photo');
         $twitter_user['background_image'] = Profile_prefs::getConfigData($profile, 'qvitter', 'background_image');
+
+        // twitter compatible
+        $twitter_user['profile_link_color'] = Profile_prefs::getConfigData($profile, 'theme', 'linkcolor');
+        $twitter_user['profile_background_color'] = Profile_prefs::getConfigData($profile, 'theme', 'backgroundcolor');
+        $twitter_user['profile_banner_url'] = Profile_prefs::getConfigData($profile, 'qvitter', 'cover_photo');
 
 		// follows me?
 		if ($scoped) {
