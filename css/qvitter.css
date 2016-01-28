@@ -423,6 +423,8 @@ button.icon.nav-search span {
     }
 .quitter-settings.dropdown-menu.dropped {
 	display:block;
+	width: 375px;
+	max-width:100%;
 	}
 .dropdown-caret {
     float: left;
