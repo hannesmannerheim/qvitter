@@ -2921,12 +2921,14 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 				|| currentMatch[0].slice(-1) == '-'
 				|| currentMatch[0].slice(-1) == ':'
 				|| currentMatch[0].slice(-1) == '.'
-				|| currentMatch[0].slice(-1) == ',') {
+				|| currentMatch[0].slice(-1) == ','
+				|| currentMatch[0].slice(-1) == ')') {
 					currentMatch[0] = currentMatch[0].slice(0,-1);
 					}
 
-				// remove any starting spaces from match
-				if(currentMatch[0].substring(0,1) == ' ') {
+				// don't include these start strings
+				if(currentMatch[0].substring(0,1) == ' '
+				|| currentMatch[0].substring(0,1) == '(') {
 					currentMatch[0] = currentMatch[0].substring(1);
 					}
 				else if(currentMatch[0].substring(0,6) == '&nbsp;') {
