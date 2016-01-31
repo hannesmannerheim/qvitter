@@ -157,11 +157,11 @@
 	"listMembers":"Medlemmer",
 	"listSubscribers":"Abonnenter",
 	"ERRORcouldNotFindList":"Det eksisterer ingen slik liste.",
-	"emailAlreadyInUse":"Already in use",
-	"addEditLanguageLink":"Help translate {site-title} to another language",
-	"onlyPartlyTranslated":"{site-title} is only partly translated to <em>{language-name}</em> ({percent}%). You can help complete the translation at <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter's repository homepage</a>",
-	"startRant":"Start a rant",
-	"continueRant":"Continue the rant",
-	"hideEmbeddedInTimeline":"Hide embedded content in this timeline",
-	"hideQuotesInTimeline":"Hide quotes in this timeline"
+	"emailAlreadyInUse":"Allerede i bruk",
+	"addEditLanguageLink":"Hjelp oss å oversette {site-title} til andre språk",
+	"onlyPartlyTranslated":"{site-title} er kun delvis oversatt til <em>{language-name}</em> ({percent}%). Du kan hjelpe å oversette i følgende lenke <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter's repository hjemmeside</a>",
+	"startRant":"Start en utblåsning",
+	"continueRant":"Fortsett utblåsningen",
+	"hideEmbeddedInTimeline":"Skjul inkluderende innhold i denne tidslinjen",
+	"hideQuotesInTimeline":"Skjul sitater i denne tidslinjen"
 }
