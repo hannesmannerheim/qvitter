@@ -61,19 +61,16 @@ class ApiQvitterCheckLoginAction extends ApiAction
     {
         parent::handle();
 
+        $this->format = 'json';
+
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $this->clientError(
-                // TRANS: Client error. POST is a HTTP command. It should not be translated.
-                _('This method requires a POST.'),
-                400,
-                $this->format
-            );
+            $this->clientError(_('This method requires a POST.'), 400);
             return;
         }
-        
+
 		$user = common_check_user($this->arg('username'),
-								  $this->arg('password'));   
-		
+								  $this->arg('password'));
+
 		if($user) {
 			$user = true;
 			}

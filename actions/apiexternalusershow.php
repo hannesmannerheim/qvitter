@@ -46,6 +46,8 @@ class ApiExternalUserShowAction extends ApiPrivateAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';        
+
         $profileurl = urldecode($this->arg('profileurl'));
         $nickname = urldecode($this->arg('nickname'));
 

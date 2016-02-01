@@ -55,6 +55,8 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';        
+
         $this->notifications = $this->getNotifications();
 
         return true;

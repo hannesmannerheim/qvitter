@@ -56,6 +56,8 @@ class ApiSavedSearchesListAction extends ApiAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';        
+
         return true;
     }
 

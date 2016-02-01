@@ -57,6 +57,8 @@ class ApiUpdateBackgroundImageAction extends ApiAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';        
+
         $this->user = $this->auth_user;
 
         $this->cropW = $this->trimmed('cropW');

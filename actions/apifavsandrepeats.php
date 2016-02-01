@@ -46,14 +46,15 @@ class ApiFavsAndRepeatsAction extends ApiPrivateAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';
+
         $this->notice_id = $this->trimmed('notice_id');
 
         $this->original = Notice::getKV('id', $this->notice_id);
 
         if (empty($this->original)) {
             // TRANS: Client error displayed trying to display redents of a non-exiting notice.
-            $this->clientError(_('No such notice.'),
-                               400, $this->format);
+            $this->clientError(_('No such notice.'), 400);
             return false;
         }
 
