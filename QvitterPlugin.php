@@ -218,6 +218,9 @@ class QvitterPlugin extends Plugin {
 		$m->connect(':nickname/notifications',
 					array('action' => 'qvitter',
 						  'nickname' => Nickname::INPUT_FMT));
+		$m->connect(':nickname/blocks',
+					array('action' => 'qvitter',
+						  'nickname' => Nickname::INPUT_FMT));
         $m->connect('settings/qvitter',
                     array('action' => 'qvittersettings'));
         $m->connect('panel/qvitter',

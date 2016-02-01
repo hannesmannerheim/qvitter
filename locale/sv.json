@@ -163,5 +163,11 @@
 	"startRant":"Påbörja en harang",
 	"continueRant":"Fortsätt harangen",
 	"hideEmbeddedInTimeline":"Dölj inbäddat innehåll i detta flöde",
-	"hideQuotesInTimeline":"Dölj citat i detta flöde"
+	"hideQuotesInTimeline":"Dölj citat i detta flöde",
+	"userBlocks":"Konton du blockerar",
+	"buttonBlocked":"Blockerad",
+	"buttonUnblock":"Avblockera",
+	"failedBlockingUser":"Misslyckades med att blockera användaren.",
+	"failedUnblockingUser":"Misslyckades med att avblockera användaren.",
+	"unblockUser": "Avblockera {username}"
 }

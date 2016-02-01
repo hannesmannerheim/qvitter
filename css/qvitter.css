@@ -4310,39 +4310,33 @@ button.shorten:not(.disabled):active {
 .edit-profile-button .edit-profile-text,
 .save-profile-button .edit-profile-text,
 .abort-edit-profile-button .edit-profile-text,
-.crop-and-save-button .edit-profile-text {
+.crop-and-save-button .edit-profile-text,
+.member-button.member .ismember-text,
+.external-follow-button.following .following-text,
+.qvitter-follow-button.following .following-text,
+.member-button.member:hover .leave-text,
+.external-follow-button.following:hover .unfollow-text,
+.qvitter-follow-button.following:hover .unfollow-text,
+.qvitter-follow-button.blocking .blocking-text,
+.qvitter-follow-button.blocking:hover .unblock-text {
 	display:block;
 	height: 28px;
     line-height: 28px;
 	}
 .member-button.member .join-text,
 .external-follow-button.following .follow-text,
-.qvitter-follow-button.following .follow-text {
-	display:none;
-	height: 28px;
-    line-height: 28px;
-	}
-.member-button.member .ismember-text,
-.external-follow-button.following .following-text,
-.qvitter-follow-button.following .following-text {
-	display:block;
-	height: 28px;
-    line-height: 28px;
-	}
+.qvitter-follow-button.following .follow-text,
 .member-button.member:hover .ismember-text,
 .external-follow-button.following:hover .following-text,
-.qvitter-follow-button.following:hover .following-text {
+.qvitter-follow-button.following:hover .following-text,
+.qvitter-follow-button.blocking .follow-text,
+.qvitter-follow-button.blocking .unfollow-text,
+.qvitter-follow-button.blocking:hover .blocking-text {
 	display:none;
-	height: 28px;
-    line-height: 28px;
 	}
-.member-button.member:hover .leave-text,
-.external-follow-button.following:hover .unfollow-text,
-.qvitter-follow-button.following:hover .unfollow-text {
-	display:block;
-	height: 28px;
-    line-height: 28px;
-	}
+
+
+
 
 .queet-box-extras button {
 	box-shadow: none;

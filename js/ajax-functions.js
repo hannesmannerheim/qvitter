@@ -457,6 +457,44 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
 		});
 	}
 
+/* ·
+   ·
+   ·   Post follow or unfollow user request
+   ·
+   ·   @param followOrUnfollow: either 'follow' or 'unfollow'
+   ·   @param user_id: the user id of the user we want to follow
+   ·   @param actionOnSuccess: callback function, false on error, data on success
+   ·
+   · · · · · · · · · · · · · */
+
+function APIBlockOrUnblockUser(blockOrUnblock,user_id,actionOnSuccess) {
+
+	if(blockOrUnblock == 'block') {
+		var postRequest = 'blocks/create.json';
+		}
+	else if (blockOrUnblock == 'unblock') {
+		var postRequest = 'blocks/destroy.json';
+		}
+
+	$.ajax({ url: window.apiRoot + postRequest,
+		cache: false,
+		type: "POST",
+		data: {
+			id: user_id
+			},
+		dataType:"json",
+		error: function(data){ actionOnSuccess(false); console.log(data); },
+		success: function(data) {
+			data = convertEmptyObjectToEmptyArray(data);
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			searchForUserDataToCache(data);
+			updateUserDataInStream();
+			actionOnSuccess(data);
+			}
+		});
+	}
+
+
 
 /* ·
    ·

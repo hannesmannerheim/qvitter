@@ -285,6 +285,47 @@ function showFavsAndRequeetsInQueet(q,data) {
 
 	}
 
+/* ·
+   ·
+   ·   Build a follow/block button
+   ·
+   ·   @param obj: an object with a user array
+   ·
+   · · · · · · · · · */
+
+function buildFollowBlockbutton(obj) {
+
+	// following?
+	var followingClass = '';
+	if(obj.following) {
+		followingClass = ' following';
+		}
+
+	// blocking?
+	var blockingClass = '';
+	if(obj.statusnet_blocking) {
+		blockingClass = ' blocking';
+		}
+
+	var followButton = '';
+	if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
+	   && window.loggedIn.id != obj.id) {	// not if this is me
+		if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users
+			var followButton = '<div class="user-actions">\
+									<button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button' + followingClass + blockingClass + '">\
+										<span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span>\
+										<span class="button-text following-text">' + window.sL.userFollowing + '</span>\
+										<span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span>\
+										<span class="button-text blocking-text">' + window.sL.buttonBlocked + '</span>\
+										<span class="button-text unblock-text">' + window.sL.buttonUnblock + '</span>\
+									</button>\
+								</div>';
+			}
+		}
+
+	return followButton;
+	}
+
 
 /* ·
    ·
@@ -310,28 +351,23 @@ function buildProfileCard(data) {
 		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';
 		}
 
-	// show user actions if logged in
-	var followingClass = '';
-	if(data.following) {
-		followingClass = 'following';
-		}
 
 	var followButton = '';
 
 	// only add follow button if this is a local user
 	if(data.is_local == true) {
 		if(typeof window.loggedIn.screen_name != 'undefined' && window.loggedIn.id != data.id) {
-			var followButton = '<div class="user-actions"><button data-follow-user-id="' + data.id + '" data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
+			followButton = buildFollowBlockbutton(data);
 			}
 
 		// follow from external instance if logged out
 		if(typeof window.loggedIn.screen_name == 'undefined') {
-			var followButton = '<div class="user-actions"><button type="button" class="external-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';
+			followButton = '<div class="user-actions"><button type="button" class="external-follow-button"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';
 			}
 
 		// edit profile button if me
 		if(typeof window.loggedIn.screen_name != 'undefined' && window.loggedIn.id == data.id) {
-			var followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';
+			followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';
 			}
 		}
 
@@ -393,21 +429,16 @@ function buildProfileCard(data) {
 
 function buildExternalProfileCard(data) {
 
-	// local profile id and follow class
-	var followLocalIdHtml = '';
-	var followingClass = '';
-	if(typeof data.local != 'undefined' && data.local !== null) {
-		followLocalIdHtml = ' data-follow-user-id="' + data.local.id + '"';
-
-		if(data.local.following) {
-			followingClass = 'following';
-			}
-		}
-
 	// follows me?
 	var follows_you = '';
 	if(data.local !== null && data.local.follows_you === true  && window.loggedIn.id != data.local.id) {
 		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';
+		}
+
+	// follow button
+	var followButton = '';
+	if(window.loggedIn !== false && typeof data.local != 'undefined' && data.local !== null) {
+		var followButton = buildFollowBlockbutton(data.local);
 		}
 
 	// empty strings and zeros instead of null
@@ -441,13 +472,6 @@ function buildExternalProfileCard(data) {
 
 	var serverUrl = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.statusnet_profile_url, data.screen_name);
 	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl;
-
-	var followButton = '';
-
-	// we can only follow remote users if we're logged in at the moment
-	if(window.loggedIn !== false) {
-		var followButton = '<div class="user-actions"><button' + followLocalIdHtml + ' data-follow-user="' + data.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span><span class="button-text following-text">' + window.sL.userFollowing + '</span><span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span></button></div>';
-		}
 
 	data.profileCardHtml = '\
 		<div class="profile-card">\
@@ -717,10 +741,11 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 					});
 				}
 
-			// hide all notices from blocked users
-			if(typeof window.allBlocking != 'undefined') {
+			// hide all notices from blocked users (not for user lists)
+			if(window.currentStreamObject.type != 'users' && typeof window.allBlocking != 'undefined') {
 				$.each(window.allBlocking,function(){
 					oldStreamState.find('strong.name[data-user-id="' + this + '"]').closest('.stream-item').addClass('profile-blocked-by-me');
+					oldStreamState.find('strong.name[data-user-id="' + this + '"]').closest('.stream-item').children('.queet').attr('data-tooltip',window.sL.thisIsANoticeFromABlockedUser);
 					});
 				}
 
@@ -1870,26 +1895,27 @@ function buildUserStreamItemHtml(obj) {
 		rtlOrNot = 'rtl';
 		}
 
-	// show user actions
+	// following?
 	var followingClass = '';
 	if(obj.following) {
-		followingClass = 'following';
+		followingClass = ' following';
 		}
+
+	// blocking?
+	var blockingClass = '';
+	if(obj.statusnet_blocking) {
+		blockingClass = ' blocking';
+		}
+
 	var followButton = '';
 	if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
 	   && window.loggedIn.id != obj.id) {	// not if this is me
 		if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users
-			var followButton = '<div class="user-actions">\
-									<button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button ' + followingClass + '">\
-										<span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span>\
-										<span class="button-text following-text">' + window.sL.userFollowing + '</span>\
-										<span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span>\
-									</button>\
-								</div>';
+			var followButton = buildFollowBlockbutton(obj);
 			}
 		}
 
-	return '<div id="stream-item-' + obj.id + '" class="stream-item user">\
+	return '<div id="stream-item-' + obj.id + '" class="stream-item user" data-user-id="' + obj.id + '">\
 				<div class="queet ' + rtlOrNot + '">\
 					' + followButton + '\
 					<div class="queet-content">\
@@ -2080,6 +2106,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 						data-quitter-id-in-stream="' + idInStream + '" \
 						data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" \
 						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"\
+						data-user-id="' + obj.user.id + '"\
 						' + requeetedByMe + '>\
 							<div class="queet" id="' + idPrepend + 'q-' + idInStream + '"' + blockingTooltip  + '>\
 								<script class="attachment-json" type="application/json">' + JSON.stringify(obj.attachments) + '</script>\

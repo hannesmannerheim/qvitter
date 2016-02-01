@@ -163,5 +163,11 @@
 	"startRant":"Start a rant",
 	"continueRant":"Continue the rant",
 	"hideEmbeddedInTimeline":"Ocultar contido incrustado nesta liña temporal",
-	"hideQuotesInTimeline":"Ocultar citas nesta liña temporal"
+	"hideQuotesInTimeline":"Ocultar citas nesta liña temporal",
+	"userBlocks":"Accounts you're blocking",
+	"buttonBlocked":"Blocked",
+	"buttonUnblock":"Unblock",
+	"failedBlockingUser":"Failed to block the user.",
+	"failedUnblockingUser":"Failed to unblock the user.",
+	"unblockUser": "Unblock {username}"
 }

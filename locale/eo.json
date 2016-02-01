@@ -163,5 +163,11 @@
 	"startRant":"Eki plendon",
 	"continueRant":"Daŭrigi la plendon",
 	"hideEmbeddedInTimeline":"Kaŝi enkorpigitajn enhavojn en ĉi tiu tempolinio",
-	"hideQuotesInTimeline":"Kaŝi citaĵojn en ĉi tiu tempolinio"
+	"hideQuotesInTimeline":"Kaŝi citaĵojn en ĉi tiu tempolinio",
+	"userBlocks":"Accounts you're blocking",
+	"buttonBlocked":"Blocked",
+	"buttonUnblock":"Unblock",
+	"failedBlockingUser":"Failed to block the user.",
+	"failedUnblockingUser":"Failed to unblock the user.",
+	"unblockUser": "Unblock {username}"
 }

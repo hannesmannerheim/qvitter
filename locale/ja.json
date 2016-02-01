@@ -163,5 +163,11 @@
 	"startRant":"連投する",
 	"continueRant":"連投を続ける",
 	"hideEmbeddedInTimeline":"タイムライン上の埋め込まれたコンテンツを隠す",
-	"hideQuotesInTimeline":"タイムライン上の引用を隠す"
+	"hideQuotesInTimeline":"タイムライン上の引用を隠す",
+	"userBlocks":"Accounts you're blocking",
+	"buttonBlocked":"Blocked",
+	"buttonUnblock":"Unblock",
+	"failedBlockingUser":"Failed to block the user.",
+	"failedUnblockingUser":"Failed to unblock the user.",
+	"unblockUser": "Unblock {username}"
 }

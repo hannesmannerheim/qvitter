@@ -1214,28 +1214,42 @@ $('body').on('click','.sm-ellipsis',function(e){
 		var streamItemUserID = $(this).closest('.queet').find('.stream-item-header').find('.name').attr('data-user-id');
 		var streamItemID = $(this).closest('.queet').parent('.stream-item').attr('data-quitter-id');
 
+		// menu
+		var menuArray = [];
+
 		// my notice
 		if(streamItemUserID == window.loggedIn.id) {
-			var menuArray = [
-				{
-					type: 'function',
-					functionName: 'deleteQueet',
-					functionArguments: {
-						streamItemID: streamItemID
-						},
-					label: window.sL.deleteVerb
+			menuArray.push({
+				type: 'function',
+				functionName: 'deleteQueet',
+				functionArguments: {
+					streamItemID: streamItemID
 					},
-				];
+				label: window.sL.deleteVerb
+				});
 			}
 		// other users' notices
 		else {
-			var menuArray = [
-				{
-					type: 'link',
-					href: window.siteInstanceURL + 'main/block?profileid=' + streamItemUserID,
+			if(userIsBlocked(streamItemUserID)) {
+				menuArray.push({
+					type: 'function',
+					functionName: 'unblockUser',
+					functionArguments: {
+						userId: streamItemUserID
+						},
+					label: window.sL.unblockUser.replace('{username}',streamItemUsername)
+					});
+				}
+			else {
+				menuArray.push({
+					type: 'function',
+					functionName: 'blockUser',
+					functionArguments: {
+						userId: streamItemUserID
+						},
 					label: window.sL.blockUser.replace('{username}',streamItemUsername)
-					},
-				];
+					});
+				}
 			}
 
 		// add menu to DOM and align it
@@ -1453,67 +1467,73 @@ $('body').on('click','.external-member-button',function(event){
 
 /* ·
    ·
-   ·   When clicking a follow button
+   ·   When clicking a follow/block button
    ·
    · · · · · · · · · · · · · */
 
 $('body').on('click','.qvitter-follow-button',function(event){
-	if(!$(this).hasClass('disabled')) {
-		$(this).addClass('disabled');
 
-		// get user id
-		var user_id = $(this).attr('data-follow-user-id');
-
-		// if there's no local user id, we have to take a detour
-		if(typeof user_id == 'undefined') {
-			$.ajax({ url: window.siteInstanceURL + 'main/ostatussub',
-				type: "POST",
-				data: {
-					token: 	window.commonSessionToken,
-					profile: $(this).attr('data-follow-user'),
-					submit: 'Confirm'
-					},
-				error: function(data){ console.log('error'); console.log(data); },
-				success: function(data) {
-					// reload page on success
-					// since ostatussub doesn't have an api, there's no good way to get the local user id here,
-					// and change the button to an unsubscribe button.
-					window.location.replace(window.siteInstanceURL + window.loggedIn.screen_name + '/subscriptions');
-					}
-				});
-			}
-
-		// if we have a local id, it's straightforward, but we could be handling an unfollow
-		else {
-
-			// follow or unfollow?
-			if($(this).hasClass('following')) {
-				var followOrUnfollow = 'unfollow';
-				}
-			else {
-				var followOrUnfollow = 'follow';
-				}
-
-			// post to api
-			display_spinner();
-			APIFollowOrUnfollowUser(followOrUnfollow,user_id, this, function(data,this_element) {
-				remove_spinner();
-				$(this_element).removeClass('disabled');
-				if(data) {
-					if(data.following) {
-						$(this_element).addClass('following');
-						$('#user-following strong').html(parseInt($('#user-following strong').html(),10)+1);
-						appendUserToMentionsSuggestionsArray(data);
-						}
-					else {
-						$(this_element).removeClass('following');
-						$('#user-following strong').html(parseInt($('#user-following strong').html(),10)-1);
-						}
-					}
-				});
-
-			}
+	if($(this).hasClass('disabled')) {
+		return true;
 		}
+
+	$(this).addClass('disabled');
+	var user_id = $(this).attr('data-follow-user-id');
+
+	// if we have a local id, it's straightforward, but we could be handling an unfollow
+	if(typeof user_id != 'undefined') {
+
+		// unblock?
+		if($(this).hasClass('blocking')) {
+			unblockUser({userId: user_id, blockButton_jQueryElement: $(this)});
+			return true;
+			}
+
+		// follow or unfollow?
+		if($(this).hasClass('following')) {
+			var followOrUnfollow = 'unfollow';
+			}
+		else {
+			var followOrUnfollow = 'follow';
+			}
+
+		// post to api
+		display_spinner();
+		APIFollowOrUnfollowUser(followOrUnfollow,user_id, this, function(data,this_element) {
+			remove_spinner();
+			$(this_element).removeClass('disabled');
+			if(data) {
+				if(data.following) {
+					$(this_element).addClass('following');
+					$('#user-following strong').html(parseInt($('#user-following strong').html(),10)+1);
+					appendUserToMentionsSuggestionsArray(data);
+					}
+				else {
+					$(this_element).removeClass('following');
+					$('#user-following strong').html(parseInt($('#user-following strong').html(),10)-1);
+					}
+				}
+			});
+
+		return true;
+		}
+
+	// if there's no local user id, we have to take a detour
+	$.ajax({ url: window.siteInstanceURL + 'main/ostatussub',
+		type: "POST",
+		data: {
+			token: 	window.commonSessionToken,
+			profile: $(this).attr('data-follow-user'),
+			submit: 'Confirm'
+			},
+		error: function(data){ console.log('error'); console.log(data); },
+		success: function(data) {
+			// reload page on success
+			// since ostatussub doesn't have an api, there's no good way to get the local user id here,
+			// and change the button to an unsubscribe button.
+			window.location.replace(window.siteInstanceURL + window.loggedIn.screen_name + '/subscriptions');
+			}
+		});
 	});
 
 

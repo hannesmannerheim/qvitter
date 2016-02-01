@@ -303,6 +303,137 @@ function localStorageIsEnabled() {
 
 /* ·
    ·
+   ·  Block/unblock user and do necessary stuff
+   ·
+   · · · · · · · · · */
+
+function blockUser(arg, callback) {
+
+	// arguments is sent as an object, for easier use with a menu's function-row
+	var userId = arg.userId;
+	var blockButton_jQueryElement = arg.blockButton_jQueryElement;
+
+	display_spinner();
+	APIBlockOrUnblockUser('block', userId, function(data) {
+		remove_spinner();
+
+		// activate the button, if we were passed one
+		if(typeof blockButton_jQueryElement != 'undefined') {
+			blockButton_jQueryElement.removeClass('disabled');
+			}
+
+		if(data && data.statusnet_blocking === true) {
+			// success
+			markUserAsBlockedInDOM(userId, data.following);
+			if(typeof callback == 'function') {
+				callback(blockButton_jQueryElement);
+				}
+			}
+		else {
+			// failed!
+			showErrorMessage(window.sL.failedBlockingUser);
+			}
+		});
+	}
+function unblockUser(arg, callback) {
+
+	// arguments is sent as an object, for easier use with a menu's function-row
+	var userId = arg.userId;
+	var blockButton_jQueryElement = arg.blockButton_jQueryElement;
+
+	display_spinner();
+	APIBlockOrUnblockUser('unblock', userId, function(data) {
+		remove_spinner();
+
+		// activate the button, if we were passed one
+		if(typeof blockButton_jQueryElement != 'undefined') {
+			blockButton_jQueryElement.removeClass('disabled');
+			}
+
+		if(data && data.statusnet_blocking === false) {
+			// success
+			markUserAsUnblockedInDOM(userId, data.following);
+			if(typeof callback == 'function') {
+				callback(blockButton_jQueryElement);
+				}
+			}
+		else {
+			// failed!
+			showErrorMessage(window.sL.failedUnblockingUser);
+			}
+		});
+	}
+function markUserAsBlockedInDOM(userId, following) {
+
+	// display buttons accordingly
+	$('.qvitter-follow-button[data-follow-user-id="' + userId + '"]').addClass('blocking');
+
+	if(following) {
+		$('.qvitter-follow-button[data-follow-user-id="' + userId + '"]').addClass('following');
+		}
+	else {
+		$('.qvitter-follow-button[data-follow-user-id="' + userId + '"]').removeClass('following');
+		}
+
+	// hide notices from the blocked user
+	$.each($('.stream-item[data-quitter-id-in-stream][data-user-id="' + userId + '"]'),function(){
+		$(this).addClass('profile-blocked-by-me');
+		$(this).children('.queet').attr('data-tooltip',window.sL.thisIsANoticeFromABlockedUser);
+		});
+
+	// add to the window.allBlocking array
+	if (userIsBlocked(userId) === false) {
+    	window.allBlocking.push(userId);
+		}
+	}
+function markUserAsUnblockedInDOM(userId, following) {
+
+	// display buttons accordingly
+	$('.qvitter-follow-button[data-follow-user-id="' + userId + '"]').removeClass('blocking');
+	if(following) {
+		$('.qvitter-follow-button[data-follow-user-id="' + userId + '"]').addClass('following');
+		}
+	else {
+		$('.qvitter-follow-button[data-follow-user-id="' + userId + '"]').removeClass('following');
+		}
+
+	// hide the user from lists of blocked users
+	$.each($('.stream-item.user[data-user-id="' + userId + '"]'),function(){
+		slideUpAndRemoveStreamItem($(this));
+		});
+
+	// unhide notices from the blocked user
+	$.each($('.stream-item[data-quitter-id-in-stream][data-user-id="' + userId + '"]'),function(){
+		$(this).removeClass('profile-blocked-by-me');
+		$(this).children('.queet').removeAttr('data-tooltip');
+		});
+
+	// remove from the window.allBlocking array
+	var existingBlockIndex = window.allBlocking.indexOf(userId);
+	if (existingBlockIndex > -1) {
+    	window.allBlocking.splice(existingBlockIndex, 1);
+		}
+	}
+
+/* ·
+   ·
+   ·  Is this user id blocked?
+   ·
+   · · · · · · · · · */
+
+function userIsBlocked(userId) {
+	var existingBlock = window.allBlocking.indexOf(userId);
+	if (existingBlock > -1) {
+    	return true;
+		}
+	else {
+		return false;
+		}
+	}
+
+
+/* ·
+   ·
    ·  Updates the times for all queets loaded to DOM
    ·
    · · · · · · · · · */
@@ -1002,7 +1133,13 @@ function rememberStreamStateInLocalStorage() {
 				return false;
 				}
 			});
+
 		var feed = $('<div/>').append(firstTwentyVisibleHTML);
+
+		// we add these again (with updated blocking list) when the notices are fetched from the cache
+		feed.children('.stream-item').removeClass('profile-blocked-by-me');
+		feed.children('.stream-item').children('.queet').removeAttr('data-tooltip'); // can contain tooltip about blocked user
+
 		feed.find('.temp-post').remove();
 		feed.children('.stream-item').removeClass('not-seen');
 		feed.children('.stream-item').removeClass('hidden-repeat'); // this means we need hide repeats when adding cached notices to feed later
