@@ -58,6 +58,8 @@ class ApiQvitterTimelineListAction extends ApiBareAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';
+
         $this->list = $this->getTargetList($this->arg('nickname'), $this->arg('id'));
         if (!($this->list instanceof Profile_list)) {
             // TRANS: Client error displayed when requesting a non existing list

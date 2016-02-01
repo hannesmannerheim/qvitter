@@ -53,6 +53,8 @@ class ApiQvitterUpdateBackgroundColorAction extends ApiAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';        
+
         $this->backgroundcolor = $this->trimmed('backgroundcolor');
         return true;
     }

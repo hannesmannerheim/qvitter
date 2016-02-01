@@ -58,6 +58,8 @@ class ApiQvitterUpdateBookmarksAction extends ApiAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';
+
         $this->bookmarks = $this->trimmed('bookmarks');
 
         return true;

@@ -199,12 +199,12 @@ class ApiQvitterStatusesUpdateAction extends ApiAuthAction
                       'The server was unable to handle that much POST data (%s bytes) due to its current configuration.',
                       intval($_SERVER['CONTENT_LENGTH']));
 
-            $this->clientError(sprintf($msg, $_SERVER['CONTENT_LENGTH']));
+            $this->clientError(sprintf($msg, $_SERVER['CONTENT_LENGTH']), 400);
         }
 
         if (empty($this->status)) {
             // TRANS: Client error displayed when the parameter "status" is missing.
-            $this->clientError(_('Client must provide a \'status\' parameter with a value.'));
+            $this->clientError(_('Client must provide a \'status\' parameter with a value.'), 400);
         }
 
         if (is_null($this->scoped)) {

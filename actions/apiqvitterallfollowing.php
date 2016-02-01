@@ -62,6 +62,8 @@ class ApiQvitterAllFollowingAction extends ApiBareAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';        
+
         $this->count = 5000; // max 5000, completely arbitrary...
 
         $this->target = $this->getTargetProfile($this->arg('id'));

@@ -65,6 +65,8 @@ class ApiQvitterListSubscribersAction extends ApiPrivateAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';
+
         $this->list = $this->getTargetList($this->arg('nickname'), $this->arg('id'));
         if (!$this->list instanceof Profile_list) {
             // TRANS: Client error displayed trying to show list membership on a non-existing list.

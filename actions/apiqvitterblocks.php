@@ -43,7 +43,7 @@ if (!defined('STATUSNET')) {
 }
 
 
-class ApiQvitterBlocksAction extends ApiBareAuthAction
+class ApiQvitterBlocksAction extends ApiPrivateAuthAction
 {
     var $profiles = null;
 
@@ -58,15 +58,20 @@ class ApiQvitterBlocksAction extends ApiBareAuthAction
     {
         parent::prepare($args);
 
-        // If called as a social graph method, show 5000 per page, otherwise 100
+        $this->format = 'json';
 
         $this->count    =  (int)$this->arg('count', 100);
 
-        $this->target = $this->getTargetProfile($this->arg('id'));
+        $arg_user = $this->getTargetUser($this->arg('id'));
+
+        $this->target = ($this->auth_user) ? $this->auth_user->getProfile() : null;
 
         if (!($this->target instanceof Profile)) {
             // TRANS: Client error displayed when requesting a list of followers for a non-existing user.
             $this->clientError(_('No such user.'), 404);
+        } else if($this->auth_user->id != $arg_user->id) {
+            $this->clientError(_('You are only allowed to view your own blocks.'), 403);
+
         }
 
         $this->profiles = $this->getProfiles();

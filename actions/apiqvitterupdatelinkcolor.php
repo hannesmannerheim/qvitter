@@ -54,6 +54,8 @@ class ApiQvitterUpdateLinkColorAction extends ApiAuthAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';        
+
         $this->linkcolor = $this->trimmed('linkcolor');
 
         return true;

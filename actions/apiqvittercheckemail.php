@@ -39,6 +39,8 @@ class ApiQvitterCheckEmailAction extends ApiAction
     {
         parent::prepare($args);
 
+        $this->format = 'json';
+
         $this->email = $this->trimmed('email');
 
         if(!Validate::email($this->email, common_config('email', 'check_domain'))) {
