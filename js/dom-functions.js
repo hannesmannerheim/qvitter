@@ -311,15 +311,22 @@ function buildFollowBlockbutton(obj) {
 	if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
 	   && window.loggedIn.id != obj.id) {	// not if this is me
 		if(!(obj.statusnet_profile_url.indexOf('/twitter.com/')>-1 && obj.following === false)) { // only unfollow twitter users
-			var followButton = '<div class="user-actions">\
-									<button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button' + followingClass + blockingClass + '">\
-										<span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span>\
-										<span class="button-text following-text">' + window.sL.userFollowing + '</span>\
-										<span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span>\
-										<span class="button-text blocking-text">' + window.sL.buttonBlocked + '</span>\
-										<span class="button-text unblock-text">' + window.sL.buttonUnblock + '</span>\
-									</button>\
-								</div>';
+			if(obj.blocks_you) {
+				var followButton = '<div class="user-actions">\
+										<div class="blocks-you" data-tooltip="' + window.sL.tooltipBlocksYou.replace('{username}','@' + obj.screen_name) + '"></div>\
+									</div>';
+				}
+			else {
+				var followButton = '<div class="user-actions">\
+										<button data-follow-user-id="' + obj.id + '" data-follow-user="' + obj.statusnet_profile_url + '" type="button" class="qvitter-follow-button' + followingClass + blockingClass + '">\
+											<span class="button-text follow-text"><i class="follow"></i>' + window.sL.userFollow + '</span>\
+											<span class="button-text following-text">' + window.sL.userFollowing + '</span>\
+											<span class="button-text unfollow-text">' + window.sL.userUnfollow + '</span>\
+											<span class="button-text blocking-text">' + window.sL.buttonBlocked + '</span>\
+											<span class="button-text unblock-text">' + window.sL.buttonUnblock + '</span>\
+										</button>\
+									</div>';
+				}
 			}
 		}
 

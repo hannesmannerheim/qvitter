@@ -4335,6 +4335,15 @@ button.shorten:not(.disabled):active {
 	display:none;
 	}
 
+.user-actions .blocks-you::before {
+	content:"\f05e";
+    color: #aaa;
+	cursor:default;
+    font-family: FontAwesome;
+    font-size: 20px;
+    line-height: 32px;
+    margin-right: 5px;
+}
 
 
 

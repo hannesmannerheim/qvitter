@@ -773,10 +773,14 @@ class QvitterPlugin extends Plugin {
         $twitter_user['profile_background_color'] = Profile_prefs::getConfigData($profile, 'theme', 'backgroundcolor');
         $twitter_user['profile_banner_url'] = Profile_prefs::getConfigData($profile, 'qvitter', 'cover_photo');
 
-		// follows me?
+
 		if ($scoped) {
-				$twitter_user['follows_you'] = $profile->isSubscribed($scoped);
-				}
+            // follows me?
+            $twitter_user['follows_you'] = $profile->isSubscribed($scoped);
+
+            // blocks me?
+            $twitter_user['blocks_you']  = $profile->hasBlocked($scoped);
+        }
 
 		// local user?
 		$twitter_user['is_local'] = $profile->isLocal();

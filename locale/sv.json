@@ -169,5 +169,6 @@
 	"buttonUnblock":"Avblockera",
 	"failedBlockingUser":"Misslyckades med att blockera användaren.",
 	"failedUnblockingUser":"Misslyckades med att avblockera användaren.",
-	"unblockUser": "Avblockera {username}"
+	"unblockUser": "Avblockera {username}",
+	"tooltipBlocksYou":"Du är blockerad från att följa {username}."
 }
