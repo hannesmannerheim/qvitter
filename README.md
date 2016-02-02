@@ -2,7 +2,7 @@ Qvitter
 ==========================================
 
 * Author:    Hannes Mannerheim (<h@nnesmannerhe.im>)
-* Last mod.: Oct, 2015
+* Last mod.: Jan, 2016
 * Version:   5-alpha
 * Homepage:  <https://git.gnu.io/h2p/Qvitter>
 
@@ -85,7 +85,6 @@ Twitter's API v1.1 documentation is also useful, but may be partly incorrect.
 
 Qvitter extends this API in a few undocumented ways. See onRouterInitialized() in QvitterPlugin.php
 for ideas about paths for the API extensions.
-
 
 
 Notes

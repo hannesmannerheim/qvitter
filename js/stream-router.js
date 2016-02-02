@@ -614,6 +614,19 @@ function pathToStreamRouter(path) {
 		return streamObject;
 		}
 
+	// {screen_name}/blocks
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'blocks') {
+		streamObject.name = 'user blocks';
+        streamObject.nickname = pathSplit[0];
+        streamObject.parentPath = streamObject.nickname;
+        streamObject.streamHeader = '@' + replaceHtmlSpecialChars(streamObject.nickname);
+        streamObject.streamSubHeader = window.sL.userBlocks;
+		streamObject.stream = 'qvitter/blocks.json?count=20&id=' + streamObject.nickname + '&withuserarray=1';
+        streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
+		return streamObject;
+		}
+
 	// {screen_name}/groups
 	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'groups') {
 		streamObject.name = 'user group list';

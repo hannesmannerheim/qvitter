@@ -163,5 +163,12 @@
 	"startRant":"Start en utblåsning",
 	"continueRant":"Fortsett utblåsningen",
 	"hideEmbeddedInTimeline":"Skjul inkluderende innhold i denne tidslinjen",
-	"hideQuotesInTimeline":"Skjul sitater i denne tidslinjen"
+	"hideQuotesInTimeline":"Skjul sitater i denne tidslinjen",
+	"userBlocks":"Accounts you're blocking",
+	"buttonBlocked":"Blocked",
+	"buttonUnblock":"Unblock",
+	"failedBlockingUser":"Failed to block the user.",
+	"failedUnblockingUser":"Failed to unblock the user.",
+	"unblockUser": "Unblock {username}",
+	"tooltipBlocksYou":"You are blocked from following {username}."
 }

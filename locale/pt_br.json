@@ -163,5 +163,12 @@
 	"startRant":"Iniciar um debate",
 	"continueRant":"Continuar o debate",
 	"hideEmbeddedInTimeline":"Ocultar conteúdo incorporado nessa linha do tempo",
-	"hideQuotesInTimeline":"Ocultar citações nesta linha do tempo"
+	"hideQuotesInTimeline":"Ocultar citações nesta linha do tempo",
+	"userBlocks":"Accounts you're blocking",
+	"buttonBlocked":"Blocked",
+	"buttonUnblock":"Unblock",
+	"failedBlockingUser":"Failed to block the user.",
+	"failedUnblockingUser":"Failed to unblock the user.",
+	"unblockUser": "Unblock {username}",
+	"tooltipBlocksYou":"You are blocked from following {username}."
 }

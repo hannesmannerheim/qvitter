@@ -161,5 +161,12 @@
 	"addEditLanguageLink":"Помогите перевести {site-title} на другой язык",
 	"onlyPartlyTranslated":"{site-title} только частично переведён на <em>{language-name}</em> ({percent}%). Вы можете помочь завершить перевод на <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">на домашней странице репозитория Qvitter</a>",
 	"startRant":"Начать декламацию",
-	"continueRant":"Продолжить декламацию"
+	"continueRant":"Продолжить декламацию",
+	"userBlocks":"Accounts you're blocking",
+	"buttonBlocked":"Blocked",
+	"buttonUnblock":"Unblock",
+	"failedBlockingUser":"Failed to block the user.",
+	"failedUnblockingUser":"Failed to unblock the user.",
+	"unblockUser": "Unblock {username}",
+	"tooltipBlocksYou":"You are blocked from following {username}."
 }
