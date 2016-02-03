@@ -164,11 +164,11 @@
 	"continueRant":"Fortsett utblåsningen",
 	"hideEmbeddedInTimeline":"Skjul inkluderende innhold i denne tidslinjen",
 	"hideQuotesInTimeline":"Skjul sitater i denne tidslinjen",
-	"userBlocks":"Accounts you're blocking",
-	"buttonBlocked":"Blocked",
-	"buttonUnblock":"Unblock",
-	"failedBlockingUser":"Failed to block the user.",
-	"failedUnblockingUser":"Failed to unblock the user.",
-	"unblockUser": "Unblock {username}",
-	"tooltipBlocksYou":"You are blocked from following {username}."
+	"userBlocks":"Brukere du blokkerer",
+	"buttonBlocked":"Blokkert",
+	"buttonUnblock":"Opphev blokkering",
+	"failedBlockingUser":"Kunne ikke blokkere brukeren.",
+	"failedUnblockingUser":"Kunne ikke oppheve blokkeringen av bruker.",
+	"unblockUser": "Opphev blokkering {username}",
+	"tooltipBlocksYou":"Du er blokkert fra å følge profilen {username}."
 }
