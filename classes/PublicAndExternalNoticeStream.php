@@ -60,7 +60,7 @@ class RawPublicAndExternalNoticeStream extends NoticeStream
         $notice->selectAdd();
         $notice->selectAdd('id');
 
-        $notice->orderBy('created DESC, id DESC');
+        $notice->orderBy('id DESC');
 
         if (!is_null($offset)) {
             $notice->limit($offset, $limit);
