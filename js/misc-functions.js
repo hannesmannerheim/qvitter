@@ -1882,7 +1882,8 @@ function loadHistoryFromLocalStorage() {
 			$('#history-container').css('display','block');
 			$('#history-container').html('');
 			$.each(cacheData, function(key,obj) {
-				$('#history-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + obj.dataStreamHeader + '<i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
+				var streamHeader = replaceHtmlSpecialChars(obj.dataStreamHeader); // because we're pulling the header with jQuery.text() before saving in localstorage, which unescapes our escaped html
+				$('#history-container').append('<a class="stream-selection" href="' + obj.dataStreamHref + '">' + streamHeader + '<i class="chev-right" data-tooltip="' + window.sL.tooltipBookmarkStream + '"></i></a>');
 				});
 			}
 		updateHistoryLocalStorage();
