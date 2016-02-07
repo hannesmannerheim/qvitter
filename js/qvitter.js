@@ -936,6 +936,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('.stream-selection.public-and-external-timeline').prepend(window.sL.publicAndExtTimeline)
 	$('#search-query').attr('placeholder',window.sL.searchVerb);
 	$('#faq-link').html(window.sL.FAQ);
+	$('#tou-link').html(window.sL.showTerms);
 	$('#add-edit-language-link').html(window.sL.addEditLanguageLink);
 	$('#shortcuts-link').html(window.sL.keyboardShortcuts);
 	$('#invite-link').html(window.sL.inviteAFriend);
@@ -1090,6 +1091,20 @@ $('#faq-link').click(function(){
 	popUpAction('popup-faq', window.siteTitle + ' ' + window.sL.FAQ,'<div id="faq-container"></div>',false);
 	getDoc('faq',function(faqHtml){
 		$('#faq-container').html(faqHtml);
+		});
+	});
+
+
+/* ·
+   ·
+   ·   Terms
+   ·
+   · · · · · · · · · · · · · */
+
+$('#tou-link').click(function(){
+	popUpAction('popup-terms', window.sL.showTerms,'<div id="terms-container"></div>',false);
+	getDoc('terms',function(termsHtml){
+		$('#terms-container').html(termsHtml);
 		});
 	});
 

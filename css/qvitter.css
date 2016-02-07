@@ -5158,7 +5158,8 @@ content:"\f068";
 /* FAQ
 -----------*/
 
-#popup-faq #faq-container {
+#popup-faq #faq-container,
+#popup-terms #terms-container {
 	padding:10px 20px 20px;
 	color:#000;
 	min-height:100vh;
