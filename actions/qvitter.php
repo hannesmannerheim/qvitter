@@ -174,23 +174,65 @@ class QvitterAction extends ApiAction
 						}
 					}
 
-                // oembed discovery for local notices
+                // oembed discovery for local notices, and twitter cards
                 if(substr($_SERVER['REQUEST_URI'],0,8) == '/notice/'
                 && $this->arg('notice')
                 && array_key_exists('Oembed', StatusNet::getActivePlugins())) {
                     $notice = Notice::getKV('id', $this->arg('notice'));
+
                     if($notice instanceof Notice) {
-                        if ($notice->isLocal()) {
+                        $profile = $notice->getProfile();
+                        if ($notice->isLocal() && $profile instanceof Profile) {
+
+                            // maybe get thumbnail url
+                            $embed_thumbnail_url = false;
+                            $attachments = $notice->attachments();
+                            if (!empty($attachments)) {
+                                foreach ($attachments as $attachment) {
+                    				if(is_object($attachment)) {
+                                        try {
+                                            $thumb = $attachment->getThumbnail();
+                    					} catch (ServerException $e) {
+                                            //
+                                        }
+                                        if(!empty($thumb) && method_exists('File_thumbnail','url')) {
+                                            try {
+                                                $embed_thumbnail_url = File_thumbnail::url($thumb->filename);
+                                                break; // only first one
+                                            } catch (ClientException $e) {
+                                                //
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             try {
                                 $notice_url = $notice->getUrl();
-                                print '<link title="oEmbed" href="'.common_local_url('apiqvitteroembednotice', array('id' => $notice->id, 'format'=>'json')).'?url='.urlencode($notice_url).'" type="application/json+oembed" rel="alternate">';
-                                print '<link title="oEmbed" href="'.common_local_url('apiqvitteroembednotice', array('id' => $notice->id, 'format'=>'xml')).'?url='.urlencode($notice_url).'" type="application/xml+oembed" rel="alternate">';
+                                print '<link title="oEmbed" href="'.common_local_url('apiqvitteroembednotice', array('id' => $notice->id, 'format'=>'json')).'?url='.urlencode($notice_url).'" type="application/json+oembed" rel="alternate">'."\n";
+                                print '<link title="oEmbed" href="'.common_local_url('apiqvitteroembednotice', array('id' => $notice->id, 'format'=>'xml')).'?url='.urlencode($notice_url).'" type="application/xml+oembed" rel="alternate">'."\n";
                             } catch (Exception $e) {
                                 //
+                            }
+
+                            // twitter cards
+                            print '<meta name="twitter:card" content="summary" />'."\n";
+                            print '<meta name="twitter:title" content="'.htmlspecialchars($profile->fullname).' (@'.$profile->nickname.')" />'."\n";
+                            print '<meta name="twitter:description" content="'.htmlspecialchars($notice->content).'" />'."\n";
+                            if($embed_thumbnail_url) {
+                                print '<meta name="twitter:image" content="'.$embed_thumbnail_url.'" />'."\n";
+                            }
+
+                            // opengraph
+                            print '<meta property="og:description" content="'.htmlspecialchars($notice->content).'" />'."\n";
+                            print '<meta property="og:site_name" content="'.$sitetitle.'" />'."\n";
+                            if($embed_thumbnail_url) {
+                                print '<meta property="og:image" content="'.$embed_thumbnail_url.'" />'."\n";
                             }
                         }
                     }
                 }
+
 
 				?>
 				<script>
