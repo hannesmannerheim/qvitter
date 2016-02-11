@@ -1101,11 +1101,16 @@ $('#faq-link').click(function(){
    ·
    · · · · · · · · · · · · · */
 
-$('#tou-link').click(function(){
+$('#tou-link,.tou-link').click(function(){
 	popUpAction('popup-terms', window.sL.showTerms,'<div id="terms-container"></div>',false);
-	getDoc('terms',function(termsHtml){
-		$('#terms-container').html(termsHtml);
-		});
+	if(window.customTermsOfUse) {
+		$('#terms-container').html(window.customTermsOfUse);
+		}
+	else {
+		getDoc('terms',function(termsHtml){
+			$('#terms-container').html(termsHtml);
+			});
+		}
 	});
 
 
