@@ -361,21 +361,19 @@ function buildProfileCard(data) {
 
 	var followButton = '';
 
-	// only add follow button if this is a local user
-	if(data.is_local == true) {
-		if(typeof window.loggedIn.screen_name != 'undefined' && window.loggedIn.id != data.id) {
-			followButton = buildFollowBlockbutton(data);
-			}
+	// follow from external instance if logged out and the user is local
+	if(window.loggedIn === false && data.is_local == true) {
+		followButton = '<div class="user-actions"><button type="button" class="external-follow-button"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';
+		}
 
-		// follow from external instance if logged out
-		if(typeof window.loggedIn.screen_name == 'undefined') {
-			followButton = '<div class="user-actions"><button type="button" class="external-follow-button"><span class="button-text follow-text"><i class="follow"></i>' + window.sL.userExternalFollow + '</span></button></div>';
-			}
+	// edit profile button if it's me
+	else if(window.loggedIn !== false && window.loggedIn.id == data.id) {
+		followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';
+		}
 
-		// edit profile button if me
-		if(typeof window.loggedIn.screen_name != 'undefined' && window.loggedIn.id == data.id) {
-			followButton = '<div class="user-actions"><button type="button" class="edit-profile-button"><span class="button-text edit-profile-text">' + window.sL.editMyProfile + '</span></button></div>';
-			}
+	// follow button for logged in users
+	else if(window.loggedIn !== false) {
+		followButton = buildFollowBlockbutton(data);
 		}
 
 	// is webpage empty?
