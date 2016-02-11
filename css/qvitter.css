@@ -201,6 +201,13 @@ body.rtl .discard-error-message {
 	left: 0;
 	width:100%;
 	text-align: center;
+	opacity:0;
+	animation: fadein 1s ease forwards 1s;
+	}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
 	}
 
 #accessibility-toggle-link {
