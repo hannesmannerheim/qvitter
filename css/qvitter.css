@@ -1836,7 +1836,7 @@ background-repeat: no-repeat;
 .stream-item.notification .small-grey-notice,
 .stream-item.notification .small-grey-notice a {
 	color:#999;
-	word-break: break-all;
+	word-wrap: break-word;
 	}
 .stream-item.notification .small-grey-notice a:hover {
 	color:#333;
