@@ -2322,7 +2322,8 @@ function buildAttachmentHTML(attachments){
 			// if there's a local thumb_url we assume this is a image or video
 			else if(typeof this.thumb_url != 'undefined'
 			&& this.thumb_url !== null
-			&& isLocalURL(this.thumb_url)) {
+			&& isLocalURL(this.thumb_url)
+			&& !($.inArray(this.mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0)) {
 				var bigThumbW = 1000;
 				var bigThumbH = 3000;
 				if(bigThumbW > window.siteMaxThumbnailSize) {
@@ -2389,6 +2390,15 @@ function buildAttachmentHTML(attachments){
 				attachmentHTML += '<a data-local-attachment-url="' + urlToHide + '" style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
 				urlsToHide.push(urlToHide); // hide this attachment url from the queet text
 				attachmentNum++;
+				}
+			else if ($.inArray(this.mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
+				var posterAttribute = '';
+				if(typeof this.thumb_url != 'undefined'
+					&& this.thumb_url !== null
+					&& isLocalURL(this.thumb_url)) {
+					posterAttribute = 'poster="' + this.thumb_url + '"';
+				}
+				attachmentHTML += '<div class="media"><video class="attachment-video" controls data-width="' + this.width + '" data-height="' + this.height + '" ' + posterAttribute + '><source src="' + this.url + '" type="' + this.mimetype + '" /></video></div>';
 				}
 			});
 		}
