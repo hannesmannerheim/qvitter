@@ -397,6 +397,7 @@ class RawInboxNoticeStreamHiddenReplies extends NoticeStream
      */
     function __construct(Profile $target)
     {
+        parent::__construct();
         $this->target  = $target;
     }
 
