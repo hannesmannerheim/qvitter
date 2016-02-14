@@ -390,6 +390,8 @@ class RawInboxNoticeStreamHiddenReplies extends NoticeStream
     protected $target  = null;
     protected $inbox = null;
 
+    protected $selectVerbs = array();
+
     /**
      * Constructor
      *
