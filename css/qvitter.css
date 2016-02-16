@@ -1609,7 +1609,7 @@ body.rtl #history-container.menu-container a .chev-right {
 	border-image-repeat: stretch stretch;
 	border-image-slice: 100% 100% 100% 100%;
 	border-image-source: none;
-	border-image-width: 1 1 1 1:
+	border-image-width: 1 1 1 1;
 	}
 #feed-header-inner {
 	position:relative;
@@ -1836,7 +1836,7 @@ background-repeat: no-repeat;
 .stream-item.notification .small-grey-notice,
 .stream-item.notification .small-grey-notice a {
 	color:#999;
-	word-break: break-all;
+	word-wrap: break-word;
 	}
 .stream-item.notification .small-grey-notice a:hover {
 	color:#333;
