@@ -819,6 +819,18 @@ function removeProtocolFromUrl(url) {
 	return url.substring(url.indexOf('://')+3);
 	}
 
+/* ·
+   ·
+   ·  Get host from URL
+   ·
+   · · · · · · · · · */
+
+function getHost(url) {
+    var a = document.createElement('a');
+    a.href = url;
+    return a.hostname;
+	}
+
 
 /* ·
    ·

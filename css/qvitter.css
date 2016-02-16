@@ -3218,7 +3218,8 @@ ul.stats .avatar-row .avatar {
 .permalink-link {
     color: #999999 !important;
 	}
-.permalink-link:hover {
+.permalink-link:hover,
+.longdate a:hover {
 	text-decoration:underline;
 	}
 

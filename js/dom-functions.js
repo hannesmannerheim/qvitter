@@ -2105,17 +2105,22 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		statusnetHTML = statusnetHTML.slice(0,-4);
 		}
 
+
 	// external
 	var ostatusHtml = '';
 	if(obj.is_local === false) {
 		ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
+		var qSource = '<a href="' + obj.external_url + '">' + getHost(obj.external_url) + '</a>';
+		}
+	else {
+		var qSource = obj.source;
 		}
 	var queetTime = parseTwitterDate(obj.created_at);
 	var queetHtml = '<div \
 						id="' + idPrepend + 'stream-item-' + idInStream + '" \
 						data-uri="' + URItoUse + '" \
 						class="stream-item notice ' + extraClasses + '" \
-						data-source="' + escape(obj.source) + '" \
+						data-source="' + escape(qSource) + '" \
 						data-quitter-id="' + obj.id + '" \
 						data-conversation-id="' + obj.statusnet_conversation_id + '" \
 						data-quitter-id-in-stream="' + idInStream + '" \
