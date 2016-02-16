@@ -109,14 +109,18 @@ class ApiQvitterBlocksAction extends ApiPrivateAuthAction
 
 		$blocks = QvitterBlocked::getBlocked($this->target->id, $offset, $limit);
 
-        $profiles = array();
+        if($blocks) {
+            $profiles = array();
 
-        while ($blocks->fetch()) {
-            $this_profile_block = clone($blocks);
-            $profiles[] = $this->getTargetProfile($this_profile_block->blocked);
+            while ($blocks->fetch()) {
+                $this_profile_block = clone($blocks);
+                $profiles[] = $this->getTargetProfile($this_profile_block->blocked);
+            }
+        return $profiles;
+        } else {
+            return false;
         }
 
-        return $profiles;
     }
 
     /**
