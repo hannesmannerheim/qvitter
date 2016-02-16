@@ -1197,15 +1197,15 @@ function expand_queet(q,doScrolling) {
 				}
 
 			// show certain attachments in expanded content
-			if(q.children('script.attachment-json').length > 0
-			&& q.children('script.attachment-json').text() != 'undefined') {
+			if(q.children('.queet').children('script.attachment-json').length > 0
+			&& q.children('.queet').children('script.attachment-json').text() != 'undefined') {
 				try {
-					var attachmentsParsed = JSON.parse(q.children('script.attachment-json').text());
+					var attachmentsParsed = JSON.parse(q.children('.queet').children('script.attachment-json').text());
 					}
 				catch(e) {
 					var attachmentsParsed = false;
 					console.log('could not parse attachment json when expanding the notice: ' + e);
-					console.log("attachment-json: " + q.children('script.attachment-json').text());
+					console.log("attachment-json: " + q.children('.queet').children('script.attachment-json').text());
 					}
 
 				if(attachmentsParsed !== false) {
@@ -1220,14 +1220,11 @@ function expand_queet(q,doScrolling) {
 						// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
 						if(typeof attachment_title != 'undefined') {
 
-							// hack to make remote webm-movies load
-							if(attachment_title_extension == 'webm') {
-								attachment_mimetype = 'video/webm';
-								}
-
 							// videos
 							if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
 								if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
+
+									console.log('video!');
 
 									// local attachment with a thumbnail
 									var attachment_poster = '';
@@ -2354,8 +2351,7 @@ function buildAttachmentHTML(attachments){
 			// if there's a local thumb_url we assume this is a image or video
 			else if(typeof this.thumb_url != 'undefined'
 			&& this.thumb_url !== null
-			&& isLocalURL(this.thumb_url)
-			&& !($.inArray(this.mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0)) {
+			&& isLocalURL(this.thumb_url)) {
 				var bigThumbW = 1000;
 				var bigThumbH = 3000;
 				if(bigThumbW > window.siteMaxThumbnailSize) {
@@ -2422,15 +2418,6 @@ function buildAttachmentHTML(attachments){
 				attachmentHTML += '<a data-local-attachment-url="' + urlToHide + '" style="background-image:url(\'' + this.url + '\')" class="thumb-container" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + this.url + '"/></a>';
 				urlsToHide.push(urlToHide); // hide this attachment url from the queet text
 				attachmentNum++;
-				}
-			else if ($.inArray(this.mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
-				var posterAttribute = '';
-				if(typeof this.thumb_url != 'undefined'
-					&& this.thumb_url !== null
-					&& isLocalURL(this.thumb_url)) {
-					posterAttribute = 'poster="' + this.thumb_url + '"';
-				}
-				attachmentHTML += '<div class="media"><video class="attachment-video" controls data-width="' + this.width + '" data-height="' + this.height + '" ' + posterAttribute + '><source src="' + this.url + '" type="' + this.mimetype + '" /></video></div>';
 				}
 			});
 		}
