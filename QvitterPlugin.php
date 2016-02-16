@@ -704,8 +704,10 @@ class QvitterPlugin extends Plugin {
         try {
             $reply = $notice->getParent();
 			$twitter_status['in_reply_to_profileurl'] = $reply->getProfile()->getUrl();
+            $twitter_status['in_reply_to_ostatus_uri'] = $reply->getProfile()->getUri();
         } catch (ServerException $e) {
 		    $twitter_status['in_reply_to_profileurl'] = null;
+            $twitter_status['in_reply_to_ostatus_uri'] = null;
         }
 
 
