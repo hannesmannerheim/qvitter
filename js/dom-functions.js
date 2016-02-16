@@ -1338,32 +1338,33 @@ function replyFormHtml(streamItem,qid) {
 	// object with ostatus-uri as key to avoid duplicates
 	var screenNamesToAdd = {};
 
-	// add the screen name to the one we're replying to (if it's not me)
+	// we don't trust attentions to be in the right order, so always add the
+	// screen name to the one we're replying to first (if it's not me)
 	if(!thisIsALinkToMyProfile(streamItem.attr('data-user-profile-url'))) {
 		screenNamesToAdd[streamItem.attr('data-user-ostatus-uri')] = streamItem.attr('data-user-screen-name');
 		}
 
-	// add the screen name to the one who the one we're replying to is replying to
-	// (if it's not me, and not if the author is replying to themselves)
-	if(q.find('i.addressees > span.reply-to').length > 0
-	&& !thisIsALinkToMyProfile(streamItem.attr('data-in-reply-to-profile-url'))
-	&& streamItem.attr('data-in-reply-to-profile-ostatus-uri') != streamItem.attr('data-user-ostatus-uri')) {
-		screenNamesToAdd[streamItem.attr('data-in-reply-to-profile-ostatus-uri')] = streamItem.attr('data-in-reply-to-screen-name');
-		}
-
-    // get all other mentions (if it's not me, or reply-to user or reply-to-reply-to user
-	// because gnusocial in not consistent in which url it supplies in the mentions links
-	// we have to check both uri and profileurl
-	$.each(q.find('.queet-text').find('.mention'),function(key,obj){
-		if(!thisIsALinkToMyProfile($(obj).attr('href'))
-		&& $(obj).attr('href') != streamItem.attr('data-in-reply-to-profile-ostatus-uri')
-		&& $(obj).attr('href') != streamItem.attr('data-in-reply-to-profile-url')
-		&& $(obj).attr('href') != streamItem.attr('data-user-profile-url')
-		&& $(obj).attr('href') != streamItem.attr('data-user-ostatus-uri')) {
-			var thisMention = $(obj).html().replace('@','');
-			screenNamesToAdd[$(obj).attr('href')] = thisMention;
+	// add the rest of the attentions (not me)
+	if(q.children('script.attentions-json').length > 0
+	&& q.children('script.attentions-json').text() != 'undefined') {
+		try {
+			var attentionsParsed = JSON.parse(q.children('script.attentions-json').text());
 			}
-		});
+		catch(e) {
+			var attentionsParsed = false;
+			console.log('could not parse attentions json: ' + e);
+			console.log("attentions-json: " + q.children('script.attentions-json').text());
+			}
+
+		if(attentionsParsed !== false) {
+			$.each(attentionsParsed, function() {
+				if(!thisIsALinkToMyProfile(this.profileurl)
+				&& typeof screenNamesToAdd[this.ostatus_uri] == 'undefined') {
+					screenNamesToAdd[this.ostatus_uri] = this.screen_name;
+					}
+				});
+			}
+		}
 
 	// build reply/rant strings
 	var repliesText = '';
@@ -2039,7 +2040,16 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 	if(obj.in_reply_to_screen_name !== null
 	&& obj.in_reply_to_profileurl !== null
 	&& obj.in_reply_to_profileurl != obj.user.statusnet_profile_url) {
-		reply_to_html = '<span class="reply-to"><a class="h-card mention" href="' + obj.in_reply_to_profileurl + '">@' + obj.in_reply_to_screen_name + '</a></span> ';
+		var replyToProfileurl = obj.in_reply_to_profileurl;
+		var replyToScreenName = obj.in_reply_to_screen_name;
+		}
+	// if we don't have a reply-to, we might have attentions, in that case use the first one as reply
+	else if(typeof obj.attentions != 'undefined' && typeof obj.attentions[0] != 'undefined') {
+		var replyToProfileurl = obj.attentions[0].profileurl;
+		var replyToScreenName = obj.attentions[0].screen_name;
+		}
+	if(typeof replyToProfileurl != 'undefined' && typeof replyToScreenName != 'undefined') {
+		reply_to_html = '<span class="reply-to"><a class="h-card mention" href="' + replyToProfileurl + '">@' + replyToScreenName + '</a></span> ';
 		}
 
 	// in-groups html
@@ -2120,6 +2130,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 						' + requeetedByMe + '>\
 							<div class="queet" id="' + idPrepend + 'q-' + idInStream + '"' + blockingTooltip  + '>\
 								<script class="attachment-json" type="application/json">' + JSON.stringify(obj.attachments) + '</script>\
+								<script class="attentions-json" type="application/json">' + JSON.stringify(obj.attentions) + '</script>\
 								' + requeetHtml + '\
 								' + ostatusHtml + '\
 								<div class="queet-content">\

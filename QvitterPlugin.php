@@ -703,13 +703,31 @@ class QvitterPlugin extends Plugin {
 		// reply-to profile url
         try {
             $reply = $notice->getParent();
-			$twitter_status['in_reply_to_profileurl'] = $reply->getProfile()->getUrl();
-            $twitter_status['in_reply_to_ostatus_uri'] = $reply->getProfile()->getUri();
+            $reply_profile = $reply->getProfile();
+			$twitter_status['in_reply_to_profileurl'] = $reply_profile->getUrl();
+            $twitter_status['in_reply_to_ostatus_uri'] = $reply_profile->getUri();
         } catch (ServerException $e) {
 		    $twitter_status['in_reply_to_profileurl'] = null;
             $twitter_status['in_reply_to_ostatus_uri'] = null;
         }
 
+        // attentions
+        try {
+            $attentions = $notice->getAttentionProfiles();
+            $attentions_array = array();
+            foreach ($attentions as $attn) {
+                $attentions_array[] = array(
+                    'id' => $attn->getID(),
+                    'screen_name' => $attn->getNickname(),
+                    'fullname' => $attn->getStreamName(),
+                    'profileurl' => $attn->getUrl(),
+                    'ostatus_uri' => $attn->getUri(),
+                );
+            }
+        $twitter_status['attentions'] = $attentions_array;
+        } catch (Exception $e) {
+            //
+        }
 
 		// fave number
 		$faves = Fave::byNotice($notice);

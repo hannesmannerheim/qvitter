@@ -1044,6 +1044,16 @@ function searchForUpdatedNoticeData(obj) {
 						streamItemsUpdated = true;
 						}
 
+					// attentions might have been added to a notice
+					if(queetFoundInFeed.children('script.attentions-json').text() != JSON.stringify(obj.attentions)) {
+						if(queetFoundInFeed.children('script.attentions-json').length == 0) {
+							queetFoundInFeed.prepend('<script class="attentions-json" type="application/json">' + JSON.stringify(obj.attentions) + '</script>');
+							}
+						else {
+							queetFoundInFeed.children('script.attentions-json').text(JSON.stringify(obj.attentions));
+							}
+						}
+
 					// set favorite data
 					queetFoundInFeed.find('.action-fav-num').attr('data-fav-num',obj.fave_num);
 					queetFoundInFeed.find('.action-fav-num').html(obj.fave_num);
