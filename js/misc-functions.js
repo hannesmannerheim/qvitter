@@ -1307,7 +1307,7 @@ function displayOrHideUnreadNotifications(notifications) {
 
 		if(totNotif>0) {
 			$('#unseen-notifications').html(totNotif);
-			document.title = window.siteTitle + ' (' + totNotif + ')'; // update html page title
+			document.title = '(' + totNotif + ') ' + window.siteTitle; // update html page title
 			$('#unseen-notifications').show();
 			}
 		else {
