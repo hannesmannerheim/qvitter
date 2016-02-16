@@ -1197,15 +1197,15 @@ function expand_queet(q,doScrolling) {
 				}
 
 			// show certain attachments in expanded content
-			if(q.children('script.attachment-json').length > 0
-			&& q.children('script.attachment-json').text() != 'undefined') {
+			if(q.children('.queet').children('script.attachment-json').length > 0
+			&& q.children('.queet').children('script.attachment-json').text() != 'undefined') {
 				try {
-					var attachmentsParsed = JSON.parse(q.children('script.attachment-json').text());
+					var attachmentsParsed = JSON.parse(q.children('.queet').children('script.attachment-json').text());
 					}
 				catch(e) {
 					var attachmentsParsed = false;
 					console.log('could not parse attachment json when expanding the notice: ' + e);
-					console.log("attachment-json: " + q.children('script.attachment-json').text());
+					console.log("attachment-json: " + q.children('.queet').children('script.attachment-json').text());
 					}
 
 				if(attachmentsParsed !== false) {
@@ -1220,14 +1220,11 @@ function expand_queet(q,doScrolling) {
 						// attachments in the content link to /attachment/etc url and not direct to image/video, link is in title
 						if(typeof attachment_title != 'undefined') {
 
-							// hack to make remote webm-movies load
-							if(attachment_title_extension == 'webm') {
-								attachment_mimetype = 'video/webm';
-								}
-
 							// videos
 							if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
 								if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
+
+									console.log('video!');
 
 									// local attachment with a thumbnail
 									var attachment_poster = '';

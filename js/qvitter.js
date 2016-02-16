@@ -3249,6 +3249,18 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 		}
 	});
 
+
+/* ·
+   ·
+   ·   Any click empties the mentions-suggestions
+   ·
+   · · · · · · · · · · · · · */
+
+$(document).click(function() {
+	$('.mentions-suggestions').empty();
+	});
+
+
 /* ·
    ·
    ·   Store unposted queets in cache, if the user accidentally reloads the page or something

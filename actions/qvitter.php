@@ -86,6 +86,7 @@ class QvitterAction extends ApiAction
 		$apiroot = common_path('api/', StatusNet::isHTTPS());
 		$attachmentroot = common_path('attachment/', StatusNet::isHTTPS());
 		$instanceurl = common_path('', StatusNet::isHTTPS());
+        $favicon_path = QvitterPlugin::settings("favicon_path");
 
         // user's browser's language setting
         $user_browser_language = 'en'; // use english if we can't find the browser language
@@ -108,6 +109,8 @@ class QvitterAction extends ApiAction
 				}
 			}
 
+
+
 		?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 		"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 		<html xmlns="http://www.w3.org/1999/xhtml">
@@ -117,7 +120,26 @@ class QvitterAction extends ApiAction
 				<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/qvitter.css?changed=<?php print date('YmdHis',filemtime(QVITTERDIR.'/css/qvitter.css')); ?>" />
 				<link rel="stylesheet" type="text/css" href="<?php print $qvitterpath; ?>css/jquery.minicolors.css" />
-				<link rel="shortcut icon" type="image/x-icon" href="<?php print $qvitterpath; ?><?php print QvitterPlugin::settings("favicon"); ?>">
+                <link rel="apple-touch-icon" sizes="57x57" href="<?php print $favicon_path ?>apple-touch-icon-57x57.png">
+                <link rel="apple-touch-icon" sizes="60x60" href="<?php print $favicon_path ?>apple-touch-icon-60x60.png">
+                <link rel="apple-touch-icon" sizes="72x72" href="<?php print $favicon_path ?>apple-touch-icon-72x72.png">
+                <link rel="apple-touch-icon" sizes="76x76" href="<?php print $favicon_path ?>apple-touch-icon-76x76.png">
+                <link rel="apple-touch-icon" sizes="114x114" href="<?php print $favicon_path ?>apple-touch-icon-114x114.png">
+                <link rel="apple-touch-icon" sizes="120x120" href="<?php print $favicon_path ?>apple-touch-icon-120x120.png">
+                <link rel="apple-touch-icon" sizes="144x144" href="<?php print $favicon_path ?>apple-touch-icon-144x144.png">
+                <link rel="apple-touch-icon" sizes="152x152" href="<?php print $favicon_path ?>apple-touch-icon-152x152.png">
+                <link rel="apple-touch-icon" sizes="180x180" href="<?php print $favicon_path ?>apple-touch-icon-180x180.png">
+                <link rel="icon" type="image/png" href="<?php print $favicon_path ?>favicon-16x16.png" sizes="16x16">
+                <link rel="icon" type="image/png" href="<?php print $favicon_path ?>favicon-32x32.png" sizes="32x32">
+                <link rel="icon" type="image/png" href="<?php print $favicon_path ?>android-chrome-192x192.png" sizes="192x192">
+                <link rel="icon" type="image/png" href="<?php print $favicon_path ?>favicon-96x96.png" sizes="96x96">
+                <link rel="manifest" href="<?php print $favicon_path ?>manifest.json">
+                <link rel="mask-icon" href="<?php print $favicon_path ?>safari-pinned-tab.svg" color="#a22430">
+                <meta name="apple-mobile-web-app-title" content="<?php print $sitetitle; ?>">
+                <meta name="application-name" content="<?php print $sitetitle; ?>">
+                <meta name="msapplication-TileColor" content="#da532c">
+                <meta name="msapplication-TileImage" content="<?php print $favicon_path ?>mstile-144x144.png">
+                <meta name="theme-color" content="#ffffff">
 				<?php
 
 				// if qvitter is a webapp and this is a users url we add feeds
