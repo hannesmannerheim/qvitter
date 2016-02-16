@@ -62,8 +62,8 @@ class QvitterPlugin extends Plugin {
 		// DEFAULT BACKGROUND IMAGE
 		$settings['sitebackground'] = 'img/vagnsmossen.jpg';
 
-		// DEFAULT FAVICON
-		$settings['favicon'] = 'img/favicon.ico?v=5';
+		// FAVICON PATH (we've used realfavicongenerator.net to generate the icons)
+		$settings['favicon_path'] = Plugin::staticPath('Qvitter', '').'img/gnusocial-favicons/';
 
 		// DEFAULT SPRITE
 		$settings['sprite'] = Plugin::staticPath('Qvitter', '').'img/sprite.png?v=41';
