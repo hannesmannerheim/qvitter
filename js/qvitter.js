@@ -2962,7 +2962,8 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 				|| currentMatch[0].slice(-1) == ':'
 				|| currentMatch[0].slice(-1) == '.'
 				|| currentMatch[0].slice(-1) == ','
-				|| currentMatch[0].slice(-1) == ')') {
+				|| currentMatch[0].slice(-1) == ')'
+				|| currentMatch[0].slice(-1) == '\'') {
 					currentMatch[0] = currentMatch[0].slice(0,-1);
 					}
 
