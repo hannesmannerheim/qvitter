@@ -1224,8 +1224,6 @@ function expand_queet(q,doScrolling) {
 							if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
 								if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
 
-									console.log('video!');
-
 									// local attachment with a thumbnail
 									var attachment_poster = '';
 									if(typeof this.thumb_url != 'undefined') {
