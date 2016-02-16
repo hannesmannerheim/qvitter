@@ -1338,10 +1338,14 @@ function replyFormHtml(streamItem,qid) {
 	// object with ostatus-uri as key to avoid duplicates
 	var screenNamesToAdd = {};
 
-	// we don't trust attentions to be in the right order, so always add the
-	// screen name to the one we're replying to first (if it's not me)
-	if(!thisIsALinkToMyProfile(streamItem.attr('data-user-profile-url'))) {
+	// add the screen name to the one we're replying to first (if it's not me)
+	if(!thisIsALinkToMyProfile(streamItem.attr('data-user-profile-url')) && typeof streamItem.attr('data-user-ostatus-uri') != 'undefined') {
 		screenNamesToAdd[streamItem.attr('data-user-ostatus-uri')] = streamItem.attr('data-user-screen-name');
+		}
+
+	// old style notice (probably cached, this can be removed later)
+	else if (typeof streamItem.attr('data-user-ostatus-uri') == 'undefined') {
+		screenNamesToAdd[q.find('.account-group').attr('href')] = q.find('.screen-name').text().replace('@','');
 		}
 
 	// add the rest of the attentions (not me)
