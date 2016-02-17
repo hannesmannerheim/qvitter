@@ -716,13 +716,15 @@ class QvitterPlugin extends Plugin {
             $attentions = $notice->getAttentionProfiles();
             $attentions_array = array();
             foreach ($attentions as $attn) {
-                $attentions_array[] = array(
-                    'id' => $attn->getID(),
-                    'screen_name' => $attn->getNickname(),
-                    'fullname' => $attn->getStreamName(),
-                    'profileurl' => $attn->getUrl(),
-                    'ostatus_uri' => $attn->getUri(),
-                );
+                if(!$attn->isGroup()) {
+                    $attentions_array[] = array(
+                        'id' => $attn->getID(),
+                        'screen_name' => $attn->getNickname(),
+                        'fullname' => $attn->getStreamName(),
+                        'profileurl' => $attn->getUrl(),
+                        'ostatus_uri' => $attn->getUri(),
+                    );
+                }
             }
         $twitter_status['attentions'] = $attentions_array;
         } catch (Exception $e) {
