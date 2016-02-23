@@ -2112,7 +2112,7 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 
 	// external
 	var ostatusHtml = '';
-	if(obj.is_local === false) {
+	if(obj.user.is_local === false) {
 		ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
 		var qSource = '<a href="' + obj.external_url + '">' + getHost(obj.external_url) + '</a>';
 		}
