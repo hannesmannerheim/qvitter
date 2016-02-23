@@ -158,6 +158,17 @@ class QvitterAction extends ApiAction
 							print '				<link title="FOAF for '.$nickname.'" type="application/rdf+xml" href="'.$instanceurl.$nickname.'/foaf" rel="meta">'."\n";
 							print '				<link href="'.$instanceurl.$nickname.'/microsummary" rel="microsummary">'."\n";
 
+                            // rel="me" for the IndieWeb audience
+                            $relMes = array(
+                                ['href' => $user->getProfile()->getHomepage(),
+                                 'text' => _('Homepage'),
+                                 'image' => null],
+                            );
+                            Event::handle('OtherAccountProfiles', array($user->getProfile(), &$relMes));
+							foreach ($relMes as $relMe) {
+                                print '				<link href="'.htmlspecialchars($relMe['href']).'" title="'.$relMe['text'].'" rel="me" />'."\n";
+                            }
+
 							// maybe openid
 							if (array_key_exists('OpenID', StatusNet::getActivePlugins())) {
 								print '				<link rel="openid2.provider" href="'.common_local_url('openidserver').'"/>'."\n";
