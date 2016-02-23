@@ -71,8 +71,13 @@ class RawPublicAndExternalNoticeStream extends NoticeStream
 		$notice->whereAdd('is_local !='. Notice::GATEWAY);
 		$notice->whereAdd('repeat_of IS NULL');
 
-        Notice::addWhereSinceId($notice, $since_id);
-        Notice::addWhereMaxId($notice, $max_id);
+        if(!empty($max_id) && is_numeric($max_id)) {
+            $notice->whereAdd('id < '.$max_id);
+        }
+
+        if(!empty($since_id) && is_numeric($since_id)) {
+            $notice->whereAdd('id > '.$since_id);
+        }
 
         $ids = array();
 

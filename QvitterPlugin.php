@@ -62,8 +62,8 @@ class QvitterPlugin extends Plugin {
 		// DEFAULT BACKGROUND IMAGE
 		$settings['sitebackground'] = 'img/vagnsmossen.jpg';
 
-		// DEFAULT FAVICON
-		$settings['favicon'] = 'img/favicon.ico?v=5';
+		// FAVICON PATH (we've used realfavicongenerator.net to generate the icons)
+		$settings['favicon_path'] = Plugin::staticPath('Qvitter', '').'img/gnusocial-favicons/';
 
 		// DEFAULT SPRITE
 		$settings['sprite'] = Plugin::staticPath('Qvitter', '').'img/sprite.png?v=41';
@@ -703,11 +703,33 @@ class QvitterPlugin extends Plugin {
 		// reply-to profile url
         try {
             $reply = $notice->getParent();
-			$twitter_status['in_reply_to_profileurl'] = $reply->getProfile()->getUrl();
+            $reply_profile = $reply->getProfile();
+			$twitter_status['in_reply_to_profileurl'] = $reply_profile->getUrl();
+            $twitter_status['in_reply_to_ostatus_uri'] = $reply_profile->getUri();
         } catch (ServerException $e) {
 		    $twitter_status['in_reply_to_profileurl'] = null;
+            $twitter_status['in_reply_to_ostatus_uri'] = null;
         }
 
+        // attentions
+        try {
+            $attentions = $notice->getAttentionProfiles();
+            $attentions_array = array();
+            foreach ($attentions as $attn) {
+                if(!$attn->isGroup()) {
+                    $attentions_array[] = array(
+                        'id' => $attn->getID(),
+                        'screen_name' => $attn->getNickname(),
+                        'fullname' => $attn->getStreamName(),
+                        'profileurl' => $attn->getUrl(),
+                        'ostatus_uri' => $attn->getUri(),
+                    );
+                }
+            }
+        $twitter_status['attentions'] = $attentions_array;
+        } catch (Exception $e) {
+            //
+        }
 
 		// fave number
 		$faves = Fave::byNotice($notice);

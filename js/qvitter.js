@@ -1101,11 +1101,16 @@ $('#faq-link').click(function(){
    ·
    · · · · · · · · · · · · · */
 
-$('#tou-link').click(function(){
+$('#tou-link,.tou-link').click(function(){
 	popUpAction('popup-terms', window.sL.showTerms,'<div id="terms-container"></div>',false);
-	getDoc('terms',function(termsHtml){
-		$('#terms-container').html(termsHtml);
-		});
+	if(window.customTermsOfUse) {
+		$('#terms-container').html(window.customTermsOfUse);
+		}
+	else {
+		getDoc('terms',function(termsHtml){
+			$('#terms-container').html(termsHtml);
+			});
+		}
 	});
 
 
@@ -2947,17 +2952,18 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 				}
 			// long enough match, create a mention span
 			else {
-				// don't include ending char, if any of these
+				// don't include ending char, if any of these (but tags can contain and end with . and -)
 				if(currentMatch[0].slice(-1) == '<'
 				|| currentMatch[0].slice(-1) == '&'
 				|| currentMatch[0].slice(-1) == '?'
 				|| currentMatch[0].slice(-1) == '!'
 				|| currentMatch[0].slice(-1) == ' '
-				|| currentMatch[0].slice(-1) == '-'
+				|| (currentMatch[0].slice(-1) == '-' && k != 'tag')
 				|| currentMatch[0].slice(-1) == ':'
-				|| currentMatch[0].slice(-1) == '.'
+				|| (currentMatch[0].slice(-1) == '.' && k != 'tag')
 				|| currentMatch[0].slice(-1) == ','
-				|| currentMatch[0].slice(-1) == ')') {
+				|| currentMatch[0].slice(-1) == ')'
+				|| currentMatch[0].slice(-1) == '\'') {
 					currentMatch[0] = currentMatch[0].slice(0,-1);
 					}
 
@@ -3243,6 +3249,18 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 			}
 		}
 	});
+
+
+/* ·
+   ·
+   ·   Any click empties the mentions-suggestions
+   ·
+   · · · · · · · · · · · · · */
+
+$(document).click(function() {
+	$('.mentions-suggestions').empty();
+	});
+
 
 /* ·
    ·

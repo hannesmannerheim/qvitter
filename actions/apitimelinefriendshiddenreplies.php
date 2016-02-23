@@ -390,6 +390,8 @@ class RawInboxNoticeStreamHiddenReplies extends NoticeStream
     protected $target  = null;
     protected $inbox = null;
 
+    protected $selectVerbs = array();
+
     /**
      * Constructor
      *
@@ -397,6 +399,7 @@ class RawInboxNoticeStreamHiddenReplies extends NoticeStream
      */
     function __construct(Profile $target)
     {
+        parent::__construct();
         $this->target  = $target;
     }
 
@@ -453,9 +456,17 @@ class RawInboxNoticeStreamHiddenReplies extends NoticeStream
         if (!empty($max_id)) {
             $notice->whereAdd(sprintf('notice.id <= %d', $max_id));
         }
-        if (!empty($this->selectVerbs)) {
+
+        // We have changed how selectVerbs work in GNUsocial, so it's an associative array
+        // where each verb is in the key and then the value (true/false) is how to filter.
+        // $this->unselectVerbs is always unset in newer GNUsocials.
+        if (!isset($this->unselectVerbs)) {
+            self::filterVerbs($notice, $this->selectVerbs);
+        } elseif (!empty($this->selectVerbs)) {
+            // old behaviour was just if there were selectVerbs set
             $notice->whereAddIn('verb', $this->selectVerbs, $notice->columnType('verb'));
         }
+
         $notice->limit($offset, $limit);
         // notice.id will give us even really old posts, which were
         // recently imported. For example if a remote instance had
