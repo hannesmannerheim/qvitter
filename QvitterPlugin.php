@@ -528,16 +528,16 @@ class QvitterPlugin extends Plugin {
                             $oembed = File_oembed::getKV('file_id',$attachment->id);
                             if($oembed instanceof File_oembed) {
                                 $oembed_html = str_replace('&lt;!--//--&gt;','',$oembed->html); // trash left of wordpress' javascript after htmLawed removed the tags
-                                if($oembed->provider == 'Twitter' && strstr($oembed_html, '>&mdash; '.$oembed->author_name)) {
-                                    $oembed_html = substr($oembed_html,0,strpos($oembed_html, '>&mdash; '.$oembed->author_name)+1); // remove user data from twitter oembed html (we have it in )
-                                    $twitter_username = substr($oembed->html,strpos($oembed->html, '>&mdash; '.$oembed->author_name)+strlen('>&mdash; '.$oembed->author_name));
+                                if($oembed->provider == 'Twitter' && strstr($oembed_html, '>— '.$oembed->author_name)) {
+                                    $oembed_html = substr($oembed_html,0,strpos($oembed_html, '>— '.$oembed->author_name)+1); // remove user data from twitter oembed html (we have it in )
+                                    $twitter_username = substr($oembed->html,strpos($oembed->html, '>— '.$oembed->author_name)+strlen('>— '.$oembed->author_name));
                                     $twitter_username = substr($twitter_username, strpos($twitter_username,'(@')+1);
                                     $twitter_username = substr($twitter_username, 0,strpos($twitter_username,')'));
                                     $oembed->title = $twitter_username;
                                     }
                                 $oembed_html = str_replace('&#8230;','...',$oembed_html); // ellipsis is sometimes stored as html in db, for some reason
-                                $oembed_html = mb_substr(trim(strip_tags(html_entity_decode($oembed_html,ENT_QUOTES))),0,250); // sometimes we have html charachters that we want to decode and then strip
-                                $oembed_title = trim(strip_tags(html_entity_decode($oembed->title,ENT_QUOTES)));
+                                $oembed_html = mb_substr(trim(strip_tags($oembed_html)),0,250);
+                                $oembed_title = trim(strip_tags(html_entity_decode($oembed->title,ENT_QUOTES))); // sometimes we have html charachters that we want to decode and then strip
                                 $oembed_provider = trim(strip_tags(html_entity_decode($oembed->provider,ENT_QUOTES)));
                                 $oembed_author_name = trim(strip_tags(html_entity_decode($oembed->author_name,ENT_QUOTES)));
                                 $attachment_url_to_id[$enclosure_o->url]['oembed'] = array(
