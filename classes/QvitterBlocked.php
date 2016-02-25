@@ -49,7 +49,12 @@ class QvitterBlocked extends Profile_block
     public static function getBlocked($profile_id, $offset = 0, $limit = PROFILES_PER_PAGE)
     {
         $ids = self::getBlockedIDs($profile_id, $offset, $limit);
-        return Profile_block::listFind('blocked', $ids);
+        try {
+        $blocked = Profile_block::listFind('blocked', $ids);
+            return $blocked;
+        } catch(NoResultException $e) {
+            return false;
+        }
     }
 
 

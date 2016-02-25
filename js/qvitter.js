@@ -2952,17 +2952,18 @@ $('body').on('keyup paste input', 'div.queet-box-syntax', function() {
 				}
 			// long enough match, create a mention span
 			else {
-				// don't include ending char, if any of these
+				// don't include ending char, if any of these (but tags can contain and end with . and -)
 				if(currentMatch[0].slice(-1) == '<'
 				|| currentMatch[0].slice(-1) == '&'
 				|| currentMatch[0].slice(-1) == '?'
 				|| currentMatch[0].slice(-1) == '!'
 				|| currentMatch[0].slice(-1) == ' '
-				|| currentMatch[0].slice(-1) == '-'
+				|| (currentMatch[0].slice(-1) == '-' && k != 'tag')
 				|| currentMatch[0].slice(-1) == ':'
-				|| currentMatch[0].slice(-1) == '.'
+				|| (currentMatch[0].slice(-1) == '.' && k != 'tag')
 				|| currentMatch[0].slice(-1) == ','
-				|| currentMatch[0].slice(-1) == ')') {
+				|| currentMatch[0].slice(-1) == ')'
+				|| currentMatch[0].slice(-1) == '\'') {
 					currentMatch[0] = currentMatch[0].slice(0,-1);
 					}
 

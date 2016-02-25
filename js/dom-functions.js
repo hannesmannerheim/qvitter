@@ -1224,8 +1224,6 @@ function expand_queet(q,doScrolling) {
 							if($.inArray(attachment_mimetype, ['video/mp4', 'video/ogg', 'video/quicktime', 'video/webm']) >=0) {
 								if(q.children('.queet').find('.expanded-content').children('.media').children('video').children('source[href="' + attachment_title + '"]').length < 1) { // not if already showed
 
-									console.log('video!');
-
 									// local attachment with a thumbnail
 									var attachment_poster = '';
 									if(typeof this.thumb_url != 'undefined') {
@@ -1337,32 +1335,40 @@ function replyFormHtml(streamItem,qid) {
         var cachedText = encodeURIComponent(data);
 		}
 
+	// object with ostatus-uri as key to avoid duplicates
 	var screenNamesToAdd = {};
 
-	// add the screen name to the one we're replying to (if it's not me)
-	if(!thisIsALinkToMyProfile(q.find('.account-group').attr('href'))) {
-		var replyToScreenName = q.find('.account-group span.screen-name').html().replace('@','');
-		screenNamesToAdd[q.find('.account-group').attr('href')] = replyToScreenName;
+	// add the screen name to the one we're replying to first (if it's not me)
+	if(!thisIsALinkToMyProfile(streamItem.attr('data-user-profile-url')) && typeof streamItem.attr('data-user-ostatus-uri') != 'undefined') {
+		screenNamesToAdd[streamItem.attr('data-user-ostatus-uri')] = streamItem.attr('data-user-screen-name');
 		}
 
-	// add the screen name to the one who the one we're replying to is replying to (if it's not me)
-	if(q.find('i.addressees > span.reply-to').length > 0
-	&& !thisIsALinkToMyProfile(q.find('i.addressees > span.reply-to > a').attr('href'))) {
-		var replyToScreenName = q.find('i.addressees > span.reply-to > a').html().replace('@','');
-		if(typeof screenNamesToAdd[q.find('i.addressees > span.reply-to > a').attr('href')] == 'undefined') {
-			screenNamesToAdd[q.find('i.addressees > span.reply-to > a').attr('href')] = replyToScreenName;
-			}
+	// old style notice (probably cached, this can be removed later)
+	else if (typeof streamItem.attr('data-user-ostatus-uri') == 'undefined') {
+		screenNamesToAdd[q.find('.account-group').attr('href')] = q.find('.screen-name').text().replace('@','');
 		}
 
-    // get all other mentions (if it's not me)
-	$.each(q.find('.queet-text').find('.mention'),function(key,obj){
-		if(!thisIsALinkToMyProfile($(obj).attr('href'))) {
-			if(typeof screenNamesToAdd[$(obj).attr('href')] == 'undefined') {
-				var thisMention = $(obj).html().replace('@','');
-				screenNamesToAdd[$(obj).attr('href')] = thisMention;
-				}
+	// add the rest of the attentions (not me)
+	if(q.children('script.attentions-json').length > 0
+	&& q.children('script.attentions-json').text() != 'undefined') {
+		try {
+			var attentionsParsed = JSON.parse(q.children('script.attentions-json').text());
 			}
-		});
+		catch(e) {
+			var attentionsParsed = false;
+			console.log('could not parse attentions json: ' + e);
+			console.log("attentions-json: " + q.children('script.attentions-json').text());
+			}
+
+		if(attentionsParsed !== false) {
+			$.each(attentionsParsed, function() {
+				if(!thisIsALinkToMyProfile(this.profileurl)
+				&& typeof screenNamesToAdd[this.ostatus_uri] == 'undefined') {
+					screenNamesToAdd[this.ostatus_uri] = this.screen_name;
+					}
+				});
+			}
+		}
 
 	// build reply/rant strings
 	var repliesText = '';
@@ -2035,8 +2041,19 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 
 	// reply-to html
 	var reply_to_html = '';
-	if(obj.in_reply_to_screen_name !== null && obj.in_reply_to_profileurl !== null && obj.in_reply_to_screen_name != obj.user.screen_name) {
-		reply_to_html = '<span class="reply-to"><a class="h-card mention" href="' + obj.in_reply_to_profileurl + '">@' + obj.in_reply_to_screen_name + '</a></span> ';
+	if(obj.in_reply_to_screen_name !== null
+	&& obj.in_reply_to_profileurl !== null
+	&& obj.in_reply_to_profileurl != obj.user.statusnet_profile_url) {
+		var replyToProfileurl = obj.in_reply_to_profileurl;
+		var replyToScreenName = obj.in_reply_to_screen_name;
+		}
+	// if we don't have a reply-to, we might have attentions, in that case use the first one as reply
+	else if(typeof obj.attentions != 'undefined' && typeof obj.attentions[0] != 'undefined') {
+		var replyToProfileurl = obj.attentions[0].profileurl;
+		var replyToScreenName = obj.attentions[0].screen_name;
+		}
+	if(typeof replyToProfileurl != 'undefined' && typeof replyToScreenName != 'undefined') {
+		reply_to_html = '<span class="reply-to"><a class="h-card mention" href="' + replyToProfileurl + '">@' + replyToScreenName + '</a></span> ';
 		}
 
 	// in-groups html
@@ -2092,26 +2109,37 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		statusnetHTML = statusnetHTML.slice(0,-4);
 		}
 
+
 	// external
 	var ostatusHtml = '';
-	if(obj.is_local === false) {
+	if(obj.user.is_local === false) {
 		ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.external_url + '"></a>';
+		var qSource = '<a href="' + obj.external_url + '">' + getHost(obj.external_url) + '</a>';
+		}
+	else {
+		var qSource = obj.source;
 		}
 	var queetTime = parseTwitterDate(obj.created_at);
 	var queetHtml = '<div \
 						id="' + idPrepend + 'stream-item-' + idInStream + '" \
 						data-uri="' + URItoUse + '" \
 						class="stream-item notice ' + extraClasses + '" \
-						data-source="' + escape(obj.source) + '" \
+						data-source="' + escape(qSource) + '" \
 						data-quitter-id="' + obj.id + '" \
 						data-conversation-id="' + obj.statusnet_conversation_id + '" \
 						data-quitter-id-in-stream="' + idInStream + '" \
 						data-in-reply-to-screen-name="' + in_reply_to_screen_name + '" \
+						data-in-reply-to-profile-url="' + obj.in_reply_to_profileurl + '" \
+						data-in-reply-to-profile-ostatus-uri="' + obj.in_reply_to_ostatus_uri + '" \
 						data-in-reply-to-status-id="' + obj.in_reply_to_status_id + '"\
 						data-user-id="' + obj.user.id + '"\
+						data-user-screen-name="' + obj.user.screen_name + '"\
+						data-user-ostatus-uri="' + obj.user.ostatus_uri + '"\
+						data-user-profile-url="' + obj.user.statusnet_profile_url + '"\
 						' + requeetedByMe + '>\
 							<div class="queet" id="' + idPrepend + 'q-' + idInStream + '"' + blockingTooltip  + '>\
 								<script class="attachment-json" type="application/json">' + JSON.stringify(obj.attachments) + '</script>\
+								<script class="attentions-json" type="application/json">' + JSON.stringify(obj.attentions) + '</script>\
 								' + requeetHtml + '\
 								' + ostatusHtml + '\
 								<div class="queet-content">\
