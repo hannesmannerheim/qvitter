@@ -153,6 +153,14 @@ class QvitterPlugin extends Plugin {
 	// route/reroute urls
     public function onRouterInitialized($m)
     {
+        $m->connect('api/qvitter/sandboxed.:format',
+                    array('action' => 'ApiQvitterSandboxed',
+                          'format' => '(xml|json)'));
+        $m->connect('api/qvitter/silenced.:format',
+                    array('action' => 'ApiQvitterSilenced',
+                          'format' => '(xml|json)'));
+        $m->connect('api/qvitter/silence/create.json',
+					array('action' => 'ApiQvitterSilenceCreate'));
         $m->connect('services/oembed.:format',
                     array('action' => 'apiqvitteroembednotice',
                           'format' => '(xml|json)'));
@@ -263,6 +271,8 @@ class QvitterPlugin extends Plugin {
             $m->connect('', array('action' => 'qvitter'));
 			$m->connect('main/all', array('action' => 'qvitter'));
             $m->connect('main/public', array('action' => 'qvitter'));
+			$m->connect('main/silenced', array('action' => 'qvitter'));
+            $m->connect('main/sandboxed', array('action' => 'qvitter'));
 			$m->connect('search/notice', array('action' => 'qvitter'));
 
             // if the user wants the twitter style home stream with hidden replies to non-friends
@@ -808,6 +818,12 @@ class QvitterPlugin extends Plugin {
 		$twitter_user['is_local'] = $profile->isLocal();
 
 
+		// silenced?
+		$twitter_user['is_silenced'] = $profile->isSilenced();
+
+		// sandboxed?
+		$twitter_user['is_sandboxed'] = $profile->isSandboxed();
+
         // ostatus uri
         if($twitter_user['is_local']) {
             $user = $profile->getUser();
@@ -1248,12 +1264,19 @@ class QvitterPlugin extends Plugin {
         }
 
 		$user_id = $user->id;
+        $profile = $user->getProfile();
 		$notification = new QvitterNotification();
 
 		$notification->selectAdd();
 		$notification->selectAdd('ntype');
 		$notification->selectAdd('count(id) as count');
 		$notification->whereAdd("(to_profile_id = '".$user_id."')");
+
+        // if the user only want notifications from users they follow
+        $only_show_notifications_from_users_i_follow = Profile_prefs::getConfigData($profile, 'qvitter', 'only_show_notifications_from_users_i_follow');
+        if($only_show_notifications_from_users_i_follow == '1') {
+            $notification->whereAdd(sprintf('qvitternotification.from_profile_id IN (SELECT subscribed FROM subscription WHERE subscriber = %u)', $user_id));
+            }
 
         // the user might have opted out from certain notification types
         $current_profile = $user->getProfile();

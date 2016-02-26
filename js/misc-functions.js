@@ -899,6 +899,16 @@ function updateUserDataInStream() {
 		&& typeof userArray.modified != 'undefined'
 		&& (timeNow-userArray.modified)<1000) {
 
+			// add/remove silenced class to stream items and profile cards
+			if(userArray.local.is_silenced === true) {
+				$('.stream-item[data-user-id=' + userArray.local.id + ']').addClass('silenced');
+				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').addClass('silenced');
+				}
+			else {
+				$('.stream-item[data-user-id=' + userArray.local.id + ']').removeClass('silenced')
+				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').removeClass('silenced');
+				}
+
 			// profile size avatars (notices, users)
 			$.each($('img.avatar.profile-size[data-user-id="' + userArray.local.id + '"]'),function(){
 				if($(this).attr('src') != userArray.local.profile_image_url_profile_size) {

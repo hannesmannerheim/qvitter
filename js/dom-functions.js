@@ -171,7 +171,7 @@ function alignMenuToParent(menu, parent, offsetLeft) {
 
 function showErrorMessage(message, after) {
 	if(typeof after == 'undefined') {
-		var after = $('#user-container');
+		var after = $('#user-container,#login-register-container');
 		}
 	after.after('<div class="error-message">' + message + '<span class="discard-error-message"></span></div>');
 	}
@@ -358,6 +358,16 @@ function buildProfileCard(data) {
 		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';
 		}
 
+	// silenced?
+	var is_silenced = '';
+	if(data.is_silenced === true) {
+		is_silenced = ' silenced';
+		}
+	// sandboxed?
+	var is_sandboxed = '';
+	if(data.is_sandboxed === true) {
+		is_sandboxed = ' sandboxed';
+		}
 
 	var followButton = '';
 
@@ -385,13 +395,15 @@ function buildProfileCard(data) {
 	// full card html
 	data.profileCardHtml = '\
 		<div class="profile-card">\
-			<div class="profile-header-inner" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '">\
+			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture" href="' + data.profile_image_url_original + '">\
 					<img class="avatar profile-size" src="' + data.profile_image_url_profile_size + '" data-user-id="' + data.id + '" />\
 				</a>\
 				<div class="profile-card-inner">\
-					<h1 class="fullname" data-user-id="' + data.id + '">' + data.name + '<span></span></h1>\
+					<h1 class="fullname" data-user-id="' + data.id + '">' + data.name + '</h1>\
+					<span class="silenced-flag" data-tooltip="' + window.sL.silencedStreamDescription + '">' + window.sL.silenced + '</span>\
+					<span class="sandboxed-flag" data-tooltip="' + window.sL.sandboxedStreamDescription + '">' + window.sL.sandboxed + '</span>\
 					<h2 class="username">\
 						<span class="screen-name" data-user-id="' + data.id + '">@' + data.screen_name + '</span>\
 						' + follows_you + '\
@@ -446,6 +458,21 @@ function buildExternalProfileCard(data) {
 		var followButton = buildFollowBlockbutton(data.local);
 		}
 
+	// silenced?
+	var is_silenced = '';
+	if(data.local.is_silenced === true) {
+		is_silenced = ' silenced';
+		}
+
+	// sandboxed?
+	var is_sandboxed = '';
+	if(data.local.is_sandboxed === true) {
+		is_sandboxed = ' sandboxed';
+		}
+
+	// local id
+	var localUserId = data.local.id;
+
 	// empty strings and zeros instead of null
 	data = cleanUpUserObject(data.external);
 
@@ -480,12 +507,14 @@ function buildExternalProfileCard(data) {
 
 	data.profileCardHtml = '\
 		<div class="profile-card">\
-			<div class="profile-header-inner" style="background-image:url(\'' + cover_photo + '\')">\
+			<div class="profile-header-inner' + is_silenced + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a>\
 				<div class="profile-card-inner">\
 					<a target="_blank" href="' + data.statusnet_profile_url + '">\
-						<h1 class="fullname">' + data.name + '<span></span></h1>\
+						<h1 class="fullname">' + data.name + '</h1>\
+						<span class="silenced-flag" data-tooltip="' + window.sL.silencedStreamDescription + '">' + window.sL.silenced + '</span>\
+						<span class="sandboxed-flag" data-tooltip="' + window.sL.sandboxedStreamDescription + '">' + window.sL.sandboxed + '</span>\
 						<h2 class="username">\
 							<span class="screen-name">' + data.screenNameWithServer + '</span>\
 							<span class="ostatus-link" data-tooltip="' + window.sL.goToTheUsersRemoteProfile + '">' + window.sL.goToTheUsersRemoteProfile + '</span>\
@@ -694,12 +723,18 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 	// remember the most recent stream object
 	window.currentStreamObject = streamObject;
 
-	// set the new streams header
+	// set the new streams header and description
 	if(streamObject.streamSubHeader) {
 		$('#feed-header-inner h2').html(streamObject.streamSubHeader);
 		}
 	else {
 		$('#feed-header-inner h2').html(streamObject.streamHeader);
+		}
+	if(streamObject.streamDescription !== false) {
+		$('#feed-header-description').html(streamObject.streamDescription);
+		}
+	else {
+		$('#feed-header-description').empty();
 		}
 
 	// add menu cog if this stream has a menu
@@ -892,14 +927,21 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				else {
 					showErrorMessage(window.sL.ERRORcouldNotFindPage + '<br><br>url: ' + url);
 					}
+				emptyRememberAndHideFeed();
 				}
 			else if(error.status == 410 && streamObject.name == 'notice') {
 				showErrorMessage(window.sL.ERRORnoticeRemoved);
+				emptyRememberAndHideFeed();
 				}
 			else if(error.status == 0
 			|| (error.status == 200 && error.responseText == 'An error occurred.')
 				) {
 				showErrorMessage(window.sL.ERRORnoContactWithServer + ' (' + replaceHtmlSpecialChars(error.statusText) + ')');
+				// don't hide feed for these errors
+				}
+			else if (typeof error.responseJSON.error != 'undefined' && error.responseJSON.error.length > 0) {
+				showErrorMessage(error.responseJSON.error);
+				emptyRememberAndHideFeed();
 				}
 			else {
 				showErrorMessage(window.sL.ERRORsomethingWentWrong + '<br><br>\
@@ -908,6 +950,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 								  streamObject:<pre><code>' + replaceHtmlSpecialChars(JSON.stringify(streamObject, null, ' ')) + '</code></pre>\
 								  ');
 				}
+
+			// make sure page-container is visible
+			$('#page-container').css('opacity','1');
 			}
 
 		// everything seems fine, show the new stream
@@ -1004,6 +1049,20 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				}
 			}
 		});
+	}
+
+/* ·
+   ·
+   ·   Empties the feed body, remembers the new empty state in localstorage and hide the feed and any profile card
+   ·   and mark this stream as current
+   ·
+   · · · · · · · · · */
+
+function emptyRememberAndHideFeed() {
+	$('#feed').css('opacity','0');
+	$('#feed-body').empty();
+	$('.profile-card').remove();
+	rememberStreamStateInLocalStorage();
 	}
 
 
@@ -1915,6 +1974,17 @@ function buildUserStreamItemHtml(obj) {
 		blockingClass = ' blocking';
 		}
 
+	// silenced?
+	var silencedClass = '';
+	if(obj.is_silenced === true) {
+		silencedClass = ' silenced';
+		}
+	// sandboxed?
+	var sandboxedClass = '';
+	if(obj.is_sandboxed === true) {
+		sandboxedClass = ' sandboxed';
+		}
+
 	var followButton = '';
 	if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
 	   && window.loggedIn.id != obj.id) {	// not if this is me
@@ -1923,14 +1993,16 @@ function buildUserStreamItemHtml(obj) {
 			}
 		}
 
-	return '<div id="stream-item-' + obj.id + '" class="stream-item user" data-user-id="' + obj.id + '">\
+	return '<div id="stream-item-' + obj.id + '" class="stream-item user' + silencedClass + sandboxedClass + '" data-user-id="' + obj.id + '">\
 				<div class="queet ' + rtlOrNot + '">\
 					' + followButton + '\
 					<div class="queet-content">\
 						<div class="stream-item-header">\
 							<a class="account-group" href="' + obj.statusnet_profile_url + '" data-user-id="' + obj.id + '">\
 								<img class="avatar profile-size" src="' + obj.profile_image_url_profile_size + '" data-user-id="' + obj.id + '" />\
-								<strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong> \
+								<strong class="name" data-user-id="' + obj.id + '">' + obj.name + '</strong>\
+								<span class="silenced-flag" data-tooltip="' + window.sL.silencedStreamDescription + '">' + window.sL.silenced + '</span> \
+								<span class="sandboxed-flag" data-tooltip="' + window.sL.sandboxedStreamDescription + '">' + window.sL.sandboxed + '</span> \
 								<span class="screen-name" data-user-id="' + obj.id + '">@' + obj.screen_name + '</span>\
 							</a>\
 							' + ostatusHtml + '\
@@ -1965,6 +2037,14 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 			});
 		}
 
+	// silenced?
+	if(obj.user.is_silenced === true) {
+		extraClasses += ' silenced';
+		}
+	// sandboxed?
+	if(obj.user.is_sandboxed === true) {
+		extraClasses += ' sandboxed';
+		}
 	// deleted?
 	if(typeof window.knownDeletedNotices[obj.uri] != 'undefined') {
 		extraClasses += ' deleted always-hidden';
@@ -2146,7 +2226,9 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 									<div class="stream-item-header">\
 										<a class="account-group" href="' + obj.user.statusnet_profile_url + '" data-user-id="' + obj.user.id + '">\
 											<img class="avatar profile-size" src="' + obj.user.profile_image_url_profile_size + '" data-user-id="' + obj.user.id + '" />\
-											<strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong> \
+											<strong class="name" data-user-id="' + obj.user.id + '">' + obj.user.name + '</strong>\
+											<span class="silenced-flag" data-tooltip="' + window.sL.silencedStreamDescription + '">' + window.sL.silenced + '</span> \
+											<span class="sandboxed-flag" data-tooltip="' + window.sL.sandboxedStreamDescription + '">' + window.sL.sandboxed + '</span> \
 											<span class="screen-name" data-user-id="' + obj.user.id + '">@' + obj.user.screen_name + '</span>' +
 										'</a>' +
 										'<i class="addressees">' + reply_to_html + in_groups_html + '</i>' +
