@@ -1643,6 +1643,19 @@ body.rtl #history-container.menu-container a .chev-right {
     line-height: 22px;
 	}
 
+#feed-header-description {
+    background-color: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    color: #66757f;
+    font-size: 12px;
+    margin-top: -1px;
+    padding: 0 10px 10px;
+    position: relative;
+	}
+#feed-header-description:empty {
+	display:none;
+	}
+
 #stream-menu-cog {
 	display: inline-block;
     font-size: 20px;
@@ -1870,6 +1883,47 @@ background-repeat: no-repeat;
 .stream-item.expanded.selected-by-keyboard::before {
 	height:100%;
 	border-radius: 9px;
+	}
+
+.stream-item .account-group span.silenced-flag,
+.stream-item .account-group span.sandboxed-flag {
+	background-color: pink;
+    border-radius: 3px;
+    font-size: 11px;
+    line-height: 18px;
+    padding: 0 5px;
+	display:none;
+	}
+.stream-item .account-group span.sandboxed-flag {
+	background-color: #00ccff;
+	}
+.stream-item.silenced .account-group span.silenced-flag,
+.stream-item.sandboxed .account-group span.sandboxed-flag {
+	display:inline-block;;
+	}
+.profile-card .profile-header-inner span.silenced-flag,
+.profile-card .profile-header-inner span.sandboxed-flag {
+ 	background-color: pink;
+    border-radius: 3px;
+    color: black;
+    display: none;
+    font-size: 11px;
+    line-height: 24px;
+    margin: 0 0 0 5px;
+    padding: 0 5px;
+    text-shadow: none;
+    vertical-align: top;
+	}
+.profile-card .profile-header-inner span.sandboxed-flag {
+	background-color: #00ccff;
+	}
+.hover-card .profile-card .profile-header-inner span.silenced-flag,
+.hover-card .profile-card .profile-header-inner span.sandboxed-flag {
+    line-height: 15px;
+	}
+.profile-card .profile-header-inner.silenced span.silenced-flag,
+.profile-card .profile-header-inner.sandboxed span.sandboxed-flag {
+	display: inline-block;
 	}
 
 .show-full-conversation {

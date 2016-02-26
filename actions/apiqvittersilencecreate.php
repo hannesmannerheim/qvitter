@@ -1,6 +1,10 @@
 <?php
 
- /* · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
+  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   ·                                                                            ·
+   ·  Silence a user                                                            ·
+   ·                                                                            ·
+   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ·                                                                             ·
   ·                                                                             ·
   ·                             Q V I T T E R                                   ·
@@ -35,73 +39,55 @@
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 
-if (!defined('STATUSNET')) {
-    exit(1);
-}
+if (!defined('GNUSOCIAL')) { exit(1); }
 
-class PublicAndExternalNoticeStream extends ScopingNoticeStream
+class ApiQvitterSilenceCreateAction extends ApiAuthAction
 {
-    function __construct($profile=null)
-    {
 
-        parent::__construct(new CachingNoticeStream(new RawPublicAndExternalNoticeStream(),
-                                                    'publicAndExternal'),
-                            $profile);
+
+    /**
+     * Take arguments for running
+     *
+     * @param array $args $_REQUEST args
+     *
+     * @return boolean success flag
+     */
+    protected function prepare(array $args=array())
+    {
+        parent::prepare($args);
+
+        $this->other  = $this->getTargetProfile($this->arg('id'));
+
+        return true;
     }
-}
 
-class RawPublicAndExternalNoticeStream extends NoticeStream
-{
-    function getNoticeIds($offset, $limit, $since_id, $max_id)
+    /**
+     * Handle the request
+     *
+     * @param array $args $_REQUEST data (unused)
+     *
+     * @return void
+     */
+    protected function handle()
     {
+        parent::handle();
 
-        $notice = new Notice();
-
-        $notice->selectAdd();
-        $notice->selectAdd('id');
-
-        $notice->orderBy('id DESC');
-
-        if (!is_null($offset)) {
-            $notice->limit($offset, $limit);
+        if (!$this->other instanceof Profile) {
+            $this->clientError(_('No such user.'), 404);
         }
 
-
-		$notice->whereAdd('is_local !='. Notice::LOCAL_NONPUBLIC);
-		$notice->whereAdd('is_local !='. Notice::GATEWAY);
-		$notice->whereAdd('repeat_of IS NULL');
-
-        // don't show sandboxed users in public timelines, unless you are a mod
-        $hide_sandboxed = true;
-        $cur_profile = Profile::current();
-        if($cur_profile instanceof Profile) {
-        	if($cur_profile->hasRight(Right::REVIEWSPAM)) {
-        		$hide_sandboxed = false;
-        	}
-        }
-        if($hide_sandboxed) {
-        	$notice->whereAdd('profile_id NOT IN (SELECT profile_id FROM profile_role WHERE role =\''.Profile_role::SANDBOXED.'\')');
+        if ($this->scoped->id == $this->other->id) {
+            $this->clientError(_("You cannot silence yourself!"), 403);
         }
 
-        if(!empty($max_id) && is_numeric($max_id)) {
-            $notice->whereAdd('id < '.$max_id);
+        try {
+            $this->other->silenceAs($this->scoped);
+        } catch (Exception $e) {
+            $this->clientError($e->getMessage(), $e->getCode());
         }
 
-        if(!empty($since_id) && is_numeric($since_id)) {
-            $notice->whereAdd('id > '.$since_id);
-        }
-
-        $ids = array();
-
-        if ($notice->find()) {
-            while ($notice->fetch()) {
-                $ids[] = $notice->id;
-            }
-        }
-
-        $notice->free();
-        $notice = NULL;
-
-        return $ids;
+        $this->initDocument('json');
+        $this->showJsonObjects($this->twitterUserArray($this->other));
+        $this->endDocument('json');
     }
 }

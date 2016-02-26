@@ -935,6 +935,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('.stream-selection.public-timeline').prepend(window.sL.publicTimeline);
 	$('.stream-selection.public-and-external-timeline').prepend(window.sL.publicAndExtTimeline)
 	$('#search-query').attr('placeholder',window.sL.searchVerb);
+	$('#blocking-link').html(window.sL.userBlocks);
 	$('#faq-link').html(window.sL.FAQ);
 	$('#tou-link').html(window.sL.showTerms);
 	$('#add-edit-language-link').html(window.sL.addEditLanguageLink);
@@ -2793,6 +2794,12 @@ $('body').on('click','.reload-stream',function () {
 	});
 // can be used a callback too, e.g. from profile pref toggles
 function reloadCurrentStream() {
+
+	// always clear cache for this stream when reloading using this function
+	$('#feed-body').empty();
+	rememberStreamStateInLocalStorage();
+
+	// reload
 	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,false);
 	}
 

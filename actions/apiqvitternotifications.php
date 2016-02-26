@@ -55,7 +55,7 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
     {
         parent::prepare($args);
 
-        $this->format = 'json';        
+        $this->format = 'json';
 
         $this->notifications = $this->getNotifications();
 
@@ -99,6 +99,8 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
                     if($notice_object instanceof Notice) {
                         $notice = self::twitterSimpleStatusArray($notice_object);
                     } else {
+                        // if the referenced notice is missing, delete this corrupt notification!
+                        $notification->delete();
                         continue;
                     }
 
@@ -117,6 +119,9 @@ class ApiQvitterNotificationsAction extends ApiPrivateAuthAction
                                             'created_at'=>self::dateTwitter($notification->created),
                                             'is_seen'=>$notification->is_seen
                                             );
+            } else {
+                // if the referenced from_profile is missing, delete this corrupt notification!
+                $notification->delete();
             }
 
             // mark as seen

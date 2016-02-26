@@ -71,12 +71,23 @@ class ApiQvitterCheckLoginAction extends ApiAction
 		$user = common_check_user($this->arg('username'),
 								  $this->arg('password'));
 
-		if($user) {
-			$user = true;
+		if(!$user instanceof User) {
+			$this->clientError(_('Incorrect credentials.'), 401);
 			}
 
+        // silenced?
+        if($user->isSilenced()) {
+            $this->clientError(_('User '.json_encode($user->isSilenced()).' is silenced.'), 403);
+        }
+
+        try {
+            $profile = $user->getProfile();
+        } catch (UserNoProfileException $e) {
+            $this->clientError(_('User got no profile.'), 400);
+        }
+
 		$this->initDocument('json');
-		$this->showJsonObjects($user);
+		$this->showJsonObjects($this->twitterUserArray($profile));
 		$this->endDocument('json');
     }
 

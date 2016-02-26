@@ -153,6 +153,14 @@ class QvitterPlugin extends Plugin {
 	// route/reroute urls
     public function onRouterInitialized($m)
     {
+        $m->connect('api/qvitter/sandboxed.:format',
+                    array('action' => 'ApiQvitterSandboxed',
+                          'format' => '(xml|json)'));
+        $m->connect('api/qvitter/silenced.:format',
+                    array('action' => 'ApiQvitterSilenced',
+                          'format' => '(xml|json)'));
+        $m->connect('api/qvitter/silence/create.json',
+					array('action' => 'ApiQvitterSilenceCreate'));
         $m->connect('services/oembed.:format',
                     array('action' => 'apiqvitteroembednotice',
                           'format' => '(xml|json)'));
@@ -263,6 +271,8 @@ class QvitterPlugin extends Plugin {
             $m->connect('', array('action' => 'qvitter'));
 			$m->connect('main/all', array('action' => 'qvitter'));
             $m->connect('main/public', array('action' => 'qvitter'));
+			$m->connect('main/silenced', array('action' => 'qvitter'));
+            $m->connect('main/sandboxed', array('action' => 'qvitter'));
 			$m->connect('search/notice', array('action' => 'qvitter'));
 
             // if the user wants the twitter style home stream with hidden replies to non-friends
@@ -528,16 +538,16 @@ class QvitterPlugin extends Plugin {
                             $oembed = File_oembed::getKV('file_id',$attachment->id);
                             if($oembed instanceof File_oembed) {
                                 $oembed_html = str_replace('&lt;!--//--&gt;','',$oembed->html); // trash left of wordpress' javascript after htmLawed removed the tags
-                                if($oembed->provider == 'Twitter' && strstr($oembed_html, '>&mdash; '.$oembed->author_name)) {
-                                    $oembed_html = substr($oembed_html,0,strpos($oembed_html, '>&mdash; '.$oembed->author_name)+1); // remove user data from twitter oembed html (we have it in )
-                                    $twitter_username = substr($oembed->html,strpos($oembed->html, '>&mdash; '.$oembed->author_name)+strlen('>&mdash; '.$oembed->author_name));
+                                if($oembed->provider == 'Twitter' && strstr($oembed_html, '>— '.$oembed->author_name)) {
+                                    $oembed_html = substr($oembed_html,0,strpos($oembed_html, '>— '.$oembed->author_name)+1); // remove user data from twitter oembed html (we have it in )
+                                    $twitter_username = substr($oembed->html,strpos($oembed->html, '>— '.$oembed->author_name)+strlen('>— '.$oembed->author_name));
                                     $twitter_username = substr($twitter_username, strpos($twitter_username,'(@')+1);
                                     $twitter_username = substr($twitter_username, 0,strpos($twitter_username,')'));
                                     $oembed->title = $twitter_username;
                                     }
                                 $oembed_html = str_replace('&#8230;','...',$oembed_html); // ellipsis is sometimes stored as html in db, for some reason
-                                $oembed_html = mb_substr(trim(strip_tags(html_entity_decode($oembed_html,ENT_QUOTES))),0,250); // sometimes we have html charachters that we want to decode and then strip
-                                $oembed_title = trim(strip_tags(html_entity_decode($oembed->title,ENT_QUOTES)));
+                                $oembed_html = mb_substr(trim(strip_tags($oembed_html)),0,250);
+                                $oembed_title = trim(strip_tags(html_entity_decode($oembed->title,ENT_QUOTES))); // sometimes we have html charachters that we want to decode and then strip
                                 $oembed_provider = trim(strip_tags(html_entity_decode($oembed->provider,ENT_QUOTES)));
                                 $oembed_author_name = trim(strip_tags(html_entity_decode($oembed->author_name,ENT_QUOTES)));
                                 $attachment_url_to_id[$enclosure_o->url]['oembed'] = array(
@@ -807,6 +817,12 @@ class QvitterPlugin extends Plugin {
 		// local user?
 		$twitter_user['is_local'] = $profile->isLocal();
 
+
+		// silenced?
+		$twitter_user['is_silenced'] = $profile->isSilenced();
+
+		// sandboxed?
+		$twitter_user['is_sandboxed'] = $profile->isSandboxed();
 
         // ostatus uri
         if($twitter_user['is_local']) {
@@ -1248,12 +1264,19 @@ class QvitterPlugin extends Plugin {
         }
 
 		$user_id = $user->id;
+        $profile = $user->getProfile();
 		$notification = new QvitterNotification();
 
 		$notification->selectAdd();
 		$notification->selectAdd('ntype');
 		$notification->selectAdd('count(id) as count');
 		$notification->whereAdd("(to_profile_id = '".$user_id."')");
+
+        // if the user only want notifications from users they follow
+        $only_show_notifications_from_users_i_follow = Profile_prefs::getConfigData($profile, 'qvitter', 'only_show_notifications_from_users_i_follow');
+        if($only_show_notifications_from_users_i_follow == '1') {
+            $notification->whereAdd(sprintf('qvitternotification.from_profile_id IN (SELECT subscribed FROM subscription WHERE subscriber = %u)', $user_id));
+            }
 
         // the user might have opted out from certain notification types
         $current_profile = $user->getProfile();

@@ -112,8 +112,11 @@ function checkLogin(username,password,actionOnSuccess) {
 			password: password
 			},
 	 	dataType: 'json',
-	 	error: function() {
+	 	error: function(data) {
 	 		shakeLoginBox();
+			if(data.status === 403) {
+				showErrorMessage(window.sL.silenced);
+				}
 	 		},
  		success: function(data) {
 			if(typeof data.error == 'undefined' && data !== false) {
