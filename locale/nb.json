@@ -171,13 +171,13 @@
 	"failedUnblockingUser":"Kunne ikke oppheve blokkeringen av bruker.",
 	"unblockUser": "Opphev blokkering {username}",
 	"tooltipBlocksYou":"Du er blokkert fra å følge profilen {username}.",
-	"silenced":"Silenced",
-	"silencedPlural":"Silenced profiles",
-	"silencedUsersOnThisInstance":"Silenced profiles on {site-title}",
-	"sandboxed":"Sandboxed",
-	"sandboxedPlural":"Sandboxed profiles",
-	"sandboxedUsersOnThisInstance":"Sandboxed profiles on {site-title}",
-	"silencedStreamDescription":"Silenced users can't login or post quips and the quips they've already posted are hidden. For local users it's like a delete that can be reversed, for remote users it's like a site wide block.",
-	"sandboxedStreamDescription":"Quips from sandboxed users are excluded from the Public Timeline and The Whole Known Network. Quips posted while being in the sandbox will not be included in the public timelines if the user is unsandboxed.",
-	"onlyShowNotificationsFromUsersIFollow":"Only show notifications from users I follow"
+	"silenced":"Forstummet",
+	"silencedPlural":"Forstummede profiler",
+	"silencedUsersOnThisInstance":"Forstummede profiler på {site-title}",
+	"sandboxed":"Lekekasse",
+	"sandboxedPlural":"Profiler satt i lekekasse",
+	"sandboxedUsersOnThisInstance":"Profiler satt i lekekasse på {site-title}",
+	"silencedStreamDescription":"Forstummede brukere can ikke logge på tjenesten, sende status meldinger, samt allerede status meldinger er skjult. For lokale brukere vil dette oppleves som å bli slettet, men beslutnignen kan reverseres. For brukere på andre instanser vil det oppleves som en utvidet blokkering.",
+	"sandboxedStreamDescription":"Statusmeldinger fra brukere satt i lekekassen, så vil meldingene bli ekskludert fra den offentlige tidslinjen og hele nettverks tidslinjen. Statusmeldinger send når man er i lekekasse vil ikke bli inkludert i den offentlige tidslinjen hvis brukeren blir tatt ut av lekekassen.",
+	"onlyShowNotificationsFromUsersIFollow":"Vis kun notifikasjoner fra brukere jeg følger"
 }
