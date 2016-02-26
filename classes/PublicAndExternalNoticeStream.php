@@ -71,6 +71,18 @@ class RawPublicAndExternalNoticeStream extends NoticeStream
 		$notice->whereAdd('is_local !='. Notice::GATEWAY);
 		$notice->whereAdd('repeat_of IS NULL');
 
+        // don't show sandboxed users in public timelines, unless you are a mod
+        $hide_sandboxed = true;
+        $cur_profile = Profile::current();
+        if($cur_profile instanceof Profile) {
+        	if($cur_profile->hasRight(Right::REVIEWSPAM)) {
+        		$hide_sandboxed = false;
+        	}
+        }
+        if($hide_sandboxed) {
+        	$notice->whereAdd('profile_id NOT IN (SELECT profile_id FROM profile_role WHERE role =\''.Profile_role::SANDBOXED.'\')');
+        }
+
         if(!empty($max_id) && is_numeric($max_id)) {
             $notice->whereAdd('id < '.$max_id);
         }
