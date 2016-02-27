@@ -821,6 +821,13 @@ class QvitterPlugin extends Plugin {
 		// silenced?
 		$twitter_user['is_silenced'] = $profile->isSilenced();
 
+        // rights
+        $twitter_user['rights'] = array();
+        $twitter_user['rights']['delete_user'] = $profile->hasRight(Right::DELETEUSER);
+        $twitter_user['rights']['delete_others_notice'] = $profile->hasRight(Right::DELETEOTHERSNOTICE);
+        $twitter_user['rights']['silence'] = $profile->hasRight(Right::SILENCEUSER);
+        $twitter_user['rights']['sandbox'] = $profile->hasRight(Right::SANDBOXUSER);
+
 		// sandboxed?
 		$twitter_user['is_sandboxed'] = $profile->isSandboxed();
 
