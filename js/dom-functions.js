@@ -1119,8 +1119,8 @@ function expand_queet(q,doScrolling) {
 		return;
 		}
 
-	// don't expand if this is a remote profile popup
-	if(q.closest('#popup-external-profile, #popup-local-profile').length>0) {
+	// don't expand if this is a popup
+	if(q.closest('.modal-container').length>0) {
 		return;
 		}
 

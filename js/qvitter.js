@@ -2282,10 +2282,11 @@ function deleteQueet(arg) {
 		}
 
 	var this_qid = this_stream_item.attr('data-quitter-id');
-	var $queetHtml = $('<div>').append(this_stream_item.html());
-	var $stuffToRemove = $queetHtml.find('.stream-item-footer, .expanded-content, .inline-reply-queetbox, .stream-item.conversation, .view-more-container-top, .view-more-container-bottom');
-	$stuffToRemove.remove();
-	var queetHtmlWithoutFooterAndConversation = $queetHtml.html();
+
+	var $queetHtml = $(this_stream_item.outerHTML());
+	$queetHtml.children('.stream-item.conversation').remove();
+	$queetHtml.find('.context,.stream-item-footer,.inline-reply-queetbox,.expanded-content').remove();
+	var queetHtmlWithoutFooterAndConversation = $queetHtml.outerHTML();
 
 	popUpAction('popup-delete-' + this_qid, window.sL.deleteConfirmation,queetHtmlWithoutFooterAndConversation,'<div class="right"><button class="close">' + window.sL.cancelVerb + '</button><button class="primary">' + window.sL.deleteVerb + '</button></div>');
 
@@ -2501,14 +2502,10 @@ $('body').on('click','.action-reply-container',function(){
 	this_stream_item.addClass('replying-to');
 
 	// grabbing the queet and view it in the popup, stripped of footer, reply box and other sruff
-	var $queetHtml = $('<div>').append(this_stream_item.children('.queet').outerHTML());
-	var $queetHtmlFooter = $queetHtml.find('.stream-item-footer');
-	$queetHtmlFooter.remove();
-	var $queetHtmlQueetBox = $queetHtml.find('.inline-reply-queetbox');
-	$queetHtmlQueetBox.remove();
-	var $queetHtmlExpandedContent = $queetHtml.find('.expanded-content');
-	$queetHtmlExpandedContent.remove();
-	var queetHtmlWithoutFooter = $queetHtml.html();
+	var $queetHtml = $(this_stream_item.outerHTML());
+	$queetHtml.children('.stream-item.conversation').remove();
+	$queetHtml.find('.context,.stream-item-footer,.inline-reply-queetbox,.expanded-content').remove();
+	var queetHtmlWithoutFooter = $queetHtml.outerHTML();
 	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.children('.queet').find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
 
 	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
@@ -2805,7 +2802,7 @@ function reloadCurrentStream() {
    · · · · · · · · · · · · · */
 
 function reloadCurrentStreamAndClearCache() {
-	
+
 	$('#feed-body').empty();
 	rememberStreamStateInLocalStorage();
 
