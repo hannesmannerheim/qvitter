@@ -275,6 +275,13 @@ function pathToStreamRouter(path) {
 		streamObject.stream = 'qvitter/silenced.json?count=20';
         streamObject.maxIdOrPage = 'page';
 		streamObject.type = 'users';
+		streamObject.menu = [
+			{
+			type: 'link',
+				label: window.sL.sandboxedPlural,
+				href: window.siteInstanceURL + 'main/sandboxed'
+				}
+			];
 		return streamObject;
 		}
 
@@ -287,6 +294,13 @@ function pathToStreamRouter(path) {
 		streamObject.stream = 'qvitter/sandboxed.json?count=20';
         streamObject.maxIdOrPage = 'page';
 		streamObject.type = 'users';
+		streamObject.menu = [
+			{
+			type: 'link',
+				label: window.sL.silencedPlural,
+				href: window.siteInstanceURL + 'main/silenced'
+				}
+			];
 		return streamObject;
 		}
 
@@ -567,7 +581,7 @@ function pathToStreamRouter(path) {
 					namespace: 'qvitter',
 					topic: 'only_show_notifications_from_users_i_follow',
 					label: window.sL.onlyShowNotificationsFromUsersIFollow,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					},
 				{
 					type: 'divider'
@@ -577,28 +591,28 @@ function pathToStreamRouter(path) {
 					namespace: 'qvitter',
 					topic: 'disable_notify_replies_and_mentions',
 					label: window.sL.notifyRepliesAndMentions,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_favs',
 					label: window.sL.notifyFavs,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_repeats',
 					label: window.sL.notifyRepeats,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_follows',
 					label: window.sL.notifyFollows,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					}
 				];
 			streamObject.callbacks = [
