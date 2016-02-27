@@ -1238,8 +1238,8 @@ $('body').on('click','.sm-ellipsis',function(e){
 		// menu
 		var menuArray = [];
 
-		// my notice
-		if(streamItemUserID == window.loggedIn.id) {
+		// delete my notice, or others notices for mods with rights
+		if(streamItemUserID == window.loggedIn.id || window.loggedIn.rights.delete_others_notice === true) {
 			menuArray.push({
 				type: 'function',
 				functionName: 'deleteQueet',
@@ -1249,8 +1249,8 @@ $('body').on('click','.sm-ellipsis',function(e){
 				label: window.sL.deleteVerb
 				});
 			}
-		// other users' notices
-		else {
+		// block/unblock if it's not me
+		if(streamItemUserID != window.loggedIn.id) {
 			if(userIsBlocked(streamItemUserID)) {
 				menuArray.push({
 					type: 'function',
@@ -2794,13 +2794,23 @@ $('body').on('click','.reload-stream',function () {
 	});
 // can be used a callback too, e.g. from profile pref toggles
 function reloadCurrentStream() {
+	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,false);
+	}
 
-	// always clear cache for this stream when reloading using this function
+
+/* ·
+   ·
+   ·   Reload current stream and clear cache
+   ·
+   · · · · · · · · · · · · · */
+
+function reloadCurrentStreamAndClearCache() {
+	
 	$('#feed-body').empty();
 	rememberStreamStateInLocalStorage();
 
 	// reload
-	setNewCurrentStream(URLtoStreamRouter(window.location.href),false,false,false);
+	reloadCurrentStream();
 	}
 
 /* ·
