@@ -110,10 +110,7 @@ class ApiQvitterSandboxedAction extends ApiPrivateAuthAction
 
         $profile = $this->getSandboxed(
             ($this->page - 1) * $this->count,
-            $this->count,
-            $this->since_id,
-            $this->max_id
-        );
+            $this->count);
 
         while ($profile->fetch()) {
             $profiles[] = clone($profile);
@@ -130,6 +127,7 @@ class ApiQvitterSandboxedAction extends ApiPrivateAuthAction
 
     function getSandboxed($offset=null, $limit=null)   // offset is null because DataObject wants it, 0 would mean no results
     {
+
         $profiles = new Profile();
         $profiles->joinAdd(array('id', 'profile_role:profile_id'));
         $profiles->whereAdd(sprintf('profile_role.role = \'%s\'', Profile_role::SANDBOXED));

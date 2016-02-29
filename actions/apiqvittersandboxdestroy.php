@@ -2,7 +2,7 @@
 
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ·                                                                            ·
-   ·  Silence a user                                                            ·
+   ·  Unsandbox a user                                                            ·
    ·                                                                            ·
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ·                                                                             ·
@@ -41,7 +41,7 @@
 
 if (!defined('GNUSOCIAL')) { exit(1); }
 
-class ApiQvitterSilenceCreateAction extends ApiAuthAction
+class ApiQvitterSandboxDestroyAction extends ApiAuthAction
 {
 
 
@@ -77,17 +77,20 @@ class ApiQvitterSilenceCreateAction extends ApiAuthAction
         }
 
         if ($this->scoped->id == $this->other->id) {
-            $this->clientError(_("You cannot silence yourself!"), 403);
+            $this->clientError(_("You cannot unsandbox yourself!"), 403);
         }
 
-        try {
-            $this->other->silenceAs($this->scoped);
-        } catch (AlreadyFulfilledException $e) {
-            // don't throw client error here, just return the user array like
-            // if we successfully silenced the user. the client is only interested
-            // in making sure the user is silenced.
-        } catch (Exception $e) {
-            $this->clientError($e->getMessage(), $e->getCode());
+        if (!$this->scoped->hasRight(Right::SANDBOXUSER)) {
+            $this->clientError(_('You cannot unsandbox users on this site.'), 403);
+        }
+
+        // only unsandbox if the user is sandboxed
+        if ($this->isSandboxed()) {
+            try {
+                $this->other->sandbox();
+            } catch (Exception $e) {
+                $this->clientError($e->getMessage(), $e->getCode());
+            }
         }
 
         $this->initDocument('json');

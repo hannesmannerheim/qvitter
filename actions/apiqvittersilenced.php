@@ -110,10 +110,7 @@ class ApiQvitterSilencedAction extends ApiPrivateAuthAction
 
         $profile = $this->getSilenced(
             ($this->page - 1) * $this->count,
-            $this->count,
-            $this->since_id,
-            $this->max_id
-        );
+            $this->count);
 
         while ($profile->fetch()) {
             $profiles[] = clone($profile);

@@ -159,8 +159,14 @@ class QvitterPlugin extends Plugin {
         $m->connect('api/qvitter/silenced.:format',
                     array('action' => 'ApiQvitterSilenced',
                           'format' => '(xml|json)'));
+        $m->connect('api/qvitter/sandbox/create.json',
+					array('action' => 'ApiQvitterSandboxCreate'));
+        $m->connect('api/qvitter/sandbox/destroy.json',
+					array('action' => 'ApiQvitterSandboxDestroy'));
         $m->connect('api/qvitter/silence/create.json',
 					array('action' => 'ApiQvitterSilenceCreate'));
+        $m->connect('api/qvitter/silence/destroy.json',
+					array('action' => 'ApiQvitterSilenceDestroy'));
         $m->connect('services/oembed.:format',
                     array('action' => 'apiqvitteroembednotice',
                           'format' => '(xml|json)'));
