@@ -507,7 +507,7 @@ function buildExternalProfileCard(data) {
 
 	data.profileCardHtml = '\
 		<div class="profile-card">\
-			<div class="profile-header-inner' + is_silenced + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '">\
+			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a>\
 				<div class="profile-card-inner">\
@@ -939,7 +939,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				showErrorMessage(window.sL.ERRORnoContactWithServer + ' (' + replaceHtmlSpecialChars(error.statusText) + ')');
 				// don't hide feed for these errors
 				}
-			else if (typeof error.responseJSON.error != 'undefined' && error.responseJSON.error.length > 0) {
+			else if (typeof error.responseJSON != 'undefined' && typeof error.responseJSON.error != 'undefined' && error.responseJSON.error.length > 0) {
 				showErrorMessage(error.responseJSON.error);
 				emptyRememberAndHideFeed();
 				}
