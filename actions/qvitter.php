@@ -472,7 +472,8 @@ class QvitterAction extends ApiAction
 						<li class="fullwidth dropdown-divider"></li>
 						<li class="fullwidth"><a id="edit-profile-header-link"></a></li>
 						<li class="fullwidth"><a id="settings" href="<?php print $instanceurl; ?>settings/profile" donthijack></a></li>
-						<li class="fullwidth"><a id="faq-link"></a></li>
+                        <li class="fullwidth"><a id="blocking-link" href="<?php print $instanceurl.$logged_in_user_obj['screen_name'].'/blocks'; ?>"></a></li>
+                        <li class="fullwidth"><a id="faq-link"></a></li>
                         <li class="fullwidth"><a id="tou-link"></a></li>
                         <li class="fullwidth"><a id="shortcuts-link"></a></li>
 						<?php if (common_config('invite', 'enabled') && !common_config('site', 'closed')) { ?>
@@ -622,7 +623,6 @@ class QvitterAction extends ApiAction
                                     if($logged_in_user) {
                                         ?><a href="<?php print $instanceurl.$logged_in_user->nickname ?>/all" class="stream-selection friends-timeline"><i class="chev-right"></i></a>
             							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/notifications" class="stream-selection notifications"><span id="unseen-notifications"></span><i class="chev-right"></i></a>
-            							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/replies" class="stream-selection mentions"><i class="chev-right"></i></a>
             							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>" class="stream-selection my-timeline"><i class="chev-right"></i></a>
             							<a href="<?php print $instanceurl.$logged_in_user->nickname ?>/favorites" class="stream-selection favorites"><i class="chev-right"></i></a>
             							<a href="<?php print $instanceurl ?>main/public" class="stream-selection public-timeline"><i class="chev-right"></i></a>
@@ -644,6 +644,7 @@ class QvitterAction extends ApiAction
 								<h2></h2>
 								<div class="reload-stream"></div>
 							</div>
+                            <div id="feed-header-description"></div>
 						</div>
 						<div id="new-queets-bar-container" class="hidden"><div id="new-queets-bar"></div></div>
 						<div id="feed-body"></div>

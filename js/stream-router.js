@@ -126,6 +126,7 @@ function pathToStreamRouter(path) {
         name: false, 				// human readable name
 		streamHeader: false,		// short header, e.g. links and buttons – no html!
 		streamSubHeader: false,		// a longer header, that can include html and links
+		streamDescription: false,	// description of the stream
 		parentPath: false,			// a parent path can e.g. be "group/qvitter" for "group/qvitter/members"
 		stream: false,				// the API path
 		nickname: false,			// if we can read a nickname/screen_name from the path, add it to this property
@@ -157,6 +158,19 @@ function pathToStreamRouter(path) {
 					topic: 'hide_quotes_in_timeline:' + streamObject.path,
 					label: window.sL.hideQuotesInTimeline,
 					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					},
+				{
+					type: 'divider'
+					},
+				{
+				type: 'link',
+					label: window.sL.silencedPlural,
+					href: window.siteInstanceURL + 'main/silenced'
+					},
+				{
+				type: 'link',
+					label: window.sL.sandboxedPlural,
+					href: window.siteInstanceURL + 'main/sandboxed'
 					}
 				];
 			streamObject.callbacks = [
@@ -188,6 +202,19 @@ function pathToStreamRouter(path) {
 					topic: 'hide_quotes_in_timeline:' + streamObject.path,
 					label: window.sL.hideQuotesInTimeline,
 					callback: 'showOrHideQuotesInTimelineFromProfilePref'
+					},
+				{
+					type: 'divider'
+					},
+				{
+				type: 'link',
+					label: window.sL.silencedPlural,
+					href: window.siteInstanceURL + 'main/silenced'
+					},
+				{
+				type: 'link',
+					label: window.sL.sandboxedPlural,
+					href: window.siteInstanceURL + 'main/sandboxed'
 					}
 				];
 			streamObject.callbacks = [
@@ -237,6 +264,44 @@ function pathToStreamRouter(path) {
 				}
 			return streamObject;
 			}
+		}
+
+	// main/silenced
+	if(path == 'main/silenced') {
+		streamObject.name = 'silenced profiles';
+        streamObject.streamHeader = window.sL.silencedPlural;
+        streamObject.streamSubHeader = window.sL.silencedUsersOnThisInstance;
+		streamObject.streamDescription = window.sL.silencedStreamDescription;
+		streamObject.stream = 'qvitter/silenced.json?count=20';
+        streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
+		streamObject.menu = [
+			{
+			type: 'link',
+				label: window.sL.sandboxedPlural,
+				href: window.siteInstanceURL + 'main/sandboxed'
+				}
+			];
+		return streamObject;
+		}
+
+	// main/sandboxed
+	if(path == 'main/sandboxed') {
+		streamObject.name = 'sandboxed profiles';
+        streamObject.streamHeader = window.sL.sandboxedPlural;
+        streamObject.streamSubHeader = window.sL.sandboxedUsersOnThisInstance;
+		streamObject.streamDescription = window.sL.sandboxedStreamDescription;
+		streamObject.stream = 'qvitter/sandboxed.json?count=20';
+        streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
+		streamObject.menu = [
+			{
+			type: 'link',
+				label: window.sL.silencedPlural,
+				href: window.siteInstanceURL + 'main/silenced'
+				}
+			];
+		return streamObject;
 		}
 
 	// {screen_name}
@@ -443,8 +508,7 @@ function pathToStreamRouter(path) {
         streamObject.nickname = pathSplit[0];
 		if(window.loggedIn.screen_name == streamObject.nickname) {
 			streamObject.stream = 'statuses/mentions.json';
-            streamObject.streamHeader = '@' + replaceHtmlSpecialChars(streamObject.nickname);
-            streamObject.streamSubHeader = window.sL.mentions;
+            streamObject.streamHeader = window.sL.mentions;
 			}
 		else {
             streamObject.parentPath = streamObject.nickname;
@@ -515,30 +579,40 @@ function pathToStreamRouter(path) {
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
+					topic: 'only_show_notifications_from_users_i_follow',
+					label: window.sL.onlyShowNotificationsFromUsersIFollow,
+					callback: 'reloadCurrentStreamAndClearCache'
+					},
+				{
+					type: 'divider'
+					},
+				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
 					topic: 'disable_notify_replies_and_mentions',
 					label: window.sL.notifyRepliesAndMentions,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_favs',
 					label: window.sL.notifyFavs,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_repeats',
 					label: window.sL.notifyRepeats,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					},
 				{
 					type: 'profile-prefs-toggle',
 					namespace: 'qvitter',
 					topic: 'disable_notify_follows',
 					label: window.sL.notifyFollows,
-					callback: 'reloadCurrentStream'
+					callback: 'reloadCurrentStreamAndClearCache'
 					}
 				];
 			streamObject.callbacks = [

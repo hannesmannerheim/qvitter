@@ -170,5 +170,14 @@
 	"failedBlockingUser":"Kunne ikke blokkere brukeren.",
 	"failedUnblockingUser":"Kunne ikke oppheve blokkeringen av bruker.",
 	"unblockUser": "Opphev blokkering {username}",
-	"tooltipBlocksYou":"Du er blokkert fra å følge profilen {username}."
+	"tooltipBlocksYou":"Du er blokkert fra å følge profilen {username}.",
+	"silenced":"Forstummet",
+	"silencedPlural":"Forstummede profiler",
+	"silencedUsersOnThisInstance":"Forstummede profiler på {site-title}",
+	"sandboxed":"Lekekasse",
+	"sandboxedPlural":"Profiler satt i lekekasse",
+	"sandboxedUsersOnThisInstance":"Profiler satt i lekekasse på {site-title}",
+	"silencedStreamDescription":"Forstummede brukere can ikke logge på tjenesten, sende status meldinger, samt allerede status meldinger er skjult. For lokale brukere vil dette oppleves som å bli slettet, men beslutnignen kan reverseres. For brukere på andre instanser vil det oppleves som en utvidet blokkering.",
+	"sandboxedStreamDescription":"Statusmeldinger fra brukere satt i lekekassen, så vil meldingene bli ekskludert fra den offentlige tidslinjen og hele nettverks tidslinjen. Statusmeldinger send når man er i lekekasse vil ikke bli inkludert i den offentlige tidslinjen hvis brukeren blir tatt ut av lekekassen.",
+	"onlyShowNotificationsFromUsersIFollow":"Vis kun notifikasjoner fra brukere jeg følger"
 }
