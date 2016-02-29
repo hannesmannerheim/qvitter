@@ -424,6 +424,9 @@ button.icon.nav-search span {
     top: 100%;
     z-index: 900;
 	}
+.user-menu-cog .dropdown-menu {
+	width:150px;
+	}
 .quitter-settings.dropdown-menu {
 	margin-right: -400px;
     right: 50%;
@@ -1655,7 +1658,8 @@ body.rtl #history-container.menu-container a .chev-right {
 	display:none;
 	}
 
-#stream-menu-cog {
+#stream-menu-cog,
+.user-menu-cog {
 	display: inline-block;
     font-size: 20px;
     line-height: 20px;
@@ -1664,14 +1668,37 @@ body.rtl #history-container.menu-container a .chev-right {
     position: relative;
 	cursor:pointer;
 	}
-#stream-menu-cog::before {
+.user-menu-cog {
+    float: right;
+    line-height: 26px;
+    margin: 13px 0 0;
+    opacity: 0.6;
+    padding: 0 5px 12px 10px;
+	}
+.hover-card .user-menu-cog {
+    color: #fff;
+    display: block;
+    float: none;
+    font-size: 16px;
+    margin: -32px 0 0;
+    opacity: 0.8;
+    position: absolute;
+    text-shadow: none;
+	}
+.profile-card:not(.logged-in) .user-menu-cog {
+	display:none !important;
+	}
+#stream-menu-cog::before,
+.user-menu-cog::before {
 	content:'\f013';
 	font-family: fontAwesome;
 	}
-#stream-menu-cog.dropped {
+#stream-menu-cog.dropped,
+.user-menu-cog.dropped {
 	opacity:1;
 	}
-#stream-menu-cog .dropdown-menu {
+#stream-menu-cog .dropdown-menu,
+.user-menu-cog .dropdown-menu {
 	z-index:1000;
 	display:block;
 	}

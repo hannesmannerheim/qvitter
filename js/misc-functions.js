@@ -309,6 +309,8 @@ function localStorageIsEnabled() {
 
 function blockUser(arg, callback) {
 
+	$('body').click(); // a click somewhere hides any open menus
+
 	// arguments is sent as an object, for easier use with a menu's function-row
 	var userId = arg.userId;
 	var blockButton_jQueryElement = arg.blockButton_jQueryElement;
@@ -336,6 +338,8 @@ function blockUser(arg, callback) {
 		});
 	}
 function unblockUser(arg, callback) {
+
+	$('body').click(); // a click somewhere hides any open menus
 
 	// arguments is sent as an object, for easier use with a menu's function-row
 	var userId = arg.userId;
@@ -431,6 +435,20 @@ function userIsBlocked(userId) {
 		}
 	}
 
+/* ·
+   ·
+   ·  Marks all notices from blocked users in an jQuery object as blocked
+   ·
+   · · · · · · · · · */
+
+
+function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
+	$.each(window.allBlocking,function(){
+		obj.find('.stream-item[data-user-id="' + this + '"]').addClass('profile-blocked-by-me');
+		obj.find('.stream-item[data-user-id="' + this + '"]').children('.queet').attr('data-tooltip',window.sL.thisIsANoticeFromABlockedUser);
+		});
+
+	}
 
 /* ·
    ·

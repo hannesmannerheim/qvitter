@@ -179,5 +179,6 @@
 	"sandboxedUsersOnThisInstance":"Sandboxed profiles on {site-title}",
 	"silencedStreamDescription":"Silenced users can't login or post quips and the quips they've already posted are hidden. For local users it's like a delete that can be reversed, for remote users it's like a site wide block.",
 	"sandboxedStreamDescription":"Quips from sandboxed users are excluded from the Public Timeline and The Whole Known Network. Quips posted while being in the sandbox will not be included in the public timelines if the user is unsandboxed.",
-	"onlyShowNotificationsFromUsersIFollow":"Only show notifications from users I follow"
+	"onlyShowNotificationsFromUsersIFollow":"Only show notifications from users I follow",
+	"userOptions":"More user actions"
 }

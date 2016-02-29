@@ -179,5 +179,6 @@
 	"sandboxedUsersOnThisInstance":"Profils dans le bac à sable sur {site-title}",
 	"silencedStreamDescription":"Le profils réduits au silence ne peuvent pas se connecter, commencer des diatribes et celles déjà postées sont cachées. Pour les comptes locaux, le résultat est similaire à une suppression de compte qui peut être annulée. Pour les comptes distants, c’est un blocage sur l’entièreté du site.",
 	"sandboxedStreamDescription":"Les mises à jour des profils du bac à sable sont exclues de l’Accueil et de l’Ensemble de la Fédération. Les messages postés tout en étant dans le bac à sable ne seront pas inclus dans les flux publics si le profil est remis en dehors du bac à sable.",
-	"onlyShowNotificationsFromUsersIFollow":"Afficher uniquement les notifications des utilisateurs que je suis"
+	"onlyShowNotificationsFromUsersIFollow":"Afficher uniquement les notifications des utilisateurs que je suis",
+	"userOptions":"More user actions"
 }

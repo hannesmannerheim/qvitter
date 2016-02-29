@@ -358,6 +358,18 @@ function buildProfileCard(data) {
 		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';
 		}
 
+	// me?
+	var is_me = '';
+	if(window.loggedIn !== false && window.loggedIn.id == data.id) {
+		var is_me = ' is-me';
+		}
+
+	// logged in?
+	var logged_in = '';
+	if(window.loggedIn !== false) {
+		var logged_in = ' logged-in';
+		}
+
 	// silenced?
 	var is_silenced = '';
 	if(data.is_silenced === true) {
@@ -394,8 +406,8 @@ function buildProfileCard(data) {
 
 	// full card html
 	data.profileCardHtml = '\
-		<div class="profile-card">\
-			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '">\
+		<div class="profile-card' + is_me + logged_in + '">\
+			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '" data-screen-name="' + data.screen_name + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture" href="' + data.profile_image_url_original + '">\
 					<img class="avatar profile-size" src="' + data.profile_image_url_profile_size + '" data-user-id="' + data.id + '" />\
@@ -426,6 +438,7 @@ function buildProfileCard(data) {
 					<li class="groups-num"><a href="' + data.statusnet_profile_url + '/groups" class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
+				<div class="user-menu-cog" data-tooltip="' + window.sL.userOptions + '"></div>\
 				<div class="clearfix"></div>\
 			</div>\
 		</div>\
@@ -538,6 +551,7 @@ function buildExternalProfileCard(data) {
 					<li class="follower-num"><a class="follower-stats" target="_blank" href="' + data.statusnet_profile_url + '/subscribers">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
+				<div class="user-menu-cog" data-tooltip="' + window.sL.userOptions + '"></div>\
 				<div class="clearfix"></div>\
 			</div>\
 		</div>\
@@ -783,10 +797,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 			// hide all notices from blocked users (not for user lists)
 			if(window.currentStreamObject.type != 'users' && typeof window.allBlocking != 'undefined') {
-				$.each(window.allBlocking,function(){
-					oldStreamState.find('strong.name[data-user-id="' + this + '"]').closest('.stream-item').addClass('profile-blocked-by-me');
-					oldStreamState.find('strong.name[data-user-id="' + this + '"]').closest('.stream-item').children('.queet').attr('data-tooltip',window.sL.thisIsANoticeFromABlockedUser);
-					});
+				markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(oldStreamState);
 				}
 
 			// hide dublicate repeats, only show the first/oldest instance of a notice

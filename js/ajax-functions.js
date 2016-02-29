@@ -261,6 +261,7 @@ function getAllFollowsMembershipsAndBlocks(callback) {
 
 		if(data.blocks)	{
 			window.allBlocking = data.blocks;
+			markAllNoticesFromBlockedUsersAsBlockedInJQueryObject($('body'));
 			}
 
 		if(typeof callback == 'function') {

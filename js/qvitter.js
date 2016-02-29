@@ -1174,6 +1174,95 @@ $('#settingslink').click(function(){
 	});
 
 
+
+/* ·
+   ·
+   ·   Show/hide the user menu dropdown on click
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('click','.user-menu-cog',function(e){
+	if(!$(e.target).is($(this))) {
+		// don't show/hide when clicking inside the menu
+		}
+
+	// hide
+	else if($(this).hasClass('dropped')) {
+		$(this).removeClass('dropped');
+		$(this).children('.dropdown-menu').remove();
+		}
+
+	// show
+	else {
+
+		$(this).addClass('dropped');
+
+		var profileCard = $(this).closest('.profile-card');
+		var profileHeaderInner = profileCard.children('.profile-header-inner');
+		var userID = profileHeaderInner.attr('data-user-id');
+		var userScreenName = profileHeaderInner.attr('data-screen-name');
+		var silenced = profileHeaderInner.hasClass('silenced');
+		var sandboxed = profileHeaderInner.hasClass('sandboxed');
+
+		// menu
+		var menuArray = [];
+
+		// block/unblock if it's not me
+		if(userID == window.loggedIn.id) {
+			menuArray.push({
+				type: 'function',
+				functionName: 'triggerEditProfileButtonClick',
+				label: window.sL.editMyProfile
+				});
+			menuArray.push({
+				type: 'link',
+				href: window.siteInstanceURL + 'settings/profile',
+				label: window.sL.settings
+				});
+			menuArray.push({
+				type: 'link',
+				href: window.siteInstanceURL + window.loggedIn.screen_name + '/blocks',
+				label: window.sL.userBlocks
+				});
+			}
+		else {
+			if(userIsBlocked(userID)) {
+				menuArray.push({
+					type: 'function',
+					functionName: 'unblockUser',
+					functionArguments: {
+						userId: userID
+						},
+					label: window.sL.unblockUser.replace('{username}','@' + userScreenName)
+					});
+				}
+			else {
+				menuArray.push({
+					type: 'function',
+					functionName: 'blockUser',
+					functionArguments: {
+						userId: userID
+						},
+					label: window.sL.blockUser.replace('{username}','@' + userScreenName)
+					});
+				}
+			}
+
+		var menu = $(getMenu(menuArray)).appendTo(this);
+		alignMenuToParent(menu,$(this));
+		}
+	});
+
+// hide the stream menu when clicking outside it
+$('body').on('click',function(e){
+	if(!$(e.target).is('.user-menu-cog') && $('.user-menu-cog').hasClass('dropped') && !$(e.target).closest('.user-menu-cog').length>0) {
+		$('.user-menu-cog').children('.dropdown-menu').remove();
+		$('.user-menu-cog').removeClass('dropped');
+		}
+	});
+
+
+
 /* ·
    ·
    ·   Show/hide the stream menu dropdown on click
@@ -4048,7 +4137,7 @@ function uploadAttachment(e, thisUploadButton) {
    ·
    · · · · · · · · · · · · · */
 
-$('body').on('click','#mini-edit-profile-button, #edit-profile-header-link, .hover-card .edit-profile-button',function(){
+$('body').on('click','#mini-edit-profile-button, #edit-profile-header-link, .hover-card .edit-profile-button, .row-type-edit-profile-menu-link',function(){
 	if(window.currentStreamObject.name == 'my profile') {
 		$('#page-container > .profile-card .edit-profile-button').trigger('click');
 		}
@@ -4058,3 +4147,6 @@ $('body').on('click','#mini-edit-profile-button, #edit-profile-header-link, .hov
 			});
 		}
 	});
+function triggerEditProfileButtonClick() {
+	$('#user-header #mini-edit-profile-button').trigger('click');
+	}

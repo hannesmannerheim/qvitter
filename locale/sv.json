@@ -179,5 +179,6 @@
 	"sandboxedUsersOnThisInstance":"Användare i sandlådan på {site-title}",
 	"silencedStreamDescription":"Nedtystade användare kan inte logga in eller skriva qvittringar. Qvittringar som de redan skrivit är dolda. För lokala användare är det som en borttagning som kan ångras, och för externa användare är det som att blockera användaren från instansen.",
 	"sandboxedStreamDescription":"Qvittringar från användare som är i sandlådan visas inte i &quot;Hela sajtens flöde&quot; eller &quot;Hela det kända nätverket&quot;. Qvittringar som användaren skriver under tiden den är i sandlådan kommer inte visas i de offentliga flödena om hen tas ur sandlådan senare.",
-	"onlyShowNotificationsFromUsersIFollow":"Visa bara notiser från användare som jag följer"
+	"onlyShowNotificationsFromUsersIFollow":"Visa bara notiser från användare som jag följer",
+	"userOptions":"Fler användaråtgärder"
 }
