@@ -1605,8 +1605,8 @@ function showConversation(q, qid, data, offsetScroll) {
 function findAndMarkLastVisibleInConversation(streamItem) {
 	streamItem.children().removeClass('last-visible');
 	streamItem.children().removeClass('first-visible-after-parent');
-	streamItem.children().not('.hidden-conversation').last().addClass('last-visible');
-	streamItem.children('.queet').nextAll().not('.hidden-conversation').first().addClass('first-visible-after-parent');
+	streamItem.children().not('.hidden-conversation').not('.always-hidden').last().addClass('last-visible');
+	streamItem.children('.queet').nextAll().not('.hidden-conversation').not('.always-hidden').first().addClass('first-visible-after-parent');
 	}
 
 
@@ -1624,7 +1624,7 @@ function findInReplyToStatusAndShow(q, qid,reply,only_first,onlyINreplyto) {
 		reply_found.css('opacity','1');
 		if(only_first && reply_found_reply_to.length>0) {
 			if(q.children('.view-more-container-top').length < 1) {
-				if(q.children('.queet').prevAll('.hidden-conversation').length>0) {
+				if(q.children('.queet').prevAll('.hidden-conversation:not(.always-hidden)').length>0) {
 					q.prepend('<div class="view-more-container-top" data-trace-from="' + reply + '"><a>' + window.sL.viewMoreInConvBefore + '</a></div>');
 					}
 				}
@@ -1658,7 +1658,7 @@ function findReplyToStatusAndShow(q, qid,this_id,only_first) {
 			}
 		if(only_first && reply_founds_reply.length>0) {
 			if(q.children('.view-more-container-bottom').length < 1) {
-				if(q.children('.queet').nextAll('.hidden-conversation').length>0) {
+				if(q.children('.queet').nextAll('.hidden-conversation:not(.always-hidden)').length>0) {
 					q.append('<div class="view-more-container-bottom" data-replies-after="' + qid + '"><a>' + window.sL.viewMoreInConvAfter + '</a></div>');
 					}
 				}
@@ -1671,7 +1671,7 @@ function findReplyToStatusAndShow(q, qid,this_id,only_first) {
 // helper function for the above recursive functions
 function checkForHiddenConversationQueets(q, qid) {
 	// here we check if there are any remaining hidden queets in conversation, if there are, we put a "show full conversation"-link
-	if(q.find('.hidden-conversation').length>0) {
+	if(q.find('.hidden-conversation:not(.always-hidden)').length>0) {
 		if(q.children('.queet').find('.show-full-conversation').length == 0) {
 			q.children('.queet').find('.stream-item-footer').append('<span class="show-full-conversation" data-stream-item-id="' + qid + '">' + window.sL.expandFullConversation + '</span>');
 			}
