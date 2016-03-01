@@ -1685,7 +1685,7 @@ body.rtl #history-container.menu-container a .chev-right {
     position: absolute;
     text-shadow: none;
 	}
-.profile-card:not(.logged-in) .user-menu-cog {
+.user-menu-cog:not(.logged-in) {
 	display:none !important;
 	}
 #stream-menu-cog::before,
@@ -2042,8 +2042,8 @@ body.has-right-to-sandbox .profile-card .profile-header-inner.sandboxed span.san
 body.rtl .queet.rtl .expanded-content {
 	direction:rtl;
 	}
-.stream-item.expanded > div:first-child,
-.stream-item.expanded > div:first-child > .queet {
+.stream-item.expanded > div.first-visible,
+.stream-item.expanded > div.first-visible > .queet {
 	border-top-left-radius:6px;
 	border-top-right-radius:6px;
 	}
@@ -2118,15 +2118,8 @@ body.rtl .queet.rtl .expanded-content {
 	box-sizing: border-box;
 	}
 
-/* only show activity notices if they are conversation starters
-   we never need to see these, but sometimes someone replies to
-   an activity notice, and then it can be good to know what the
-   user is replying to... */
 #feed-body > .stream-item.activity {
 	display:none;
-	}
-.stream-item > .stream-item.activity:first-child {
-	display:block;
 	}
 
 .quoted-notices,

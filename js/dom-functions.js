@@ -438,7 +438,7 @@ function buildProfileCard(data) {
 					<li class="groups-num"><a href="' + data.statusnet_profile_url + '/groups" class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
-				<div class="user-menu-cog" data-tooltip="' + window.sL.userOptions + '"></div>\
+				<div class="user-menu-cog' + is_silenced + is_sandboxed + logged_in + '" data-tooltip="' + window.sL.userOptions + '" data-user-id="' + data.id + '" data-screen-name="' + data.screen_name + '"></div>\
 				<div class="clearfix"></div>\
 			</div>\
 		</div>\
@@ -471,6 +471,18 @@ function buildExternalProfileCard(data) {
 		var followButton = buildFollowBlockbutton(data.local);
 		}
 
+	// me?
+	var is_me = '';
+	if(window.loggedIn !== false && window.loggedIn.id == data.local.id) {
+		var is_me = ' is-me';
+		}
+
+	// logged in?
+	var logged_in = '';
+	if(window.loggedIn !== false) {
+		var logged_in = ' logged-in';
+		}
+
 	// silenced?
 	var is_silenced = '';
 	if(data.local.is_silenced === true) {
@@ -483,8 +495,9 @@ function buildExternalProfileCard(data) {
 		is_sandboxed = ' sandboxed';
 		}
 
-	// local id
+	// local id/screen_name
 	var localUserId = data.local.id;
+	var localUserScreenName = data.local.screen_name;
 
 	// empty strings and zeros instead of null
 	data = cleanUpUserObject(data.external);
@@ -519,8 +532,8 @@ function buildExternalProfileCard(data) {
 	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl;
 
 	data.profileCardHtml = '\
-		<div class="profile-card">\
-			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '">\
+		<div class="profile-card' + is_me + logged_in + '">\
+			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '" data-screen-name="' + localUserScreenName + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a>\
 				<div class="profile-card-inner">\
@@ -551,7 +564,7 @@ function buildExternalProfileCard(data) {
 					<li class="follower-num"><a class="follower-stats" target="_blank" href="' + data.statusnet_profile_url + '/subscribers">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
-				<div class="user-menu-cog" data-tooltip="' + window.sL.userOptions + '"></div>\
+				<div class="user-menu-cog' + is_silenced + is_sandboxed + logged_in + '" data-tooltip="' + window.sL.userOptions + '" data-user-id="' + localUserId + '" data-screen-name="' + localUserScreenName + '"></div>\
 				<div class="clearfix"></div>\
 			</div>\
 		</div>\
@@ -1599,7 +1612,7 @@ function showConversation(q, qid, data, offsetScroll) {
 
 /* ·
    ·
-   ·  Add last visible class, since that's not possible to select in pure css
+   ·  Add last&first visible class, since that's not possible to select in pure css
    ·
    · · · · · · · · · · · · · */
 function findAndMarkLastVisibleInConversation(streamItem) {
@@ -1607,6 +1620,8 @@ function findAndMarkLastVisibleInConversation(streamItem) {
 	streamItem.children().removeClass('first-visible-after-parent');
 	streamItem.children().not('.hidden-conversation').not('.always-hidden').last().addClass('last-visible');
 	streamItem.children('.queet').nextAll().not('.hidden-conversation').not('.always-hidden').first().addClass('first-visible-after-parent');
+	streamItem.children().removeClass('first-visible');
+	streamItem.children().not('.hidden-conversation').not('.always-hidden').first().addClass('first-visible');
 	}
 
 
@@ -1995,6 +2010,11 @@ function buildUserStreamItemHtml(obj) {
 	if(obj.is_sandboxed === true) {
 		sandboxedClass = ' sandboxed';
 		}
+	// logged in?
+	var loggedInClass = '';
+	if(window.loggedIn !== false) {
+		loggedInClass = ' logged-in';
+		}
 
 	var followButton = '';
 	if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
@@ -2007,6 +2027,7 @@ function buildUserStreamItemHtml(obj) {
 	return '<div id="stream-item-' + obj.id + '" class="stream-item user' + silencedClass + sandboxedClass + '" data-user-id="' + obj.id + '">\
 				<div class="queet ' + rtlOrNot + '">\
 					' + followButton + '\
+					<div class="user-menu-cog' + silencedClass + sandboxedClass + loggedInClass + '" data-tooltip="' + window.sL.userOptions + '" data-user-id="' + obj.id + '" data-screen-name="' + obj.screen_name + '"></div>\
 					<div class="queet-content">\
 						<div class="stream-item-header">\
 							<a class="account-group" href="' + obj.statusnet_profile_url + '" data-user-id="' + obj.id + '">\

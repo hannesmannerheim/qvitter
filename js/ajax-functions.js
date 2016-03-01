@@ -523,6 +523,7 @@ function APISandboxCreateOrDestroy(createOrDestroy,userId,actionOnSuccess) {
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
 			updateUserDataInStream();
+			rememberStreamStateInLocalStorage();
 			actionOnSuccess(data);
 			}
 		});
@@ -552,6 +553,7 @@ function APISilenceCreateOrDestroy(createOrDestroy,userId,actionOnSuccess) {
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);
 			searchForUserDataToCache(data);
 			updateUserDataInStream();
+			rememberStreamStateInLocalStorage();
 			actionOnSuccess(data);
 			}
 		});

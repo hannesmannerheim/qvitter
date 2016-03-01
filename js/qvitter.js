@@ -1197,12 +1197,10 @@ $('body').on('click','.user-menu-cog',function(e){
 
 		$(this).addClass('dropped');
 
-		var profileCard = $(this).closest('.profile-card');
-		var profileHeaderInner = profileCard.children('.profile-header-inner');
-		var userID = profileHeaderInner.attr('data-user-id');
-		var userScreenName = profileHeaderInner.attr('data-screen-name');
-		var silenced = profileHeaderInner.hasClass('silenced');
-		var sandboxed = profileHeaderInner.hasClass('sandboxed');
+		var userID = $(this).attr('data-user-id');
+		var userScreenName = $(this).attr('data-screen-name');
+		var silenced = $(this).hasClass('silenced');
+		var sandboxed = $(this).hasClass('sandboxed');
 
 		// menu
 		var menuArray = [];

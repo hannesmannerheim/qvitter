@@ -404,9 +404,11 @@ function markUserAsUnblockedInDOM(userId, following) {
 		}
 
 	// hide the user from lists of blocked users
-	$.each($('.stream-item.user[data-user-id="' + userId + '"]'),function(){
-		slideUpAndRemoveStreamItem($(this));
-		});
+	if(window.currentStreamObject.name == 'user blocks' && window.currentStreamObject.nickname == window.loggedIn.screen_name) {
+		$.each($('.stream-item.user[data-user-id="' + userId + '"]'),function(){
+			slideUpAndRemoveStreamItem($(this));
+			});
+		}
 
 	// unhide notices from the blocked user
 	$.each($('.stream-item[data-quitter-id-in-stream][data-user-id="' + userId + '"]'),function(){
@@ -461,25 +463,11 @@ function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
 function sandboxCreateOrDestroy(arg, callback) {
 
 	$('body').click(); // a click somewhere hides any open menus
-	var userId = arg.userId;
-	var createOrDestroy = arg.createOrDestroy;
 
 	display_spinner();
-	APISandboxCreateOrDestroy(createOrDestroy, userId, function(data) {
+	APISandboxCreateOrDestroy(arg.createOrDestroy, arg.userId, function(data) {
 		remove_spinner();
-		if(data) {
-			// success, mark the user's notices and profile cards as sandboxed or unsandboxed
-			if(data.is_sandboxed === true) {
-				$('.stream-item[data-user-id="' + userId + '"]').addClass('sandboxed');
-				$('.profile-card .profile-header-inner[data-user-id="' + userId + '"]').addClass('sandboxed');
-				}
-			else {
-				$('.stream-item[data-user-id="' + userId + '"]').removeClass('sandboxed');
-				$('.profile-card .profile-header-inner[data-user-id="' + userId + '"]').removeClass('sandboxed');
-				}
-			rememberStreamStateInLocalStorage();
-			}
-		else {
+		if(!data) {
 			// failed!
 			showErrorMessage(window.sL.ERRORfailedSandboxingUser);
 			}
@@ -495,25 +483,11 @@ function sandboxCreateOrDestroy(arg, callback) {
 function silenceCreateOrDestroy(arg, callback) {
 
 	$('body').click(); // a click somewhere hides any open menus
-	var userId = arg.userId;
-	var createOrDestroy = arg.createOrDestroy;
 
 	display_spinner();
-	APISilenceCreateOrDestroy(createOrDestroy, userId, function(data) {
+	APISilenceCreateOrDestroy(arg.createOrDestroy, arg.userId, function(data) {
 		remove_spinner();
-		if(data) {
-			// success, mark the user's notices and profile cards as silenced or unsilenced
-			if(data.is_silenced === true) {
-				$('.stream-item[data-user-id="' + userId + '"]').addClass('silenced');
-				$('.profile-card .profile-header-inner[data-user-id="' + userId + '"]').addClass('silenced');
-				}
-			else {
-				$('.stream-item[data-user-id="' + userId + '"]').removeClass('silenced');
-				$('.profile-card .profile-header-inner[data-user-id="' + userId + '"]').removeClass('silenced');
-				}
-			rememberStreamStateInLocalStorage();
-			}
-		else {
+		if(!data) {
 			// failed!
 			showErrorMessage(window.sL.ERRORfailedSilencingUser);
 			}
@@ -1065,10 +1039,12 @@ function updateUserDataInStream() {
 			if(userArray.local.is_silenced === true) {
 				$('.stream-item[data-user-id=' + userArray.local.id + ']').addClass('silenced');
 				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').addClass('silenced');
+				$('.user-menu-cog[data-user-id=' + userArray.local.id + ']').addClass('silenced');
 				}
 			else {
 				$('.stream-item[data-user-id=' + userArray.local.id + ']').removeClass('silenced')
 				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').removeClass('silenced');
+				$('.user-menu-cog[data-user-id=' + userArray.local.id + ']').removeClass('silenced');
 				}
 
 
@@ -1076,10 +1052,12 @@ function updateUserDataInStream() {
 			if(userArray.local.is_sandboxed === true) {
 				$('.stream-item[data-user-id=' + userArray.local.id + ']').addClass('sandboxed');
 				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').addClass('sandboxed');
+				$('.user-menu-cog[data-user-id=' + userArray.local.id + ']').addClass('sandboxed');
 				}
 			else {
 				$('.stream-item[data-user-id=' + userArray.local.id + ']').removeClass('sandboxed')
 				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').removeClass('sandboxed');
+				$('.user-menu-cog[data-user-id=' + userArray.local.id + ']').removeClass('sandboxed');
 				}
 
 			// profile size avatars (notices, users)
