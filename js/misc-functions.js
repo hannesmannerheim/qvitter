@@ -301,6 +301,8 @@ function localStorageIsEnabled() {
 	}
 
 
+
+
 /* ·
    ·
    ·  Block/unblock user and do necessary stuff
@@ -449,6 +451,148 @@ function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
 		});
 
 	}
+
+/* ·
+   ·
+   ·  Sandbox/unsandbox user and do necessary stuff
+   ·
+   · · · · · · · · · */
+
+function sandboxCreateOrDestroy(arg, callback) {
+
+	$('body').click(); // a click somewhere hides any open menus
+	var userId = arg.userId;
+	var createOrDestroy = arg.createOrDestroy;
+
+	display_spinner();
+	APISandboxCreateOrDestroy(createOrDestroy, userId, function(data) {
+		remove_spinner();
+		if(data) {
+			// success, mark the user's notices and profile cards as sandboxed or unsandboxed
+			if(data.is_sandboxed === true) {
+				$('.stream-item[data-user-id="' + userId + '"]').addClass('sandboxed');
+				$('.profile-card .profile-header-inner[data-user-id="' + userId + '"]').addClass('sandboxed');
+				}
+			else {
+				$('.stream-item[data-user-id="' + userId + '"]').removeClass('sandboxed');
+				$('.profile-card .profile-header-inner[data-user-id="' + userId + '"]').removeClass('sandboxed');
+				}
+			rememberStreamStateInLocalStorage();
+			}
+		else {
+			// failed!
+			showErrorMessage(window.sL.ERRORfailedSandboxingUser);
+			}
+		});
+	}
+
+/* ·
+   ·
+   ·  Sandbox/unsandbox user and do necessary stuff
+   ·
+   · · · · · · · · · */
+
+function silenceCreateOrDestroy(arg, callback) {
+
+	$('body').click(); // a click somewhere hides any open menus
+	var userId = arg.userId;
+	var createOrDestroy = arg.createOrDestroy;
+
+	display_spinner();
+	APISilenceCreateOrDestroy(createOrDestroy, userId, function(data) {
+		remove_spinner();
+		if(data) {
+			// success, mark the user's notices and profile cards as silenced or unsilenced
+			if(data.is_silenced === true) {
+				$('.stream-item[data-user-id="' + userId + '"]').addClass('silenced');
+				$('.profile-card .profile-header-inner[data-user-id="' + userId + '"]').addClass('silenced');
+				}
+			else {
+				$('.stream-item[data-user-id="' + userId + '"]').removeClass('silenced');
+				$('.profile-card .profile-header-inner[data-user-id="' + userId + '"]').removeClass('silenced');
+				}
+			rememberStreamStateInLocalStorage();
+			}
+		else {
+			// failed!
+			showErrorMessage(window.sL.ERRORfailedSilencingUser);
+			}
+		});
+	}
+
+
+/* ·
+   ·
+   ·   Append moderator user actions to menu array
+   ·
+   ·   @param menuArray: array used to build menus in getMenu()
+   ·   @param userID: the user id of the user to act on
+   ·   @param userScreenName: the screen_name/nickname/username of the user to act on
+   ·   @param sandboxed: is the user sandboxed?
+   ·   @param silenced: is the user silenced?
+   ·
+   · · · · · · · · · */
+
+function appendModeratorUserActionsToMenuArray(menuArray,userID,userScreenName,sandboxed,silenced) {
+
+	// not if it's me
+	if(window.loggedIn.id == userID) {
+		return menuArray;
+		}
+
+	if(window.loggedIn !== false && window.loggedIn.rights.sandbox === true) {
+		menuArray.push({type:'divider'});
+		if(sandboxed === true) {
+			menuArray.push({
+				type: 'function',
+				functionName: 'sandboxCreateOrDestroy',
+				functionArguments: {
+					userId: userID,
+					createOrDestroy: 'destroy'
+					},
+				label: window.sL.unSandboxThisUser.replace('{nickname}','@' + userScreenName)
+				});
+			}
+		else {
+			menuArray.push({
+				type: 'function',
+				functionName: 'sandboxCreateOrDestroy',
+				functionArguments: {
+					userId: userID,
+					createOrDestroy: 'create'
+					},
+				label: window.sL.sandboxThisUser.replace('{nickname}','@' + userScreenName)
+				});
+			}
+		}
+	if(window.loggedIn !== false && window.loggedIn.rights.silence === true) {
+		if(silenced === true) {
+			menuArray.push({
+				type: 'function',
+				functionName: 'silenceCreateOrDestroy',
+				functionArguments: {
+					userId: userID,
+					createOrDestroy: 'destroy'
+					},
+				label: window.sL.unSilenceThisUser.replace('{nickname}','@' + userScreenName)
+				});
+			}
+		else {
+			menuArray.push({
+				type: 'function',
+				functionName: 'silenceCreateOrDestroy',
+				functionArguments: {
+					userId: userID,
+					createOrDestroy: 'create'
+					},
+				label: window.sL.silenceThisUser.replace('{nickname}','@' + userScreenName)
+				});
+			}
+		}
+
+	return menuArray;
+	}
+
 
 /* ·
    ·
@@ -925,6 +1069,17 @@ function updateUserDataInStream() {
 			else {
 				$('.stream-item[data-user-id=' + userArray.local.id + ']').removeClass('silenced')
 				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').removeClass('silenced');
+				}
+
+
+			// add/remove sandboxed class to stream items and profile cards
+			if(userArray.local.is_sandboxed === true) {
+				$('.stream-item[data-user-id=' + userArray.local.id + ']').addClass('sandboxed');
+				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').addClass('sandboxed');
+				}
+			else {
+				$('.stream-item[data-user-id=' + userArray.local.id + ']').removeClass('sandboxed')
+				$('.profile-card .profile-header-inner[data-user-id=' + userArray.local.id + ']').removeClass('sandboxed');
 				}
 
 			// profile size avatars (notices, users)

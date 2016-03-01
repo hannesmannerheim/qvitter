@@ -44,6 +44,7 @@ if (!defined('GNUSOCIAL')) { exit(1); }
 class ApiQvitterSandboxDestroyAction extends ApiAuthAction
 {
 
+    protected $needPost = true;
 
     /**
      * Take arguments for running
@@ -55,6 +56,8 @@ class ApiQvitterSandboxDestroyAction extends ApiAuthAction
     protected function prepare(array $args=array())
     {
         parent::prepare($args);
+
+        $this->format = 'json';
 
         $this->other  = $this->getTargetProfile($this->arg('id'));
 
@@ -85,9 +88,9 @@ class ApiQvitterSandboxDestroyAction extends ApiAuthAction
         }
 
         // only unsandbox if the user is sandboxed
-        if ($this->isSandboxed()) {
+        if ($this->other->isSandboxed()) {
             try {
-                $this->other->sandbox();
+                $this->other->unsandbox();
             } catch (Exception $e) {
                 $this->clientError($e->getMessage(), $e->getCode());
             }

@@ -429,7 +429,19 @@ class QvitterAction extends ApiAction
 
 				?>
 			</head>
-			<body style="background-color:<?php print QvitterPlugin::settings("defaultbackgroundcolor"); ?>">
+			<body class="<?php
+
+            // rights as body classes
+            if($logged_in_user) {
+                if($logged_in_user_obj['rights']['silence']){
+                    print 'has-right-to-silence';
+                    }
+                if($logged_in_user_obj['rights']['sandbox']){
+                    print ' has-right-to-sandbox';
+                    }
+                }
+
+            ?>" style="background-color:<?php print QvitterPlugin::settings("defaultbackgroundcolor"); ?>">
                 <?php
 
                 // add an accessibility toggle link to switch to standard UI, if we're logged in

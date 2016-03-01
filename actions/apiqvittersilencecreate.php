@@ -44,6 +44,7 @@ if (!defined('GNUSOCIAL')) { exit(1); }
 class ApiQvitterSilenceCreateAction extends ApiAuthAction
 {
 
+    protected $needPost = true;
 
     /**
      * Take arguments for running
@@ -55,6 +56,8 @@ class ApiQvitterSilenceCreateAction extends ApiAuthAction
     protected function prepare(array $args=array())
     {
         parent::prepare($args);
+
+        $this->format = 'json';
 
         $this->other  = $this->getTargetProfile($this->arg('id'));
 

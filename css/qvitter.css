@@ -425,7 +425,7 @@ button.icon.nav-search span {
     z-index: 900;
 	}
 .user-menu-cog .dropdown-menu {
-	width:150px;
+	width:180px;
 	}
 .quitter-settings.dropdown-menu {
 	margin-right: -400px;
@@ -1924,8 +1924,8 @@ background-repeat: no-repeat;
 .stream-item .account-group span.sandboxed-flag {
 	background-color: #00ccff;
 	}
-.stream-item.silenced .account-group span.silenced-flag,
-.stream-item.sandboxed .account-group span.sandboxed-flag {
+body.has-right-to-silence .stream-item.silenced .account-group span.silenced-flag,
+body.has-right-to-sandbox .stream-item.sandboxed .account-group span.sandboxed-flag {
 	display:inline-block;;
 	}
 .profile-card .profile-header-inner span.silenced-flag,
@@ -1948,8 +1948,8 @@ background-repeat: no-repeat;
 .hover-card .profile-card .profile-header-inner span.sandboxed-flag {
     line-height: 15px;
 	}
-.profile-card .profile-header-inner.silenced span.silenced-flag,
-.profile-card .profile-header-inner.sandboxed span.sandboxed-flag {
+body.has-right-to-silence .profile-card .profile-header-inner.silenced span.silenced-flag,
+body.has-right-to-sandbox .profile-card .profile-header-inner.sandboxed span.sandboxed-flag {
 	display: inline-block;
 	}
 

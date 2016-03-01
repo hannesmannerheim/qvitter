@@ -180,5 +180,11 @@
 	"silencedStreamDescription":"サイレンスされたユーザーはログインおよびクイップの投稿ができなくなり、そのユーザーの既に投稿されたクイップは非表示になります。ローカルユーザーにとっては復旧可能な削除のような状態で、リモートユーザーにとっては全サイトでブロックされているような状態になります。",
 	"sandboxedStreamDescription":"サンドボックスされたユーザーからのクイップは「パブリックタイムライン」および「関連ネットワーク全体」から除外されます。アンサンドボックスされたユーザーのサンドボックス期間中に投稿されたクイップはパブリックタイムラインに含まれません",
 	"onlyShowNotificationsFromUsersIFollow":"フォローしているユーザーのお知らせのみ表示する",
-	"userOptions":"More user actions"
+	"userOptions":"More user actions",
+	"silenceThisUser":"Silence {nickname}",
+	"sandboxThisUser":"Sandbox {nickname}",
+	"unSilenceThisUser":"Unsilence {nickname}",
+	"unSandboxThisUser":"Unsandbox {nickname}",
+	"ERRORfailedSandboxingUser":"Failed sandboxing/unsandboxing the user",
+	"ERRORfailedSilencingUser":"Failed silencing/unsilencing the user"
 }

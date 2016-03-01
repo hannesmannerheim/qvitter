@@ -463,10 +463,10 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
 
 /* ·
    ·
-   ·   Post follow or unfollow user request
+   ·   Post block or unblock user request
    ·
-   ·   @param followOrUnfollow: either 'follow' or 'unfollow'
-   ·   @param user_id: the user id of the user we want to follow
+   ·   @param blockOrUnblock: either 'block' or 'unblock'
+   ·   @param user_id: the user id of the user we want to block/unblock
    ·   @param actionOnSuccess: callback function, false on error, data on success
    ·
    · · · · · · · · · · · · · */
@@ -488,6 +488,65 @@ function APIBlockOrUnblockUser(blockOrUnblock,user_id,actionOnSuccess) {
 			},
 		dataType:"json",
 		error: function(data){ actionOnSuccess(false); console.log(data); },
+		success: function(data) {
+			data = convertEmptyObjectToEmptyArray(data);
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			searchForUserDataToCache(data);
+			updateUserDataInStream();
+			actionOnSuccess(data);
+			}
+		});
+	}
+
+
+/* ·
+   ·
+   ·   Post sandbox or unsandbox user request
+   ·
+   ·   @param createOrDestroy: either 'create' or 'destroy'
+   ·   @param userId: the user id of the user we want to sandbox/unsandbox
+   ·   @param actionOnSuccess: callback function, false on error, data on success
+   ·
+   · · · · · · · · · · · · · */
+
+function APISandboxCreateOrDestroy(createOrDestroy,userId,actionOnSuccess) {
+	$.ajax({ url: window.apiRoot + 'qvitter/sandbox/' + createOrDestroy + '.json',
+		cache: false,
+		type: "POST",
+		data: {
+			id: userId
+			},
+		dataType:"json",
+		error: function(data){ actionOnSuccess(false); console.log('sandbox error'); console.log(data); },
+		success: function(data) {
+			data = convertEmptyObjectToEmptyArray(data);
+			data = iterateRecursiveReplaceHtmlSpecialChars(data);
+			searchForUserDataToCache(data);
+			updateUserDataInStream();
+			actionOnSuccess(data);
+			}
+		});
+	}
+
+/* ·
+   ·
+   ·   Post silence or unsilence user request
+   ·
+   ·   @param createOrDestroy: either 'create' or 'destroy'
+   ·   @param userId: the user id of the user we want to silence/unsilence
+   ·   @param actionOnSuccess: callback function, false on error, data on success
+   ·
+   · · · · · · · · · · · · · */
+
+function APISilenceCreateOrDestroy(createOrDestroy,userId,actionOnSuccess) {
+	$.ajax({ url: window.apiRoot + 'qvitter/silence/' + createOrDestroy + '.json',
+		cache: false,
+		type: "POST",
+		data: {
+			id: userId
+			},
+		dataType:"json",
+		error: function(data){ actionOnSuccess(false); console.log('silence error'); console.log(data); },
 		success: function(data) {
 			data = convertEmptyObjectToEmptyArray(data);
 			data = iterateRecursiveReplaceHtmlSpecialChars(data);

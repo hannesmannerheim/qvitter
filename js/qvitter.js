@@ -1207,7 +1207,7 @@ $('body').on('click','.user-menu-cog',function(e){
 		// menu
 		var menuArray = [];
 
-		// block/unblock if it's not me
+		// settings etc if it's me
 		if(userID == window.loggedIn.id) {
 			menuArray.push({
 				type: 'function',
@@ -1225,6 +1225,7 @@ $('body').on('click','.user-menu-cog',function(e){
 				label: window.sL.userBlocks
 				});
 			}
+		// block etc if it not me
 		else {
 			if(userIsBlocked(userID)) {
 				menuArray.push({
@@ -1246,6 +1247,9 @@ $('body').on('click','.user-menu-cog',function(e){
 					label: window.sL.blockUser.replace('{username}','@' + userScreenName)
 					});
 				}
+
+			// moderator actions
+			menuArray = appendModeratorUserActionsToMenuArray(menuArray,userID,userScreenName,sandboxed,silenced);
 			}
 
 		var menu = $(getMenu(menuArray)).appendTo(this);
@@ -1260,7 +1264,6 @@ $('body').on('click',function(e){
 		$('.user-menu-cog').removeClass('dropped');
 		}
 	});
-
 
 
 /* ·
@@ -1320,9 +1323,12 @@ $('body').on('click','.sm-ellipsis',function(e){
 	else {
 		$(this).addClass('dropped');
 
-		var streamItemUsername = $(this).closest('.queet').find('.stream-item-header').find('.screen-name').text();
-		var streamItemUserID = $(this).closest('.queet').find('.stream-item-header').find('.name').attr('data-user-id');
-		var streamItemID = $(this).closest('.queet').parent('.stream-item').attr('data-quitter-id');
+		var closestStreamItem = $(this).closest('.queet').parent('.stream-item');
+		var streamItemUsername = closestStreamItem.attr('data-user-screen-name');
+		var streamItemUserID = closestStreamItem.attr('data-user-id');
+		var streamItemID = closestStreamItem.attr('data-quitter-id');
+		var streamItemUserSandboxed = closestStreamItem.hasClass('sandboxed');
+		var streamItemUserSilenced = closestStreamItem.hasClass('silenced');
 
 		// menu
 		var menuArray = [];
@@ -1361,6 +1367,9 @@ $('body').on('click','.sm-ellipsis',function(e){
 					});
 				}
 			}
+
+		// moderator actions
+		menuArray = appendModeratorUserActionsToMenuArray(menuArray,streamItemUserID,streamItemUsername,streamItemUserSandboxed,streamItemUserSilenced);
 
 		// add menu to DOM and align it
 		var menu = $(getMenu(menuArray)).appendTo(this);
