@@ -180,7 +180,7 @@
 	"silencedStreamDescription":"Silencaj uzantoj ne povas ensaluti aŭ sendadi pepoj, kaj la pepoj ili jam sendadis kasxan. Por loka uzantoj, ĝi estas simila al forigo, kiu povas inversi, sed por fora uzantoj estas simila al loko-larĝa bloko.",
 	"sandboxedStreamDescription":"Pepoj de sablokesta uzantoj ekskludas de la publika tempolinio kaj la tuta konata reto. Pepoj sendadis dum sablokesta ne enhavos en la publikaj tempolinioj se la uzantoj malsablokesti.",
 	"onlyShowNotificationsFromUsersIFollow":"Nur montri sciigoj de uzantoj mi sekvas",
-	"userOptions":"More user actions",
+	"userOptions":"Pli ukazo agoj",
 	"silenceThisUser":"Silentiĝi {nickname}",
 	"sandboxThisUser":"Sablokesti {nickname}",
 	"unSilenceThisUser":"Malsilentiĝi {nickname}",
