@@ -96,7 +96,7 @@ class ApiQvitterBlocksAction extends ApiPrivateAuthAction
     }
 
     /**
-     * Get the user's subscribers (followers) as an array of profiles
+     * Get the user's blocked profiles
      *
      * @return array Profiles
      */

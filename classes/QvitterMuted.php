@@ -2,7 +2,7 @@
 
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ·                                                                            ·
-   ·  Silence a user                                                            ·
+   ·  Get muted profiles for a profile                                          ·
    ·                                                                            ·
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ·                                                                             ·
@@ -41,60 +41,65 @@
 
 if (!defined('GNUSOCIAL')) { exit(1); }
 
-class ApiQvitterSilenceCreateAction extends ApiAuthAction
+class QvitterMuted
 {
 
-    protected $needPost = true;
-
-    /**
-     * Take arguments for running
-     *
-     * @param array $args $_REQUEST args
-     *
-     * @return boolean success flag
-     */
-    protected function prepare(array $args=array())
+    public static function getMutedProfiles($profile_id, $offset = 0, $limit = PROFILES_PER_PAGE)
     {
-        parent::prepare($args);
 
-        $this->format = 'json';
+        $ids = self::getMutedIDs($profile_id, $offset, $limit);
 
-        $this->other  = $this->getTargetProfile($this->arg('id'));
-
-        return true;
+        if(count($ids) === 0) {
+            return false;
+        } else {
+            $profiles = array();
+            foreach($ids as $id) {
+                try {
+                    $profiles[] = Profile::getByID($id);
+                } catch (Exception $e) {
+                    //
+                }
+            }
+            if(count($profiles) === 0) {
+                return false;
+            } else {
+                return $profiles;
+            }
+        }
     }
 
-    /**
-     * Handle the request
-     *
-     * @param array $args $_REQUEST data (unused)
-     *
-     * @return void
-     */
-    protected function handle()
+
+    public static function getMutedIDs($profile_id, $offset, $limit)
     {
-        parent::handle();
 
-        if (!$this->other instanceof Profile) {
-            $this->clientError(_('No such user.'), 404);
+        if(!is_numeric($profile_id)) {
+            return false;
         }
 
-        if ($this->scoped->id == $this->other->id) {
-            $this->clientError(_("You cannot silence yourself!"), 403);
+        $mutes = new Profile_prefs();
+        $mutes->selectAdd('topic');
+        $mutes->whereAdd("profile_id = ".$profile_id);
+        $mutes->whereAdd("namespace = 'qvitter'");
+        $mutes->whereAdd("data = '1'");
+        $mutes->whereAdd("topic LIKE 'mute:%'");
+        $mutes->orderBy('modified DESC');
+        $mutes->limit($offset, $limit);
+
+        if (!$mutes->find()) {
+            return array();
         }
 
-        try {
-            $this->other->silenceAs($this->scoped);
-        } catch (AlreadyFulfilledException $e) {
-            // don't throw client error here, just return the user array like
-            // if we successfully silenced the user. the client is only interested
-            // in making sure the user is silenced.
-        } catch (Exception $e) {
-            $this->clientError($e->getMessage(), $e->getCode());
+        $topics = $mutes->fetchAll('topic');
+        $ids = array();
+        foreach($topics as $topic) {
+            $topic_exploded = explode(':',$topic);
+            if(is_numeric($topic_exploded[1])) {
+                $ids[] = $topic_exploded[1];
+            }
         }
 
-        $this->initDocument('json');
-        $this->showJsonObjects($this->twitterUserArray($this->other));
-        $this->endDocument('json');
+        return $ids;
     }
+
+
 }

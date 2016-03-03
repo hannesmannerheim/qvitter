@@ -584,6 +584,13 @@ function pathToStreamRouter(path) {
 					callback: 'reloadCurrentStreamAndClearCache'
 					},
 				{
+					type: 'profile-prefs-toggle',
+					namespace: 'qvitter',
+					topic: 'hide_notifications_from_muted_users',
+					label: window.sL.hideNotificationsFromMutedUsers,
+					callback: 'showOrHideNoticesFromMutedUsersInNotifications'
+					},
+				{
 					type: 'divider'
 					},
 				{
@@ -617,7 +624,8 @@ function pathToStreamRouter(path) {
 				];
 			streamObject.callbacks = [
 				'showOrHideEmbeddedContentInTimelineFromProfilePref',
-				'showOrHideQuotesInTimelineFromProfilePref'
+				'showOrHideQuotesInTimelineFromProfilePref',
+				'showOrHideNoticesFromMutedUsersInNotifications'
 				];
 			}
 		return streamObject;
@@ -692,10 +700,22 @@ function pathToStreamRouter(path) {
 	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'blocks') {
 		streamObject.name = 'user blocks';
         streamObject.nickname = pathSplit[0];
-        streamObject.parentPath = streamObject.nickname;
-        streamObject.streamHeader = '@' + replaceHtmlSpecialChars(streamObject.nickname);
+        streamObject.streamHeader = window.sL.userBlocked;
         streamObject.streamSubHeader = window.sL.userBlocks;
 		streamObject.stream = 'qvitter/blocks.json?count=20&id=' + streamObject.nickname + '&withuserarray=1';
+        streamObject.maxIdOrPage = 'page';
+		streamObject.type = 'users';
+		return streamObject;
+		}
+
+	// {screen_name}/mutes
+	if(pathSplit.length == 2 && /^[a-zA-Z0-9]+$/.test(pathSplit[0]) && pathSplit[1] == 'mutes') {
+		streamObject.name = 'user mutes';
+        streamObject.nickname = pathSplit[0];
+        streamObject.streamHeader = window.sL.userMuted;
+        streamObject.streamSubHeader = window.sL.userMutes;
+		streamObject.streamDescription = window.sL.mutedStreamDescription;
+		streamObject.stream = 'qvitter/mutes.json?count=20&withuserarray=1';
         streamObject.maxIdOrPage = 'page';
 		streamObject.type = 'users';
 		return streamObject;

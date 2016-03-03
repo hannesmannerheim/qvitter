@@ -81,22 +81,31 @@ function getMenu(menuArray) {
 
 				// enabled?
 				var prefEnabledOrDisabled = 'disabled';
-				if(typeof window.qvitterProfilePrefs[this.topic] != 'undefined'
-					&& window.qvitterProfilePrefs[this.topic] !== null
-				&& window.qvitterProfilePrefs[this.topic] != ''
-				&& window.qvitterProfilePrefs[this.topic] !== false
-				&& window.qvitterProfilePrefs[this.topic] != 0
-				&& window.qvitterProfilePrefs[this.topic] != '0') {
+				if(isQvitterProfilePrefEnabled(this.topic)) {
 					prefEnabledOrDisabled = 'enabled';
 					}
 
+				// sometimes we want another label when the toggle is enabled
+				var labelToUse = this.label;
+				if(isQvitterProfilePrefEnabled(this.topic) && typeof this.enabledLabel != 'undefined') {
+					labelToUse = this.enabledLabel;
+					}
+
+				// the tick can be disabled
+				var disableTickClass = '';
+				if(typeof this.tickDisabled != 'undefined' && this.tickDisabled === true) {
+					var disableTickClass = ' tick-disabled';
+					}
+
 				// get row html
-				menuHTML = menuHTML + buildMenuRowFullwidth(this.label, {
+				menuHTML = menuHTML + buildMenuRowFullwidth(labelToUse, {
 					id: this.topic,
-					class: 'row-type-' + this.type + ' ' + prefEnabledOrDisabled,
+					class: 'row-type-' + this.type + ' ' + prefEnabledOrDisabled + disableTickClass,
 					'data-menu-row-type': this.type,
 					'data-profile-prefs-topic': this.topic,
 					'data-profile-prefs-namespace': this.namespace,
+					'data-profile-prefs-label': replaceHtmlSpecialChars(this.label),
+					'data-profile-prefs-enabled-label': replaceHtmlSpecialChars(this.enabledLabel),
 					'data-profile-pref-state': prefEnabledOrDisabled,
 					'data-profile-pref-callback': this.callback
 					});
@@ -358,6 +367,18 @@ function buildProfileCard(data) {
 		var follows_you = '<span class="follows-you">' + window.sL.followsYou + '</span>';
 		}
 
+	// me?
+	var is_me = '';
+	if(window.loggedIn !== false && window.loggedIn.id == data.id) {
+		var is_me = ' is-me';
+		}
+
+	// logged in?
+	var logged_in = '';
+	if(window.loggedIn !== false) {
+		var logged_in = ' logged-in';
+		}
+
 	// silenced?
 	var is_silenced = '';
 	if(data.is_silenced === true) {
@@ -367,6 +388,11 @@ function buildProfileCard(data) {
 	var is_sandboxed = '';
 	if(data.is_sandboxed === true) {
 		is_sandboxed = ' sandboxed';
+		}
+	// muted?
+	var is_muted = '';
+	if(isUserMuted(data.id)) {
+		is_muted = ' user-muted';
 		}
 
 	var followButton = '';
@@ -394,8 +420,8 @@ function buildProfileCard(data) {
 
 	// full card html
 	data.profileCardHtml = '\
-		<div class="profile-card">\
-			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '">\
+		<div class="profile-card' + is_me + logged_in + is_muted + '">\
+			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '" data-screen-name="' + data.screen_name + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture" href="' + data.profile_image_url_original + '">\
 					<img class="avatar profile-size" src="' + data.profile_image_url_profile_size + '" data-user-id="' + data.id + '" />\
@@ -426,6 +452,7 @@ function buildProfileCard(data) {
 					<li class="groups-num"><a href="' + data.statusnet_profile_url + '/groups" class="groups-stats">' + window.sL.groups + '<strong>' + data.groups_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
+				<div class="user-menu-cog' + is_silenced + is_sandboxed + logged_in + '" data-tooltip="' + window.sL.userOptions + '" data-user-id="' + data.id + '" data-screen-name="' + data.screen_name + '"></div>\
 				<div class="clearfix"></div>\
 			</div>\
 		</div>\
@@ -458,6 +485,18 @@ function buildExternalProfileCard(data) {
 		var followButton = buildFollowBlockbutton(data.local);
 		}
 
+	// me?
+	var is_me = '';
+	if(window.loggedIn !== false && window.loggedIn.id == data.local.id) {
+		var is_me = ' is-me';
+		}
+
+	// logged in?
+	var logged_in = '';
+	if(window.loggedIn !== false) {
+		var logged_in = ' logged-in';
+		}
+
 	// silenced?
 	var is_silenced = '';
 	if(data.local.is_silenced === true) {
@@ -470,8 +509,15 @@ function buildExternalProfileCard(data) {
 		is_sandboxed = ' sandboxed';
 		}
 
-	// local id
+	// muted?
+	var is_muted = '';
+	if(isUserMuted(data.local.id)) {
+		is_muted = ' user-muted';
+		}
+
+	// local id/screen_name
 	var localUserId = data.local.id;
+	var localUserScreenName = data.local.screen_name;
 
 	// empty strings and zeros instead of null
 	data = cleanUpUserObject(data.external);
@@ -506,8 +552,8 @@ function buildExternalProfileCard(data) {
 	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl;
 
 	data.profileCardHtml = '\
-		<div class="profile-card">\
-			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '">\
+		<div class="profile-card' + is_me + logged_in + is_muted + '">\
+			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '" data-screen-name="' + localUserScreenName + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a>\
 				<div class="profile-card-inner">\
@@ -538,6 +584,7 @@ function buildExternalProfileCard(data) {
 					<li class="follower-num"><a class="follower-stats" target="_blank" href="' + data.statusnet_profile_url + '/subscribers">' + window.sL.followers + '<strong>' + data.followers_count + '</strong></a></li>\
 				</ul>\
 				' + followButton + '\
+				<div class="user-menu-cog' + is_silenced + is_sandboxed + logged_in + '" data-tooltip="' + window.sL.userOptions + '" data-user-id="' + localUserId + '" data-screen-name="' + localUserScreenName + '"></div>\
 				<div class="clearfix"></div>\
 			</div>\
 		</div>\
@@ -783,11 +830,12 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 			// hide all notices from blocked users (not for user lists)
 			if(window.currentStreamObject.type != 'users' && typeof window.allBlocking != 'undefined') {
-				$.each(window.allBlocking,function(){
-					oldStreamState.find('strong.name[data-user-id="' + this + '"]').closest('.stream-item').addClass('profile-blocked-by-me');
-					oldStreamState.find('strong.name[data-user-id="' + this + '"]').closest('.stream-item').children('.queet').attr('data-tooltip',window.sL.thisIsANoticeFromABlockedUser);
-					});
+				markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(oldStreamState);
 				}
+
+			// mark all notices and profile cards from muted users as muted
+			markAllNoticesFromMutedUsersAsMutedInJQueryObject(oldStreamState);
+			markAllProfileCardsFromMutedUsersAsMutedInDOM();
 
 			// hide dublicate repeats, only show the first/oldest instance of a notice
 			oldStreamState = hideAllButOldestInstanceOfStreamItem(oldStreamState);
@@ -1343,7 +1391,7 @@ function cleanUpAfterCollapseQueet(streamItem) {
 	streamItem.find('.view-more-container-top').remove();
 	streamItem.find('.view-more-container-bottom').remove();
 	streamItem.find('.inline-reply-queetbox').remove();
-	streamItem.find('.stream-item.conversation').remove();
+	streamItem.children('.stream-item.conversation').remove();
 	streamItem.find('.show-full-conversation').remove();
 	streamItem.removeAttr('style');
 	queet.removeAttr('style');
@@ -1588,14 +1636,16 @@ function showConversation(q, qid, data, offsetScroll) {
 
 /* ·
    ·
-   ·  Add last visible class, since that's not possible to select in pure css
+   ·  Add last&first visible class, since that's not possible to select in pure css
    ·
    · · · · · · · · · · · · · */
 function findAndMarkLastVisibleInConversation(streamItem) {
 	streamItem.children().removeClass('last-visible');
 	streamItem.children().removeClass('first-visible-after-parent');
-	streamItem.children().not('.hidden-conversation').last().addClass('last-visible');
-	streamItem.children('.queet').nextAll().not('.hidden-conversation').first().addClass('first-visible-after-parent');
+	streamItem.children().not('.hidden-conversation').not('.always-hidden').last().addClass('last-visible');
+	streamItem.children('.queet').nextAll().not('.hidden-conversation').not('.always-hidden').first().addClass('first-visible-after-parent');
+	streamItem.children().removeClass('first-visible');
+	streamItem.children().not('.hidden-conversation').not('.always-hidden').first().addClass('first-visible');
 	}
 
 
@@ -1613,7 +1663,7 @@ function findInReplyToStatusAndShow(q, qid,reply,only_first,onlyINreplyto) {
 		reply_found.css('opacity','1');
 		if(only_first && reply_found_reply_to.length>0) {
 			if(q.children('.view-more-container-top').length < 1) {
-				if(q.children('.queet').prevAll('.hidden-conversation').length>0) {
+				if(q.children('.queet').prevAll('.hidden-conversation:not(.always-hidden)').length>0) {
 					q.prepend('<div class="view-more-container-top" data-trace-from="' + reply + '"><a>' + window.sL.viewMoreInConvBefore + '</a></div>');
 					}
 				}
@@ -1647,7 +1697,7 @@ function findReplyToStatusAndShow(q, qid,this_id,only_first) {
 			}
 		if(only_first && reply_founds_reply.length>0) {
 			if(q.children('.view-more-container-bottom').length < 1) {
-				if(q.children('.queet').nextAll('.hidden-conversation').length>0) {
+				if(q.children('.queet').nextAll('.hidden-conversation:not(.always-hidden)').length>0) {
 					q.append('<div class="view-more-container-bottom" data-replies-after="' + qid + '"><a>' + window.sL.viewMoreInConvAfter + '</a></div>');
 					}
 				}
@@ -1660,7 +1710,7 @@ function findReplyToStatusAndShow(q, qid,this_id,only_first) {
 // helper function for the above recursive functions
 function checkForHiddenConversationQueets(q, qid) {
 	// here we check if there are any remaining hidden queets in conversation, if there are, we put a "show full conversation"-link
-	if(q.find('.hidden-conversation').length>0) {
+	if(q.find('.hidden-conversation:not(.always-hidden)').length>0) {
 		if(q.children('.queet').find('.show-full-conversation').length == 0) {
 			q.children('.queet').find('.stream-item-footer').append('<span class="show-full-conversation" data-stream-item-id="' + qid + '">' + window.sL.expandFullConversation + '</span>');
 			}
@@ -1708,7 +1758,11 @@ function addToFeed(feed, after, extraClasses) {
 				var notificationTime = parseTwitterDate(obj.created_at);
 
 				if(obj.is_seen == '0') {
-					extraClassesThisRun += ' not-seen'
+					extraClassesThisRun += ' not-seen';
+					}
+
+				if(isUserMuted(obj.from_profile.id)) {
+					extraClassesThisRun += ' user-muted';
 					}
 
 				// external
@@ -1717,10 +1771,9 @@ function addToFeed(feed, after, extraClasses) {
 					ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.from_profile.statusnet_profile_url + '"></a>';
 					}
 
-
 				if(obj.ntype == 'like') {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like">\
+					var notificationHtml = '<div data-user-id="' + obj.from_profile.id + '" data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like">\
 												<div class="queet">\
 													<div class="dogear"></div>\
 													' + ostatusHtml + '\
@@ -1746,7 +1799,7 @@ function addToFeed(feed, after, extraClasses) {
 					}
 				else if(obj.ntype == 'repeat') {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat">\
+					var notificationHtml = '<div data-user-id="' + obj.from_profile.id + '" data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat">\
 												<div class="queet">\
 													<div class="dogear"></div>\
 													' + ostatusHtml + '\
@@ -1777,7 +1830,7 @@ function addToFeed(feed, after, extraClasses) {
 					var notificationHtml = buildQueetHtml(obj.notice, obj.id, extraClassesThisRun + ' notification reply');
 					}
 				else if(obj.ntype == 'follow') {
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification follow">\
+					var notificationHtml = '<div data-user-id="' + obj.from_profile.id + '" data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification follow">\
 												<div class="queet">\
 													<div class="queet-content">\
 														' + ostatusHtml + '\
@@ -1984,6 +2037,16 @@ function buildUserStreamItemHtml(obj) {
 	if(obj.is_sandboxed === true) {
 		sandboxedClass = ' sandboxed';
 		}
+	// logged in?
+	var loggedInClass = '';
+	if(window.loggedIn !== false) {
+		loggedInClass = ' logged-in';
+		}
+	// muted?
+	var mutedClass = '';
+	if(isUserMuted(obj.id)) {
+		mutedClass = ' user-muted';
+		}
 
 	var followButton = '';
 	if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
@@ -1993,9 +2056,10 @@ function buildUserStreamItemHtml(obj) {
 			}
 		}
 
-	return '<div id="stream-item-' + obj.id + '" class="stream-item user' + silencedClass + sandboxedClass + '" data-user-id="' + obj.id + '">\
+	return '<div id="stream-item-' + obj.id + '" class="stream-item user' + silencedClass + sandboxedClass + mutedClass + '" data-user-id="' + obj.id + '">\
 				<div class="queet ' + rtlOrNot + '">\
 					' + followButton + '\
+					<div class="user-menu-cog' + silencedClass + sandboxedClass + loggedInClass + '" data-tooltip="' + window.sL.userOptions + '" data-user-id="' + obj.id + '" data-screen-name="' + obj.screen_name + '"></div>\
 					<div class="queet-content">\
 						<div class="stream-item-header">\
 							<a class="account-group" href="' + obj.statusnet_profile_url + '" data-user-id="' + obj.id + '">\
@@ -2037,6 +2101,11 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 			});
 		}
 
+	// muted? (if class is not already added)
+	if(isUserMuted(obj.user.id) && extraClasses.indexOf(' user-muted') == -1) {
+		extraClasses += ' user-muted';
+		blockingTooltip = ' data-tooltip="' + window.sL.thisIsANoticeFromAMutedUser + '"';
+		}
 	// silenced?
 	if(obj.user.is_silenced === true) {
 		extraClasses += ' silenced';

@@ -258,6 +258,11 @@ $('body').on('mouseover',function (e) {
 		return true;
 		}
 
+	// no hover card if the element has the no-hover-card class
+	if(targetElement.hasClass('no-hover-card')) {
+		return true;
+		}
+
 	// no hovercard for anchor links
 	if(hrefAttr.substring(0,1) == '#') {
 		return true;
@@ -943,15 +948,16 @@ function proceedToSetLanguageAndLogin(data){
 	$('#invite-link').html(window.sL.inviteAFriend);
 	$('#classic-link').html(window.sL.classicInterface);
 	$('#edit-profile-header-link').html(window.sL.editMyProfile);
-	$('#mini-edit-profile-button').attr('data-tooltip',window.sL.editMyProfile);
+	$('#mini-logged-in-user-cog-wheel').attr('data-tooltip',window.sL.profileSettings);
 	$('#accessibility-toggle-link').html(window.sL.accessibilityToggleLink);
-	$('#settingslink .nav-session').attr('data-tooltip',window.sL.tooltipTopMenu);
+	$('#settingslink .nav-session').attr('data-tooltip',window.sL.profileAndSettings);
 	$('#top-compose').attr('data-tooltip',window.sL.compose);
 	$('button.upload-image').attr('data-tooltip',window.sL.tooltipAttachImage);
 	$('button.shorten').attr('data-tooltip',window.sL.tooltipShortenUrls);
 	$('.reload-stream').attr('data-tooltip',window.sL.tooltipReloadStream);
 	$('#clear-history').html(window.sL.clearHistory);
 	$('#user-screen-name, #user-avatar, #user-name').attr('data-tooltip', window.sL.viewMyProfilePage);
+	$('#top-menu-profile-link-view-profile').html(window.sL.viewMyProfilePage);
 
 	// show site body now
 	$('#user-container').css('display','block');
@@ -1174,6 +1180,93 @@ $('#settingslink').click(function(){
 	});
 
 
+
+/* ·
+   ·
+   ·   Show/hide the user menu dropdown on click
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('click','.user-menu-cog',function(e){
+	if(!$(e.target).is($(this))) {
+		// don't show/hide when clicking inside the menu
+		}
+
+	// hide
+	else if($(this).hasClass('dropped')) {
+		$(this).removeClass('dropped');
+		$(this).children('.dropdown-menu').remove();
+		}
+
+	// show
+	else {
+
+		$(this).addClass('dropped');
+
+		var userID = $(this).attr('data-user-id');
+		var userScreenName = $(this).attr('data-screen-name');
+		var silenced = $(this).hasClass('silenced');
+		var sandboxed = $(this).hasClass('sandboxed');
+
+		// menu
+		var menuArray = [];
+
+		// settings etc if it's me
+		if(userID == window.loggedIn.id) {
+			menuArray = loggedInUsersMenuArray();
+			}
+		// block etc if it not me
+		else {
+			if(userIsBlocked(userID)) {
+				menuArray.push({
+					type: 'function',
+					functionName: 'unblockUser',
+					functionArguments: {
+						userId: userID
+						},
+					label: window.sL.unblockUser.replace('{username}','@' + userScreenName)
+					});
+				}
+			else {
+				menuArray.push({
+					type: 'function',
+					functionName: 'blockUser',
+					functionArguments: {
+						userId: userID
+						},
+					label: window.sL.blockUser.replace('{username}','@' + userScreenName)
+					});
+				}
+
+			// mute profile pref
+			menuArray.push({
+				type: 'profile-prefs-toggle',
+				namespace: 'qvitter',
+				topic: 'mute:' + userID,
+				label: window.sL.muteUser,
+				enabledLabel: window.sL.unmuteUser,
+				tickDisabled: true,
+				callback: 'hideOrShowNoticesAfterMuteOrUnmute'
+				});
+
+			// moderator actions
+			menuArray = appendModeratorUserActionsToMenuArray(menuArray,userID,userScreenName,sandboxed,silenced);
+			}
+
+		var menu = $(getMenu(menuArray)).appendTo(this);
+		alignMenuToParent(menu,$(this));
+		}
+	});
+
+// hide the stream menu when clicking outside it
+$('body').on('click',function(e){
+	if(!$(e.target).is('.user-menu-cog') && $('.user-menu-cog').hasClass('dropped') && !$(e.target).closest('.user-menu-cog').length>0) {
+		$('.user-menu-cog').children('.dropdown-menu').remove();
+		$('.user-menu-cog').removeClass('dropped');
+		}
+	});
+
+
 /* ·
    ·
    ·   Show/hide the stream menu dropdown on click
@@ -1231,9 +1324,12 @@ $('body').on('click','.sm-ellipsis',function(e){
 	else {
 		$(this).addClass('dropped');
 
-		var streamItemUsername = $(this).closest('.queet').find('.stream-item-header').find('.screen-name').text();
-		var streamItemUserID = $(this).closest('.queet').find('.stream-item-header').find('.name').attr('data-user-id');
-		var streamItemID = $(this).closest('.queet').parent('.stream-item').attr('data-quitter-id');
+		var closestStreamItem = $(this).closest('.queet').parent('.stream-item');
+		var streamItemUsername = closestStreamItem.attr('data-user-screen-name');
+		var streamItemUserID = closestStreamItem.attr('data-user-id');
+		var streamItemID = closestStreamItem.attr('data-quitter-id');
+		var streamItemUserSandboxed = closestStreamItem.hasClass('sandboxed');
+		var streamItemUserSilenced = closestStreamItem.hasClass('silenced');
 
 		// menu
 		var menuArray = [];
@@ -1271,7 +1367,21 @@ $('body').on('click','.sm-ellipsis',function(e){
 					label: window.sL.blockUser.replace('{username}',streamItemUsername)
 					});
 				}
+
+			// mute profile pref
+			menuArray.push({
+				type: 'profile-prefs-toggle',
+				namespace: 'qvitter',
+				topic: 'mute:' + streamItemUserID,
+				label: window.sL.muteUser,
+				enabledLabel: window.sL.unmuteUser,
+				tickDisabled: true,
+				callback: 'hideOrShowNoticesAfterMuteOrUnmute'
+				});
 			}
+
+		// moderator actions
+		menuArray = appendModeratorUserActionsToMenuArray(menuArray,streamItemUserID,streamItemUsername,streamItemUserSandboxed,streamItemUserSilenced);
 
 		// add menu to DOM and align it
 		var menu = $(getMenu(menuArray)).appendTo(this);
@@ -1306,7 +1416,7 @@ $('body').on('click','.row-type-function',function(e){
 	thisFunctionRow.addClass('clicked');
 
 	var functionName = $(this).attr('data-function-name');
-	if($(this).attr('data-function-arguments') == 'undefined') {
+	if(typeof $(this).attr('data-function-arguments') == 'undefined' || $(this).attr('data-function-arguments') == 'undefined') {
 		var functionArguments = false;
 		}
 	else {
@@ -1349,6 +1459,8 @@ $('body').on('click','.row-type-profile-prefs-toggle',function(e){
 
 	var prefNamespace = thisToggle.attr('data-profile-prefs-namespace');
 	var prefTopic = thisToggle.attr('data-profile-prefs-topic');
+	var prefLabel = thisToggle.attr('data-profile-prefs-label');
+	var prefEnabledLabel = thisToggle.attr('data-profile-prefs-enabled-label');
 
 	// only prefs in the 'qvitter' namespace allowed
 	if(prefNamespace != 'qvitter') {
@@ -1366,12 +1478,18 @@ $('body').on('click','.row-type-profile-prefs-toggle',function(e){
 				thisToggle.removeClass('disabled');
 				thisToggle.addClass('enabled');
 				thisToggle.attr('data-profile-pref-state','enabled');
+				if(prefEnabledLabel != 'undefined') {
+					thisToggle.html(prefEnabledLabel);
+					}
 				window.qvitterProfilePrefs[prefTopic] = '1';
 				}
 			else if(thisToggle.attr('data-profile-pref-state') == 'enabled') {
 				thisToggle.removeClass('enabled');
 				thisToggle.addClass('disabled');
 				thisToggle.attr('data-profile-pref-state','disabled');
+				if(prefEnabledLabel != 'undefined') {
+					thisToggle.html(prefLabel);
+					}
 				window.qvitterProfilePrefs[prefTopic] = '0';
 				}
 
@@ -1423,14 +1541,10 @@ function showOrHideEmbeddedContentInTimelineFromProfilePref() {
 		var showHide = window.qvitterProfilePrefs['hide_embedded_in_timeline:' + window.currentStreamObject.path];
 		if(parseInt(showHide,10) == 1) {
 			$('#feed-body').addClass('embedded-content-hidden-by-user');
-			}
-		else {
-			$('#feed-body').removeClass('embedded-content-hidden-by-user');
+			return;
 			}
 		}
-	else {
-		$('#feed-body').removeClass('embedded-content-hidden-by-user');
-		}
+	$('#feed-body').removeClass('embedded-content-hidden-by-user');
 	}
 
 /* ·
@@ -1444,14 +1558,28 @@ function showOrHideQuotesInTimelineFromProfilePref() {
 		var showHide = window.qvitterProfilePrefs['hide_quotes_in_timeline:' + window.currentStreamObject.path];
 		if(parseInt(showHide,10) == 1) {
 			$('#feed-body').addClass('quotes-hidden-by-user');
-			}
-		else {
-			$('#feed-body').removeClass('quotes-hidden-by-user');
+			return;
 			}
 		}
-	else {
-		$('#feed-body').removeClass('quotes-hidden-by-user');
+	$('#feed-body').removeClass('quotes-hidden-by-user');
+	}
+
+
+/* ·
+   ·
+   ·   Show or hide notices from muted users in notifications?
+   ·
+   · · · · · · · · · · · · · */
+
+function showOrHideNoticesFromMutedUsersInNotifications() {
+	if(typeof window.qvitterProfilePrefs['hide_notifications_from_muted_users'] != 'undefined') {
+		var showHide = window.qvitterProfilePrefs['hide_notifications_from_muted_users'];
+		if(parseInt(showHide,10) == 1) {
+			$('#feed-body').addClass('hide-notifications-from-muted-users');
+			return;
+			}
 		}
+	$('#feed-body').removeClass('hide-notifications-from-muted-users')
 	}
 
 
@@ -1628,8 +1756,8 @@ $('body').on('click','.member-button',function(event){
    · · · · · · · · · · · · · */
 
 $('#user-header').on('click',function(e){
-	// not if we're clicking the mini-edit-profile-button
-	if($(e.target).is('#mini-edit-profile-button')) {
+	// not if we're clicking the mini-logged-in-user-cog-wheel
+	if($(e.target).is('#mini-logged-in-user-cog-wheel')) {
 		return;
 		}
 	setNewCurrentStream(pathToStreamRouter(window.loggedIn.screen_name),true,false);
@@ -2041,15 +2169,13 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 		var thisAttachmentThumbSrc = $(this).attr('src');
 		var parentStreamItem = $(this).closest('.stream-item');
 		var $parentStreamItemClone = $('<div/>').append(parentStreamItem.outerHTML());
-
-		if(!parentStreamItem.hasClass('conversation')) {
-			$parentStreamItemClone.find('.stream-item.conversation').remove();
-			}
-
 		var $queetThumbsClone = $('<div/>').append($parentStreamItemClone.find('.queet-thumbs').outerHTML());
 
-		$parentStreamItemClone.find('.queet-thumbs, .expanded-content, .inline-reply-queetbox, .stream-item-footer').remove();
-		var footerHTML = $parentStreamItemClone.find('.queet').outerHTML();
+		// cleaned version of the stream item to show in the footer
+		cleanStreamItemsFromClassesAndConversationElements($parentStreamItemClone);
+		$parentStreamItemClone.find('.context,.stream-item-footer').remove();
+		var parentStreamItemHTMLWithoutFooter = $parentStreamItemClone.outerHTML();
+
 		$thumbToDisplay = $queetThumbsClone.find('img.attachment-thumb[src="' + thisAttachmentThumbSrc + '"]');
 		$thumbToDisplay.parent().addClass('display-this-thumb');
 
@@ -2092,7 +2218,7 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 			$thisImgInQueetThumbsClone.parent('.thumb-container').children('iframe').attr('height',calculatedDimensions.displayImgHeight);
 
 			// open popup
-			popUpAction('queet-thumb-popup', '', '' + $queetThumbsClone.outerHTML() + '', footerHTML, calculatedDimensions.popUpWidth);
+			popUpAction('queet-thumb-popup', '', '' + $queetThumbsClone.outerHTML() + '', parentStreamItemHTMLWithoutFooter, calculatedDimensions.popUpWidth);
 			disableOrEnableNavigationButtonsInImagePopup($('#queet-thumb-popup'));
 			}
 		}
@@ -2501,12 +2627,13 @@ $('body').on('click','.action-reply-container',function(){
 	var this_stream_item_id = this_stream_item.attr('data-quitter-id');
 	this_stream_item.addClass('replying-to');
 
-	// grabbing the queet and view it in the popup, stripped of footer, reply box and other sruff
-	var $queetHtml = $(this_stream_item.outerHTML());
-	$queetHtml.children('.stream-item.conversation').remove();
-	$queetHtml.find('.context,.stream-item-footer,.inline-reply-queetbox,.expanded-content').remove();
-	var queetHtmlWithoutFooter = $queetHtml.outerHTML();
-	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.children('.queet').find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),queetHtmlWithoutFooter);
+	// grabbing the stream-item and view it in the popup, stripped of conversation footer, reply box and other sruff
+	var streamItemHTML = $('<div/>').html(this_stream_item.outerHTML());
+	cleanStreamItemsFromClassesAndConversationElements(streamItemHTML);
+	streamItemHTML.find('.context,.stream-item-footer').remove();
+	var streamItemHTMLWithoutFooter = streamItemHTML.outerHTML();
+
+	popUpAction('popup-reply-' + this_stream_item_id, window.sL.replyTo + ' ' + this_stream_item.children('.queet').find('.screen-name').html(),replyFormHtml(this_stream_item,this_stream_item_id),streamItemHTMLWithoutFooter);
 
 	$('#popup-reply-' + this_stream_item_id).find('.modal-body').find('.queet-box').trigger('click'); // expand
 
@@ -4044,17 +4171,62 @@ function uploadAttachment(e, thisUploadButton) {
 
 /* ·
    ·
-   ·   Small edit profile button on mini-card. Go-to user stream and hit edit button
+   ·   Small edit profile button on hover cards goes to edit profile
    ·
    · · · · · · · · · · · · · */
 
-$('body').on('click','#mini-edit-profile-button, #edit-profile-header-link, .hover-card .edit-profile-button',function(){
+$('body').on('click','.hover-card .edit-profile-button',function(){
+	goToEditProfile();
+	});
+
+
+/* ·
+   ·
+   ·   User menu when clicking the mini cog wheel in the logged in mini card
+   ·
+   · · · · · · · · · · · · · */
+
+$('body').on('click','#mini-logged-in-user-cog-wheel:not(.dropped)',function(){
+	var menu = $(getMenu(loggedInUsersMenuArray())).appendTo(this);
+	alignMenuToParent(menu,$(this));
+	$(this).addClass('dropped');
+	});
+// hide when clicking it again
+$('body').on('click','#mini-logged-in-user-cog-wheel.dropped',function(e){
+	if($(e.target).is('#mini-logged-in-user-cog-wheel')) {
+		$('#mini-logged-in-user-cog-wheel').children('.dropdown-menu').remove();
+		$('#mini-logged-in-user-cog-wheel').removeClass('dropped');
+		}
+	});
+// hide the menu when clicking outside it
+$('body').on('click',function(e){
+	if($('#mini-logged-in-user-cog-wheel').hasClass('dropped') && !$(e.target).closest('#mini-logged-in-user-cog-wheel').length>0) {
+		$('#mini-logged-in-user-cog-wheel').children('.dropdown-menu').remove();
+		$('#mini-logged-in-user-cog-wheel').removeClass('dropped');
+		}
+	});
+
+
+/* ·
+   ·
+   ·   Goes to edit profile
+   ·
+   · · · · · · · · · · · · · */
+
+function goToEditProfile(arg, callback) {
 	if(window.currentStreamObject.name == 'my profile') {
 		$('#page-container > .profile-card .edit-profile-button').trigger('click');
+		if(typeof callback == 'function') {
+			callback(true);
+			}
 		}
 	else {
 		setNewCurrentStream(pathToStreamRouter(window.loggedIn.screen_name), true, false, function(){
 			$('#page-container > .profile-card .edit-profile-button').trigger('click');
+			if(typeof callback == 'function') {
+				callback(true);
+				}
 			});
 		}
-	});
+
+	}

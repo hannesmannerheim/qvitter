@@ -2,7 +2,7 @@
 
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ·                                                                            ·
-   ·  Silence a user                                                            ·
+   ·  Sandbox a user                                                            ·
    ·                                                                            ·
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ·                                                                             ·
@@ -41,7 +41,7 @@
 
 if (!defined('GNUSOCIAL')) { exit(1); }
 
-class ApiQvitterSilenceCreateAction extends ApiAuthAction
+class ApiQvitterSandboxCreateAction extends ApiAuthAction
 {
 
     protected $needPost = true;
@@ -80,17 +80,24 @@ class ApiQvitterSilenceCreateAction extends ApiAuthAction
         }
 
         if ($this->scoped->id == $this->other->id) {
-            $this->clientError(_("You cannot silence yourself!"), 403);
+            $this->clientError(_("You cannot sandbox yourself!"), 403);
         }
 
-        try {
-            $this->other->silenceAs($this->scoped);
-        } catch (AlreadyFulfilledException $e) {
-            // don't throw client error here, just return the user array like
-            // if we successfully silenced the user. the client is only interested
-            // in making sure the user is silenced.
-        } catch (Exception $e) {
-            $this->clientError($e->getMessage(), $e->getCode());
+        if (!$this->scoped->hasRight(Right::SANDBOXUSER)) {
+            $this->clientError(_('You cannot sandbox users on this site.'), 403);
+        }
+        // Only administrators can sandbox other privileged users (such as others who have the right to sandbox).
+        if ($this->scoped->isPrivileged() && !$this->scoped->hasRole(Profile_role::ADMINISTRATOR)) {
+            $this->clientError(_('You cannot sandbox other privileged users.'), 403);
+        }
+
+        // only sandbox of the user isn't sandboxed
+        if (!$this->other->isSandboxed()) {
+            try {
+                $this->other->sandbox();
+            } catch (Exception $e) {
+                $this->clientError($e->getMessage(), $e->getCode());
+            }
         }
 
         $this->initDocument('json');

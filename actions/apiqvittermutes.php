@@ -2,7 +2,7 @@
 
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ·                                                                            ·
-   ·  Silence a user                                                            ·
+   ·  API for getting all muted profiles for a profile                        ·
    ·                                                                            ·
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ·                                                                             ·
@@ -38,13 +38,12 @@
   ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
-
 if (!defined('GNUSOCIAL')) { exit(1); }
 
-class ApiQvitterSilenceCreateAction extends ApiAuthAction
-{
 
-    protected $needPost = true;
+class ApiQvitterMutesAction extends ApiPrivateAuthAction
+{
+    var $profiles = null;
 
     /**
      * Take arguments for running
@@ -59,7 +58,7 @@ class ApiQvitterSilenceCreateAction extends ApiAuthAction
 
         $this->format = 'json';
 
-        $this->other  = $this->getTargetProfile($this->arg('id'));
+        $this->count    =  (int)$this->arg('count', 100);
 
         return true;
     }
@@ -67,7 +66,7 @@ class ApiQvitterSilenceCreateAction extends ApiAuthAction
     /**
      * Handle the request
      *
-     * @param array $args $_REQUEST data (unused)
+     * Show the profiles
      *
      * @return void
      */
@@ -75,26 +74,109 @@ class ApiQvitterSilenceCreateAction extends ApiAuthAction
     {
         parent::handle();
 
-        if (!$this->other instanceof Profile) {
-            $this->clientError(_('No such user.'), 404);
-        }
+        $this->target = Profile::current();
 
-        if ($this->scoped->id == $this->other->id) {
-            $this->clientError(_("You cannot silence yourself!"), 403);
-        }
+		if(!$this->target instanceof Profile) {
+			$this->clientError(_('You have to be logged in to view your mutes.'), 403);
+			}
 
-        try {
-            $this->other->silenceAs($this->scoped);
-        } catch (AlreadyFulfilledException $e) {
-            // don't throw client error here, just return the user array like
-            // if we successfully silenced the user. the client is only interested
-            // in making sure the user is silenced.
-        } catch (Exception $e) {
-            $this->clientError($e->getMessage(), $e->getCode());
-        }
+        $this->profiles = $this->getProfiles();
 
         $this->initDocument('json');
-        $this->showJsonObjects($this->twitterUserArray($this->other));
+        print json_encode($this->showProfiles());
         $this->endDocument('json');
+    }
+
+    /**
+     * Get the user's muted profiles
+     *
+     * @return array Profiles
+     */
+    protected function getProfiles()
+    {
+        $offset = ($this->page - 1) * $this->count;
+        $limit =  $this->count;
+
+		$mutes = QvitterMuted::getMutedProfiles($this->target->id, $offset, $limit);
+
+        if($mutes) {
+            return $mutes;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Is this action read only?
+     *
+     * @param array $args other arguments
+     *
+     * @return boolean true
+     */
+    function isReadOnly($args)
+    {
+        return true;
+    }
+
+    /**
+     * When was this feed last modified?
+     *
+     * @return string datestamp of the latest profile in the stream
+     */
+    function lastModified()
+    {
+        if (!empty($this->profiles) && (count($this->profiles) > 0)) {
+            return strtotime($this->profiles[0]->modified);
+        }
+
+        return null;
+    }
+
+    /**
+     * An entity tag for this action
+     *
+     * Returns an Etag based on the action name, language, user ID, and
+     * timestamps of the first and last profiles in the subscriptions list
+     * There's also an indicator to show whether this action is being called
+     * as /api/statuses/(friends|followers) or /api/(friends|followers)/ids
+     *
+     * @return string etag
+     */
+    function etag()
+    {
+        if (!empty($this->profiles) && (count($this->profiles) > 0)) {
+
+            $last = count($this->profiles) - 1;
+
+            return '"' . implode(
+                ':',
+                array($this->arg('action'),
+                      common_user_cache_hash($this->auth_user),
+                      common_language(),
+                      $this->target->id,
+                      'Profiles',
+                      strtotime($this->profiles[0]->modified),
+                      strtotime($this->profiles[$last]->modified))
+            )
+            . '"';
+        }
+
+        return null;
+    }
+
+    /**
+     * Show the profiles as Twitter-style useres and statuses
+     *
+     * @return void
+     */
+    function showProfiles()
+    {
+		$user_arrays = array();
+        if($this->profiles !== false) {
+    		foreach ($this->profiles as $profile) {
+    			$user_arrays[] = $this->twitterUserArray($profile, false );
+    		}
+        }
+		return $user_arrays;
     }
 }

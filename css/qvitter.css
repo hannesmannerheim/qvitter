@@ -424,6 +424,9 @@ button.icon.nav-search span {
     top: 100%;
     z-index: 900;
 	}
+.user-menu-cog .dropdown-menu {
+	width:180px;
+	}
 .quitter-settings.dropdown-menu {
 	margin-right: -400px;
     right: 50%;
@@ -488,6 +491,7 @@ button.icon.nav-search span {
 .dropdown-menu li.fullwidth:not(.dropdown-caret) {
 	width:100%;
 	text-align:left;
+	margin-left: 0;
 	}
 body.rtl .dropdown-menu li:not(.dropdown-caret) {
 	text-align:right;
@@ -514,9 +518,30 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     width: 100%;
 	box-sizing:border-box;
 	}
+
+
 .dropdown-menu li:not(.dropdown-caret) a:hover {
     color: #FFFFFF;
     text-decoration: none;
+	}
+
+#top-menu-profile-link-fullname,
+#top-menu-profile-link-view-profile {
+	width:100%;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+	font-size:11px;
+	color:#999;
+	}
+#top-menu-profile-link-fullname {
+	font-size:13px;
+	font-weight:700;
+	color:#292f33;
+	margin-top:5px;
+	}
+#top-menu-profile-link:hover div {
+	color:#fff;
 	}
 
 /* dropdown menu from ellipsis button */
@@ -543,6 +568,10 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
 	line-height: 18px;
 	}
 .dropdown-menu .row-type-profile-prefs-toggle.disabled::before {
+	content:' ';
+	}
+
+.dropdown-menu .row-type-profile-prefs-toggle.tick-disabled::before {
 	content:' ';
 	}
 
@@ -1655,7 +1684,8 @@ body.rtl #history-container.menu-container a .chev-right {
 	display:none;
 	}
 
-#stream-menu-cog {
+#stream-menu-cog,
+.user-menu-cog {
 	display: inline-block;
     font-size: 20px;
     line-height: 20px;
@@ -1664,16 +1694,67 @@ body.rtl #history-container.menu-container a .chev-right {
     position: relative;
 	cursor:pointer;
 	}
-#stream-menu-cog::before {
+.user-menu-cog {
+    float: right;
+    line-height: 26px;
+    margin: 13px 0 0;
+    opacity: 0.6;
+    padding: 0 5px 12px 10px;
+	}
+.hover-card .user-menu-cog {
+    color: #fff;
+    display: block;
+    float: none;
+    font-size: 16px;
+    margin: -32px 0 0;
+    opacity: 0.8;
+    position: absolute;
+    text-shadow: none;
+	}
+.user-menu-cog:not(.logged-in) {
+	display:none !important;
+	}
+#stream-menu-cog::before,
+.user-menu-cog::before {
 	content:'\f013';
 	font-family: fontAwesome;
 	}
-#stream-menu-cog.dropped {
+#stream-menu-cog.dropped,
+.user-menu-cog.dropped {
 	opacity:1;
 	}
-#stream-menu-cog .dropdown-menu {
+#stream-menu-cog .dropdown-menu,
+.user-menu-cog .dropdown-menu {
 	z-index:1000;
 	display:block;
+	}
+
+.stream-item.user.user-muted > .queet > .user-menu-cog::after,
+.profile-card.user-muted .user-menu-cog::after,
+.stream-item.notice.user-muted > .queet .account-group .name::after,
+.stream-item.notification.user-muted > .queet .account-group .name::after {
+	display:block;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left:-20px;
+	top:0;
+	color:#e81c4f;
+	content:'\f070';
+	font-family: fontAwesome;
+	}
+.hover-card .profile-card.user-muted .user-menu-cog::after {
+	left:auto;
+	right:-25px;
+	}
+.stream-item.notice.user-muted > .queet .account-group .name::after,
+.stream-item.notification.user-muted > .queet .account-group .name::after {
+    display: inline-block;
+    height: auto;
+    left: auto;
+    margin: 0 5px;
+    position: relative;
+    width: auto;
 	}
 
 .queet-streams {
@@ -1897,8 +1978,8 @@ background-repeat: no-repeat;
 .stream-item .account-group span.sandboxed-flag {
 	background-color: #00ccff;
 	}
-.stream-item.silenced .account-group span.silenced-flag,
-.stream-item.sandboxed .account-group span.sandboxed-flag {
+body.has-right-to-silence .stream-item.silenced .account-group span.silenced-flag,
+body.has-right-to-sandbox .stream-item.sandboxed .account-group span.sandboxed-flag {
 	display:inline-block;;
 	}
 .profile-card .profile-header-inner span.silenced-flag,
@@ -1921,8 +2002,8 @@ background-repeat: no-repeat;
 .hover-card .profile-card .profile-header-inner span.sandboxed-flag {
     line-height: 15px;
 	}
-.profile-card .profile-header-inner.silenced span.silenced-flag,
-.profile-card .profile-header-inner.sandboxed span.sandboxed-flag {
+body.has-right-to-silence .profile-card .profile-header-inner.silenced span.silenced-flag,
+body.has-right-to-sandbox .profile-card .profile-header-inner.sandboxed span.sandboxed-flag {
 	display: inline-block;
 	}
 
@@ -2015,8 +2096,8 @@ background-repeat: no-repeat;
 body.rtl .queet.rtl .expanded-content {
 	direction:rtl;
 	}
-.stream-item.expanded > div:first-child,
-.stream-item.expanded > div:first-child > .queet {
+.stream-item.expanded > div.first-visible,
+.stream-item.expanded > div.first-visible > .queet {
 	border-top-left-radius:6px;
 	border-top-right-radius:6px;
 	}
@@ -2048,11 +2129,15 @@ body.rtl .queet.rtl .expanded-content {
 	color:#999999;
 	}
 
-.stream-item:not(.expanded).profile-blocked-by-me {
+.stream-item:not(.expanded):not(.user).profile-blocked-by-me,
+.stream-item:not(.expanded):not(.user):not(.notification).user-muted,
+#feed-body.hide-notifications-from-muted-users .stream-item:not(.expanded).user-muted {
 	height:15px;
 	overflow:hidden;
 	}
-.stream-item:not(.expanded).profile-blocked-by-me::before {
+.stream-item:not(.expanded):not(.user).profile-blocked-by-me::before,
+.stream-item:not(.expanded):not(.user):not(.notification).user-muted::before,
+#feed-body.hide-notifications-from-muted-users .stream-item:not(.expanded).user-muted::before {
 	display: block;
 	position: absolute;
 	left:0;
@@ -2066,12 +2151,16 @@ body.rtl .queet.rtl .expanded-content {
 	box-sizing: border-box;
 	}
 
-.stream-item:not(.expanded).profile-blocked-by-me .queet {
+.stream-item:not(.expanded):not(.user).profile-blocked-by-me .queet,
+.stream-item:not(.expanded):not(.user):not(.notification).user-muted .queet,
+#feed-body.hide-notifications-from-muted-users .stream-item:not(.expanded).user-muted .queet {
 	width:20px;
 	position:absolute;
 	right:0;
 	}
-.stream-item:not(.expanded).profile-blocked-by-me .queet::before {
+.stream-item:not(.expanded):not(.user).profile-blocked-by-me .queet::before,
+.stream-item:not(.expanded):not(.user):not(.notification).user-muted .queet::before,
+#feed-body.hide-notifications-from-muted-users .stream-item:not(.expanded).user-muted .queet::before {
 	display: block;
 	position: absolute;
 	left:0;
@@ -2090,16 +2179,13 @@ body.rtl .queet.rtl .expanded-content {
 	border-bottom:1px solid #ddd;
 	box-sizing: border-box;
 	}
+.stream-item:not(.expanded):not(.user):not(.notification).user-muted .queet::before,
+#feed-body.hide-notifications-from-muted-users .stream-item:not(.expanded).user-muted .queet::before {
+	content: '\f070';
+	}
 
-/* only show activity notices if they are conversation starters
-   we never need to see these, but sometimes someone replies to
-   an activity notice, and then it can be good to know what the
-   user is replying to... */
 #feed-body > .stream-item.activity {
 	display:none;
-	}
-.stream-item > .stream-item.activity:first-child {
-	display:block;
 	}
 
 .quoted-notices,
@@ -3457,18 +3543,18 @@ span.inline-reply-caret .caret-inner {
 	content:'@';
 	}
 
-#mini-edit-profile-button {
+#mini-logged-in-user-cog-wheel {
 	width:30px;
 	height:30px;
 	position:absolute;
-	z-index:102;
+	z-index:201;
 	right:5px;
 	top:5px;
 	}
-#mini-edit-profile-button:before {
+#mini-logged-in-user-cog-wheel:before {
 	font-family: 'FontAwesome';
 	font-size:17px;
-	content:'\f044';
+	content:'\f013';
 	display:block;
 	position:absolute;
 	width:30px;
@@ -3476,10 +3562,10 @@ span.inline-reply-caret .caret-inner {
 	line-height:30px;
 	text-align:center;
 	text-shadow:none;
-	color:rgba(255,255,255,0.7);
+	color:rgba(255,255,255,0.9);
 	z-index:102;
 	}
-#mini-edit-profile-button:hover:before {
+#mini-logged-in-user-cog-wheel:hover:before {
 	color:rgba(255,255,255,1);
 	}
 
@@ -4617,7 +4703,6 @@ background:rgba(0,0,0,0.2);
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
     position: relative;
-	overflow: hidden;
 	}
 .modal-close {
     margin: 0;
@@ -4690,14 +4775,16 @@ background:rgba(0,0,0,0.2);
     content: " ";
     clear: both;
 	}
-.modal-container[id*="popup-reply-"] .modal-footer {
+.modal-container[id*="popup-reply-"] .modal-footer,
+#queet-thumb-popup .modal-footer {
 	padding:0;
 	}
-.modal-container[id*="popup-reply-"] .modal-footer {}
+
 .modal-footer .queet,
 .modal-footer .stream-item {
 	border:0 none;
 	cursor:auto;
+	border-radius: 0 0 5px 5px;
 	}
 .modal-footer .queet:hover {
 	background-color:#fff;
@@ -5549,10 +5636,13 @@ body.rtl #feed-header-inner h2  {
 	    z-index: 1;
 		}
 
-	#feed,
-	.profile-card	 {
+	#feed  {
 		position:relative;
 		z-index:10;
+		}
+	.profile-card {
+		position:relative;
+		z-index:11;
 		}
 
 	#search-query-hint {
