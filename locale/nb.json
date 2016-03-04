@@ -180,11 +180,11 @@
 	"silencedStreamDescription":"Forstummede brukere can ikke logge på tjenesten, sende status meldinger, samt allerede status meldinger er skjult. For lokale brukere vil dette oppleves som å bli slettet, men beslutnignen kan reverseres. For brukere på andre instanser vil det oppleves som en utvidet blokkering.",
 	"sandboxedStreamDescription":"Statusmeldinger fra brukere satt i lekekassen, så vil meldingene bli ekskludert fra den offentlige tidslinjen og hele nettverks tidslinjen. Statusmeldinger send når man er i lekekasse vil ikke bli inkludert i den offentlige tidslinjen hvis brukeren blir tatt ut av lekekassen.",
 	"onlyShowNotificationsFromUsersIFollow":"Vis kun notifikasjoner fra brukere jeg følger",
-	"userOptions":"More user actions",
-	"silenceThisUser":"Silence {nickname}",
-	"sandboxThisUser":"Sandbox {nickname}",
-	"unSilenceThisUser":"Unsilence {nickname}",
-	"unSandboxThisUser":"Unsandbox {nickname}",
-	"ERRORfailedSandboxingUser":"Failed sandboxing/unsandboxing the user",
-	"ERRORfailedSilencingUser":"Failed silencing/unsilencing the user"
+	"userOptions":"Flere hendelser fra bruker",
+	"silenceThisUser":"Forstumme {nickname}",
+	"sandboxThisUser":"Sett i lekekasse {nickname}",
+	"unSilenceThisUser":"Opphev forstumming for {nickname}",
+	"unSandboxThisUser":"Opphev lekekasse for {nickname}",
+	"ERRORfailedSandboxingUser":"Feilet ved forsøk på å sette i lekekasse/oppheve lekekasse av bruker",
+	"ERRORfailedSilencingUser":"Feilet ved forstumming/oppheving av forstumming av bruker"
 }
