@@ -186,5 +186,15 @@
 	"unSilenceThisUser":"Ontdemp {nickname}",
 	"unSandboxThisUser":"Beperking opheffen {nickname}",
 	"ERRORfailedSandboxingUser":"Beperking/beperking opheffen voor gebruiker gefaald.",
-	"ERRORfailedSilencingUser":"Dempen/ontdempen gebruiker gefaald."
+	"ERRORfailedSilencingUser":"Dempen/ontdempen gebruiker gefaald.",
+	"muteUser":"Mute",
+	"unmuteUser":"Unmute",
+	"hideNotificationsFromMutedUsers":"Hide notifications from muted users",
+	"thisIsANoticeFromAMutedUser":"You have muted the author of this quip. Click here to show it anyway.",
+	"userMutes":"Accounts you're muting",
+	"userBlocked":"Blocked accounts",
+	"userMuted":"Muted accounts",
+	"mutedStreamDescription":"You've hidden these accounts from your timeline. You will still recieve notifications from these accounts, unless you select &quot;Hide notifications from muted users&quot; from the cog wheel menu on the notifications page.",
+	"profileAndSettings":"Profile and settings",
+	"profileSettings":"Profile settings"
 }

@@ -117,9 +117,15 @@ function removeOldestLocalStorageEntries(callback) {
 			}
 		});
 
-	console.log('removed 100 old localstorage items');
+	console.log('removed ' + i + ' old localstorage items');
 
-	callback();
+	if(i>0) {
+		callback();
+		return true;
+		}
+	else {
+		return false;
+		}
 	}
 
 
@@ -290,9 +296,18 @@ function localStorageIsEnabled() {
 		}
 	catch(e) {
 		if (e.name == 'QUOTA_EXCEEDED_ERR' || e.name == 'NS_ERROR_DOM_QUOTA_REACHED' || e.name == 'QuotaExceededError' || e.name == 'W3CException_DOM_QUOTA_EXCEEDED_ERR') {
-			removeOldestLocalStorageEntries(function(){
-				localStorageIsEnabled();
+
+			// if localstorage is empty but returns a full error, we assume it's disabled (in an ugly way)
+			if(localStorage.length === 0) {
+				return false;
+				}
+
+			var successfulRemoval = removeOldestLocalStorageEntries(function(){
+				return localStorageIsEnabled();
 				});
+			if(successfulRemoval === false) {
+				return false;
+				}
 			}
 		else {
 			return false;
@@ -456,6 +471,58 @@ function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
 
 /* ·
    ·
+   ·  Marks all notices from muted users in an jQuery object as muted
+   ·
+   · · · · · · · · · */
+
+function markAllNoticesFromMutedUsersAsMutedInJQueryObject(obj) {
+
+	$.each(obj.find('.stream-item'),function(){
+		if(isUserMuted($(this).attr('data-user-id'))) {
+			$(this).addClass('user-muted');
+			$(this).children('.queet').attr('data-tooltip',window.sL.thisIsANoticeFromAMutedUser);
+			}
+		else {
+			$(this).children('.queet').removeAttr('data-tooltip');
+			$(this).removeClass('user-muted');
+			}
+		});
+	}
+
+
+/* ·
+   ·
+   ·  Marks all profile cards from muted users as muted in DOM
+   ·
+   · · · · · · · · · */
+
+function markAllProfileCardsFromMutedUsersAsMutedInDOM() {
+
+	$.each($('body').find('.profile-header-inner'),function(){
+		if(isUserMuted($(this).attr('data-user-id'))) {
+			$(this).parent('.profile-card').addClass('user-muted');
+			}
+		else {
+			$(this).parent('.profile-card').removeClass('user-muted');
+			}
+		});
+	}
+
+
+
+/* ·
+   ·
+   ·  Function invoked after mute and unmute
+   ·
+   · · · · · · · · · */
+
+function hideOrShowNoticesAfterMuteOrUnmute() {
+	markAllNoticesFromMutedUsersAsMutedInJQueryObject($('#feed-body'));
+	markAllProfileCardsFromMutedUsersAsMutedInDOM();
+	}
+
+/* ·
+   ·
    ·  Sandbox/unsandbox user and do necessary stuff
    ·
    · · · · · · · · · */
@@ -492,6 +559,39 @@ function silenceCreateOrDestroy(arg, callback) {
 			showErrorMessage(window.sL.ERRORfailedSilencingUser);
 			}
 		});
+	}
+
+/* ·
+   ·
+   ·   Get the logged in user's menu array
+   ·
+   · · · · · · · · · */
+
+function loggedInUsersMenuArray() {
+	return [
+		{
+			type: 'function',
+			functionName: 'goToEditProfile',
+			label: window.sL.editMyProfile
+			},
+		{
+			type: 'link',
+			href: window.siteInstanceURL + 'settings/profile',
+			label: window.sL.settings
+			},
+		{
+			type:'divider'
+			},
+		{
+			type: 'link',
+			href: window.siteInstanceURL + window.loggedIn.screen_name + '/mutes',
+			label: window.sL.userMuted
+			},
+		{
+			type: 'link',
+			href: window.siteInstanceURL + window.loggedIn.screen_name + '/blocks',
+			label: window.sL.userBlocked
+			}];
 	}
 
 
@@ -611,20 +711,36 @@ function isLocalURL(url) {
    · · · · · · · · · */
 
 function maybeShowTheNewQueetsBar() {
-	var new_queets_num = $('#feed-body').find('.stream-item.hidden:not(.always-hidden):not(.hidden-repeat)').length;
-	if(new_queets_num > 0) {
+
+	var newQueetsNum = $('#feed-body').find('.stream-item.hidden:not(.always-hidden):not(.hidden-repeat)').length;
+
+	// subtract the number of hidden notices from muted users if this isn't the notifications stream,
+	// or if this is the notifications stream but the user has opted out of seeing notifications from muted users
+	var mutedHiddenNum = 0;
+	if(window.currentStreamObject.name == 'notifications') {
+		if($('#feed-body').hasClass('hide-notifications-from-muted-users')) {
+			mutedHiddenNum = $('#feed-body').find('.stream-item.hidden.user-muted:not(.always-hidden):not(.hidden-repeat)').length;
+			}
+		}
+	else {
+		var mutedHiddenNum = $('#feed-body').find('.stream-item.hidden.user-muted:not(.always-hidden):not(.hidden-repeat)').length;
+		}
+
+	newQueetsNum = newQueetsNum - mutedHiddenNum;
+
+	if(newQueetsNum > 0) {
 
 		$('#new-queets-bar').parent().removeClass('hidden');
 
 		// bar label
-		if(new_queets_num == 1) { var q_txt = window.sL.newQueet; }
+		if(newQueetsNum == 1) { var q_txt = window.sL.newQueet; }
 		else { var q_txt = window.sL.newQueets; }
 		if(window.currentStreamObject.name == 'notifications') {
-			if(new_queets_num == 1) { var q_txt = window.sL.newNotification; }
+			if(newQueetsNum == 1) { var q_txt = window.sL.newNotification; }
 			else { var q_txt = window.sL.newNotifications; }
 			}
 
-		$('#new-queets-bar').html(q_txt.replace('{new-notice-count}',new_queets_num));
+		$('#new-queets-bar').html(q_txt.replace('{new-notice-count}',newQueetsNum));
 		}
 	}
 
@@ -1319,19 +1435,9 @@ function rememberStreamStateInLocalStorage() {
 
 		var feed = $('<div/>').append(firstTwentyVisibleHTML);
 
-		// we add these again (with updated blocking list) when the notices are fetched from the cache
-		feed.children('.stream-item').removeClass('profile-blocked-by-me');
-		feed.children('.stream-item').children('.queet').removeAttr('data-tooltip'); // can contain tooltip about blocked user
+		// we add some of these things again when the notices are fetched from the cache
+		cleanStreamItemsFromClassesAndConversationElements(feed);
 
-		feed.find('.temp-post').remove();
-		feed.children('.stream-item').removeClass('not-seen');
-		feed.children('.stream-item').removeClass('hidden-repeat'); // this means we need hide repeats when adding cached notices to feed later
-		feed.children('.stream-item').removeClass('selected-by-keyboard');
-		feed.find('.dropdown-menu').remove();
-		feed.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').removeClass('collapsing').addClass('visible');
-		feed.children('.stream-item').each(function() {
-			cleanUpAfterCollapseQueet($(this));
-			});
 		var feedHtml = feed.html();
 		var profileCardHtml = $('#feed').siblings('.profile-card').outerHTML();
 		var streamData = {
@@ -1341,6 +1447,30 @@ function rememberStreamStateInLocalStorage() {
 
 		localStorageObjectCache_STORE('streamState',window.currentStreamObject.path, streamData);
 		}
+	}
+
+/* ·
+   ·
+   ·   Clean stream items from classes and conversation elements,
+   ·   to use e.g. for caching and including in popup footers
+   ·
+   ·   @param streamItems: jQuery object with stream items as children
+   ·
+   · · · · · · · · · */
+
+function cleanStreamItemsFromClassesAndConversationElements(streamItems) {
+	streamItems.children('.stream-item').removeClass('profile-blocked-by-me');
+	streamItems.children('.stream-item').children('.queet').removeAttr('data-tooltip'); // can contain tooltip about blocked user
+
+	streamItems.find('.temp-post').remove();
+	streamItems.children('.stream-item').removeClass('not-seen');
+	streamItems.children('.stream-item').removeClass('hidden-repeat'); // this means we need hide repeats when adding cached notices to feed later
+	streamItems.children('.stream-item').removeClass('selected-by-keyboard');
+	streamItems.find('.dropdown-menu').remove();
+	streamItems.find('.stream-item').removeClass('expanded').removeClass('next-expanded').removeClass('hidden').removeClass('collapsing').addClass('visible');
+	streamItems.children('.stream-item').each(function() {
+		cleanUpAfterCollapseQueet($(this));
+		});
 	}
 
 
@@ -1440,6 +1570,38 @@ function appendUserToMentionsSuggestionsArray(user) {
 	}
 
 
+/* ·
+   ·
+   ·  Is a profile pref in the qvitter namespace enabled?
+   ·
+   · · · · · · · · · */
+
+function isQvitterProfilePrefEnabled(topic) {
+	if(typeof window.qvitterProfilePrefs != 'undefined' && typeof window.qvitterProfilePrefs[topic] != 'undefined'
+		&& window.qvitterProfilePrefs[topic] !== null
+		&& window.qvitterProfilePrefs[topic] != ''
+		&& window.qvitterProfilePrefs[topic] !== false
+		&& window.qvitterProfilePrefs[topic] != 0
+		&& window.qvitterProfilePrefs[topic] != '0') {
+		return true;
+		}
+	return false;
+	}
+
+/* ·
+   ·
+   ·  Is this user muted?
+   ·
+   · · · · · · · · · */
+
+function isUserMuted(userID) {
+	if(isQvitterProfilePrefEnabled('mute:' + userID)) {
+		return true;
+		}
+	else {
+		return false;
+		}
+	}
 
 
 /* ·
@@ -1508,6 +1670,12 @@ function iterateRecursiveReplaceHtmlSpecialChars(obj) {
 	return obj;
 	}
 function replaceHtmlSpecialChars(text) {
+
+	// don't do anything if the text is undefined
+	if(typeof text == 'undefined') {
+		return text;
+		}
+
 	var map = {
 		'&': '&amp;',
 		'<': '&lt;',

@@ -480,11 +480,8 @@ class QvitterAction extends ApiAction
 							<span class="caret-outer"></span>
 							<span class="caret-inner"></span>
 						</li>
-						<li class="fullwidth"><a id="logout"></a></li>
+						<li class="fullwidth"><a id="top-menu-profile-link" class="no-hover-card" href="<?php print $instanceurl.$logged_in_user_obj['screen_name']; ?>"><div id="top-menu-profile-link-fullname"><?php print $logged_in_user_obj['name']; ?></div><div id="top-menu-profile-link-view-profile"></div></a></li>
 						<li class="fullwidth dropdown-divider"></li>
-						<li class="fullwidth"><a id="edit-profile-header-link"></a></li>
-						<li class="fullwidth"><a id="settings" href="<?php print $instanceurl; ?>settings/profile" donthijack></a></li>
-                        <li class="fullwidth"><a id="blocking-link" href="<?php print $instanceurl.$logged_in_user_obj['screen_name'].'/blocks'; ?>"></a></li>
                         <li class="fullwidth"><a id="faq-link"></a></li>
                         <li class="fullwidth"><a id="tou-link"></a></li>
                         <li class="fullwidth"><a id="shortcuts-link"></a></li>
@@ -492,6 +489,8 @@ class QvitterAction extends ApiAction
 							<li class="fullwidth"><a id="invite-link" href="<?php print $instanceurl; ?>main/invite"></a></li>
 						<?php } ?>
 						<li class="fullwidth"><a id="classic-link"></a></li>
+						<li class="fullwidth dropdown-divider"></li>
+						<li class="fullwidth"><a id="logout"></a></li>
 						<li class="fullwidth language dropdown-divider"></li>
 						<?php
 
@@ -601,7 +600,7 @@ class QvitterAction extends ApiAction
                     if($logged_in_user) { ?>
                         <div id="user-container" style="display:none;">
     						<div id="user-header" style="background-image:url('<?php print htmlspecialchars($logged_in_user_obj['cover_photo']) ?>')">
-    							<div id="mini-edit-profile-button"></div>
+    							<div id="mini-logged-in-user-cog-wheel"></div>
     							<div class="profile-header-inner-overlay"></div>
     							<div id="user-avatar-container"><img id="user-avatar" src="<?php print htmlspecialchars($logged_in_user_obj['profile_image_url_profile_size']) ?>" /></div>
     							<div id="user-name"><?php print htmlspecialchars($logged_in_user_obj['name']) ?></div>

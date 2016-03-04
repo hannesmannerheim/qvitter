@@ -81,22 +81,31 @@ function getMenu(menuArray) {
 
 				// enabled?
 				var prefEnabledOrDisabled = 'disabled';
-				if(typeof window.qvitterProfilePrefs[this.topic] != 'undefined'
-					&& window.qvitterProfilePrefs[this.topic] !== null
-				&& window.qvitterProfilePrefs[this.topic] != ''
-				&& window.qvitterProfilePrefs[this.topic] !== false
-				&& window.qvitterProfilePrefs[this.topic] != 0
-				&& window.qvitterProfilePrefs[this.topic] != '0') {
+				if(isQvitterProfilePrefEnabled(this.topic)) {
 					prefEnabledOrDisabled = 'enabled';
 					}
 
+				// sometimes we want another label when the toggle is enabled
+				var labelToUse = this.label;
+				if(isQvitterProfilePrefEnabled(this.topic) && typeof this.enabledLabel != 'undefined') {
+					labelToUse = this.enabledLabel;
+					}
+
+				// the tick can be disabled
+				var disableTickClass = '';
+				if(typeof this.tickDisabled != 'undefined' && this.tickDisabled === true) {
+					var disableTickClass = ' tick-disabled';
+					}
+
 				// get row html
-				menuHTML = menuHTML + buildMenuRowFullwidth(this.label, {
+				menuHTML = menuHTML + buildMenuRowFullwidth(labelToUse, {
 					id: this.topic,
-					class: 'row-type-' + this.type + ' ' + prefEnabledOrDisabled,
+					class: 'row-type-' + this.type + ' ' + prefEnabledOrDisabled + disableTickClass,
 					'data-menu-row-type': this.type,
 					'data-profile-prefs-topic': this.topic,
 					'data-profile-prefs-namespace': this.namespace,
+					'data-profile-prefs-label': replaceHtmlSpecialChars(this.label),
+					'data-profile-prefs-enabled-label': replaceHtmlSpecialChars(this.enabledLabel),
 					'data-profile-pref-state': prefEnabledOrDisabled,
 					'data-profile-pref-callback': this.callback
 					});
@@ -380,6 +389,11 @@ function buildProfileCard(data) {
 	if(data.is_sandboxed === true) {
 		is_sandboxed = ' sandboxed';
 		}
+	// muted?
+	var is_muted = '';
+	if(isUserMuted(data.id)) {
+		is_muted = ' user-muted';
+		}
 
 	var followButton = '';
 
@@ -406,7 +420,7 @@ function buildProfileCard(data) {
 
 	// full card html
 	data.profileCardHtml = '\
-		<div class="profile-card' + is_me + logged_in + '">\
+		<div class="profile-card' + is_me + logged_in + is_muted + '">\
 			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '" data-screen-name="' + data.screen_name + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture" href="' + data.profile_image_url_original + '">\
@@ -495,6 +509,12 @@ function buildExternalProfileCard(data) {
 		is_sandboxed = ' sandboxed';
 		}
 
+	// muted?
+	var is_muted = '';
+	if(isUserMuted(data.local.id)) {
+		is_muted = ' user-muted';
+		}
+
 	// local id/screen_name
 	var localUserId = data.local.id;
 	var localUserScreenName = data.local.screen_name;
@@ -532,7 +552,7 @@ function buildExternalProfileCard(data) {
 	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl;
 
 	data.profileCardHtml = '\
-		<div class="profile-card' + is_me + logged_in + '">\
+		<div class="profile-card' + is_me + logged_in + is_muted + '">\
 			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '" data-screen-name="' + localUserScreenName + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture"><img src="' + data.profile_image_url_profile_size + '" /></a>\
@@ -812,6 +832,10 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 			if(window.currentStreamObject.type != 'users' && typeof window.allBlocking != 'undefined') {
 				markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(oldStreamState);
 				}
+
+			// mark all notices and profile cards from muted users as muted
+			markAllNoticesFromMutedUsersAsMutedInJQueryObject(oldStreamState);
+			markAllProfileCardsFromMutedUsersAsMutedInDOM();
 
 			// hide dublicate repeats, only show the first/oldest instance of a notice
 			oldStreamState = hideAllButOldestInstanceOfStreamItem(oldStreamState);
@@ -1367,7 +1391,7 @@ function cleanUpAfterCollapseQueet(streamItem) {
 	streamItem.find('.view-more-container-top').remove();
 	streamItem.find('.view-more-container-bottom').remove();
 	streamItem.find('.inline-reply-queetbox').remove();
-	streamItem.find('.stream-item.conversation').remove();
+	streamItem.children('.stream-item.conversation').remove();
 	streamItem.find('.show-full-conversation').remove();
 	streamItem.removeAttr('style');
 	queet.removeAttr('style');
@@ -1734,7 +1758,11 @@ function addToFeed(feed, after, extraClasses) {
 				var notificationTime = parseTwitterDate(obj.created_at);
 
 				if(obj.is_seen == '0') {
-					extraClassesThisRun += ' not-seen'
+					extraClassesThisRun += ' not-seen';
+					}
+
+				if(isUserMuted(obj.from_profile.id)) {
+					extraClassesThisRun += ' user-muted';
 					}
 
 				// external
@@ -1743,10 +1771,9 @@ function addToFeed(feed, after, extraClasses) {
 					ostatusHtml = '<a target="_blank" data-tooltip="' + window.sL.goToOriginalNotice + '" class="ostatus-link" href="' + obj.from_profile.statusnet_profile_url + '"></a>';
 					}
 
-
 				if(obj.ntype == 'like') {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like">\
+					var notificationHtml = '<div data-user-id="' + obj.from_profile.id + '" data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification like">\
 												<div class="queet">\
 													<div class="dogear"></div>\
 													' + ostatusHtml + '\
@@ -1772,7 +1799,7 @@ function addToFeed(feed, after, extraClasses) {
 					}
 				else if(obj.ntype == 'repeat') {
 					var noticeTime = parseTwitterDate(obj.notice.created_at);
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat">\
+					var notificationHtml = '<div data-user-id="' + obj.from_profile.id + '" data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification repeat">\
 												<div class="queet">\
 													<div class="dogear"></div>\
 													' + ostatusHtml + '\
@@ -1803,7 +1830,7 @@ function addToFeed(feed, after, extraClasses) {
 					var notificationHtml = buildQueetHtml(obj.notice, obj.id, extraClassesThisRun + ' notification reply');
 					}
 				else if(obj.ntype == 'follow') {
-					var notificationHtml = '<div data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification follow">\
+					var notificationHtml = '<div data-user-id="' + obj.from_profile.id + '" data-quitter-id-in-stream="' + obj.id + '" id="stream-item-n-' + obj.id + '" class="stream-item ' + extraClassesThisRun + ' notification follow">\
 												<div class="queet">\
 													<div class="queet-content">\
 														' + ostatusHtml + '\
@@ -2015,6 +2042,11 @@ function buildUserStreamItemHtml(obj) {
 	if(window.loggedIn !== false) {
 		loggedInClass = ' logged-in';
 		}
+	// muted?
+	var mutedClass = '';
+	if(isUserMuted(obj.id)) {
+		mutedClass = ' user-muted';
+		}
 
 	var followButton = '';
 	if(typeof window.loggedIn.screen_name != 'undefined'  	// if logged in
@@ -2024,7 +2056,7 @@ function buildUserStreamItemHtml(obj) {
 			}
 		}
 
-	return '<div id="stream-item-' + obj.id + '" class="stream-item user' + silencedClass + sandboxedClass + '" data-user-id="' + obj.id + '">\
+	return '<div id="stream-item-' + obj.id + '" class="stream-item user' + silencedClass + sandboxedClass + mutedClass + '" data-user-id="' + obj.id + '">\
 				<div class="queet ' + rtlOrNot + '">\
 					' + followButton + '\
 					<div class="user-menu-cog' + silencedClass + sandboxedClass + loggedInClass + '" data-tooltip="' + window.sL.userOptions + '" data-user-id="' + obj.id + '" data-screen-name="' + obj.screen_name + '"></div>\
@@ -2069,6 +2101,11 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 			});
 		}
 
+	// muted? (if class is not already added)
+	if(isUserMuted(obj.user.id) && extraClasses.indexOf(' user-muted') == -1) {
+		extraClasses += ' user-muted';
+		blockingTooltip = ' data-tooltip="' + window.sL.thisIsANoticeFromAMutedUser + '"';
+		}
 	// silenced?
 	if(obj.user.is_silenced === true) {
 		extraClasses += ' silenced';

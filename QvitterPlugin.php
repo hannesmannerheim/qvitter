@@ -153,6 +153,11 @@ class QvitterPlugin extends Plugin {
 	// route/reroute urls
     public function onRouterInitialized($m)
     {
+		$m->connect(':nickname/mutes',
+					array('action' => 'qvitter',
+						  'nickname' => Nickname::INPUT_FMT));
+        $m->connect('api/qvitter/mutes.json',
+					array('action' => 'ApiQvitterMutes'));
         $m->connect('api/qvitter/sandboxed.:format',
                     array('action' => 'ApiQvitterSandboxed',
                           'format' => '(xml|json)'));
@@ -1289,6 +1294,16 @@ class QvitterPlugin extends Plugin {
         $only_show_notifications_from_users_i_follow = Profile_prefs::getConfigData($profile, 'qvitter', 'only_show_notifications_from_users_i_follow');
         if($only_show_notifications_from_users_i_follow == '1') {
             $notification->whereAdd(sprintf('qvitternotification.from_profile_id IN (SELECT subscribed FROM subscription WHERE subscriber = %u)', $user_id));
+            }
+
+        // the user might have opted out from notifications from profiles they have muted
+        $hide_notifications_from_muted_users = Profile_prefs::getConfigData($profile, 'qvitter', 'hide_notifications_from_muted_users');
+        if($hide_notifications_from_muted_users == '1') {
+            $muted_ids = QvitterMuted::getMutedIDs($profile->id,0,10000); // get all (hopefully not more than 10 000...)
+            if($muted_ids !== false && count($muted_ids) > 0) {
+                $ids_imploded = implode(',',$muted_ids);
+                $notification->whereAdd('qvitternotification.from_profile_id NOT IN ('.$ids_imploded.')');
+                }
             }
 
         // the user might have opted out from certain notification types

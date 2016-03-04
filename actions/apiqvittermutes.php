@@ -2,7 +2,7 @@
 
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    ·                                                                            ·
-   ·  API for getting all blocked profiles for a profile                        ·
+   ·  API for getting all muted profiles for a profile                        ·
    ·                                                                            ·
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ·                                                                             ·
@@ -38,12 +38,10 @@
   ·                                                                             ·
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
-if (!defined('STATUSNET')) {
-    exit(1);
-}
+if (!defined('GNUSOCIAL')) { exit(1); }
 
 
-class ApiQvitterBlocksAction extends ApiPrivateAuthAction
+class ApiQvitterMutesAction extends ApiPrivateAuthAction
 {
     var $profiles = null;
 
@@ -62,20 +60,6 @@ class ApiQvitterBlocksAction extends ApiPrivateAuthAction
 
         $this->count    =  (int)$this->arg('count', 100);
 
-        $arg_user = $this->getTargetUser($this->arg('id'));
-
-        $this->target = ($this->auth_user) ? $this->auth_user->getProfile() : null;
-
-        if (!($this->target instanceof Profile)) {
-            // TRANS: Client error displayed when requesting a list of followers for a non-existing user.
-            $this->clientError(_('No such user.'), 404);
-        } else if($this->auth_user->id != $arg_user->id) {
-            $this->clientError(_('You are only allowed to view your own blocks.'), 403);
-
-        }
-
-        $this->profiles = $this->getProfiles();
-
         return true;
     }
 
@@ -90,37 +74,36 @@ class ApiQvitterBlocksAction extends ApiPrivateAuthAction
     {
         parent::handle();
 
+        $this->target = Profile::current();
+
+		if(!$this->target instanceof Profile) {
+			$this->clientError(_('You have to be logged in to view your mutes.'), 403);
+			}
+
+        $this->profiles = $this->getProfiles();
+
         $this->initDocument('json');
         print json_encode($this->showProfiles());
         $this->endDocument('json');
     }
 
     /**
-     * Get the user's blocked profiles
+     * Get the user's muted profiles
      *
      * @return array Profiles
      */
     protected function getProfiles()
     {
         $offset = ($this->page - 1) * $this->count;
-        $limit =  $this->count + 1;
+        $limit =  $this->count;
 
-        $blocks = null;
+		$mutes = QvitterMuted::getMutedProfiles($this->target->id, $offset, $limit);
 
-		$blocks = QvitterBlocked::getBlocked($this->target->id, $offset, $limit);
-
-        if($blocks) {
-            $profiles = array();
-
-            while ($blocks->fetch()) {
-                $this_profile_block = clone($blocks);
-                $profiles[] = $this->getTargetProfile($this_profile_block->blocked);
-            }
-        return $profiles;
+        if($mutes) {
+            return $mutes;
         } else {
             return false;
         }
-
     }
 
     /**
@@ -189,9 +172,11 @@ class ApiQvitterBlocksAction extends ApiPrivateAuthAction
     function showProfiles()
     {
 		$user_arrays = array();
-		foreach ($this->profiles as $profile) {
-			$user_arrays[] = $this->twitterUserArray($profile, false );
-		}
+        if($this->profiles !== false) {
+    		foreach ($this->profiles as $profile) {
+    			$user_arrays[] = $this->twitterUserArray($profile, false );
+    		}
+        }
 		return $user_arrays;
     }
 }

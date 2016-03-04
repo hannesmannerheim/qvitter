@@ -48,6 +48,16 @@ class NotificationStream
             $notification->whereAdd(sprintf('qvitternotification.from_profile_id IN (SELECT subscribed FROM subscription WHERE subscriber = %u)', $current_profile->id));
             }
 
+        // the user might have opted out from notifications from profiles they have muted
+        $hide_notifications_from_muted_users = Profile_prefs::getConfigData($current_profile, 'qvitter', 'hide_notifications_from_muted_users');
+        if($hide_notifications_from_muted_users == '1') {
+            $muted_ids = QvitterMuted::getMutedIDs($current_profile->id,0,10000); // get all (hopefully not more than 10 000...)
+            if($muted_ids !== false && count($muted_ids) > 0) {
+                $ids_imploded = implode(',',$muted_ids);
+                $notification->whereAdd('qvitternotification.from_profile_id NOT IN ('.$ids_imploded.')');
+                }
+            }
+
         // the user might have opted out from certain notification types
         $disable_notify_replies_and_mentions = Profile_prefs::getConfigData($current_profile, 'qvitter', 'disable_notify_replies_and_mentions');
         $disable_notify_favs = Profile_prefs::getConfigData($current_profile, 'qvitter', 'disable_notify_favs');

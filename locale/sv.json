@@ -164,7 +164,7 @@
 	"continueRant":"Fortsätt harangen",
 	"hideEmbeddedInTimeline":"Dölj inbäddat innehåll i detta flöde",
 	"hideQuotesInTimeline":"Dölj citat i detta flöde",
-	"userBlocks":"Konton du blockerar",
+	"userBlocks":"Konton som du blockerar",
 	"buttonBlocked":"Blockerad",
 	"buttonUnblock":"Avblockera",
 	"failedBlockingUser":"Misslyckades med att blockera användaren.",
@@ -186,5 +186,15 @@
 	"unSilenceThisUser":"Ta bort nedtystning av {nickname}",
 	"unSandboxThisUser":"Ta {nickname} ur sandlådan",
 	"ERRORfailedSandboxingUser":"Misslyckades med att sätta/ta ur användaren i sandlådan",
-	"ERRORfailedSilencingUser":"Misslyckades med att tysta ner eller ta bort nedtystning"
+	"ERRORfailedSilencingUser":"Misslyckades med att tysta ner eller ta bort nedtystning",
+	"muteUser":"Ignorera",
+	"unmuteUser":"Sluta ignorera",
+	"hideNotificationsFromMutedUsers":"Dölj notiser från användare som du ignorerar",
+	"thisIsANoticeFromAMutedUser":"Det här är en qvittring från en användare som du ignorerar. Klicka här för att visa kvittringen.",
+	"userMutes":"Konton som du ignorerar",
+	"userBlocked":"Blockerade konton",
+	"userMuted":"Ignorerade konton",
+	"mutedStreamDescription":"Du har dolt dessa användare från dina flöden. Du kommer fortfarande få notiser från dem, om du inte väljer &quot;Dölj notiser från användare som du ignorerar&quot; från kugghjulsmenyn på notissidan.",
+	"profileAndSettings":"Profil och inställningar",
+	"profileSettings":"Profilinställningar"
 }
