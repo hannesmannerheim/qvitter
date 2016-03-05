@@ -67,6 +67,15 @@ class ApiUpdateAvatarAction extends ApiAuthAction
         $this->cropY = $this->trimmed('cropY');
         $this->img   = $this->trimmed('img');
 
+        $this->img = str_replace('data:image/jpeg;base64,', '', $this->img);
+        $this->img = str_replace('data:image/png;base64,', '', $this->img);
+        $this->img = str_replace(' ', '+', $this->img);
+        $this->img = base64_decode($this->img);
+
+        if (empty($this->img)) {
+            throw new ClientException(_('No uploaded image data.'));
+        }
+
         return true;
     }
 
@@ -79,21 +88,11 @@ class ApiUpdateAvatarAction extends ApiAuthAction
     {
         parent::handle();
 
-		$base64img = $this->img;
-		$base64img = str_replace('data:image/jpeg;base64,', '', $base64img);
-		$base64img = str_replace('data:image/png;base64,', '', $base64img);
-		$base64img = str_replace(' ', '+', $base64img);
-		$base64img = base64_decode($base64img);
-
-        if (empty($base64img)) {
-            throw new ClientException(_('No uploaded image data.'));
-        }
-
         $imagefile = null;
         // write the image to a temporary file
         $fh = tmpfile();
-        fwrite($fh, $base64img);
-        unset($base64img);  // no need to keep it in memory
+        fwrite($fh, $this->img);
+        unset($this->img);  // no need to keep it in memory
         // seek back to position 0, so we don't read EOF directly
         fseek($fh, 0);
         // read the temporary file as an uploaded image, will store File object
