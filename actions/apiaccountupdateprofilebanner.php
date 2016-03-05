@@ -78,44 +78,27 @@ class ApiAccountUpdateProfileBannerAction extends ApiAuthAction
     protected function handle()
     {
         parent::handle();
-        $profile = $this->user->getProfile();
 
         // see if we have regular uploaded image data
         try {
 
-            $mediafile = MediaFile::fromUpload('banner', $profile);
+            $mediafile = MediaFile::fromUpload('banner', $this->scoped);
 
         } catch (NoUploadedMediaException $e) {
 
             // if not we may have base64 data
-    		$img = $this->img;
-    		if(stristr($img, 'image/jpeg')) {
-    			$img_mime = 'image/jpeg';
-    			}
-    		elseif(stristr($img, 'image/png')) {
-    			// should convert to jpg here!!
-    			$img_mime = 'image/png';
-    			}
 
-            // i don't remember why we had to do this
-    		$img = str_replace('data:image/jpeg;base64,', '', $img);
-    		$img = str_replace('data:image/png;base64,', '', $img);
-    		$img = str_replace(' ', '+', $img);
-    		$img = base64_decode($img, true);
+            $this->img = str_replace('data:image/jpeg;base64,', '', $this->img);
+            $this->img = str_replace('data:image/png;base64,', '', $this->img);
+            $this->img = str_replace(' ', '+', $this->img);
+            $this->img = base64_decode($this->img, true);
 
-            try {
-    		    $img_filename = File::filename($profile, 'cover', $img_mime);
-        		$img_path = File::path($img_filename);
-        		$img_success = file_put_contents($img_path, $img);
-        		$img_mimetype = MediaFile::getUploadedMimeType($img_path, $img_filename);
-                $mediafile = new MediaFile($profile, $img_filename, $img_mimetype);
-            } catch (Exception $e) {
-                $this->clientError($e, 400);
-            }
-        }
+            $fh = tmpfile();
+            fwrite($fh, $this->img);
+            unset($this->img);
+            fseek($fh, 0);
 
-        if(!$mediafile instanceof MediaFile) {
-            $this->clientError(_('Could not process image data.'), 400);
+            $mediafile = MediaFile::fromFilehandle($fh, $this->scoped);
         }
 
         // maybe resize
@@ -132,16 +115,27 @@ class ApiAccountUpdateProfileBannerAction extends ApiAuthAction
 
         // crop
         try {
-     		$imagefile = new ImageFile($mediafile->fileRecord->id, File::path($mediafile->filename));
-      		$imagefile->resizeTo(File::path($mediafile->filename), array('width'=>$width, 'height'=>$height, 'x'=>$this->cropX, 'y'=>$this->cropY, 'w'=>$this->cropW, 'h'=>$this->cropH));
-    		$result['url'] = File::url($mediafile->filename);
+            $imagefile = ImageFile::fromFileObject($mediafile->fileRecord);
+            unset($mediafile);
+
+            // We're just using the Avatar function to build a filename here
+            // but we don't save it _as_ an avatar below... but in the same dir!
+            $filename = Avatar::filename(
+                $this->scoped->getID(),
+                image_type_to_extension($imagefile->preferredType()),
+                null,
+                'banner-'.common_timestamp()
+            );
+
+            $imagefile->resizeTo(Avatar::path($filename), array('width'=>$width, 'height'=>$height, 'x'=>$this->cropX, 'y'=>$this->cropY, 'w'=>$this->cropW, 'h'=>$this->cropH));
+            $result['url'] = Avatar::url($filename);
         } catch (Exception $e) {
             $this->clientError(_('The image could not be resized and cropped. '.$e), 422);
         }
 
         // save in profile_prefs
         try {
-		    Profile_prefs::setData($profile, 'qvitter', 'cover_photo', $result['url']);
+		    Profile_prefs::setData($this->scoped, 'qvitter', 'cover_photo', $result['url']);
         } catch (ServerException $e) {
             $this->clientError(_('The image could not be resized and cropped. '.$e), 422);
         }

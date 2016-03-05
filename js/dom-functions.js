@@ -419,8 +419,9 @@ function buildProfileCard(data) {
 		}
 
 	// full card html
-	data.profileCardHtml = '\
+	var profileCardHtml = '\
 		<div class="profile-card' + is_me + logged_in + is_muted + '">\
+			<script class="profile-json" type="application/json">' + JSON.stringify(data) + '</script>\
 			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="' + coverPhotoHtml + '" data-user-id="' + data.id + '" data-screen-name="' + data.screen_name + '">\
 				<div class="profile-header-inner-overlay"></div>\
 				<a class="profile-picture" href="' + data.profile_image_url_original + '">\
@@ -458,7 +459,7 @@ function buildProfileCard(data) {
 		</div>\
 		';
 
-	return data;
+	return { userArray: data, profileCardHtml: profileCardHtml };
 	}
 
 
@@ -551,7 +552,7 @@ function buildExternalProfileCard(data) {
 	var serverUrl = guessInstanceUrlWithoutProtocolFromProfileUrlAndNickname(data.statusnet_profile_url, data.screen_name);
 	data.screenNameWithServer = '@' + data.screen_name + '@' + serverUrl;
 
-	data.profileCardHtml = '\
+	var profileCardHtml = '\
 		<div class="profile-card' + is_me + logged_in + is_muted + '">\
 			<div class="profile-header-inner' + is_silenced + is_sandboxed + '" style="background-image:url(\'' + cover_photo + '\')" data-user-id="' + localUserId + '" data-screen-name="' + localUserScreenName + '">\
 				<div class="profile-header-inner-overlay"></div>\
@@ -590,7 +591,7 @@ function buildExternalProfileCard(data) {
 		</div>\
 		<div class="clearfix"></div>';
 
-	return data;
+	return { userArray: data, profileCardHtml: profileCardHtml };
 	}
 
 
@@ -608,7 +609,7 @@ function addProfileCardToDOM(data) {
 
 
 	// change design
-	changeDesign({backgroundimage:data.background_image, backgroundcolor:data.backgroundcolor, linkcolor:data.linkcolor});
+	changeDesign({backgroundimage:data.userArray.background_image, backgroundcolor:data.userArray.backgroundcolor, linkcolor:data.userArray.linkcolor});
 
 	// remove any old profile card and show profile card
 	$('#feed').siblings('.profile-card').remove();
