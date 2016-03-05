@@ -101,7 +101,6 @@ class ApiUpdateAvatarAction extends ApiAuthAction
         fclose($fh);
 
         // Now try to get it as an ImageFile since it has some handy functions
-        // but will throw a FileNotFoundException if the file doesn't exist.
         $imagefile = ImageFile::fromFileObject($mediafile->fileRecord);
         unset($mediafile);  // This isn't needed in memory.
 
