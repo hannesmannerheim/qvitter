@@ -847,7 +847,7 @@ function cacheSyntaxHighlightingGroups() {
 
 /* ·
    ·
-   ·  User array cache
+   ·  User array cache (called array because it's an array in php)
    ·
    ·  Stored in window.userArrayCache with unique key like instance_url/nickname
    ·  with protocol (http:// or https://) trimmed off, e.g. "quitter.se/hannes2peer"
