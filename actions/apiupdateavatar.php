@@ -105,12 +105,10 @@ class ApiUpdateAvatarAction extends ApiAuthAction
         $imagefile = ImageFile::fromFileObject($mediafile->fileRecord);
         unset($mediafile);  // This isn't needed in memory.
 
-        $type = $imagefile->preferredType();
-
         // Get an appropriate filename for the avatar
         $filename = Avatar::filename(
             $this->scoped->getID(),
-            image_type_to_extension($type),
+            image_type_to_extension($imagefile->preferredType()),
             null,
             common_timestamp()
         );
