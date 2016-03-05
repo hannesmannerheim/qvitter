@@ -79,47 +79,47 @@ class ApiUpdateAvatarAction extends ApiAuthAction
     {
         parent::handle();
 
-		$profile = $this->user->getProfile();
 		$base64img = $this->img;
-		if(stristr($base64img, 'image/jpeg')) {
-			$base64img_mime = 'image/jpeg';
-			}
-		elseif(stristr($base64img, 'image/png')) {
-			// should convert to jpg here!!
-			$base64img_mime = 'image/png';
-			}
 		$base64img = str_replace('data:image/jpeg;base64,', '', $base64img);
 		$base64img = str_replace('data:image/png;base64,', '', $base64img);
 		$base64img = str_replace(' ', '+', $base64img);
-		$base64img_hash = md5($base64img);
 		$base64img = base64_decode($base64img);
-		$base64img_basename = basename('avatar');
-		$base64img_filename = File::filename($profile, $base64img_basename, $base64img_mime);
-		$base64img_path = File::path($base64img_filename);
-		$base64img_success = file_put_contents($base64img_path, $base64img);
-		$base64img_mimetype = MediaFile::getUploadedMimeType($base64img_path, $base64img_filename);
-		$mediafile = new MediaFile($profile, $base64img_filename, $base64img_mimetype);
- 		$imagefile = new ImageFile($mediafile->fileRecord->id, File::path($mediafile->filename));
-  		$imagefile->resizeTo(File::path($mediafile->filename), array('width'=>$this->cropW, 'height'=>$this->cropH, 'x'=>$this->cropX, 'y'=>$this->cropY, 'w'=>$this->cropW, 'h'=>$this->cropH));
+
+        if (empty($base64img)) {
+            throw new ClientException(_('No uploaded image data.'));
+        }
+
+        $imagefile = null;
+        // write the image to a temporary file
+        $fh = tmpfile();
+        fwrite($fh, $base64img);
+        unset($base64img);  // no need to keep it in memory
+        // seek back to position 0, so we don't read EOF directly
+        fseek($fh, 0);
+        // read the temporary file as an uploaded image, will store File object
+        $mediafile = MediaFile::fromFilehandle($fh, $this->scoped);
+        // Deletes the temporary file, if it was needed we stored it in fromFilehandle
+        fclose($fh);
+
+        // Now try to get it as an ImageFile since it has some handy functions
+        // but will throw a FileNotFoundException if the file doesn't exist.
+        $imagefile = ImageFile::fromFileObject($mediafile->fileRecord);
+        unset($mediafile);  // This isn't needed in memory.
 
         $type = $imagefile->preferredType();
+
+        // Get an appropriate filename for the avatar
         $filename = Avatar::filename(
-            $profile->id,
+            $this->scoped->getID(),
             image_type_to_extension($type),
             null,
             common_timestamp()
         );
+        $imagefile->resizeTo(Avatar::path($filename), array('width'=>$this->cropW, 'height'=>$this->cropH, 'x'=>$this->cropX, 'y'=>$this->cropY, 'w'=>$this->cropW, 'h'=>$this->cropH));
 
-        $filepath = Avatar::path($filename);
+        $this->scoped->setOriginal($filename);
 
-        $imagefile->copyTo($filepath);
-
-        $profile = $this->user->getProfile();
-        $profile->setOriginal($filename);
-
-        $mediafile->delete();
-
-        $twitter_user = $this->twitterUserArray($profile, true);
+        $twitter_user = $this->twitterUserArray($this->scoped, true);
         $this->initDocument('json');
         $this->showJsonObjects($twitter_user);
         $this->endDocument('json');
