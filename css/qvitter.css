@@ -3249,8 +3249,11 @@ ul.stats {
 .stream-item ul.stats {
 	width: 1000px;
 	}
+.queet.rtl .queet-stats-container {
+	min-height:0;
+	}
 .queet.rtl ul.stats {
-	text-align:right;
+	float:right;
 	}
 ul.stats li {
 	display:block;
@@ -3258,6 +3261,11 @@ ul.stats li {
     padding: 4px 10px 0 0;
     min-width:82px;
     box-sizing:border-box;
+	text-align: left;
+	}
+.queet.rtl ul.stats li {
+  	padding-left: 10px;
+    text-align: right;
 	}
 .profile-card ul.stats li {
 	padding-top: 7px;
@@ -3286,10 +3294,6 @@ ul.stats a {
 .hover-card ul.stats a {
 	font-size: 9px;
 	}
-.queet.rtl ul.stats a{
-    border-right: 1px solid #E8E8E8;
-    border-left: 0 none;
-	}
 
 ul.stats a strong {
 	font-size: 18px;
@@ -3306,6 +3310,10 @@ ul.stats .avatar-row {
     border-left: 1px solid #E8E8E8;
     padding: 12px;
 	}
+.queet.rtl ul.stats .avatar-row {
+    border-left:0 none;
+    border-right: 1px solid #E8E8E8;
+	}
 ul.stats .avatar-row a {
 	padding: 11px 0;
 	border-left: medium none;
@@ -3317,18 +3325,12 @@ ul.stats .avatar-row a {
     border-left: 0 none;
     padding-left: 0;
 	}
-.queet.rtl ul.stats .avatar-row a:last-child {
-    border-right: 1px solid #E8E8E8;
-    padding-right: 12px;
-    border-left: 0 none;
-    padding-left: 0;
-	}
 ul.stats .avatar-row .avatar {
     float: left;
     margin-right: 5px;
 	}
 .queet.rtl ul.stats .avatar-row .avatar {
-    float: left;
+    float: right;
     margin-left: 5px;
     margin-right: 0;
 	}

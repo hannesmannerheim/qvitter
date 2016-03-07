@@ -220,7 +220,7 @@ function showFavsAndRequeetsInQueet(q,data) {
 		q.children('.queet').find('ul.stats').remove();
 		}
 
-	q.children('.queet').find('.queet-stats-container').prepend('<ul class="stats"><li class="avatar-row"></li></ul>');
+	q.children('.queet').find('.queet-stats-container').prepend('<ul class="stats"><li class="avatar-row"></li></ul><div class="clearfix"></div>');
 
 	// set the expanded fav-count number
 	if(data.favs.length > 0) {
