@@ -2169,7 +2169,7 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 		var thisAttachmentThumbSrc = $(this).attr('src');
 		var parentStreamItem = $(this).closest('.stream-item');
 		var $parentStreamItemClone = $('<div/>').append(parentStreamItem.outerHTML());
-		var $queetThumbsClone = $('<div/>').append($parentStreamItemClone.find('.queet-thumbs').outerHTML());
+		var $queetThumbsClone = $('<div/>').append($parentStreamItemClone.children('.stream-item').children('.queet').find('.queet-thumbs').outerHTML());
 
 		// cleaned version of the stream item to show in the footer
 		cleanStreamItemsFromClassesAndConversationElements($parentStreamItemClone);
