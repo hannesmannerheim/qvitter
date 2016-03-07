@@ -511,6 +511,9 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     white-space: nowrap;
     text-decoration: none;
 	}
+body.rtl .dropdown-menu li:not(.dropdown-caret) a {
+    padding: 3px 22px 3px 15px;
+	}
 .quitter-settings.dropdown-menu li.fullwidth:not(.dropdown-caret) a,
 #stream-menu-cog .dropdown-menu li.fullwidth:not(.dropdown-caret) a,
 .action-ellipsis-container .dropdown-menu li.fullwidth:not(.dropdown-caret) a {
@@ -566,6 +569,10 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
 	content:'\f00c';
 	font-size:10px;
 	line-height: 18px;
+	}
+body.rtl .dropdown-menu .row-type-profile-prefs-toggle::before {
+	left:auto;
+	right:3px;
 	}
 .dropdown-menu .row-type-profile-prefs-toggle.disabled::before {
 	content:' ';
@@ -1450,6 +1457,10 @@ body.rtl #history-container.menu-container a .chev-right {
 	text-align:center;
 	font-weight:normal;
 	}
+body.rtl #unseen-notifications {
+	right: auto;
+	left: 0;
+	}
 
 #history-container {
 	display:none;
@@ -1701,6 +1712,10 @@ body.rtl #history-container.menu-container a .chev-right {
     opacity: 0.6;
     padding: 0 5px 12px 10px;
 	}
+body.rtl .user-menu-cog {
+    float: left;
+    padding: 0 10px 12px 5px;
+	}
 .hover-card .user-menu-cog {
     color: #fff;
     display: block;
@@ -1742,6 +1757,13 @@ body.rtl #history-container.menu-container a .chev-right {
 	color:#e81c4f;
 	content:'\f070';
 	font-family: fontAwesome;
+	}
+body.rtl .stream-item.user.user-muted > .queet > .user-menu-cog::after,
+body.rtl .profile-card.user-muted .user-menu-cog::after,
+.queet.rtl .stream-item.notice.user-muted > .queet .account-group .name::after,
+.queet.rtl .stream-item.notification.user-muted > .queet .account-group .name::after {
+	left:auto;
+	right:-20px;
 	}
 .hover-card .profile-card.user-muted .user-menu-cog::after {
 	left:auto;
@@ -2908,12 +2930,15 @@ ul.queet-actions > li .icon {
 ul.queet-actions > li:not(:first-child) .icon {
 	margin-left:52px;
 	}
-.queet.rtl ul.queet-actions .icon {
-	margin-left:26px;
+.queet.rtl ul.queet-actions > li:not(:first-child) .icon {
+	margin-left:7px;
+	margin-right:52px;
 	}
-.queet.rtl ul.queet-actions > li .icon {
-    margin-right:0;
+.queet.rtl ul.queet-actions > li:first-child .icon {
+	margin-left:0;
+	margin-right:0;
 	}
+
 ul.queet-actions > li.action-rt-container .with-icn.done .icon:before {
 	color: #609928;
 	}
@@ -4577,6 +4602,10 @@ button.shorten:after {
 	margin-left:0;
 	opacity:0.5;
 	}
+body.rtl #feed-header-inner .loader {
+	left:2px;
+	right:auto;
+	}
 
 .reload-stream {
     display: block;
@@ -5463,8 +5492,16 @@ body.rtl .language-dropdown {
 body.rtl .quitter-settings.dropdown-menu {
 	left:auto;
 	right:50%;
-	margin-right:147px;
+	margin-right:22px;
 	margin-left:0;
+	}
+
+/* hide these since I just can't get syntax highlighting working properly in rtl... */
+body.rtl .syntax-middle .mention,
+body.rtl .syntax-middle .tag,
+body.rtl .syntax-middle .group,
+body.rtl .syntax-middle .externalMention {
+	opacity:0;
 	}
 
 body.rtl #logo {
