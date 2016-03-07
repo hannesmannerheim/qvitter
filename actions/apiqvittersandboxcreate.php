@@ -86,10 +86,6 @@ class ApiQvitterSandboxCreateAction extends ApiAuthAction
         if (!$this->scoped->hasRight(Right::SANDBOXUSER)) {
             $this->clientError(_('You cannot sandbox users on this site.'), 403);
         }
-        // Only administrators can sandbox other privileged users (such as others who have the right to sandbox).
-        if ($this->scoped->isPrivileged() && !$this->scoped->hasRole(Profile_role::ADMINISTRATOR)) {
-            $this->clientError(_('You cannot sandbox other privileged users.'), 403);
-        }
 
         // only sandbox of the user isn't sandboxed
         if (!$this->other->isSandboxed()) {
