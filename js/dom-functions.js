@@ -1926,8 +1926,9 @@ function addToFeed(feed, after, extraClasses) {
 			// if repeat-notice doesn't already exist in feed
 			if($('#stream-item-' + obj.id).length == 0) {
 
-				// if the repeated notice already exist in feed, we add this, but hidden
-				if($('.stream-item[data-quitter-id="' + obj.retweeted_status.id + '"]').length > 0) {
+				// if the this or the repeated notice already exist in feed, we add this, but hidden
+				if($('.stream-item[data-quitter-id="' + obj.retweeted_status.id + '"]').length > 0
+				|| $('.stream-item[data-quitter-id="' + obj.id + '"]').length > 0) {
 					extraClassesThisRun += ' hidden-repeat';
 					}
 
