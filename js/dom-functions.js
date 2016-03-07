@@ -1927,8 +1927,7 @@ function addToFeed(feed, after, extraClasses) {
 			if($('#stream-item-' + obj.id).length == 0) {
 
 				// if the this or the repeated notice already exist in feed, we add this, but hidden
-				if($('.stream-item[data-quitter-id="' + obj.retweeted_status.id + '"]').length > 0
-				|| $('.stream-item[data-quitter-id="' + obj.id + '"]').length > 0) {
+				if($('.stream-item[data-quitter-id="' + obj.retweeted_status.id + '"]').length > 0) {
 					extraClassesThisRun += ' hidden-repeat';
 					}
 
@@ -1949,6 +1948,14 @@ function addToFeed(feed, after, extraClasses) {
 
 			// only if not already exist
 			if($('#stream-item-' + obj.id).length == 0) {
+
+				// sometimes the notice already exist but in the form of a repeat, because of
+				// a repeat reaching our server before the actual notice, or because of date settings
+				// on different servers, anyhow, hide this notice if a repeat of it already exist in
+				// the stream, using the hidden-repeat class (a little confusing maybe)
+				if($('.stream-item[data-quitter-id="' + obj.id + '"]').length > 0) {
+					extraClassesThisRun += ' hidden-repeat';
+					}
 
 				// remove any matching temp post
 				if(typeof obj.user != 'undefined'
