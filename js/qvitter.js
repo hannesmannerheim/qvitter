@@ -927,7 +927,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('#queet-box').html(window.sL.compose);
 	$('#queet-box').attr('data-start-text',encodeURIComponent(window.sL.compose));
 	$('#user-footer .queet-button button').html(window.sL.queetVerb);
-	$('#feed-header-inner h2').html(window.sL.queetsNounPlural);
+	$('#stream-header').html(window.sL.queetsNounPlural);
 	$('#logout').html(window.sL.logout);
 	$('#settings').html(window.sL.settings);
 	$('#other-servers-link').html(window.sL.otherServers);

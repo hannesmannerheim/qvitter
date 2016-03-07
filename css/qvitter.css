@@ -1656,10 +1656,7 @@ body.rtl #unseen-notifications {
 	color: #333333;
 	line-height: 18px;
 	background-color: #FFFFFF;
-	padding-top: 12px;
-	padding-right: 12px;
-	padding-bottom: 12px;
-	padding-left: 12px;
+	padding: 8px 12px;
 	border-bottom-width: 1px;
 	border-bottom-color: #E8E8E8;
 	border-bottom-style: solid;
@@ -1679,8 +1676,17 @@ body.rtl #unseen-notifications {
     color: #66757F;
     font-size: 22px;
     font-weight: 300;
-    line-height: 22px;
-	max-width: 520px;	
+    line-height: 30px;
+	}
+
+#stream-header {
+	display: inline-block;
+    max-width: 490px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+	height: 30px;
+	white-space: nowrap;
 	}
 
 #feed-header-description {

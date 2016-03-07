@@ -755,6 +755,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 	$('#new-queets-bar-container').addClass('hidden');
 	$('.reload-stream').hide();
 
+	// remove old menu cog
+	$('#stream-menu-cog').remove();
+
 	display_spinner('#feed-header-inner');
 
 	// are we just reloading?
@@ -773,10 +776,10 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 	// set the new streams header and description
 	if(streamObject.streamSubHeader) {
-		$('#feed-header-inner h2').html(streamObject.streamSubHeader);
+		$('#stream-header').html(streamObject.streamSubHeader);
 		}
 	else {
-		$('#feed-header-inner h2').html(streamObject.streamHeader);
+		$('#stream-header').html(streamObject.streamHeader);
 		}
 	if(streamObject.streamDescription !== false) {
 		$('#feed-header-description').html(streamObject.streamDescription);

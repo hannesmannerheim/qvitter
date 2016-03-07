@@ -652,7 +652,9 @@ class QvitterAction extends ApiAction
                     <div id="feed">
 						<div id="feed-header">
 							<div id="feed-header-inner">
-								<h2></h2>
+								<h2>
+                                    <span id="stream-header"></span>
+                                </h2>
 								<div class="reload-stream"></div>
 							</div>
                             <div id="feed-header-description"></div>
