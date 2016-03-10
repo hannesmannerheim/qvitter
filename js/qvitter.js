@@ -927,7 +927,7 @@ function proceedToSetLanguageAndLogin(data){
 	$('#queet-box').html(window.sL.compose);
 	$('#queet-box').attr('data-start-text',encodeURIComponent(window.sL.compose));
 	$('#user-footer .queet-button button').html(window.sL.queetVerb);
-	$('#feed-header-inner h2').html(window.sL.queetsNounPlural);
+	$('#stream-header').html(window.sL.queetsNounPlural);
 	$('#logout').html(window.sL.logout);
 	$('#settings').html(window.sL.settings);
 	$('#other-servers-link').html(window.sL.otherServers);
@@ -2169,7 +2169,7 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 		var thisAttachmentThumbSrc = $(this).attr('src');
 		var parentStreamItem = $(this).closest('.stream-item');
 		var $parentStreamItemClone = $('<div/>').append(parentStreamItem.outerHTML());
-		var $queetThumbsClone = $('<div/>').append($parentStreamItemClone.find('.queet-thumbs').outerHTML());
+		var $queetThumbsClone = $('<div/>').append($parentStreamItemClone.children('.stream-item').children('.queet').find('.queet-thumbs').outerHTML());
 
 		// cleaned version of the stream item to show in the footer
 		cleanStreamItemsFromClassesAndConversationElements($parentStreamItemClone);

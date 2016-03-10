@@ -480,7 +480,7 @@ class QvitterAction extends ApiAction
 							<span class="caret-outer"></span>
 							<span class="caret-inner"></span>
 						</li>
-						<li class="fullwidth"><a id="top-menu-profile-link" class="no-hover-card" href="<?php print $instanceurl.$logged_in_user_obj['screen_name']; ?>"><div id="top-menu-profile-link-fullname"><?php print $logged_in_user_obj['name']; ?></div><div id="top-menu-profile-link-view-profile"></div></a></li>
+						<li class="fullwidth"><a id="top-menu-profile-link" class="no-hover-card" href="<?php print $instanceurl.$logged_in_user_obj['screen_name']; ?>"><div id="top-menu-profile-link-fullname"><?php print htmlspecialchars($logged_in_user_obj['name']); ?></div><div id="top-menu-profile-link-view-profile"></div></a></li>
 						<li class="fullwidth dropdown-divider"></li>
                         <li class="fullwidth"><a id="faq-link"></a></li>
                         <li class="fullwidth"><a id="tou-link"></a></li>
@@ -652,7 +652,9 @@ class QvitterAction extends ApiAction
                     <div id="feed">
 						<div id="feed-header">
 							<div id="feed-header-inner">
-								<h2></h2>
+								<h2>
+                                    <span id="stream-header"></span>
+                                </h2>
 								<div class="reload-stream"></div>
 							</div>
                             <div id="feed-header-description"></div>

@@ -220,7 +220,7 @@ function showFavsAndRequeetsInQueet(q,data) {
 		q.children('.queet').find('ul.stats').remove();
 		}
 
-	q.children('.queet').find('.queet-stats-container').prepend('<ul class="stats"><li class="avatar-row"></li></ul>');
+	q.children('.queet').find('.queet-stats-container').prepend('<ul class="stats"><li class="avatar-row"></li></ul><div class="clearfix"></div>');
 
 	// set the expanded fav-count number
 	if(data.favs.length > 0) {
@@ -755,6 +755,9 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 	$('#new-queets-bar-container').addClass('hidden');
 	$('.reload-stream').hide();
 
+	// remove old menu cog
+	$('#stream-menu-cog').remove();
+
 	display_spinner('#feed-header-inner');
 
 	// are we just reloading?
@@ -773,10 +776,10 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 	// set the new streams header and description
 	if(streamObject.streamSubHeader) {
-		$('#feed-header-inner h2').html(streamObject.streamSubHeader);
+		$('#stream-header').html(streamObject.streamSubHeader);
 		}
 	else {
-		$('#feed-header-inner h2').html(streamObject.streamHeader);
+		$('#stream-header').html(streamObject.streamHeader);
 		}
 	if(streamObject.streamDescription !== false) {
 		$('#feed-header-description').html(streamObject.streamDescription);
@@ -1926,7 +1929,7 @@ function addToFeed(feed, after, extraClasses) {
 			// if repeat-notice doesn't already exist in feed
 			if($('#stream-item-' + obj.id).length == 0) {
 
-				// if the repeated notice already exist in feed, we add this, but hidden
+				// if the this or the repeated notice already exist in feed, we add this, but hidden
 				if($('.stream-item[data-quitter-id="' + obj.retweeted_status.id + '"]').length > 0) {
 					extraClassesThisRun += ' hidden-repeat';
 					}
@@ -1948,6 +1951,14 @@ function addToFeed(feed, after, extraClasses) {
 
 			// only if not already exist
 			if($('#stream-item-' + obj.id).length == 0) {
+
+				// sometimes the notice already exist but in the form of a repeat, because of
+				// a repeat reaching our server before the actual notice, or because of date settings
+				// on different servers, anyhow, hide this notice if a repeat of it already exist in
+				// the stream, using the hidden-repeat class (a little confusing maybe)
+				if($('.stream-item[data-quitter-id="' + obj.id + '"]').length > 0) {
+					extraClassesThisRun += ' hidden-repeat';
+					}
 
 				// remove any matching temp post
 				if(typeof obj.user != 'undefined'
