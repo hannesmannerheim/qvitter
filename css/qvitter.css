@@ -2403,7 +2403,8 @@ body.rtl .queet.rtl .expanded-content {
 	background-size:100% auto;
 	}
 
-.queet .queet-thumbs.thumb-num-1 .thumb-container.youtube {
+.queet .queet-thumbs.thumb-num-1 .thumb-container.host-youtube-com,
+.queet .queet-thumbs.thumb-num-1 .thumb-container.host-vimeo-com {
 	height:250px;
 	}
 
@@ -5013,11 +5014,13 @@ body.rtl .modal-footer button {
 	margin: 0 auto;
     min-height: 0;
 	}
-#queet-thumb-popup .modal-body .thumb-container.youtube iframe {
+#queet-thumb-popup .modal-body .thumb-container.host-youtube-com iframe,
+#queet-thumb-popup .modal-body .thumb-container.host-vimeo-com iframe {
 	position:absolute;
 	z-index:2;
 	}
-#queet-thumb-popup .modal-body .thumb-container.youtube {
+#queet-thumb-popup .modal-body .thumb-container.host-youtube-com,
+#queet-thumb-popup .modal-body .thumb-container.host-vimeo-com {
 	background-image:none !important;
 	z-index:1;
 	}

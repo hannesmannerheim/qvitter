@@ -1298,12 +1298,22 @@ function expand_queet(q,doScrolling) {
 				}
 
 			// if there's only one thumb and it's a youtube video, show it inline
-			if(q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').length == 1) {
-				var youtubeURL = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').children('.attachment-thumb').attr('data-full-image-url');
+			if(q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.host-youtube-com').length == 1) {
+				var youtubeURL = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.host-youtube-com').children('.attachment-thumb').attr('data-full-image-url');
 				if(q.children('.queet').find('.expanded-content').children('.media').children('iframe[src="' + youTubeEmbedLinkFromURL(youtubeURL) + '"]').length < 1) { // not if already showed
 					q.children('.queet').find('.queet-thumbs').addClass('hide-thumbs');
 					// show video
 					q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="510" height="315" src="' + youTubeEmbedLinkFromURL(youtubeURL) + '" frameborder="0" allowfullscreen></iframe></div>');
+					}
+				}
+			// if there's only one thumb and it's a vimeo video, show it inline
+			else if(q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.host-vimeo-com').length == 1) {
+				var vimeoURL = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.host-vimeo-com').children('.attachment-thumb').attr('data-full-image-url');
+				var embedURL = vimeoEmbedLinkFromURL(vimeoURL);
+				if(q.children('.queet').find('.expanded-content').children('.media').children('iframe[src="' + embedURL + '"]').length < 1) { // not if already showed
+					q.children('.queet').find('.queet-thumbs').addClass('hide-thumbs');
+					// show video
+					q.children('.queet').find('.expanded-content').prepend('<iframe src="' + embedURL + '" width="510" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
 					}
 				}
 
@@ -2478,6 +2488,7 @@ function buildAttachmentHTML(attachments){
 			&& this.oembed !== false
 			&& this.oembed.title !== null
 			&& this.oembed.provider != 'YouTube'
+			&& this.oembed.provider != 'Vimeo'
 			&& this.oembed.type != 'photo') {
 
 				var oembedImage = '';
@@ -2560,15 +2571,10 @@ function buildAttachmentHTML(attachments){
 
 				// play button for videos and animated gifs
 				var playButtonClass = '';
-				if((this.url.indexOf('://www.youtube.com') > -1 || this.url.indexOf('://youtu.be') > -1)
-				|| (typeof this.animated != 'undefined' && this.animated === true)) {
-					var playButtonClass = ' play-button';
-					}
-
-				// youtube class
-				var youTubeClass = '';
-				if(this.url.indexOf('://www.youtube.com') > -1 || this.url.indexOf('://youtu.be') > -1) {
-					youTubeClass = ' youtube';
+				if(typeof this.animated != 'undefined' && this.animated === true
+				|| (this.url.indexOf('://www.youtube.com') > -1 || this.url.indexOf('://youtu.be') > -1)
+				|| this.url.indexOf('://vimeo.com') > -1) {
+					playButtonClass = ' play-button';
 					}
 
 				// gif-class
@@ -2600,7 +2606,7 @@ function buildAttachmentHTML(attachments){
 
 				var urlToHide = window.siteInstanceURL + 'attachment/' + this.id;
 
-				attachmentHTML += '<a data-local-attachment-url="' + urlToHide + '" style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + animatedGifClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
+				attachmentHTML += '<a data-local-attachment-url="' + urlToHide + '" style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + animatedGifClass + ' ' + CSSclassNameByHostFromURL(this.url) + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
 				urlsToHide.push(urlToHide); // hide this attachment url from the queet text
 				attachmentNum++;
 				}

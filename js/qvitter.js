@@ -2179,23 +2179,18 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 		$thumbToDisplay = $queetThumbsClone.find('img.attachment-thumb[src="' + thisAttachmentThumbSrc + '"]');
 		$thumbToDisplay.parent().addClass('display-this-thumb');
 
-		// "play" all animated gifs and add youtube iframes to all youtube videos
+		// "play" all animated gifs and add youtube iframes to all youtube and vimeo videos
 		$.each($queetThumbsClone.find('img.attachment-thumb'),function(){
 			if($(this).attr('data-mime-type') == 'image/gif'
 			&& $(this).parent().hasClass('play-button')) {
 				$(this).attr('src',$(this).attr('data-full-image-url'));
 				$(this).parent('.thumb-container').css('background-image','url(\'' + $(this).attr('data-full-image-url') + '\')');
 				}
-			else if($(this).parent().hasClass('youtube')){
-
-				// autoplay a clicked video
-				var autoplayFlag = '';
-				if($(this).parent().hasClass('display-this-thumb')) {
-					autoplayFlag = '&autoplay=1';
-					}
-
-				var youtubeId = $(this).attr('data-full-image-url').replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
-				$(this).parent().prepend('<iframe width="510" height="315" src="//www.youtube.com/embed/' + youtubeId + '?enablejsapi=1&version=3&playerapiid=ytplayer' + autoplayFlag + '" frameborder="0" allowscriptaccess="always" allowfullscreen></iframe>');
+			else if($(this).parent().hasClass('host-youtube-com')){
+				$(this).parent().prepend('<iframe width="510" height="315" src="' + youTubeEmbedLinkFromURL($(this).attr('data-full-image-url'), $(this).parent().hasClass('display-this-thumb')) + '" frameborder="0" allowscriptaccess="always" allowfullscreen></iframe>');
+				}
+			else if($(this).parent().hasClass('host-vimeo-com')){
+				$(this).parent().prepend('<iframe src="' + vimeoEmbedLinkFromURL($(this).attr('data-full-image-url'), $(this).parent().hasClass('display-this-thumb')) + '" width="510" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
 				}
 			});
 
@@ -2208,7 +2203,7 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 
 		if(parentStreamItem.hasClass('expanded')) {
 
-			var calculatedDimensions = calculatePopUpAndImageDimensions($thumbToDisplay.attr('src'));
+			var calculatedDimensions = calculatePopUpAndImageDimensions($thumbToDisplay);
 			var $thisImgInQueetThumbsClone = $queetThumbsClone.find('img[src="' + $thumbToDisplay.attr('src') + '"]');
 
 			// set dimensions
@@ -2220,12 +2215,22 @@ $('body').on('click','.stream-item .queet img.attachment-thumb',function (event)
 			// open popup
 			popUpAction('queet-thumb-popup', '', '' + $queetThumbsClone.outerHTML() + '', parentStreamItemHTMLWithoutFooter, calculatedDimensions.popUpWidth);
 			disableOrEnableNavigationButtonsInImagePopup($('#queet-thumb-popup'));
+
+			// for some reason vimeo autoplays when we have a #t=x start time, so stop any vimeo videos running in the background (delay so it has time to load)
+			setTimeout(function(){
+				$.each($('#queet-thumb-popup').find('.thumb-container.host-vimeo-com:not(.display-this-thumb)').children('iframe'),function(){
+					console.log($(this).attr('src'));
+					this.contentWindow.postMessage('{"method": "pause"}', '*');
+					});
+				},1000);
 			}
 		}
 	});
 
 // popups can be max 900px wide, and should not be higher than the window, so we need to do some calculating
-function calculatePopUpAndImageDimensions(img_src) {
+function calculatePopUpAndImageDimensions(img) {
+
+		var img_src = img.attr('src');
 
 		// trick to get width and height, we can't go with what gnusocial tells us, because
 		// gnusocial doesn't (always?) report width and height after proper orientation
@@ -2285,7 +2290,14 @@ function calculatePopUpAndImageDimensions(img_src) {
 				var popUpWidth = 900;
 				}
 			}
-	return {popUpWidth: popUpWidth, displayImgWidth: displayImgWidth};
+
+	// vimeo can't be too small, or the design freaks out
+	if(img.parent('.thumb-container').hasClass('host-vimeo-com') && displayImgWidth < 540) {
+		displayImgWidth = 540;
+		displayImgHeight = 305;
+		}
+
+	return {popUpWidth: popUpWidth, displayImgWidth: displayImgWidth, displayImgHeight: displayImgHeight };
 	}
 
 // switch to next image when clicking the image in the popup
@@ -2296,15 +2308,23 @@ $('body').on('click','#queet-thumb-popup .attachment-thumb',function (event) {
 	if(nextImage.length>0) {
 
 		// start and stop youtube videos, if any
-		$.each($(this).parent('.youtube').children('iframe'),function(){
+		$.each($(this).parent('.host-youtube-com').children('iframe'),function(){
 			this.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
 			});
-		$.each(nextImage.parent('.youtube').children('iframe'),function(){
+		$.each(nextImage.parent('.host-youtube-com').children('iframe'),function(){
 			this.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
 			});
 
+		// start stop vimeo
+		$.each($(this).parent('.host-vimeo-com').children('iframe'),function(){
+			this.contentWindow.postMessage('{"method": "pause"}', '*');
+			});
+		$.each(nextImage.parent('.host-vimeo-com').children('iframe'),function(){
+			this.contentWindow.postMessage('{"method": "play"}', '*');
+			});
+
 		// set dimensions of next image and the popup
-		var calculatedDimensions = calculatePopUpAndImageDimensions(nextImage.attr('src'));
+		var calculatedDimensions = calculatePopUpAndImageDimensions(nextImage);
 		nextImage.width(calculatedDimensions.displayImgWidth);
 		nextImage.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
 		nextImage.parent('.thumb-container').children('iframe').attr('width',calculatedDimensions.displayImgWidth);
@@ -2329,15 +2349,23 @@ $('body').on('click','#queet-thumb-popup .prev-thumb',function (event) {
 	if(prevImage.length>0) {
 
 		// start and stop youtube videos, if any
-		$.each($(this).parent().find('.display-this-thumb.youtube').children('iframe'),function(){
+		$.each($(this).parent().find('.display-this-thumb.host-youtube-com').children('iframe'),function(){
 			this.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
 			});
-		$.each(prevImage.parent('.youtube').children('iframe'),function(){
+		$.each(prevImage.parent('.host-youtube-com').children('iframe'),function(){
 			this.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
 			});
 
+		// start stop vimeo
+		$.each($(this).parent().find('.display-this-thumb.host-vimeo-com').children('iframe'),function(){
+			this.contentWindow.postMessage('{"method": "pause"}', '*');
+			});
+		$.each(prevImage.parent('.host-vimeo-com').children('iframe'),function(){
+			this.contentWindow.postMessage('{"method": "play"}', '*');
+			});
+
 		// set dimensions of next image and the popup
-		var calculatedDimensions = calculatePopUpAndImageDimensions(prevImage.attr('src'));
+		var calculatedDimensions = calculatePopUpAndImageDimensions(prevImage);
 		prevImage.width(calculatedDimensions.displayImgWidth);
 		prevImage.parent('.thumb-container').width(calculatedDimensions.displayImgWidth);
 		prevImage.parent('.thumb-container').children('iframe').attr('width',calculatedDimensions.displayImgWidth);

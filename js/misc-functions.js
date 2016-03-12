@@ -2634,24 +2634,99 @@ function shortenUrlsInBox(shortenButton) {
 	}
 
 
+
+/* ·
+   ·
+   ·   Youtube ID from Youtube URL
+   ·
+   · · · · · · · · · · · · · */
+
+function youTubeIDFromYouTubeURL(url) {
+	return url.replace('https://youtube.com/watch?v=','').replace('http://youtube.com/watch?v=','').replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
+	}
+
 /* ·
    ·
    ·   Youtube embed link from youtube url
    ·
    · · · · · · · · · · · · · */
 
-function youTubeEmbedLinkFromURL(url) {
-	var youtubeId = url.replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
-
+function youTubeEmbedLinkFromURL(url, autoplay) {
 	// get start time hash
 	var l = document.createElement("a");
 	l.href = url;
+
+	var addStart = '';
 	if(l.hash.substring(0,3) == '#t=') {
-		return '//www.youtube.com/embed/' + youtubeId + '?start=' + l.hash.substring(3);
+		addStart = '&start=' + l.hash.substring(3);
 		}
-	else {
-		return '//www.youtube.com/embed/' + youtubeId;
+
+	var addAutoplay = '';
+	if(typeof autoplay != 'undefined' && autoplay === true) {
+		addAutoplay = '&autoplay=1';
 		}
+
+	return '//www.youtube.com/embed/' + youTubeIDFromYouTubeURL(url) + '?enablejsapi=1&version=3&playerapiid=ytplayer' + addStart + addAutoplay;
+	}
+
+/* ·
+   ·
+   ·   Vimeo ID from Vimeo URL
+   ·
+   · · · · · · · · · · · · · */
+
+function vimeoIDFromVimeoURL(url) {
+	id = url.replace('http://vimeo.com/','').replace('https://vimeo.com/','');
+	if(id.indexOf('#') > -1) {
+		id = id.substring(0,id.indexOf('#'));
+		}
+	return id;
+	}
+
+/* ·
+   ·
+   ·   Vimeo embed link from vimeo url
+   ·
+   · · · · · · · · · · · · · */
+
+function vimeoEmbedLinkFromURL(url, autoplay) {
+	// get start time hash
+	var l = document.createElement("a");
+	l.href = url;
+
+	var addStart = '';
+	if(l.hash.substring(0,3) == '#t=') {
+		addStart = l.hash;
+		}
+
+	var addAutoplay = '&autoplay=0';
+	if(typeof autoplay != 'undefined' && autoplay === true) {
+		addAutoplay = '&autoplay=1';
+		}
+
+	return 'https://player.vimeo.com/video/' + vimeoIDFromVimeoURL(url) + '?api=1' + addAutoplay + addStart;
+	}
+
+
+/* ·
+   ·
+   ·   CSS class name from URL
+   ·
+   · · · · · · · · · · · · · */
+
+function CSSclassNameByHostFromURL(url) {
+	var host = getHost(url);
+	if(host.indexOf('www.') === 0) {
+		host = host.substring(4);
+		}
+	host = host.toLowerCase().replace(/\./g, "-");
+	host = host.replace(/[^a-zA-Z0-9-]+/g, "_");
+
+	if(host == 'youtu-be') {
+		host = 'youtube-com';
+		}
+
+	return 'host-' + host;
 	}
 
 
