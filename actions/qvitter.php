@@ -397,11 +397,12 @@ class QvitterAction extends ApiAction
 							}
 
 						// also make an array with all language names, to use for generating menu
-						$languagecodesandnames[$lancode]['english_name'] = Locale::getDisplayLanguage($lancode, 'en');
-						$languagecodesandnames[$lancode]['name'] = Locale::getDisplayLanguage($lancode, $lancode);
-						if(Locale::getDisplayRegion($lancode, $lancode)) {
-							$languagecodesandnames[$lancode]['name'] .= ' ('.Locale::getDisplayRegion($lancode, $lancode).')'.$rtl_or_ltr_special_char;
-							}
+						$languagecodesandnames[$lancode]['english_name'] = Locale::getDisplayName($lancode, 'en');
+						$languagecodesandnames[$lancode]['name'] = Locale::getDisplayName($lancode, $lancode);
+                        $languagecodesandnames[$lancode]['tooltip'] = $languagecodesandnames[$lancode]['name'].' – '.$languagecodesandnames[$lancode]['english_name'];
+                        if($languagecodesandnames[$lancode]['name'] == $languagecodesandnames[$lancode]['english_name']) {
+                            $languagecodesandnames[$lancode]['tooltip'] = $languagecodesandnames[$lancode]['english_name'];
+                        }
 
 						// ahorita meme only on quitter.es
 						if($lancode == 'es_ahorita') {
@@ -496,7 +497,7 @@ class QvitterAction extends ApiAction
 
 						// languages
 						foreach($languagecodesandnames as $lancode=>$lan) {
-							print '<li class="language"><a class="language-link" title="'.$lan['name'].' – '.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
+							print '<li class="language"><a class="language-link" data-tooltip="'.$lan['tooltip'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
 							}
 
 						?>
@@ -530,7 +531,7 @@ class QvitterAction extends ApiAction
 
 											// languages
 											foreach($languagecodesandnames as $lancode=>$lan) {
-												print '<li><a class="language-link" title="'.$lan['name'].' – '.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
+												print '<li><a class="language-link" data-tooltip="'.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
 												}
 
 											?>
