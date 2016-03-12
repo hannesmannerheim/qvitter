@@ -496,7 +496,7 @@ class QvitterAction extends ApiAction
 
 						// languages
 						foreach($languagecodesandnames as $lancode=>$lan) {
-							print '<li class="language"><a class="language-link" title="'.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
+							print '<li class="language"><a class="language-link" title="'.$lan['name'].' – '.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
 							}
 
 						?>
@@ -530,7 +530,7 @@ class QvitterAction extends ApiAction
 
 											// languages
 											foreach($languagecodesandnames as $lancode=>$lan) {
-												print '<li><a class="language-link" title="'.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
+												print '<li><a class="language-link" title="'.$lan['name'].' – '.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
 												}
 
 											?>

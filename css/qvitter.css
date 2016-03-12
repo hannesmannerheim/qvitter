@@ -505,11 +505,13 @@ body.rtl .dropdown-menu li:not(.dropdown-caret) {
     font-size: 12px;
     font-weight: normal;
     line-height: 18px;
-    padding: 3px 15px 3px 22px;
+    overflow: hidden;
+    padding: 3px 0 3px 22px;
     position: relative;
+    text-decoration: none;
+    text-overflow: ellipsis;
     text-shadow: none;
     white-space: nowrap;
-    text-decoration: none;
 	}
 body.rtl .dropdown-menu li:not(.dropdown-caret) a {
     padding: 3px 22px 3px 15px;
