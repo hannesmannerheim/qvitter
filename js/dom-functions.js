@@ -808,7 +808,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 		// discard and remove any cached data that is not in this (new) format
 		if(typeof haveOldStreamState.card == 'undefined'
-		|| typeof haveOldStreamState.feed == 'undefined') {
+		|| typeof haveOldStreamState.feed == 'undefined') {
 			localStorageObjectCache_STORE('streamState',window.currentStreamObject.path, false);
 			haveOldStreamState = false;
 			}
@@ -958,7 +958,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				}
 			else if(error.status == 404) {
 				if(streamObject.name == 'profile'
-				|| streamObject.name == 'friends timeline'
+				|| streamObject.name == 'friends timeline'
 				|| streamObject.name == 'mentions'
 				|| streamObject.name == 'favorites'
 				|| streamObject.name == 'subscribers'
@@ -967,13 +967,13 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 					showErrorMessage(window.sL.ERRORcouldNotFindUserWithNickname.replace('{nickname}',replaceHtmlSpecialChars(streamObject.nickname)));
 					}
 				else if(streamObject.name == 'group notice stream'
-					 || streamObject.name == 'group member list'
-				 	 || streamObject.name == 'group admin list') {
+					 || streamObject.name == 'group member list'
+				 	 || streamObject.name == 'group admin list') {
 					showErrorMessage(window.sL.ERRORcouldNotFindGroupWithNickname.replace('{nickname}',replaceHtmlSpecialChars(streamObject.nickname)));
 					}
 				else if(streamObject.name == 'list notice stream'
-					 || streamObject.name == 'list members'
-					 || streamObject.name == 'list subscribers') {
+					 || streamObject.name == 'list members'
+					 || streamObject.name == 'list subscribers') {
 					showErrorMessage(window.sL.ERRORcouldNotFindList);
 					}
 				else {
@@ -1485,7 +1485,7 @@ function replyFormHtml(streamItem,qid) {
 	var repliesText = '';
 	if(Object.keys(screenNamesToAdd).length < 1
 	&& q.find('strong.name').attr('data-user-id') == window.loggedIn.id) {
-		if(streamItem.attr('data-in-reply-to-status-id') == 'null' || streamItem.attr('data-in-reply-to-status-id') == 'false' || streamItem.attr('data-in-reply-to-status-id') == 'undefined' || streamItem.attr('data-in-reply-to-status-id') == '') {
+		if(streamItem.attr('data-in-reply-to-status-id') == 'null' || streamItem.attr('data-in-reply-to-status-id') == 'false' || streamItem.attr('data-in-reply-to-status-id') == 'undefined' || streamItem.attr('data-in-reply-to-status-id') == '') {
 			var startText = window.sL.startRant + ' ';
 			}
 		else {

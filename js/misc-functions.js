@@ -461,7 +461,7 @@ function userIsBlocked(userId) {
    · · · · · · · · · */
 
 
-function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
+function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
 	$.each(window.allBlocking,function(){
 		obj.find('.stream-item[data-user-id="' + this + '"]').addClass('profile-blocked-by-me');
 		obj.find('.stream-item[data-user-id="' + this + '"]').children('.queet').attr('data-tooltip',window.sL.thisIsANoticeFromABlockedUser);
@@ -475,7 +475,7 @@ function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
    ·
    · · · · · · · · · */
 
-function markAllNoticesFromMutedUsersAsMutedInJQueryObject(obj) {
+function markAllNoticesFromMutedUsersAsMutedInJQueryObject(obj) {
 
 	$.each(obj.find('.stream-item'),function(){
 		if(isUserMuted($(this).attr('data-user-id'))) {
@@ -496,7 +496,7 @@ function markAllNoticesFromMutedUsersAsMutedInJQueryObject(obj) {
    ·
    · · · · · · · · · */
 
-function markAllProfileCardsFromMutedUsersAsMutedInDOM() {
+function markAllProfileCardsFromMutedUsersAsMutedInDOM() {
 
 	$.each($('body').find('.profile-header-inner'),function(){
 		if(isUserMuted($(this).attr('data-user-id'))) {
@@ -938,7 +938,7 @@ function userArrayCacheStore(data) {
 			window.convertStatusnetProfileUrlToUserArrayCacheKey[dataToStore.external.statusnet_profile_url] = key;
 			}
 		// store the time when this record was modified
-		if(dataToStore.local || dataToStore.external) {
+		if(dataToStore.local || dataToStore.external) {
 			window.userArrayCache[key].modified = Date.now();
 			}
 		}
@@ -1733,7 +1733,7 @@ function validateRegisterForm(o) {
 	return allFieldsValid;
 	}
 
-function validEmail(email) {
+function validEmail(email) {
 	if(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)) {
 		return true;
 		}

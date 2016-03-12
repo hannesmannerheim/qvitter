@@ -222,8 +222,8 @@ window.userArrayLastRetrieved = new Object();
 $('body').on('mouseover',function (e) {
 
 	// no hovercards on these elements
-	if($(e.target).is('#user-queets') || $(e.target).closest('a').is('#user-queets')
-	|| $(e.target).is('.tweet-stats') || $(e.target).closest('a').is('.tweet-stats')) {
+	if($(e.target).is('#user-queets') || $(e.target).closest('a').is('#user-queets')
+	|| $(e.target).is('.tweet-stats') || $(e.target).closest('a').is('.tweet-stats')) {
 		return true;
 		}
 
@@ -321,7 +321,7 @@ $('body').on('mouseover',function (e) {
 
 					// if the user array has not been retrieved from the server for the last 60 seconds,
 					// we query it for the lastest data
-					if((typeof window.userArrayLastRetrieved[hrefAttr] == 'undefined') || (timeNow - window.userArrayLastRetrieved[hrefAttr]) > 60000) {
+					if((typeof window.userArrayLastRetrieved[hrefAttr] == 'undefined') || (timeNow - window.userArrayLastRetrieved[hrefAttr]) > 60000) {
 						window.userArrayLastRetrieved[hrefAttr] = timeNow;
 
 						// local users
@@ -380,7 +380,7 @@ function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,targetElement,ca
 				setTimeout(function(){
 					if(targetElement.is(":hover")) {
 						// don't try this if we already tried it less than a minute ago
-						if((typeof window.userArrayLastRetrieved[maybeProfileUrl] == 'undefined') || (timeNow - window.userArrayLastRetrieved[maybeProfileUrl]) > 60000) {
+						if((typeof window.userArrayLastRetrieved[maybeProfileUrl] == 'undefined') || (timeNow - window.userArrayLastRetrieved[maybeProfileUrl]) > 60000) {
 							window.userArrayLastRetrieved[maybeProfileUrl] = timeNow;
 							getFromAPI('qvitter/external_user_show.json?profileurl=' + encodeURIComponent(maybeProfileUrl),function(data){
 								if(data && data.external !== null) {
@@ -406,11 +406,11 @@ function getUserArrayData(maybeProfileUrl,maybeNickname,timeNow,targetElement,ca
 			else if(streamObject && (streamObject.name == 'profile' || streamObject.name == 'profile by id')) {
 
 				var nicknameOrId = streamObject.nickname;
-				if(!nicknameOrId) {
+				if(!nicknameOrId) {
 					nicknameOrId = streamObject.id;
 					}
 				// don't query too often for the same user
-				if(typeof window.userArrayLastRetrieved[maybeProfileUrl] == 'undefined' || (timeNow - window.userArrayLastRetrieved[maybeProfileUrl]) > 60000) {
+				if(typeof window.userArrayLastRetrieved[maybeProfileUrl] == 'undefined' || (timeNow - window.userArrayLastRetrieved[maybeProfileUrl]) > 60000) {
 					window.userArrayLastRetrieved[maybeProfileUrl] = timeNow;
 					// query server and cache user data (done automatically in getFromAPI)
 					getFromAPI('users/show.json?id=' + nicknameOrId, function(data){
@@ -1400,7 +1400,7 @@ $('body').on('click',function(e){
 
 /* ·
    ·
-   ·   When clicking a function row in a stream menu – invoke the function
+   ·   When clicking a function row in a stream menu – invoke the function
    ·
    · · · · · · · · · · · · · */
 
@@ -1847,7 +1847,7 @@ $('body').on('click','a', function(e) {
 					setNewCurrentStream(pathToStreamRouter(window.following[streamObject.id].username),true,streamObject.id);
 					}
 				// if the text() of the clicked element looks like a user nickname, use that (but send id to setNewCurrentStream() in case this is bad data)
-				else if(/^@[a-zA-Z0-9]+$/.test($(e.target).text()) || /^[a-zA-Z0-9]+$/.test($(e.target).text())) {
+				else if(/^@[a-zA-Z0-9]+$/.test($(e.target).text()) || /^[a-zA-Z0-9]+$/.test($(e.target).text())) {
 					var nickname = $(e.target).text();
 					if(nickname.indexOf('@') == 0) {
 						nickname = nickname.substring(1); // remove any starting @
@@ -1873,7 +1873,7 @@ $('body').on('click','a', function(e) {
 					setNewCurrentStream(pathToStreamRouter('group/' + window.groupMemberships[streamObject.id].username),true,streamObject.id);
 					}
 				// if the text() of the clicked element looks like a group nickname, use that (but send id to setNewCurrentStream() in case this is bad data)
-				else if(/^![a-zA-Z0-9]+$/.test($(e.target).text()) || /^[a-zA-Z0-9]+$/.test($(e.target).text())) {
+				else if(/^![a-zA-Z0-9]+$/.test($(e.target).text()) || /^[a-zA-Z0-9]+$/.test($(e.target).text())) {
 					var nickname = $(e.target).text();
 					if(nickname.indexOf('!') == 0) {
 						nickname = nickname.substring(1); // remove any starting !
@@ -2049,7 +2049,7 @@ function checkForNewQueets() {
 		$('body').addClass('loading-newer');
 
 		// only if logged in and only for notice or notification streams
-		if(window.loggedIn && (window.currentStreamObject.type == 'notices' || window.currentStreamObject.type == 'notifications')) {
+		if(window.loggedIn && (window.currentStreamObject.type == 'notices' || window.currentStreamObject.type == 'notifications')) {
 			var lastId = $('#feed-body').children('.stream-item').not('.temp-post').not('.posted-from-form').attr('data-quitter-id-in-stream');
 			var addThisStream = window.currentStreamObject.stream;
 			var timeNow = new Date().getTime();
@@ -3471,7 +3471,7 @@ $('body').keyup(function (e) {
 	&& window.loggedIn !== false) {
 
 		// shortcuts documentation on '?'
-		if(e.shiftKey && (e.which == 171 || e.which == 191)) {
+		if(e.shiftKey && (e.which == 171 || e.which == 191)) {
 			$('#shortcuts-link').click();
 			}
 

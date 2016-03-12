@@ -182,7 +182,7 @@ function pathToStreamRouter(path) {
 		}
 
 	// the whole known network
-	if(path.length == 0 || path == 'main/all') {
+	if(path.length == 0 || path == 'main/all') {
         streamObject.path = 'main/all';
 		streamObject.name = 'public and external timeline';
 		streamObject.streamHeader = window.sL.publicAndExtTimeline;
