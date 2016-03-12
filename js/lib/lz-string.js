@@ -1,11 +1,27 @@
-// Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net>
-// This work is free. You can redistribute it and/or modify it
-// under the terms of the WTFPL, Version 2
-// For more information see LICENSE.txt or http://www.wtfpl.net/
-//
-// For more information, the home page:
-// http://pieroxy.net/blog/pages/lz-string/testing.html
-//
+/*
+
+@licstart  The following is the entire license notice for the
+JavaScript code in this page.
+
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+Version 2, December 2004
+
+Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net> http://pieroxy.net/blog/pages/lz-string/testing.html
+
+Everyone is permitted to copy and distribute verbatim or modified
+copies of this license document, and changing it is allowed as long
+as the name is changed.
+
+WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+0. You just DO WHAT THE FUCK YOU WANT TO.
+
+@licend  The above is the entire license notice
+for the JavaScript code in this page.
+
+*/
+
 // LZ-based compression algorithm, version 1.4.4
 var LZString = (function() {
 
@@ -493,9 +509,3 @@ var LZString = {
 };
   return LZString;
 })();
-
-if (typeof define === 'function' && define.amd) {
-  define(function () { return LZString; });
-} else if( typeof module !== 'undefined' && module != null ) {
-  module.exports = LZString
-}
