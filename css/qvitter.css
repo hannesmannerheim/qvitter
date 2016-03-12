@@ -2009,9 +2009,9 @@ background-repeat: no-repeat;
 .stream-item .account-group span.sandboxed-flag {
 	background-color: #00ccff;
 	}
-body.has-right-to-silence .stream-item.silenced .account-group span.silenced-flag,
-body.has-right-to-sandbox .stream-item.sandboxed .account-group span.sandboxed-flag {
-	display:inline-block;;
+body.has-right-to-silence .stream-item.silenced > .queet .account-group span.silenced-flag,
+body.has-right-to-sandbox .stream-item.sandboxed > .queet .account-group span.sandboxed-flag {
+	display:inline-block;
 	}
 .profile-card .profile-header-inner span.silenced-flag,
 .profile-card .profile-header-inner span.sandboxed-flag {
