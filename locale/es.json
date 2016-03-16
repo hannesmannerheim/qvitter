@@ -171,7 +171,7 @@
 	"failedUnblockingUser":"Falló el desbloqueo del usuario .",
 	"unblockUser": "Desbloquear a {username}",
 	"tooltipBlocksYou":"{username} te ha bloqueado.",
-	"silenced":"Silenciado",
+	"silenced":"Prohibido",
 	"silencedPlural":"Perfiles silenciados",
 	"silencedUsersOnThisInstance":"Perfiles silenciados en {site-title}",
 	"sandboxed":"Aislado",
