@@ -999,7 +999,6 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				showErrorMessage(window.sL.ERRORsomethingWentWrong + '<br><br>\
 								  url: ' + url + '<br><br>\
 								  jQuery ajax() error:<pre><code>' + replaceHtmlSpecialChars(JSON.stringify(error, null, ' ')) + '</code></pre>\
-								  streamObject:<pre><code>' + replaceHtmlSpecialChars(JSON.stringify(streamObject, null, ' ')) + '</code></pre>\
 								  ');
 				}
 

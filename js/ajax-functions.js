@@ -184,7 +184,9 @@ function getFromAPI(stream, actionOnSuccess) {
 
 			actionOnSuccess(data, userArray, request, url);
 			},
-		error: function(data) {
+		error: function(data, textStatus, errorThrown) {
+			data.textStatus = textStatus;
+			data.errorThrown = errorThrown;
 			actionOnSuccess(false, false, data, url);
 			remove_spinner();
 			}
