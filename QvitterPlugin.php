@@ -150,6 +150,12 @@ class QvitterPlugin extends Plugin {
         return true;
     }
 
+    public function onBeforePluginCheckSchema()
+    {
+        QvitterNotification::beforeSchemaUpdate();
+        return true;
+    }
+
 	// route/reroute urls
     public function onRouterInitialized($m)
     {
