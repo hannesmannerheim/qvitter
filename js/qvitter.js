@@ -627,8 +627,8 @@ if(!window.registrationsClosed) {
 				});
 
 
-			// validate on keyup / paste
-			$('#popup-register input').on('keyup paste',function(){
+			// validate on keyup / paste / blur
+			$('#popup-register input').on('keyup paste blur',function(){
 				setTimeout(function () { // defer validation as after paste the content is not immediately available
 					if(validateRegisterForm($('#popup-register'))
 					&& !$('#signup-user-nickname-step2').hasClass('nickname-taken')
