@@ -4084,6 +4084,7 @@ div.nav-session {
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
+	background-position: center;
 	}
 .hover-card .profile-header-inner {
 	height: 200px;
