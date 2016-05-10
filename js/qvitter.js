@@ -627,16 +627,18 @@ if(!window.registrationsClosed) {
 				});
 
 
-			// validate on keyup
-			$('#popup-register input').on('keyup',function(){
-				if(validateRegisterForm($('#popup-register'))
-				&& !$('#signup-user-nickname-step2').hasClass('nickname-taken')
-				&& !$('#signup-user-email-step2').hasClass('email-in-use')) {
-					$('#signup-btn-step2').removeClass('disabled');
-					}
-				else {
-					$('#signup-btn-step2').addClass('disabled');
-					}
+			// validate on keyup / paste / blur
+			$('#popup-register input').on('keyup paste blur',function(){
+				setTimeout(function () { // defer validation as after paste the content is not immediately available
+					if(validateRegisterForm($('#popup-register'))
+					&& !$('#signup-user-nickname-step2').hasClass('nickname-taken')
+					&& !$('#signup-user-email-step2').hasClass('email-in-use')) {
+						$('#signup-btn-step2').removeClass('disabled');
+						}
+					else {
+						$('#signup-btn-step2').addClass('disabled');
+						}
+				}, 0);
 				});
 			$('#popup-register input').trigger('keyup');
 
