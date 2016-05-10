@@ -1061,14 +1061,17 @@ class QvitterPlugin extends Plugin {
 
 		$notif->delete();
 
-		// outputs an activity notice that this notice was deleted
-        $profile = $notice->getProfile();
-
         // don't delete if this is a user is being deleted
         // because that creates an infinite loop of deleting and creating notices...
         $user_is_deleted = false;
-        $user = User::getKV('id',$profile->id);
-        if($user instanceof User && $user->hasRole(Profile_role::DELETED)) {
+        try {
+            // outputs an activity notice that this notice was deleted
+            $profile = $notice->getProfile();
+            $user = User::getKV('id',$profile->id);
+            if($user instanceof User && $user->hasRole(Profile_role::DELETED)) {
+                $user_is_deleted = true;
+            }
+        } catch (NoProfileException $e) {
             $user_is_deleted = true;
         }
 
