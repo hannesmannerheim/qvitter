@@ -2222,8 +2222,17 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		var replyToProfileurl = obj.attentions[0].profileurl;
 		var replyToScreenName = obj.attentions[0].screen_name;
 		}
+
 	if(typeof replyToProfileurl != 'undefined' && typeof replyToScreenName != 'undefined') {
-		reply_to_html = '<span class="reply-to"><a class="h-card mention" href="' + replyToProfileurl + '">@' + replyToScreenName + '</a></span> ';
+
+		// if the reply-to nickname doesn't exist in the notice, we add a class to the reply-to nickname in the header, to make the reply more visible
+		var mentionedInline = '';
+		if(obj.statusnet_html.indexOf('>' + replyToScreenName + '<') === -1) {
+			console.log(obj.statusnet_html);
+			var mentionedInline = 'not-mentioned-inline';
+			}
+
+		reply_to_html = '<span class="reply-to"><a class="h-card mention ' + mentionedInline + '" href="' + replyToProfileurl + '">@' + replyToScreenName + '</a></span> ';
 		}
 
 	// in-groups html

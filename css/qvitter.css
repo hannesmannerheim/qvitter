@@ -2805,6 +2805,9 @@ body.rtl .view-more-container-bottom { direction:rtl; }
 	font-family:FontAwesome;
 	font-style:normal;
 	}
+.stream-item-header .addressees .reply-to .h-card.not-mentioned-inline {
+	font-weight:bold;
+	}
 .stream-item-header .created-at {
 	color: #BBBBBB;
     font-size: 13px;

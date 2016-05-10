@@ -734,7 +734,8 @@ class QvitterAction extends ApiAction
 					ul.stats a strong,
 					.queet-box-extras button,
 					#openid-login:hover:after,
-                    .post-to-group {
+                    .post-to-group,
+                    .stream-item-header .addressees .reply-to .h-card.not-mentioned-inline {
 						color:/*COLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*COLOREND*/;
 						}
 					#unseen-notifications,
