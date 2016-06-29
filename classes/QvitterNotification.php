@@ -57,6 +57,15 @@ class QvitterNotification extends Managed_DataObject
 
     static public function beforeSchemaUpdate()
     {
+        $table = strtolower(get_called_class());
+        $schema = Schema::get();
+        try {
+            $schemadef = $schema->getTableDef($table);
+        } catch (SchemaTableMissingException $e) {
+            printfnq("\nTable '$table' not created yet, so nothing to do with it before Schema Update... DONE.");
+            return;
+        }
+
         printfnq("\nEnsuring no NULL values for foreign keys in QvitterNotification...");
         // Because constraints to profile and notice table assume not null, we must
         // remove any values in these columns that are NULL (or 0), because they
