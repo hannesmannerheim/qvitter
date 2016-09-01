@@ -522,6 +522,9 @@ class QvitterPlugin extends Plugin {
     function onNoticeSimpleStatusArray($notice, &$twitter_status, $scoped)
     {
 
+        // strip tags from source, we can't trust html here, because of gs bug
+        $twitter_status['source'] = htmlspecialchars(strip_tags($twitter_status['source']));
+
     	// groups
 		$notice_groups = $notice->getGroups();
 		$group_addressees = false;
