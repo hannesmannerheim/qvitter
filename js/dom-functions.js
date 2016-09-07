@@ -2278,6 +2278,11 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		$(this).contents().unwrap();
 		});
 
+	// bookmarks created by the bookmark plugin get's a tooltip
+	statusnetHTML.find('.xfolkentry').each(function(){
+		$(this).attr('data-tooltip',window.sL.thisIsABookmark);
+		});
+
 	// find a place in the queet-text for the quoted notices
 	statusnetHTML = placeQuotedNoticesInQueetText(attachmentBuild.quotedNotices, statusnetHTML);
 	statusnetHTML = statusnetHTML.html();

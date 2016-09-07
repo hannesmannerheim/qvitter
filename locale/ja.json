@@ -196,5 +196,6 @@
 	"userMuted":"ミュートされているユーザー",
 	"mutedStreamDescription":"あなたのタイムラインから、選択されたユーザーを隠しました。あなたがお知らせページの歯車のメニューにある&quot;ミュートしたユーザーからのお知らせを隠す&quot;を選択しなかったユーザー以外からは、まだお知らせを受け取ります。",
 	"profileAndSettings":"プロフィールと設定",
-	"profileSettings":"プロフィール設定"
+	"profileSettings":"プロフィール設定",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

@@ -196,5 +196,6 @@
 	"userMuted":"Contas acaladas",
 	"mutedStreamDescription":"Ocultaches estas contas da túa liña de tempo. Continuarás a recibir notificacións destas contas, a non ser que selecciones &quot;Agochar notificacións de usuarias acaladas&quot; na roda dentada do menú da páxina de notificacións.",
 	"profileAndSettings":"Perfil e axustes",
-	"profileSettings":"Axustes do perfil"
+	"profileSettings":"Axustes do perfil",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

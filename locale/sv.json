@@ -196,5 +196,6 @@
 	"userMuted":"Ignorerade konton",
 	"mutedStreamDescription":"Du har dolt dessa användare från dina flöden. Du kommer fortfarande få notiser från dem, om du inte väljer &quot;Dölj notiser från användare som du ignorerar&quot; från kugghjulsmenyn på notissidan.",
 	"profileAndSettings":"Profil och inställningar",
-	"profileSettings":"Profilinställningar"
+	"profileSettings":"Profilinställningar",
+	"thisIsABookmark":"Detta är ett bokmärke som skapats i GNU socials standardgränssnitt"
 }

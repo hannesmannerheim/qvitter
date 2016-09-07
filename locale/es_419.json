@@ -196,5 +196,6 @@
 	"userMuted":"Cuentas mudas",
 	"mutedStreamDescription":"Haz ocultado esas cuentas de tu línea temporal. Igualmente recibirás notificaciones de esas cuentas, a menos que selecciones &quot;Hide notifications from muted users&quot; desde el menú de la rueda dentada en la página de notificaciones.",
 	"profileAndSettings":"Perfiles y configuraciones",
-	"profileSettings":"Perfil y configuración"
+	"profileSettings":"Perfil y configuración",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

@@ -193,5 +193,6 @@
 	"userMuted":"Արհամարհվող օգտատերերը։",
 	"mutedStreamDescription":"Դուք թացրել եք այս օգտատերերին Ձեր հոսքից։ Դուք կշարունակեք ստանալ այս օգտատերերից ծանուցումներ, եթե չընտրեք &quot;Թաքցնել արհամարհվող օգտատերերի ծանուցումները &quot; Ծանուցումների էջի մենյուի կարգավորումներում",
 	"profileAndSettings":"Էջ և կարգավորումներ",
-	"profileSettings":"Էջի կարգավորումներ"
+	"profileSettings":"Էջի կարգավորումներ",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

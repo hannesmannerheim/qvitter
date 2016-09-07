@@ -194,5 +194,6 @@
 	"userMuted":"Игнорируемые учётные записи",
 	"mutedStreamDescription":"Вы скрыли этих пользователей из вашей ленты. Вы будете продолжать получать уведомления от этих пользователей, если не выберете &quot;Скрыть уведомления от игнорируемых пользователей&quot; в меню с шестерёнкой на странице уведомлений",
 	"profileAndSettings":"Профиль и настройки",
-	"profileSettings":"Настройки профиля"
+	"profileSettings":"Настройки профиля",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

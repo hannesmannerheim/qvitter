@@ -196,5 +196,6 @@
 	"userMuted":"Contas caladas",
 	"mutedStreamDescription":"Você escondeu estas contas de sua linha do tempo. Você ainda receberá notificações destas contas, a menos que você selecione &quot;Esconder notificações de usuários calados&quot; no menu de engrenagem na página de notificações.",
 	"profileAndSettings":"Perfil e ajustes",
-	"profileSettings":"Ajustes de perfil"
+	"profileSettings":"Ajustes de perfil",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

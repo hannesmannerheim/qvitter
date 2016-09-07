@@ -196,5 +196,6 @@
 	"userMuted":"Cuentas silenciadas",
 	"mutedStreamDescription":"Has ocultado estas cuentas de tu línea temporal. Seguirás recibiendo notificaciones de dichas cuentas a menos que selecciones &quot;Ocultar notificaciones de usuarios silencioados&quot; desde el menú con forma de rueda dentada en la página de notificaciones.",
 	"profileAndSettings":"Perfil y ajustes",
-	"profileSettings":"Ajustes del perfil"
+	"profileSettings":"Ajustes del perfil",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

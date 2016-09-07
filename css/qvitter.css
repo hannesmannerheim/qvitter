@@ -2225,7 +2225,8 @@ body.rtl .queet.rtl .expanded-content {
 	position:relative;
 }
 .quoted-notice,
-.oembed-item {
+.oembed-item,
+.xfolkentry {
 	width:100%;
 	border: 1px solid #eee;
     border-radius: 4px;
@@ -2238,17 +2239,25 @@ body.rtl .queet.rtl .expanded-content {
 	color:#292f33 !important;
 	overflow: hidden;
 	}
-.oembed-item {
+.oembed-item,
+.xfolkentry {
 	padding:0;
 	}
 .quoted-notice:hover,
-.oembed-item:hover {
+.oembed-item:hover,
+.xfolkentry:hover {
 	text-decoration: none !important;
 	}
 .stream-item:hover:not(.expanded) .quoted-notice ,
-.stream-item:hover:not(.expanded) .oembed-item {
+.stream-item:hover:not(.expanded) .oembed-item,
+.stream-item:hover:not(.expanded) .xfolkentry {
 	border: 1px solid #ddd;
 	}
+.stream-item:hover:not(.expanded) .xfolkentry .taggedlink::before {
+	background-color:#ddd;
+	color:#bbb;
+	}
+
 
 .quoted-notice-attachments {
 	width:100%;
@@ -2263,7 +2272,8 @@ body.rtl .queet.rtl .expanded-content {
 	}
 
 .quoted-notice-img-container,
-.oembed-img-container {
+.oembed-img-container,
+.xfolkentry .taggedlink::before {
     height: 102px;
     width: 102px;
 	display: inline-block;
@@ -2272,6 +2282,20 @@ body.rtl .queet.rtl .expanded-content {
 	background-size:cover;
 	background-repeat:no-repeat;
 	background-position: center;
+	}
+.xfolkentry .taggedlink::before {
+    background-color: #eee;
+    color: #ccc;
+    content: '\f097';
+    float: left;
+    font-family: "fontAwesome";
+    font-size: 40px;
+    height: 70px;
+    line-height: 70px;
+    margin-top: 0;
+    text-align: center;
+    vertical-align: top;
+    width: 70px;
 	}
 .oembed-img-container {
     height: 125px;
@@ -2344,12 +2368,27 @@ body.rtl .queet.rtl .expanded-content {
 	line-height: 18.3px;
 	margin-top:4.5px;
 	}
-.oembed-item-footer {
+.oembed-item-footer,
+.xfolkentry .meta .tag {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 	color:#999;
 	padding-bottom: 9px;
+	}
+.xfolkentry .taggedlink {
+	line-height:25px;
+	font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+	}
+.xfolkentry .meta,
+.xfolkentry .description {
+	display:block;
+    margin:-2px 10px 3px 8px;
+	}
+.xfolkentry .meta .tag::before {
+	content:"#";
 	}
 .oembed-item-provider-url {
 	font-style:italic;

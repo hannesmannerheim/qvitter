@@ -196,5 +196,6 @@
 	"userMuted":"Forstummede kontoer",
 	"mutedStreamDescription":"Du har skjul disse kontoene fra din tidslinje. Du vil alikevel motta notifikasjoner fra disse kontoene, hvis da du ikke velger &quot;Skjul notifikasjoner fra forstummede brukere&quot; fra tannhjul menyen på notifikasjons siden.",
 	"profileAndSettings":"Profiler og innstillinger",
-	"profileSettings":"Profil innstillinger"
+	"profileSettings":"Profil innstillinger",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

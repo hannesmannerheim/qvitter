@@ -196,5 +196,6 @@
 	"userMuted":"Account a cui hai tolto la voce",
 	"mutedStreamDescription":"Hai nascosto questi account dalla tua bacheca. Riceverai comunque le loro notifiche, per disabilitarle seleziona &quot;Nascondi notifiche dagli account senza voce&quot; dal menu delle impostazioni sulla pagina relativa alle notifiche.",
 	"profileAndSettings":"Profilo e impostazioni",
-	"profileSettings":"Impostazioni del profilo"
+	"profileSettings":"Impostazioni del profilo",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }
