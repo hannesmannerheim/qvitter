@@ -150,7 +150,7 @@
 	"ERRORfailedSavingYourSetting":"As definições não puderam ser guardadas",
 	"ERRORfailedMarkingAllNotificationsAsRead":"Não conseguimos marcar todas as notificações como vistas.",
 	"newNotification": "{new-notice-count} nova notificação",
-	"newNotifications": "{new-notice-count} novas notificações,
+	"newNotifications": "{new-notice-count} novas notificações",
 	"thisIsANoticeFromABlockedUser":"Aviso: Esta Noticia é de um utilizador que você bloqueou, carregue aqui para ler.",
 	"nicknamesListWithListName":"Lista de {nickname}: {list-name}",
 	"myListWithListName":"A Minha lista: {list-name}",
