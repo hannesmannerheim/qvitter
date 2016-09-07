@@ -47,11 +47,11 @@
    · · · · · · · · · */
 
 function triggerClickOnInputFile(inputFile) {
-	if(bowser != 'undefined') {
+	if(typeof bowser != 'undefined') {
 		var bowserIntVersion = parseInt(bowser.version,10);
-		if(bowser.chrome != 'undefined' && bowser.chrome === true && bowserIntVersion < 53
-		|| bowser.opera != 'undefined' && bowser.opera === true && bowserIntVersion < 39
-		|| bowser.safari != 'undefined' && bowser.safari === true && bowserIntVersion < 9) {
+		if(typeof bowser.chrome != 'undefined' && bowser.chrome === true && bowserIntVersion < 53
+		|| typeof bowser.opera != 'undefined' && bowser.opera === true && bowserIntVersion < 39
+		|| typeof bowser.safari != 'undefined' && bowser.safari === true && bowserIntVersion < 9) {
 			var evt = document.createEvent("HTMLEvents");
 			evt.initEvent("click", true, true);
 			inputFile[0].dispatchEvent(evt);

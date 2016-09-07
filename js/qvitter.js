@@ -3475,6 +3475,12 @@ $('body').on('keyup', 'div.queet-box-syntax', function(e) {
 
 // menu
 $('#shortcuts-link').click(function(){
+
+	// not if disabled
+	if($(this).hasClass('disabled')) {
+		return true;
+		}
+
 	popUpAction('popup-shortcuts', window.sL.keyboardShortcuts,'<div id="shortcuts-container"></div>',false);
 	getDoc('shortcuts',function(html){
 		$('#shortcuts-container').html(html);
@@ -3484,6 +3490,12 @@ $('#shortcuts-link').click(function(){
 
 // send queet on ctrl+enter or ⌘+enter (mac)
 $('body').on('keydown','.queet-box-syntax',function (e) {
+
+	// do nothing if shortcuts are disabled
+	if(window.disableKeyboardShortcuts === true) {
+		return true;
+		}
+
 	if((e.ctrlKey && e.which == 13)
 	|| (e.metaKey && e.which == 13)) {
 		e.preventDefault();
@@ -3494,6 +3506,11 @@ $('body').on('keydown','.queet-box-syntax',function (e) {
 	});
 
 $('body').keyup(function (e) {
+
+	// do nothing if shortcuts are disabled
+	if(window.disableKeyboardShortcuts === true) {
+		return true;
+		}
 
 	// only if queetbox is blurred, and we're not typing in any input, and we're logged in
 	if($('.queet-box-syntax[contenteditable="true"]').length == 0

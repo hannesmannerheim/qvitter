@@ -374,6 +374,21 @@ class QvitterAction extends ApiAction
                                 print 'window.qvitterProfilePrefs = false;';
                                 }
                             }
+
+                        // keyboard shortcuts can be disabled
+                        $disable_keyboard_shortcuts = false;
+                        if($logged_in_user) {
+                            try {
+                                $disable_keyboard_shortcuts = Profile_prefs::getData($logged_in_user->getProfile(), 'qvitter', 'disable_keyboard_shortcuts');
+                                if($disable_keyboard_shortcuts == '1' || $disable_keyboard_shortcuts == 1) {
+                                    $disable_keyboard_shortcuts = true;
+                                }
+                            } catch (Exception $e) {
+                                //
+                                }
+                            }
+                        print 'window.disableKeyboardShortcuts = '.var_export($disable_keyboard_shortcuts, true).';';
+
                     ?>
 
 					// available language files and their last update time
@@ -485,8 +500,16 @@ class QvitterAction extends ApiAction
 						<li class="fullwidth dropdown-divider"></li>
                         <li class="fullwidth"><a id="faq-link"></a></li>
                         <li class="fullwidth"><a id="tou-link"></a></li>
-                        <li class="fullwidth"><a id="shortcuts-link"></a></li>
-						<?php if (common_config('invite', 'enabled') && !common_config('site', 'closed')) { ?>
+                        <?php
+
+                        if($disable_keyboard_shortcuts === true)  {
+                            print '<li class="fullwidth"><a id="shortcuts-link" class="disabled" href="'.$instanceurl.'settings/qvitter"></a></li>';
+					        }
+                        else {
+                            print '<li class="fullwidth"><a id="shortcuts-link"></a></li>';
+                            }
+
+                        if (common_config('invite', 'enabled') && !common_config('site', 'closed')) { ?>
 							<li class="fullwidth"><a id="invite-link" href="<?php print $instanceurl; ?>main/invite"></a></li>
 						<?php } ?>
 						<li class="fullwidth"><a id="classic-link"></a></li>

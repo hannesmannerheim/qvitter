@@ -5343,6 +5343,10 @@ content:"\f068";
 /* Keyboard shortcuts
 -----------*/
 
+#shortcuts-link.disabled {
+	color:#eee;
+	}
+
 #popup-shortcuts #shortcuts-container {
 	padding:0 20px 20px 20px;
 	font-size:13px;
