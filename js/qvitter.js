@@ -3972,16 +3972,13 @@ $('body').on('click','.upload-cover-photo, .upload-avatar, .upload-background-im
 		coverPhotoAndAvatarSelectAndCrop(e, coverOrAvatar);
 		})});
 
-	// trigger click for firefox
-	if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-		$('#' + inputId).trigger('click');
-		}
-	// other browsers
-	else {
-		var evt = document.createEvent("HTMLEvents");
-		evt.initEvent("click", true, true);
-		$('#' + inputId)[0].dispatchEvent(evt);
-		}
+	// trigger click
+	$('#' + inputId).trigger('click');
+	// chrome, opera and safari now supports above method,
+	// before we had use the method below for those.
+	// var evt = document.createEvent("HTMLEvents");
+	// evt.initEvent("click", true, true);
+	// $('#' + inputId)[0].dispatchEvent(evt);
 
 	});
 
@@ -4110,16 +4107,14 @@ $('body').on('click','.upload-image',function () {
 			})
 		});
 
-	// trigger click for firefox
-	if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-		$('#upload-image-input').trigger('click');
-		}
-	// other browsers
-	else {
-		var evt = document.createEvent("HTMLEvents");
-		evt.initEvent("click", true, true);
-		$('#upload-image-input')[0].dispatchEvent(evt);
-		}
+	// trigger click
+	$('#upload-image-input').trigger('click');
+	// chrome, opera and safari now supports above method,
+	// before we had use the method below for those.
+	// var evt = document.createEvent("HTMLEvents");
+	// evt.initEvent("click", true, true);
+	// $('#upload-image-input')[0].dispatchEvent(evt);
+
 	});
 
 function uploadAttachment(e, thisUploadButton) {
