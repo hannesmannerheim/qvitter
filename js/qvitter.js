@@ -3973,12 +3973,7 @@ $('body').on('click','.upload-cover-photo, .upload-avatar, .upload-background-im
 		})});
 
 	// trigger click
-	$('#' + inputId).trigger('click');
-	// chrome, opera and safari now supports above method,
-	// before we had use the method below for those.
-	// var evt = document.createEvent("HTMLEvents");
-	// evt.initEvent("click", true, true);
-	// $('#' + inputId)[0].dispatchEvent(evt);
+	triggerClickOnInputFile($('#' + inputId));
 
 	});
 
@@ -4108,12 +4103,7 @@ $('body').on('click','.upload-image',function () {
 		});
 
 	// trigger click
-	$('#upload-image-input').trigger('click');
-	// chrome, opera and safari now supports above method,
-	// before we had use the method below for those.
-	// var evt = document.createEvent("HTMLEvents");
-	// evt.initEvent("click", true, true);
-	// $('#upload-image-input')[0].dispatchEvent(evt);
+	triggerClickOnInputFile($('#upload-image-input'));
 
 	});
 
