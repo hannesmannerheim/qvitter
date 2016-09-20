@@ -248,6 +248,16 @@ class QvitterAction extends ApiAction
                                 //
                             }
 
+                            // single notice feeds
+                            try {
+                                $single_notice_json = common_local_url('ApiStatusesShow', array( 'id' => $notice->getID(),'format' => 'json'));
+                                $single_notice_atom = common_local_url('ApiStatusesShow', array( 'id' => $notice->getID(),'format' => 'atom'));
+                                print '<link title="Single notice (JSON)" href="'.$single_notice_json.'" type="application/stream+json" rel="alternate">'."\n";
+                                print '<link title="Single notice (Atom)" href="'.$single_notice_atom.'" type="application/atom+xml" rel="alternate">'."\n";
+                            } catch (Exception $e) {
+                                //
+                            }
+
                             // twitter cards
                             print '<meta name="twitter:card" content="summary" />'."\n";
                             print '<meta name="twitter:title" content="'.htmlspecialchars($profile->fullname).' (@'.$profile->nickname.')" />'."\n";
