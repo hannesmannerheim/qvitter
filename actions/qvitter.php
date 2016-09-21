@@ -626,8 +626,12 @@ class QvitterAction extends ApiAction
     							<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
     						</div>
                             <div id="other-servers-link"></div><?php }
-                            ?><div id="qvitter-notice-logged-out"><?php print common_config('site', 'qvitternoticeloggedout'); ?></div>
-                        </div><?php
+                            ?><div id="qvitter-notice-logged-out"><?php print common_config('site', 'qvitternoticeloggedout'); ?></div><?php
+
+                            // event for other plugins to add html to the logged in sidebar
+                            Event::handle('QvitterEndShowSidebarLoggedOut', array($this));
+
+                            ?></div><?php
                         }
 
                     // box containing the logged in users queet count and compose form
@@ -679,8 +683,12 @@ class QvitterAction extends ApiAction
         						<div class="menu-container" id="bookmark-container"></div>
                                 <div class="menu-container" id="history-container"></div>
                                 <div id="clear-history"></div>
-        						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div>
-        					</div><?php
+        						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div><?php
+
+                	            // event for other plugins to add html to the logged in sidebar
+                	            Event::handle('QvitterEndShowSidebarLoggedIn', array($this));
+
+        				        ?></div><?php
                             } ?>
 
                     <div id="feed">
