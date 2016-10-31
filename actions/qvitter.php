@@ -248,6 +248,16 @@ class QvitterAction extends ApiAction
                                 //
                             }
 
+                            // single notice feeds
+                            try {
+                                $single_notice_json = common_local_url('ApiStatusesShow', array( 'id' => $notice->getID(),'format' => 'json'));
+                                $single_notice_atom = common_local_url('ApiStatusesShow', array( 'id' => $notice->getID(),'format' => 'atom'));
+                                print '<link title="Single notice (JSON)" href="'.$single_notice_json.'" type="application/stream+json" rel="alternate">'."\n";
+                                print '<link title="Single notice (Atom)" href="'.$single_notice_atom.'" type="application/atom+xml" rel="alternate">'."\n";
+                            } catch (Exception $e) {
+                                //
+                            }
+
                             // twitter cards
                             print '<meta name="twitter:card" content="summary" />'."\n";
                             print '<meta name="twitter:title" content="'.htmlspecialchars($profile->fullname).' (@'.$profile->nickname.')" />'."\n";
@@ -374,6 +384,21 @@ class QvitterAction extends ApiAction
                                 print 'window.qvitterProfilePrefs = false;';
                                 }
                             }
+
+                        // keyboard shortcuts can be disabled
+                        $disable_keyboard_shortcuts = false;
+                        if($logged_in_user) {
+                            try {
+                                $disable_keyboard_shortcuts = Profile_prefs::getData($logged_in_user->getProfile(), 'qvitter', 'disable_keyboard_shortcuts');
+                                if($disable_keyboard_shortcuts == '1' || $disable_keyboard_shortcuts == 1) {
+                                    $disable_keyboard_shortcuts = true;
+                                }
+                            } catch (Exception $e) {
+                                //
+                                }
+                            }
+                        print 'window.disableKeyboardShortcuts = '.var_export($disable_keyboard_shortcuts, true).';';
+
                     ?>
 
 					// available language files and their last update time
@@ -397,11 +422,12 @@ class QvitterAction extends ApiAction
 							}
 
 						// also make an array with all language names, to use for generating menu
-						$languagecodesandnames[$lancode]['english_name'] = Locale::getDisplayLanguage($lancode, 'en');
-						$languagecodesandnames[$lancode]['name'] = Locale::getDisplayLanguage($lancode, $lancode);
-						if(Locale::getDisplayRegion($lancode, $lancode)) {
-							$languagecodesandnames[$lancode]['name'] .= ' ('.Locale::getDisplayRegion($lancode, $lancode).')'.$rtl_or_ltr_special_char;
-							}
+						$languagecodesandnames[$lancode]['english_name'] = Locale::getDisplayName($lancode, 'en');
+						$languagecodesandnames[$lancode]['name'] = Locale::getDisplayName($lancode, $lancode);
+                        $languagecodesandnames[$lancode]['tooltip'] = $languagecodesandnames[$lancode]['name'].' – '.$languagecodesandnames[$lancode]['english_name'];
+                        if($languagecodesandnames[$lancode]['name'] == $languagecodesandnames[$lancode]['english_name']) {
+                            $languagecodesandnames[$lancode]['tooltip'] = $languagecodesandnames[$lancode]['english_name'];
+                        }
 
 						// ahorita meme only on quitter.es
 						if($lancode == 'es_ahorita') {
@@ -484,8 +510,16 @@ class QvitterAction extends ApiAction
 						<li class="fullwidth dropdown-divider"></li>
                         <li class="fullwidth"><a id="faq-link"></a></li>
                         <li class="fullwidth"><a id="tou-link"></a></li>
-                        <li class="fullwidth"><a id="shortcuts-link"></a></li>
-						<?php if (common_config('invite', 'enabled') && !common_config('site', 'closed')) { ?>
+                        <?php
+
+                        if($disable_keyboard_shortcuts === true)  {
+                            print '<li class="fullwidth"><a id="shortcuts-link" class="disabled" href="'.$instanceurl.'settings/qvitter"></a></li>';
+					        }
+                        else {
+                            print '<li class="fullwidth"><a id="shortcuts-link"></a></li>';
+                            }
+
+                        if (common_config('invite', 'enabled') && !common_config('site', 'closed')) { ?>
 							<li class="fullwidth"><a id="invite-link" href="<?php print $instanceurl; ?>main/invite"></a></li>
 						<?php } ?>
 						<li class="fullwidth"><a id="classic-link"></a></li>
@@ -496,7 +530,7 @@ class QvitterAction extends ApiAction
 
 						// languages
 						foreach($languagecodesandnames as $lancode=>$lan) {
-							print '<li class="language"><a class="language-link" title="'.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
+							print '<li class="language"><a class="language-link" data-tooltip="'.$lan['tooltip'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
 							}
 
 						?>
@@ -530,7 +564,7 @@ class QvitterAction extends ApiAction
 
 											// languages
 											foreach($languagecodesandnames as $lancode=>$lan) {
-												print '<li><a class="language-link" title="'.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
+												print '<li><a class="language-link" data-tooltip="'.$lan['english_name'].'" data-lang-code="'.$lancode.'">'.$lan['name'].'</a></li>';
 												}
 
 											?>
@@ -592,8 +626,12 @@ class QvitterAction extends ApiAction
     							<button id="signup-btn-step1" class="signup-btn" type="submit"></button>
     						</div>
                             <div id="other-servers-link"></div><?php }
-                            ?><div id="qvitter-notice-logged-out"><?php print common_config('site', 'qvitternoticeloggedout'); ?></div>
-                        </div><?php
+                            ?><div id="qvitter-notice-logged-out"><?php print common_config('site', 'qvitternoticeloggedout'); ?></div><?php
+
+                            // event for other plugins to add html to the logged in sidebar
+                            Event::handle('QvitterEndShowSidebarLoggedOut', array($this));
+
+                            ?></div><?php
                         }
 
                     // box containing the logged in users queet count and compose form
@@ -645,8 +683,12 @@ class QvitterAction extends ApiAction
         						<div class="menu-container" id="bookmark-container"></div>
                                 <div class="menu-container" id="history-container"></div>
                                 <div id="clear-history"></div>
-        						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div>
-        					</div><?php
+        						<div id="qvitter-notice"><?php print common_config('site', 'qvitternotice'); ?></div><?php
+
+                	            // event for other plugins to add html to the logged in sidebar
+                	            Event::handle('QvitterEndShowSidebarLoggedIn', array($this));
+
+        				        ?></div><?php
                             } ?>
 
                     <div id="feed">
@@ -733,7 +775,8 @@ class QvitterAction extends ApiAction
 					ul.stats a strong,
 					.queet-box-extras button,
 					#openid-login:hover:after,
-                    .post-to-group {
+                    .post-to-group,
+                    .stream-item-header .addressees .reply-to .h-card.not-mentioned-inline {
 						color:/*COLORSTART*/<?php print QvitterPlugin::settings("defaultlinkcolor"); ?>/*COLOREND*/;
 						}
 					#unseen-notifications,

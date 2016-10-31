@@ -105,7 +105,7 @@
 	"registerLocation": "Konum",
 	"registerRepeatPassword": "Şifreni tekrar gir",
 	"moreSettings": "Diğer ayarlar",
-	"otherServers": "Alternatively you can create an account on another server of the GNU social network. <a href=\"http://federation.skilledtests.com/select_your_server.html\">Comparison</a>",
+	"otherServers": "Alternatif olarak GNU sosyal networkünde başka bir sunucu da hesap oluşturabilirsiniz. <a href=\"http://federation.skilledtests.com/select_your_server.html\">Karşılaştırın</a>",
 	"editMyProfile": "Profili düzenle",
 	"notifications": "Bildirimler",
 	"xFavedYourQueet": "Queet'ini favorilerine ekledi",
@@ -159,7 +159,7 @@
 	"ERRORcouldNotFindList":"Böyle bir liste yok.",
 	"emailAlreadyInUse":"Kullanımda",
 	"addEditLanguageLink":"{site-title} çevirisine yardım et",
-	"onlyPartlyTranslated":"{site-title} is only partly translated to <em>{language-name}</em> ({percent}%). You can help complete the translation at <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter's repository homepage</a>",
+	"onlyPartlyTranslated":"{site-title} bir kısmı ({percent}%) <em>{language-name}</em> diline tercüme edildi. <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter'in depo anasayfasından</a> tercümenin tamamlanmasına yardımcı olabilirsiniz",
 	"startRant":"Konuşmaya başla",
 	"continueRant":"Konuşmaya devam et",
 	"hideEmbeddedInTimeline":"Bu akışta gömülü içeriği gizle",
@@ -170,9 +170,9 @@
 	"failedBlockingUser":"Kullanıcı engellenemedi.",
 	"failedUnblockingUser":"Kullanıcının engeli kaldırılamadı.",
 	"unblockUser": "{username} engelini kaldır",
-	"tooltipBlocksYou":"You are blocked from following {username}.",
-	"silenced":"Silenced",
-	"silencedPlural":"Silenced profiles",
+	"tooltipBlocksYou":"{username} kullanıcısını engellediniz.",
+	"silenced":"Susturuldu",
+	"silencedPlural":"Susturulan profiller",
 	"silencedUsersOnThisInstance":"Silenced profiles on {site-title}",
 	"sandboxed":"Sandboxed",
 	"sandboxedPlural":"Sandboxed profiles",
@@ -196,5 +196,6 @@
 	"userMuted":"Muted accounts",
 	"mutedStreamDescription":"You've hidden these accounts from your timeline. You will still recieve notifications from these accounts, unless you select &quot;Hide notifications from muted users&quot; from the cog wheel menu on the notifications page.",
 	"profileAndSettings":"Profile and settings",
-	"profileSettings":"Profile settings"
+	"profileSettings":"Profile settings",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

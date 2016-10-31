@@ -196,5 +196,6 @@
 	"userMuted":"Gedempte gebruikers",
 	"mutedStreamDescription":"Je negeert deze gebruikers in je tijdlijn. Je krijgt wel nog mededelingen van deze gebruikers, tenzij je &quot;Geen mededelingen van genegeerde gebruikers.&quot; kiest van het instellingen icoon op de mededelingen pagina.",
 	"profileAndSettings":"Profiel en instellingen",
-	"profileSettings":"Profiel instellingen"
+	"profileSettings":"Profiel instellingen",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

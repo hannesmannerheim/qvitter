@@ -171,7 +171,7 @@
 	"failedUnblockingUser":"Falló el desbloqueo del usuario .",
 	"unblockUser": "Desbloquear a {username}",
 	"tooltipBlocksYou":"{username} te ha bloqueado.",
-	"silenced":"Silenciado",
+	"silenced":"Prohibido",
 	"silencedPlural":"Perfiles silenciados",
 	"silencedUsersOnThisInstance":"Perfiles silenciados en {site-title}",
 	"sandboxed":"Aislado",
@@ -195,5 +195,6 @@
 	"userMuted":"Cuentas silenciadas",
 	"mutedStreamDescription":"Has ocultado estas cuentas de tu línea temporal. Seguirás recibiendo notificaciones de dichas cuentas a menos que selecciones &quot;Ocultar notificaciones de usuarios silencioados&quot; desde el menú con forma de rueda dentada en la página de notificaciones.",
 	"profileAndSettings":"Perfil y ajustes",
-	"profileSettings":"Ajustes del perfil"
+	"profileSettings":"Ajustes del perfil",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

@@ -194,7 +194,8 @@
 	"userMutes":"Accounts you're muting",
 	"userBlocked":"Blocked accounts",
 	"userMuted":"Muted accounts",
-	"mutedStreamDescription":"You've hidden these accounts from your timeline. You will still recieve notifications from these accounts, unless you select &quot;Hide notifications from muted users&quot; from the cog wheel menu on the notifications page.",
+	"mutedStreamDescription":"You've hidden these accounts from your timeline. You will still receive notifications from these accounts, unless you select &quot;Hide notifications from muted users&quot; from the cog wheel menu on the notifications page.",
 	"profileAndSettings":"Profile and settings",
-	"profileSettings":"Profile settings"
+	"profileSettings":"Profile settings",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

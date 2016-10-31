@@ -808,7 +808,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 
 		// discard and remove any cached data that is not in this (new) format
 		if(typeof haveOldStreamState.card == 'undefined'
-		|| typeof haveOldStreamState.feed == 'undefined') {
+		|| typeof haveOldStreamState.feed == 'undefined') {
 			localStorageObjectCache_STORE('streamState',window.currentStreamObject.path, false);
 			haveOldStreamState = false;
 			}
@@ -958,7 +958,7 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				}
 			else if(error.status == 404) {
 				if(streamObject.name == 'profile'
-				|| streamObject.name == 'friends timeline'
+				|| streamObject.name == 'friends timeline'
 				|| streamObject.name == 'mentions'
 				|| streamObject.name == 'favorites'
 				|| streamObject.name == 'subscribers'
@@ -967,13 +967,13 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 					showErrorMessage(window.sL.ERRORcouldNotFindUserWithNickname.replace('{nickname}',replaceHtmlSpecialChars(streamObject.nickname)));
 					}
 				else if(streamObject.name == 'group notice stream'
-					 || streamObject.name == 'group member list'
-				 	 || streamObject.name == 'group admin list') {
+					 || streamObject.name == 'group member list'
+				 	 || streamObject.name == 'group admin list') {
 					showErrorMessage(window.sL.ERRORcouldNotFindGroupWithNickname.replace('{nickname}',replaceHtmlSpecialChars(streamObject.nickname)));
 					}
 				else if(streamObject.name == 'list notice stream'
-					 || streamObject.name == 'list members'
-					 || streamObject.name == 'list subscribers') {
+					 || streamObject.name == 'list members'
+					 || streamObject.name == 'list subscribers') {
 					showErrorMessage(window.sL.ERRORcouldNotFindList);
 					}
 				else {
@@ -999,7 +999,6 @@ function setNewCurrentStream(streamObject,setLocation,fallbackId,actionOnSuccess
 				showErrorMessage(window.sL.ERRORsomethingWentWrong + '<br><br>\
 								  url: ' + url + '<br><br>\
 								  jQuery ajax() error:<pre><code>' + replaceHtmlSpecialChars(JSON.stringify(error, null, ' ')) + '</code></pre>\
-								  streamObject:<pre><code>' + replaceHtmlSpecialChars(JSON.stringify(streamObject, null, ' ')) + '</code></pre>\
 								  ');
 				}
 
@@ -1298,12 +1297,22 @@ function expand_queet(q,doScrolling) {
 				}
 
 			// if there's only one thumb and it's a youtube video, show it inline
-			if(q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').length == 1) {
-				var youtubeURL = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.youtube').children('.attachment-thumb').attr('data-full-image-url');
+			if(q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.host-youtube-com').length == 1) {
+				var youtubeURL = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.host-youtube-com').children('.attachment-thumb').attr('data-full-image-url');
 				if(q.children('.queet').find('.expanded-content').children('.media').children('iframe[src="' + youTubeEmbedLinkFromURL(youtubeURL) + '"]').length < 1) { // not if already showed
 					q.children('.queet').find('.queet-thumbs').addClass('hide-thumbs');
 					// show video
 					q.children('.queet').find('.expanded-content').prepend('<div class="media"><iframe width="510" height="315" src="' + youTubeEmbedLinkFromURL(youtubeURL) + '" frameborder="0" allowfullscreen></iframe></div>');
+					}
+				}
+			// if there's only one thumb and it's a vimeo video, show it inline
+			else if(q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.host-vimeo-com').length == 1) {
+				var vimeoURL = q.children('.queet').find('.queet-thumbs.thumb-num-1').children('.thumb-container.play-button.host-vimeo-com').children('.attachment-thumb').attr('data-full-image-url');
+				var embedURL = vimeoEmbedLinkFromURL(vimeoURL);
+				if(q.children('.queet').find('.expanded-content').children('.media').children('iframe[src="' + embedURL + '"]').length < 1) { // not if already showed
+					q.children('.queet').find('.queet-thumbs').addClass('hide-thumbs');
+					// show video
+					q.children('.queet').find('.expanded-content').prepend('<iframe src="' + embedURL + '" width="510" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
 					}
 				}
 
@@ -1485,7 +1494,7 @@ function replyFormHtml(streamItem,qid) {
 	var repliesText = '';
 	if(Object.keys(screenNamesToAdd).length < 1
 	&& q.find('strong.name').attr('data-user-id') == window.loggedIn.id) {
-		if(streamItem.attr('data-in-reply-to-status-id') == 'null' || streamItem.attr('data-in-reply-to-status-id') == 'false' || streamItem.attr('data-in-reply-to-status-id') == 'undefined' || streamItem.attr('data-in-reply-to-status-id') == '') {
+		if(streamItem.attr('data-in-reply-to-status-id') == 'null' || streamItem.attr('data-in-reply-to-status-id') == 'false' || streamItem.attr('data-in-reply-to-status-id') == 'undefined' || streamItem.attr('data-in-reply-to-status-id') == '') {
 			var startText = window.sL.startRant + ' ';
 			}
 		else {
@@ -2213,8 +2222,16 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 		var replyToProfileurl = obj.attentions[0].profileurl;
 		var replyToScreenName = obj.attentions[0].screen_name;
 		}
+
 	if(typeof replyToProfileurl != 'undefined' && typeof replyToScreenName != 'undefined') {
-		reply_to_html = '<span class="reply-to"><a class="h-card mention" href="' + replyToProfileurl + '">@' + replyToScreenName + '</a></span> ';
+
+		// if the reply-to nickname doesn't exist in the notice, we add a class to the reply-to nickname in the header, to make the reply more visible
+		var mentionedInline = '';
+		if(obj.statusnet_html.indexOf('>' + replyToScreenName + '<') === -1) {
+			var mentionedInline = 'not-mentioned-inline';
+			}
+
+		reply_to_html = '<span class="reply-to"><a class="h-card mention ' + mentionedInline + '" href="' + replyToProfileurl + '">@' + replyToScreenName + '</a></span> ';
 		}
 
 	// in-groups html
@@ -2259,6 +2276,11 @@ function buildQueetHtml(obj, idInStream, extraClasses, requeeted_by, isConversat
 	// if statusnetHTML is contains <p>:s, unwrap those (diaspora..)
 	statusnetHTML.children('p').each(function(){
 		$(this).contents().unwrap();
+		});
+
+	// bookmarks created by the bookmark plugin get's a tooltip
+	statusnetHTML.find('.xfolkentry').each(function(){
+		$(this).attr('data-tooltip',window.sL.thisIsABookmark);
 		});
 
 	// find a place in the queet-text for the quoted notices
@@ -2478,6 +2500,7 @@ function buildAttachmentHTML(attachments){
 			&& this.oembed !== false
 			&& this.oembed.title !== null
 			&& this.oembed.provider != 'YouTube'
+			&& this.oembed.provider != 'Vimeo'
 			&& this.oembed.type != 'photo') {
 
 				var oembedImage = '';
@@ -2560,15 +2583,10 @@ function buildAttachmentHTML(attachments){
 
 				// play button for videos and animated gifs
 				var playButtonClass = '';
-				if((this.url.indexOf('://www.youtube.com') > -1 || this.url.indexOf('://youtu.be') > -1)
-				|| (typeof this.animated != 'undefined' && this.animated === true)) {
-					var playButtonClass = ' play-button';
-					}
-
-				// youtube class
-				var youTubeClass = '';
-				if(this.url.indexOf('://www.youtube.com') > -1 || this.url.indexOf('://youtu.be') > -1) {
-					youTubeClass = ' youtube';
+				if(typeof this.animated != 'undefined' && this.animated === true
+				|| (this.url.indexOf('://www.youtube.com') > -1 || this.url.indexOf('://youtu.be') > -1)
+				|| this.url.indexOf('://vimeo.com') > -1) {
+					playButtonClass = ' play-button';
 					}
 
 				// gif-class
@@ -2600,7 +2618,7 @@ function buildAttachmentHTML(attachments){
 
 				var urlToHide = window.siteInstanceURL + 'attachment/' + this.id;
 
-				attachmentHTML += '<a data-local-attachment-url="' + urlToHide + '" style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + youTubeClass + animatedGifClass + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
+				attachmentHTML += '<a data-local-attachment-url="' + urlToHide + '" style="background-image:url(\'' + img_url + '\')" class="thumb-container' + noCoverClass + playButtonClass + animatedGifClass + ' ' + CSSclassNameByHostFromURL(this.url) + '" href="' + this.url + '"><img class="attachment-thumb" data-mime-type="' + this.mimetype + '" src="' + img_url + '"/ data-width="' + this.width + '" data-height="' + this.height + '" data-full-image-url="' + this.url + '" data-thumb-url="' + img_url + '"></a>';
 				urlsToHide.push(urlToHide); // hide this attachment url from the queet text
 				attachmentNum++;
 				}

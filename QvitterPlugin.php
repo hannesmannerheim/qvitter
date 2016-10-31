@@ -150,6 +150,12 @@ class QvitterPlugin extends Plugin {
         return true;
     }
 
+    public function onBeforePluginCheckSchema()
+    {
+        QvitterNotification::beforeSchemaUpdate();
+        return true;
+    }
+
 	// route/reroute urls
     public function onRouterInitialized($m)
     {
@@ -515,6 +521,9 @@ class QvitterPlugin extends Plugin {
 
     function onNoticeSimpleStatusArray($notice, &$twitter_status, $scoped)
     {
+
+        // strip tags from source, we can't trust html here, because of gs bug
+        $twitter_status['source'] = htmlspecialchars(strip_tags($twitter_status['source']));
 
     	// groups
 		$notice_groups = $notice->getGroups();
@@ -1055,14 +1064,17 @@ class QvitterPlugin extends Plugin {
 
 		$notif->delete();
 
-		// outputs an activity notice that this notice was deleted
-        $profile = $notice->getProfile();
-
         // don't delete if this is a user is being deleted
         // because that creates an infinite loop of deleting and creating notices...
         $user_is_deleted = false;
-        $user = User::getKV('id',$profile->id);
-        if($user instanceof User && $user->hasRole(Profile_role::DELETED)) {
+        try {
+            // outputs an activity notice that this notice was deleted
+            $profile = $notice->getProfile();
+            $user = User::getKV('id',$profile->id);
+            if($user instanceof User && $user->hasRole(Profile_role::DELETED)) {
+                $user_is_deleted = true;
+            }
+        } catch (NoProfileException $e) {
             $user_is_deleted = true;
         }
 

@@ -196,5 +196,6 @@
 	"userMuted":"Ausgeblendete Nutzer",
 	"mutedStreamDescription":"Du hast diese Nutzer in Deiner Timeline ausgeblendet. Benachrichtigungen von diesen Nutzern werden werden weiterhin angezeigt. Um sie ebenfalls zu verbergen, wähle im Zahnradmenu der Benachrichtigungsseite die Option &quot;Benachrichtigungen von ausgeblendeten Benutzern verbergen&quot;.",
 	"profileAndSettings":"Profil und Einstellungen",
-	"profileSettings":"Profileinstellungen"
+	"profileSettings":"Profileinstellungen",
+	"thisIsABookmark":"This is a bookmark created in the Classic interface"
 }

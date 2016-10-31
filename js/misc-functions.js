@@ -38,6 +38,37 @@
   · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · */
 
 
+/* ·
+   ·
+   ·   Trigger click on <input type="file"> elements
+   ·
+   ·   @param inputFile: jQuery element to trigger click on
+   ·
+   · · · · · · · · · */
+
+function triggerClickOnInputFile(inputFile) {
+	if(typeof bowser != 'undefined') {
+		var bowserIntVersion = parseInt(bowser.version,10);
+		if(typeof bowser.chrome != 'undefined' && bowser.chrome === true && bowserIntVersion < 53
+		|| typeof bowser.opera != 'undefined' && bowser.opera === true && bowserIntVersion < 39
+		|| typeof bowser.safari != 'undefined' && bowser.safari === true && bowserIntVersion < 9) {
+			var evt = document.createEvent("HTMLEvents");
+			evt.initEvent("click", true, true);
+			inputFile[0].dispatchEvent(evt);
+			console.log('triggering click on on input file element with the old trigger hack for older browsers...');
+			}
+		else {
+			inputFile.trigger('click');
+			console.log('regular click triggered on input file element');
+			}
+		}
+	else {
+		inputFile.trigger('click');
+		console.log('no bowser object found: regular click triggered on input file element');
+		}
+	console.log(bowser);
+	}
+
 
 /* ·
    ·
@@ -461,7 +492,7 @@ function userIsBlocked(userId) {
    · · · · · · · · · */
 
 
-function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
+function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
 	$.each(window.allBlocking,function(){
 		obj.find('.stream-item[data-user-id="' + this + '"]').addClass('profile-blocked-by-me');
 		obj.find('.stream-item[data-user-id="' + this + '"]').children('.queet').attr('data-tooltip',window.sL.thisIsANoticeFromABlockedUser);
@@ -475,7 +506,7 @@ function markAllNoticesFromBlockedUsersAsBlockedInJQueryObject(obj) {
    ·
    · · · · · · · · · */
 
-function markAllNoticesFromMutedUsersAsMutedInJQueryObject(obj) {
+function markAllNoticesFromMutedUsersAsMutedInJQueryObject(obj) {
 
 	$.each(obj.find('.stream-item'),function(){
 		if(isUserMuted($(this).attr('data-user-id'))) {
@@ -496,7 +527,7 @@ function markAllNoticesFromMutedUsersAsMutedInJQueryObject(obj) {
    ·
    · · · · · · · · · */
 
-function markAllProfileCardsFromMutedUsersAsMutedInDOM() {
+function markAllProfileCardsFromMutedUsersAsMutedInDOM() {
 
 	$.each($('body').find('.profile-header-inner'),function(){
 		if(isUserMuted($(this).attr('data-user-id'))) {
@@ -938,7 +969,7 @@ function userArrayCacheStore(data) {
 			window.convertStatusnetProfileUrlToUserArrayCacheKey[dataToStore.external.statusnet_profile_url] = key;
 			}
 		// store the time when this record was modified
-		if(dataToStore.local || dataToStore.external) {
+		if(dataToStore.local || dataToStore.external) {
 			window.userArrayCache[key].modified = Date.now();
 			}
 		}
@@ -1733,7 +1764,7 @@ function validateRegisterForm(o) {
 	return allFieldsValid;
 	}
 
-function validEmail(email) {
+function validEmail(email) {
 	if(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)) {
 		return true;
 		}
@@ -2634,24 +2665,99 @@ function shortenUrlsInBox(shortenButton) {
 	}
 
 
+
+/* ·
+   ·
+   ·   Youtube ID from Youtube URL
+   ·
+   · · · · · · · · · · · · · */
+
+function youTubeIDFromYouTubeURL(url) {
+	return url.replace('https://youtube.com/watch?v=','').replace('http://youtube.com/watch?v=','').replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
+	}
+
 /* ·
    ·
    ·   Youtube embed link from youtube url
    ·
    · · · · · · · · · · · · · */
 
-function youTubeEmbedLinkFromURL(url) {
-	var youtubeId = url.replace('http://www.youtube.com/watch?v=','').replace('https://www.youtube.com/watch?v=','').replace('http://youtu.be/','').replace('https://youtu.be/','').substr(0,11);
-
+function youTubeEmbedLinkFromURL(url, autoplay) {
 	// get start time hash
 	var l = document.createElement("a");
 	l.href = url;
+
+	var addStart = '';
 	if(l.hash.substring(0,3) == '#t=') {
-		return '//www.youtube.com/embed/' + youtubeId + '?start=' + l.hash.substring(3);
+		addStart = '&start=' + l.hash.substring(3);
 		}
-	else {
-		return '//www.youtube.com/embed/' + youtubeId;
+
+	var addAutoplay = '';
+	if(typeof autoplay != 'undefined' && autoplay === true) {
+		addAutoplay = '&autoplay=1';
 		}
+
+	return '//www.youtube.com/embed/' + youTubeIDFromYouTubeURL(url) + '?enablejsapi=1&version=3&playerapiid=ytplayer' + addStart + addAutoplay;
+	}
+
+/* ·
+   ·
+   ·   Vimeo ID from Vimeo URL
+   ·
+   · · · · · · · · · · · · · */
+
+function vimeoIDFromVimeoURL(url) {
+	id = url.replace('http://vimeo.com/','').replace('https://vimeo.com/','');
+	if(id.indexOf('#') > -1) {
+		id = id.substring(0,id.indexOf('#'));
+		}
+	return id;
+	}
+
+/* ·
+   ·
+   ·   Vimeo embed link from vimeo url
+   ·
+   · · · · · · · · · · · · · */
+
+function vimeoEmbedLinkFromURL(url, autoplay) {
+	// get start time hash
+	var l = document.createElement("a");
+	l.href = url;
+
+	var addStart = '';
+	if(l.hash.substring(0,3) == '#t=') {
+		addStart = l.hash;
+		}
+
+	var addAutoplay = '&autoplay=0';
+	if(typeof autoplay != 'undefined' && autoplay === true) {
+		addAutoplay = '&autoplay=1';
+		}
+
+	return 'https://player.vimeo.com/video/' + vimeoIDFromVimeoURL(url) + '?api=1' + addAutoplay + addStart;
+	}
+
+
+/* ·
+   ·
+   ·   CSS class name from URL
+   ·
+   · · · · · · · · · · · · · */
+
+function CSSclassNameByHostFromURL(url) {
+	var host = getHost(url);
+	if(host.indexOf('www.') === 0) {
+		host = host.substring(4);
+		}
+	host = host.toLowerCase().replace(/\./g, "-");
+	host = host.replace(/[^a-zA-Z0-9-]+/g, "_");
+
+	if(host == 'youtu-be') {
+		host = 'youtube-com';
+		}
+
+	return 'host-' + host;
 	}
 
 

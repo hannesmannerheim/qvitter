@@ -50,6 +50,7 @@ $config['site']['qvitter']['sprite'] = Plugin::staticPath('Qvitter', '').'img/sp
 $config['site']['qvitter']['enablewelcometext'] = true;
 // $config['site']['qvitter']['customwelcometext']['sv'] = '<h1>Välkommen till Quitter.se – en federerad<sup>1</sup> mikrobloggsallmänning!</h1><p>Etc etc...</p>';
 // $config['site']['qvitter']['customwelcometext']['en'] = '<h1>Welcome to Quitter.se – a federated microblog common!</h1><p>Etc etc...</p>';
+// $config['site']['qvitter']['customtermsofuse'] = 'Our custom terms of use';
 $config['site']['qvitter']['blocked_ips'] = array();
 
 // Recommended GNU social settings
