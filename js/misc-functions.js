@@ -1996,17 +1996,24 @@ function detectRTL(s) {
     	$streamItem.children('.stream-item').children('.queet').addClass('rtl');
     	}
     else {
-		// for ltr languages we move @, ! and # to inside
-    	$streamItem.find('.queet-text').find('.h-card.mention').prepend('@');
-    	$streamItem.find('.queet-text').find('.h-card.group').prepend('!');
-    	$streamItem.find('.queet-text').find('.vcard .fn.nickname:not(.group)').prepend('@'); // very old style
-        $streamItem.find('.queet-text').find('.vcard .nickname.mention:not(.fn)').prepend('@'); // old style
-    	$streamItem.find('.queet-text').find('.vcard .nickname.group').prepend('!'); // old style
-    	$streamItem.find('.queet-text').find('a[rel="tag"]').prepend('#');
+		// for ltr languages we move @, ! and # to inside (only because it looks better)
+    	prependCharIfItDoesntAlreadyExist($streamItem.find('.queet-text').find('.h-card.mention'),'@');
+		prependCharIfItDoesntAlreadyExist($streamItem.find('.queet-text').find('.h-card.group'),'!');
+		prependCharIfItDoesntAlreadyExist($streamItem.find('.queet-text').find('.vcard .fn.nickname:not(.group)'),'@'); // very old style
+		prependCharIfItDoesntAlreadyExist($streamItem.find('.queet-text').find('.vcard .nickname.mention:not(.fn)'),'@'); // old style
+		prependCharIfItDoesntAlreadyExist($streamItem.find('.queet-text').find('.vcard .nickname.group'),'!'); // old style
+		prependCharIfItDoesntAlreadyExist($streamItem.find('.queet-text').find('a[rel="tag"]'),'#');
     	}
 
 	// we remove @, ! and #, they are added as pseudo elements, or have been moved to the inside
    	return $streamItem.html().replace(/@<a/gi,'<a').replace(/!<a/gi,'<a').replace(/@<span class="vcard">/gi,'<span class="vcard">').replace(/!<span class="vcard">/gi,'<span class="vcard">').replace(/#<span class="tag">/gi,'<span class="tag">');
+	}
+
+
+function prependCharIfItDoesntAlreadyExist(jQueryObject,char) {
+	if(jQueryObject.text().substring(0,1) != char) {
+		jQueryObject.prepend(char);
+		}
 	}
 
 
