@@ -54,7 +54,9 @@ class QvitterPlugin extends Plugin {
 		// e.g. $config['site']['qvitter']['enabledbydefault'] = false;
 
 		// ENABLED BY DEFAULT (true/false)
-		$settings['enabledbydefault'] = true;
+		$settings['enabledbydefault'] = isset($_COOKIE['qvitter:enabled'])
+                                            ? $_COOKIE['qvitter:enabled'] === 'true'
+                                            : false;
 
 		// DEFAULT BACKGROUND COLOR
 		$settings['defaultbackgroundcolor'] = '#f4f4f4';
@@ -279,6 +281,10 @@ class QvitterPlugin extends Plugin {
             $this->hijack_ui = true;
         }
 
+        if (common_logged_in()) {
+            common_set_cookie('qvitter:enabled', $this->hijack_ui?'true':'false'); // remember this to avoid javascript redirect
+        }
+
 
         if ($this->hijack_ui === true) {
 
@@ -429,39 +435,13 @@ class QvitterPlugin extends Plugin {
      * @return boolean hook return
      */
 
-    function onEndShowScripts($action){
-
-        if (common_logged_in()) {
-
-			$user = common_current_user();
-			$profile = $user->getProfile();
-			$qvitter_enabled='false';
-
-			// if qvitter is enabled by default but _not_ disabled by the user,
-			if(QvitterPlugin::settings('enabledbydefault')) {
-				$disabled = Profile_prefs::getConfigData($profile, 'qvitter', 'disable_qvitter');
-				if($disabled == 0) {
-					$qvitter_enabled='true';
-					}
-				}
-			// if qvitter is disabled by default and _enabled_ by the user,
-			else {
-				$enabled = Profile_prefs::getConfigData($profile, 'qvitter', 'enable_qvitter');
-				if($enabled == 1) {
-					$qvitter_enabled='true';
-					}
-				}
-
-            $action->inlineScript(' var toggleQvitterAPIURL = \''.common_path('', true).'api/qvitter/toggle_qvitter.json\';
-            						var toggleText = \''._('New').' '.str_replace("'","\'",common_config('site','name')).'\';
-            						var qvitterEnabled = '.$qvitter_enabled.';
-            						var qvitterAllLink = \''.common_local_url('all', array('nickname' => $user->nickname)).'\';
-            						');
-            $action->script($this->path('js/toggleqvitter.js').'?changed='.date('YmdHis',filemtime(QVITTERDIR.'/js/toggleqvitter.js')));
-        }
+    function onEndShowScripts(Action $action) {
+        $action->inlineScript(' var toggleQvitterAPIURL = \''.common_path('', true).'api/qvitter/toggle_qvitter.json\';
+                                var toggleText = \''._('New').' '.str_replace("'","\'",common_config('site','name')).'\';
+                                var qvitterEnabledByDefault = \''.(static::settings('enabledbydefault') ? 'true' : 'false').'\';
+                                ');
+        $action->script($this->path('js/toggleqvitter.js').'?changed='.date('YmdHis',filemtime(QVITTERDIR.'/js/toggleqvitter.js')));
     }
-
-
 
     /**
      * Menu item for Qvitter
