@@ -144,47 +144,18 @@ if (!defined('STATUSNET')) {
  * @license  http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License version 3.0
  * @link     http://status.net/
  */
-class ApiQvitterStatusesUpdateAction extends ApiAuthAction
+class ApiQvitterStatusesUpdateAction extends ApiStatusesUpdateAction
 {
-    protected $needPost = true;
-
-    var $status                = null;
-    var $in_reply_to_status_id = null;
-    var $lat                   = null;
-    var $lon                   = null;
+    var $media_ids = array();   // so we don't accidentally have an unset class variable
 
     /**
-     * Take arguments for running
+     * Handle the request Qvitter-style!
      *
-     * @param array $args $_REQUEST args
-     *
-     * @return boolean success flag
-     */
-    protected function prepare(array $args=array())
-    {
-        parent::prepare($args);
-
-        $this->status = $this->trimmed('status');
-        $this->post_to_groups = $this->trimmed('post_to_groups');
-        $this->lat    = $this->trimmed('lat');
-        $this->lon    = $this->trimmed('long');
-
-        $this->in_reply_to_status_id
-            = intval($this->trimmed('in_reply_to_status_id'));
-
-        return true;
-    }
-
-    /**
-     * Handle the request
-     *
-     * Make a new notice for the update, save it, and show it
-     *
-     * @return void
+     * FIXME: Try to align this with mainline GNU social!
      */
     protected function handle()
     {
-        parent::handle();
+        ApiAuthAction::handle();
 
         // Workaround for PHP returning empty $_POST and $_FILES when POST
         // length > post_max_size in php.ini
@@ -243,6 +214,12 @@ class ApiQvitterStatusesUpdateAction extends ApiAuthAction
                     // TRANS: Client error displayed when replying to a non-existing notice.
                     $this->clientError(_('Parent notice not found.'), 404);
                 }
+            }
+
+            foreach(array_keys($this->media_ids) as $media_id) {
+                // FIXME: Validation on this... Worst case is that if someone sends bad media_ids then
+                // we'll fill the notice with non-working links, so no real harm, done, but let's fix.
+                $this->status .= ' ' . common_local_url('attachment', array('attachment' => $media_id));
             }
 
             $upload = null;
@@ -366,42 +343,5 @@ class ApiQvitterStatusesUpdateAction extends ApiAuthAction
         }
 
         $this->showNotice();
-    }
-
-    /**
-     * Show the resulting notice
-     *
-     * @return void
-     */
-    function showNotice()
-    {
-        if (!empty($this->notice)) {
-            if ($this->format == 'xml') {
-                $this->showSingleXmlStatus($this->notice);
-            } elseif ($this->format == 'json') {
-                $this->show_single_json_status($this->notice);
-            }
-        }
-    }
-
-    /**
-     * Is this command supported when doing an update from the API?
-     *
-     * @param string $cmd the command to check for
-     *
-     * @return boolean true or false
-     */
-    function supported($cmd)
-    {
-        static $cmdlist = array('SubCommand', 'UnsubCommand',
-            'OnCommand', 'OffCommand', 'JoinCommand', 'LeaveCommand');
-
-        $supported = null;
-
-        if (Event::handle('CommandSupportedAPI', array($cmd, &$supported))) {
-            $supported = $supported || in_array(get_class($cmd), $cmdlist);
-        }
-
-        return $supported;
     }
 }
