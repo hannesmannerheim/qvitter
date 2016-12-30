@@ -1672,6 +1672,9 @@ $('body').on('click','.qvitter-follow-button',function(event){
 	// if there's no local user id, we have to take a detour
 	$.ajax({ url: window.siteInstanceURL + 'main/ostatussub',
 		type: "POST",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
+			},
 		data: {
 			token: 	window.commonSessionToken,
 			profile: $(this).attr('data-follow-user'),
@@ -3845,6 +3848,9 @@ $('body').on('click','.crop-and-save-button',function(){
 			$.ajax({
 				url:         window.apiRoot + 'account/update_profile_banner.json',
 				type:        "POST",
+		        beforeSend: function (xhr) {
+		            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
+					},
 				data:        coverImgFormData,
 				processData: false,
 				contentType: false,
@@ -3878,6 +3884,9 @@ $('body').on('click','.crop-and-save-button',function(){
 		else if($('#edit-profile-popup .jwc_frame.avatar-to-crop').length>0) {
 			$.ajax({ url: window.apiRoot + 'qvitter/update_avatar.json',
 				type: "POST",
+		        beforeSend: function (xhr) {
+		            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
+					},
 				data: {
 					cropH: 	window.jwc.result.cropH,
 					cropW: 	window.jwc.result.cropW,
@@ -3910,6 +3919,9 @@ $('body').on('click','.crop-and-save-button',function(){
 		else if($('#edit-profile-popup .jwc_frame.background-to-crop').length>0) {
 			$.ajax({ url: window.apiRoot + 'qvitter/update_background_image.json',
 				type: "POST",
+				        beforeSend: function (xhr) {
+				            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
+						},
 				data: {
 					cropH: 	window.jwc.result.cropH,
 					cropW: 	window.jwc.result.cropW,
@@ -3949,6 +3961,9 @@ $('body').on('click','.save-profile-button',function(){
 		if(validateEditProfileForm($('#edit-profile-popup'))) {
 			$.ajax({ url: window.apiRoot + 'account/update_profile.json',
 				type: "POST",
+		        beforeSend: function (xhr) {
+		            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
+					},
 				data: {
 					name: 			$('#edit-profile-popup input.fullname').val(),
 					url: 			$('#edit-profile-popup input.url').val(),
@@ -4142,6 +4157,9 @@ function uploadAttachment(e, thisUploadButton) {
 	// upload
 	$.ajax({ url: window.apiRoot + 'statusnet/media/upload',
 		type: "POST",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
+			},
 		data: imgFormData,
 		contentType: false,
 		processData: false,
