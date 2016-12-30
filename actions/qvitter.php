@@ -45,6 +45,15 @@ class QvitterAction extends ApiAction
     {
         parent::prepare($args);
 
+        // if we're logged in but we have missing or incorrect csrf cookie, logout
+        if(common_logged_in()) {
+            $csrf_token = sha1(common_config('qvitter', 'appid').session_id());
+            if(!isset($_COOKIE['Qvitter-CSRF']) || $_COOKIE['Qvitter-CSRF'] != $csrf_token) {
+                header('Location: '.common_path('').'main/logout');
+                die();
+            }
+        }
+
         $user = common_current_user();
 
         return true;

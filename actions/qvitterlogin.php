@@ -112,6 +112,17 @@ class QvitterLoginAction extends FormAction
             common_rememberme($user);
         }
 
+        // make sure we have a unique app id for this Qvitter installation in config
+        // to use for creating a csrf token
+		if(common_config('qvitter', 'appid') == false) {
+            Config::save('qvitter', 'appid', sha1(common_random_hexstr(16)));
+		}
+
+        // set csrf-cookie
+        $csrf_token = sha1(common_config('qvitter', 'appid').session_id());
+        common_set_cookie('Qvitter-CSRF', $csrf_token, time() + 60*60*24*30); // 1 month
+
+
         $url = common_get_returnto();
 
         if ($url) {
