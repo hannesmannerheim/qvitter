@@ -422,6 +422,16 @@ class QvitterPlugin extends Plugin {
 
     }
 
+    /**
+     * Remove CSRF cookie on logout
+     *
+     */
+
+    function onEndLogout($action) {
+        common_set_cookie('Qvitter-CSRF', '', 0);
+        return true;
+    }
+
 
     /**
      * Add script to default ui, to be able to toggle Qvitter with one click
@@ -1284,6 +1294,24 @@ class QvitterPlugin extends Plugin {
      * @return boolean hook flag
      */
     public function onEndSetApiUser($user) {
+
+        // if we're POST:ing and are logged in using a regular session (i.e. not basic auth or oauth)
+        // check that we have a correct csrf cookie and header, otherwise deny
+        if(common_logged_in() && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(!isset($_COOKIE['Qvitter-CSRF'])) {
+                throw new ServerException(_('Error setting user. Missing authorization cookie data. Please logout and login again.'));
+            }
+            $csrf_token = sha1(common_config('qvitter', 'appid').session_id());
+            if($_COOKIE['Qvitter-CSRF'] != $csrf_token) {
+                throw new ServerException(_('Error setting user. Invalid authorization cookie data. Please logout and login again.'));
+            }
+            if(!isset($_SERVER['HTTP_X_QVITTER_CSRF'])) {
+                throw new ServerException(_('Error setting user. Missing authorization header data. Please logout and login again.'));
+            }
+            if($_SERVER['HTTP_X_QVITTER_CSRF'] != $csrf_token) {
+                throw new ServerException(_('Error setting user. Invalid authorization header data. Please logout and login again.'));
+            }
+        }
 
         // cleanup sessions, to allow for simultaneous http-requests,
         // e.g. if posting a notice takes a very long time
