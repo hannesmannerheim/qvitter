@@ -334,9 +334,6 @@ function postUpdateBookmarks(newBookmarks) {
 	$.ajax({ url: window.apiRoot + 'qvitter/update_bookmarks.json',
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			bookmarks: bookmarksString
 			},
@@ -361,9 +358,6 @@ function postNewLinkColor(newLinkColor) {
 	$.ajax({ url: window.apiRoot + 'qvitter/update_link_color.json',
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			linkcolor: newLinkColor
 			},
@@ -389,9 +383,6 @@ function postNewBackgroundColor(newBackgroundColor) {
 	$.ajax({ url: window.apiRoot + 'qvitter/update_background_color.json',
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			backgroundcolor: newBackgroundColor
 			},
@@ -421,9 +412,6 @@ function postSetProfilePref(namespace, topic, data, callback) {
 	$.ajax({ url: window.apiRoot + 'qvitter/set_profile_pref.json',
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			namespace: namespace,
 			topic: topic,
@@ -460,9 +448,6 @@ function APIFollowOrUnfollowUser(followOrUnfollow,user_id,this_element,actionOnS
 	$.ajax({ url: window.apiRoot + postRequest,
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			user_id: user_id
 			},
@@ -500,9 +485,6 @@ function APIBlockOrUnblockUser(blockOrUnblock,user_id,actionOnSuccess) {
 	$.ajax({ url: window.apiRoot + postRequest,
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			id: user_id
 			},
@@ -533,9 +515,6 @@ function APISandboxCreateOrDestroy(createOrDestroy,userId,actionOnSuccess) {
 	$.ajax({ url: window.apiRoot + 'qvitter/sandbox/' + createOrDestroy + '.json',
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			id: userId
 			},
@@ -566,9 +545,6 @@ function APISilenceCreateOrDestroy(createOrDestroy,userId,actionOnSuccess) {
 	$.ajax({ url: window.apiRoot + 'qvitter/silence/' + createOrDestroy + '.json',
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			id: userId
 			},
@@ -601,9 +577,6 @@ function APIJoinOrLeaveGroup(joinOrLeave,group_id,this_element,actionOnSuccess) 
 	$.ajax({ url: window.apiRoot + 'statusnet/groups/' + joinOrLeave + '.json',
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			id: group_id
 			},
@@ -635,9 +608,6 @@ function postQueetToAPI(queetText_txt, in_reply_to_status_id, postToGroups, acti
 	$.ajax({ url: window.apiRoot + 'qvitter/statuses/update.json',
 		cache: false,
 		type: "POST",
-		beforeSend: function (xhr) {
-    		xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-    		},
 		data: {
 			status: queetText_txt,
 			source: 'Qvitter',
@@ -673,9 +643,6 @@ function postActionToAPI(action, actionOnSuccess) {
 	$.ajax({ url: window.apiRoot + action,
 		cache: false,
 		type: "POST",
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Qvitter-CSRF', getCookieValue('Qvitter-CSRF'));
-            },
 		data: {
 			source: 'Qvitter'
 			},
