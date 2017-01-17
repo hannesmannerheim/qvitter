@@ -98,7 +98,7 @@
 	"signUpEmail": "Retpostadreso",
 	"signUpButtonText": "Enrejistrar su che {site-title}",
 	"welcomeHeading": "Bonvenez ad {site-title}.",
-	"welcomeText": "Ni esas <span id=\"federated-tooltip\"><div id=\"what-is-federation\">\"Federo\" signifikas, ke konto che {site-title} esas fakultativa por sequar, esar sequata da, od interagar kun uzeri di {site-title}. Vu povas registragar vu en servilo di GNU Social od en irga servado fondita sur la protokolo <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">OStatus</a>! Vu ne mem mustas juntar vu a servado: probez instalar l'aminda programo <a href=\"http://www.gnu.org/software/social/\">GNU Social</a> en vua propra servilo! :)</div>federo</span> de mikroblogeri qui sucias etiko e solidareso, e qui deziras abandonar la centraligita e kapitalista servadi.",
+	"welcomeText": "Ni esas <span id=\"federated-tooltip\"><div id=\"what-is-federation\">Notico por «federo»: «federo» signifikas, ke vu ne bezonas konto che {site-title} por povar sequar lia uzeri, o ke li povez sequar vu ed/od interagar kun la uzeri di {site-title}. Vu povas enrejistrar vu che irga servero di StatusNet o <a href=\"http://www.gnu.org/software/social/\">GNU social</a>, o irga servero, qua fondesas sur la protokolo <a href=\"http://www.w3.org/community/ostatus/wiki/Main_Page\">OStatus</a>! Mem ne esas necesa enrejistrar su en una ek la existanta serveri – Vu ipsa povas instalar la bela programo GNU social en vua propra servero! :)</div>federo</span> de mikroblogeri, qui sucias etiko e solidareso, e qui deziras desertar la centraligita kapitalista servadi.",
 	"registerNickname": "Uzeronomo",
 	"registerHomepage": "Retoloko",
 	"registerBio": "Biografio",
