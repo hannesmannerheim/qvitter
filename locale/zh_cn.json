@@ -158,7 +158,7 @@
 	"ERRORcouldNotFindList":"找不到这个列表",
 	"emailAlreadyInUse":"已经被使用了",
 	"addEditLanguageLink":"帮助将 {site-title} 翻译为其他语言",
-	"onlyPartlyTranslated":"{site-title} 的 <em>{language-name}</em> 翻译并不完整（{percent}%）。 你可以前往 <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter 的 repository 主页</a>" 帮助翻译。",
+	"onlyPartlyTranslated":"{site-title} 的 <em>{language-name}</em> 翻译并不完整（{percent}%）。 你可以前往 <a href=\"https://git.gnu.io/h2p/Qvitter/tree/master/locale\">Qvitter 的 repository 主页</a> 帮助翻译。",
 	"startRant":"开始聊天",
 	"continueRant":"继续聊天",
 	"hideEmbeddedInTimeline":"隐藏该时间线中嵌入的内容",
