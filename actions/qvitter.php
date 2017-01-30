@@ -354,6 +354,7 @@ class QvitterAction extends ApiAction
 					window.customWelcomeText = <?php print json_encode(QvitterPlugin::settings("customwelcometext")); ?>;
 					window.urlShortenerAPIURL = '<?php print QvitterPlugin::settings("urlshortenerapiurl"); ?>';
 					window.urlShortenerSignature = '<?php print QvitterPlugin::settings("urlshortenersignature"); ?>';
+                    window.urlshortenerFormat = '<?php print QvitterPlugin::settings("urlshortenerformat"); ?>';
 					window.commonSessionToken = '<?php print common_session_token(); ?>';
 					window.siteMaxThumbnailSize = <?php print common_config('thumbnail', 'maxsize'); ?>;
 					window.siteAttachmentURLBase = '<?php print $attachmentroot; ?>';

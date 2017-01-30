@@ -87,6 +87,7 @@ class QvitterPlugin extends Plugin {
 		// URL SHORTENER
 		$settings['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';
 		$settings['urlshortenersignature'] = 'b6afeec983';
+        $settings['urlshortenerformat'] = 'jsonp'; // if you're using shortener.php you can set this to 'json', which enables you to use YOURLS versions below 1.5.1
 
 		// CUSTOM TERMS OF USE
 		$settings['customtermsofuse'] = false;
