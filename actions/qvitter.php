@@ -159,15 +159,19 @@ class QvitterAction extends ApiAction
 							print '				<link href="'.$instanceurl.$nickname.'/microsummary" rel="microsummary">'."\n";
 
                             // rel="me" for the IndieWeb audience
-                            $relMes = array(
-                                ['href' => $user->getProfile()->getHomepage(),
-                                 'text' => _('Homepage'),
-                                 'image' => null],
-                            );
-                            Event::handle('OtherAccountProfiles', array($user->getProfile(), &$relMes));
-							foreach ($relMes as $relMe) {
-                                print '				<link href="'.htmlspecialchars($relMe['href']).'" title="'.$relMe['text'].'" rel="me" />'."\n";
-                            }
+                            // (no indieweb for users of older gnu social versions)
+                            if(method_exists('Profile','getHomepage')) {
+                                $user_homepage = $user->getProfile()->getHomepage();
+                                $relMes = array(
+                                    ['href' => $user->getProfile()->getHomepage(),
+                                     'text' => _('Homepage'),
+                                     'image' => null],
+                                    );
+                                Event::handle('OtherAccountProfiles', array($user->getProfile(), &$relMes));
+    							foreach ($relMes as $relMe) {
+                                    print '				<link href="'.htmlspecialchars($relMe['href']).'" title="'.$relMe['text'].'" rel="me" />'."\n";
+                                    }
+                                }
 
 							// maybe openid
 							if (array_key_exists('OpenID', StatusNet::getActivePlugins())) {
