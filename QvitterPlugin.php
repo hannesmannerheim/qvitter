@@ -87,6 +87,7 @@ class QvitterPlugin extends Plugin {
 		// URL SHORTENER
 		$settings['urlshortenerapiurl'] = 'http://qttr.at/yourls-api.php';
 		$settings['urlshortenersignature'] = 'b6afeec983';
+        $settings['urlshortenerformat'] = 'jsonp'; // if you're using shortener.php you can set this to 'json', which enables you to use YOURLS versions below 1.5.1
 
 		// CUSTOM TERMS OF USE
 		$settings['customtermsofuse'] = false;
@@ -628,6 +629,7 @@ class QvitterPlugin extends Plugin {
 
                     // this applies to older versions of gnu social, i think
 					} catch (Exception $e) {
+                        $twitter_status['attachment_error'] = array('code'=>$e->getCode(),'message'=>$e->getMessage(),'file'=>$e->getFile(),'line'=>$e->getLine(),'trace'=>$e->getTraceAsString());
 						$thumb = File_thumbnail::getKV('file_id', $attachment->id);
 						if ($thumb instanceof File_thumbnail) {
                             $thumb_url = $thumb->getUrl();

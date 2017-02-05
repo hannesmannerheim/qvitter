@@ -2663,7 +2663,7 @@ function shortenUrlsInBox(shortenButton) {
 
 		display_spinner();
 
-		$.ajax({ url: window.urlShortenerAPIURL + '?format=jsonp&action=shorturl&signature=' + window.urlShortenerSignature + '&url=' + encodeURIComponent(url), type: "GET", dataType: "jsonp",
+		$.ajax({ url: window.urlShortenerAPIURL + '?format=' + window.urlshortenerFormat + '&action=shorturl&signature=' + window.urlShortenerSignature + '&url=' + encodeURIComponent(url), type: "GET", dataType: window.urlshortenerFormat,
 			success: function(data) {
 
 				if(typeof data.shorturl != 'undefined') {

@@ -168,15 +168,19 @@ class QvitterAction extends ApiAction
 							print '				<link href="'.$instanceurl.$nickname.'/microsummary" rel="microsummary">'."\n";
 
                             // rel="me" for the IndieWeb audience
-                            $relMes = array(
-                                ['href' => $user->getProfile()->getHomepage(),
-                                 'text' => _('Homepage'),
-                                 'image' => null],
-                            );
-                            Event::handle('OtherAccountProfiles', array($user->getProfile(), &$relMes));
-							foreach ($relMes as $relMe) {
-                                print '				<link href="'.htmlspecialchars($relMe['href']).'" title="'.$relMe['text'].'" rel="me" />'."\n";
-                            }
+                            // (no indieweb for users of older gnu social versions)
+                            if(method_exists('Profile','getHomepage')) {
+                                $user_homepage = $user->getProfile()->getHomepage();
+                                $relMes = array(
+                                    ['href' => $user->getProfile()->getHomepage(),
+                                     'text' => _('Homepage'),
+                                     'image' => null],
+                                    );
+                                Event::handle('OtherAccountProfiles', array($user->getProfile(), &$relMes));
+    							foreach ($relMes as $relMe) {
+                                    print '				<link href="'.htmlspecialchars($relMe['href']).'" title="'.$relMe['text'].'" rel="me" />'."\n";
+                                    }
+                                }
 
 							// maybe openid
 							if (array_key_exists('OpenID', StatusNet::getActivePlugins())) {
@@ -363,6 +367,7 @@ class QvitterAction extends ApiAction
 					window.customWelcomeText = <?php print json_encode(QvitterPlugin::settings("customwelcometext")); ?>;
 					window.urlShortenerAPIURL = '<?php print QvitterPlugin::settings("urlshortenerapiurl"); ?>';
 					window.urlShortenerSignature = '<?php print QvitterPlugin::settings("urlshortenersignature"); ?>';
+                    window.urlshortenerFormat = '<?php print QvitterPlugin::settings("urlshortenerformat"); ?>';
 					window.commonSessionToken = '<?php print common_session_token(); ?>';
 					window.siteMaxThumbnailSize = <?php print common_config('thumbnail', 'maxsize'); ?>;
 					window.siteAttachmentURLBase = '<?php print $attachmentroot; ?>';

@@ -750,6 +750,11 @@ $(window).load(function() {
 	// set language, from local storage, else browser language
 	var browserLang = navigator.language || navigator.userLanguage;
 
+	// use english if browser has no language set
+	if(typeof browserLang == 'undefined') {
+		var browserLang = 'en-GB';
+		}
+
 	// browsers report e.g. sv-SE but we want it in the format "sv" or "sv_se"
 	browserLang = browserLang.replace('-','_').toLowerCase();
 
