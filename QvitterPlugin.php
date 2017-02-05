@@ -619,6 +619,7 @@ class QvitterPlugin extends Plugin {
 
                     // this applies to older versions of gnu social, i think
 					} catch (Exception $e) {
+                        $twitter_status['attachment_error'] = array('code'=>$e->getCode(),'message'=>$e->getMessage(),'file'=>$e->getFile(),'line'=>$e->getLine(),'trace'=>$e->getTraceAsString());
 						$thumb = File_thumbnail::getKV('file_id', $attachment->id);
 						if ($thumb instanceof File_thumbnail) {
                             $thumb_url = $thumb->getUrl();
